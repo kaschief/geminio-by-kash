@@ -22,7 +22,7 @@ import {
 
 const roots: string[] = []
 const root = (): string => {
-  const value = mkdtempSync(join(tmpdir(), 'gitcito-file-actions-'))
+  const value = mkdtempSync(join(tmpdir(), 'geminio-file-actions-'))
   roots.push(value)
   return value
 }

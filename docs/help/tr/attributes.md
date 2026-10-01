@@ -48,13 +48,13 @@ satırı bulunduğu yerde yeniden yazar; sonradan geldiği için kazanan ikinci 
 kural eklemez. Dosyadaki yorumlar olduğu gibi kalır, çünkü bir kuralın yanındaki
 "neden" genellikle kuralın kendisinden daha değerlidir.
 
-Her kaydetme sıradan bir Gitcito eylemidir: bildirim çıkar ve **Geri al**
+Her kaydetme sıradan bir Geminio eylemidir: bildirim çıkar ve **Geri al**
 dosyayı tam olarak eski hâline döndürür.
 
 **Bir depoda birden fazla öznitelik dosyası olabilir.** Kök dizinde bir tane,
 herhangi bir alt dizinde bir tane ve hiçbir zaman commit'lenmeyen, yalnızca
 sizin makinenizde geçerli olan özel bir `.git/info/attributes` — projeyle değil
-sizinle ilgili bir kuralın doğru yeri. Gitcito hepsini listeler ve hangisinin ne
+sizinle ilgili bir kuralın doğru yeri. Geminio hepsini listeler ve hangisinin ne
 olduğunu söyler.
 
 ## Bir yola ne uygulanıyor?
@@ -80,19 +80,19 @@ dönüştürülmüş metni karşılaştırır.
 2. `.gitattributes` içinde `*.docx diff=<name>` — hangi dosyalara uygulanacağı.
 
 Buradaki düğmeler ikisini birden yapar. Word, Excel, JSON ve `.strings` için dönüştürücüyü
-**Gitcito'nun kendisi paketinde getirir** — önizlemelerinin kullandığı belge
-ayrıştırmanın aynısı, uygulamanın içinde küçük bir `gitcito-textconv` komutu
+**Geminio'nun kendisi paketinde getirir** — önizlemelerinin kullandığı belge
+ayrıştırmanın aynısı, uygulamanın içinde küçük bir `geminio-textconv` komutu
 olarak sunulur — dolayısıyla bu dördü hiçbir şey kurmadan çalışır. Geri
-kalanların hâlâ PATH'inizde gerçek bir araca ihtiyacı vardır: Gitcito bunu
+kalanların hâlâ PATH'inizde gerçek bir araca ihtiyacı vardır: Geminio bunu
 denetler ve eksik olanı soluklaştırır; ilk diff'te başarısız olacak bir sürücü
 yazmaz.
 
 | Sürücü | Gereksinimi | Size verdiği |
 |--------|-------------|--------------|
-| `word` | hiçbir şey — Gitcito ile gelir | `.docx` dosyalarının düzyazı diff'leri |
-| `excel` | hiçbir şey — Gitcito ile gelir | `.xlsx`/`.xls` dosyalarının satır bazlı diff'leri (sayfa başına CSV) |
-| `json` | hiçbir şey — Gitcito ile gelir | Anahtara göre sıralanmış, kararlı JSON diff'leri |
-| `strings` | hiçbir şey — Gitcito ile gelir | git'in ikili dediği UTF-16 `.strings` dosyasının satır farkları |
+| `word` | hiçbir şey — Geminio ile gelir | `.docx` dosyalarının düzyazı diff'leri |
+| `excel` | hiçbir şey — Geminio ile gelir | `.xlsx`/`.xls` dosyalarının satır bazlı diff'leri (sayfa başına CSV) |
+| `json` | hiçbir şey — Geminio ile gelir | Anahtara göre sıralanmış, kararlı JSON diff'leri |
+| `strings` | hiçbir şey — Geminio ile gelir | git'in ikili dediği UTF-16 `.strings` dosyasının satır farkları |
 | `pdf` | `pdftotext` (poppler) | `.pdf` dosyalarının metin diff'leri |
 | `exif` | `exiftool` | Pikseller anlaşılmaz olduğunda bir görselde neyin değiştiği |
 
@@ -117,7 +117,7 @@ sürücüsü onları kapsar: anahtarları sıralar, böylece en üste eklenen bi
 farkta bütün dosyayı yeniden yazmayı bırakır.
 
 Paketle gelen dönüştürücünün sınırları, açıkça söylersek: `.doc` (Word'ün eski
-ikili biçimi) anlaşılmaz, yalnızca `.docx`; PDF kapsanmaz — Gitcito PDF'leri
+ikili biçimi) anlaşılmaz, yalnızca `.docx`; PDF kapsanmaz — Geminio PDF'leri
 tarayıcının görüntüleyicisiyle önizler ve yeniden kullanabileceği bir metin
 çıkarıcısı yoktur; ayrıca bir belgenin her diff'i kısa bir dönüştürücü başlatma
 bedeli öder. `git config diff.<name>.cachetextconv true` ayarı, git'in çıktıyı
@@ -125,9 +125,9 @@ blob başına önbelleğe almasını sağlar.
 
 Dönüştürücü yarısı **sizin** yapılandırmanızda yaşar, depoda değil — git, bir
 klonun size uzattığı komutları çalıştırmaz ve bu, korunmaya değer bir güvenlik
-özelliğidir. Paketle gelen sürücüler ayrıca *sizin* Gitcito kurulum yolunuzu
+özelliğidir. Paketle gelen sürücüler ayrıca *sizin* Geminio kurulum yolunuzu
 gösterir; dolayısıyla depoyu klonlayan bir ekip arkadaşınız `diff=word`
-kuralını alır ama kendi dönüştürücüsünü (Gitcito ya da başka bir şey) bağlayana
+kuralını alır ama kendi dönüştürücüsünü (Geminio ya da başka bir şey) bağlayana
 kadar yine eski okunaksız diff'i görür. Bunu README'nizde belirtin.
 
 ## Clean/smudge filtreleri — önce bir deneme çalıştırmasıyla
@@ -140,7 +140,7 @@ ayıklar.
 
 Aynı zamanda `.gitattributes`'ın işaret edebileceği en tehlikeli şeydir: bir
 filtre **eşleşen her dosyanın her checkout'unda** çalışır ve yanlış bir filtre
-çalışma dizininizi sessizce bozar. Bu yüzden Gitcito burada düz bir metin
+çalışma dizininizi sessizce bozar. Bu yüzden Geminio burada düz bir metin
 kutusu olmayı reddeder. Bir filtreyi yapılandırmak, deponuzdaki gerçek eşleşen
 dosyalara karşı bir **deneme çalıştırmasından** geçer:
 
@@ -182,8 +182,8 @@ geçer.
 - **Kurallar yalnızca dosyanın göründüğü yerde geçerlidir.**
   `design/.gitattributes` içindeki bir kural `src/` hakkında hiçbir şey
   söylemez.
-- Gitcito dosyaların tamamını yazar; bu yüzden elle biçimlendirilmiş bir dosya
-  biçimiyle birlikte geri gelir — ama Gitcito'nun yeniden yazdığı bir kural,
+- Geminio dosyaların tamamını yazar; bu yüzden elle biçimlendirilmiş bir dosya
+  biçimiyle birlikte geri gelir — ama Geminio'nun yeniden yazdığı bir kural,
   git'in kanonik `pattern attr attr` aralığına göre yeniden biçimlendirilir.
 
 Ayrıca bakınız: [LFS ve seyrek checkout](lfs-sparse.md) ·

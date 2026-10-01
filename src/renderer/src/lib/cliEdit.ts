@@ -1,5 +1,5 @@
 /**
- * Reading the file git handed to `gitcito --wait`.
+ * Reading the file git handed to `geminio --wait`.
  *
  * git never says what it wants edited — it just passes a path — so the kind is
  * inferred from the name, which is the same thing every other editor

@@ -28,7 +28,7 @@ Sélectionnez un commit. Sous le message se trouve une section **Note** :
 
 ![Rédaction d'une note sous le message d'un commit poussé, puis enregistrement](../../screenshots/clip-commit-note.webp)
 
-Enregistrer une note est une action Gitcito ordinaire — elle affiche une
+Enregistrer une note est une action Geminio ordinaire — elle affiche une
 notification, et **Annuler** remet le texte précédent, y compris en restaurant
 une note que vous aviez retirée.
 
@@ -37,7 +37,7 @@ Effacer le texte puis enregistrer supprime la note ; la note vide n'existe pas.
 ## En trouver une
 
 Les notes sont invisibles dans un log normal, ce qui est la principale raison
-pour laquelle personne ne les découvre jamais. Gitcito marque un commit qui en
+pour laquelle personne ne les découvre jamais. Geminio marque un commit qui en
 porte une avec une petite icône de note dans la colonne des messages du graphe :
 l'annotation est donc trouvable sans savoir qu'elle est là.
 
@@ -60,12 +60,12 @@ git fetch <remote> +refs/notes/commits:refs/notes/commits
 ```
 
 Seule la référence des notes de commit voyage — les références locales à la
-machine propres à Gitcito (comme les verdicts de la [CI locale](local-ci.md))
+machine propres à Geminio (comme les verdicts de la [CI locale](local-ci.md))
 ne sont délibérément pas publiées.
 
 Certains hébergeurs exigent en plus que les notes soient activées ou autorisées
 de leur côté ; un refus à cet endroit relève de la politique de l'hébergeur, pas
-d'une limite de Gitcito.
+d'une limite de Geminio.
 
 Pas de distant partagé, ou pas d'accès en écriture ? Le
 [Partage sécurisé](secure-share.md) peut emballer les notes d'un dépôt dans un
@@ -74,7 +74,7 @@ atterrirait et un choix d'écrasement explicite pour les notes divergentes.
 
 ## Limites
 
-- **Une seule référence de notes.** Gitcito lit et écrit la référence par défaut
+- **Une seule référence de notes.** Geminio lit et écrit la référence par défaut
   `refs/notes/commits`. Les espaces de noms personnalisés
   (`git notes --ref=review`) ne sont pas exposés — un dépôt qui les utilise ne
   verra pas ces notes ici.

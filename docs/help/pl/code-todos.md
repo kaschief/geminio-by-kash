@@ -71,7 +71,7 @@ Kliknięcie wiersza otwiera plik w tej linii.
 ## Czego nie robi
 
 - **Czyta, nigdy nie zapisuje.** Nie ma „oznacz jako zrobione”: TODO zamyka się,
-  usuwając linię i zatwierdzając to. Listę, którą Gitcito prowadzi za ciebie,
+  usuwając linię i zatwierdzając to. Listę, którą Geminio prowadzi za ciebie,
   opisuje [todos](todos.md) — zupełnie co innego: prywatne notatki żyjące w
   aplikacji, nie w kodzie.
 - **Pliki ignorowane są pomijane**, razem z `node_modules`, cokolwiek mówią

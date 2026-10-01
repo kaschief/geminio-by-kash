@@ -49,12 +49,12 @@ export function BranchStatusPicker({ repo }: { repo: RepoData }): React.JSX.Elem
     const onKeyDown = (event: KeyboardEvent): void => {
       if (event.key === 'Escape') close()
     }
-    window.addEventListener('mousedown', onMouseDown)
+    window.addEventListener('pointerdown', onMouseDown, true)
     window.addEventListener('keydown', onKeyDown)
     window.addEventListener('resize', close)
     window.addEventListener('blur', close)
     return () => {
-      window.removeEventListener('mousedown', onMouseDown)
+      window.removeEventListener('pointerdown', onMouseDown, true)
       window.removeEventListener('keydown', onKeyDown)
       window.removeEventListener('resize', close)
       window.removeEventListener('blur', close)
@@ -211,13 +211,11 @@ export function BranchStatusPicker({ repo }: { repo: RepoData }): React.JSX.Elem
         aria-expanded={position !== null}
         onClick={toggle}
       >
-        <span className="repo-pill-stack">
-          <span className="repo-pill-label">{t('toolbar.branch')}</span>
-          <strong>
-            <GitBranch size={12} /> {repo.branches.current || t('toolbar.noBranch')}
-          </strong>
+        <GitBranch size={14} className="repo-pill-icon" />
+        <span className="repo-pill-value" title={repo.branches.current || t('toolbar.noBranch')}>
+          {repo.branches.current || t('toolbar.noBranch')}
         </span>
-        <ChevronDown size={13} />
+        <ChevronDown size={12} className="repo-pill-chevron" />
       </button>
 
       {position &&

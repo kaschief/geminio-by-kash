@@ -9,7 +9,7 @@ keywords: awatar awatary gravatar blobatar autor zdjęcie obrazek identicon twar
 # Awatary autorów
 
 Lista commitów to ściana nazwisk, a nazwiska czyta się wolno. Obrazek obok każdego
-zamienia „kto to napisał” w coś, na co odpowiadasz jednym spojrzeniem. Gitcito daje
+zamienia „kto to napisał” w coś, na co odpowiadasz jednym spojrzeniem. Geminio daje
 go każdemu pokazywanemu autorowi: w kolumnie autora w grafie, w szczegółach commita
 obok autora i każdego współautora, w wyborze współautorów przy pisaniu, w
 przełączniku profili i obok każdego profilu w Ustawieniach.
@@ -37,7 +37,7 @@ zwykle tak zauważasz konto maszynowe albo źle ustawiony `user.email`. Napraw t
 
 ## Twarz na pasku tytułu
 
-Awatar obok nazwy Twojego profilu to jedyny awatar w Gitcito, który przedstawia
+Awatar obok nazwy Twojego profilu to jedyny awatar w Geminio, który przedstawia
 **Ciebie, w tym repozytorium, teraz** — więc jedyny, który reaguje na stan repozytorium.
 Robi minę, gdy coś się dzieje, a przez resztę czasu pozostaje neutralny.
 

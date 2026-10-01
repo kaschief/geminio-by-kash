@@ -13,7 +13,7 @@ Yığın, her birinin altındakinin üzerine kurulduğu bir dal zinciridir:
 
 ![Bir dal yığını](../../screenshots/branch-stack.webp)
 
-Gitcito bunu bir **güzergâh** olarak çizer: en üstte bir başlangıç dalı, altında her
+Geminio bunu bir **güzergâh** olarak çizer: en üstte bir başlangıç dalı, altında her
 katman için bir durak. Her durağın PR'ı üstündeki durağı hedefler, ilk durak da
 başlangıç dalına iner. Durak kendi commit'lerini, restack gerekip gerekmediğini ve
 gönderildikten sonra PR numarasını gösterir.
@@ -53,12 +53,12 @@ Sırayı değiştiren her şey — takas, taşıma, başka bir başlangıç — 
 oynatır**: her durağın kendi commit'leri yeni temeline rebase edilir. Yani tıpkı
 restack gibi **çakışabilir**. Aynı satırlara dokunan iki durak, bir insan olmadan yer
 değiştiremez; böyle olduğunda **hiçbir şey olmaz**: değişikliğin tamamı geri
-alınır — uçlar, ebeveyn bağları ve yarım kalan rebase — ve Gitcito çarpışan iki
+alınır — uçlar, ebeveyn bağları ve yarım kalan rebase — ve Geminio çarpışan iki
 durağı adıyla söyler. Dürttüğün bir açılır liste seni rebase'in ortasında
 bırakmamalı.
 
 **Restack** anlaşmanın öteki yarısıdır: adıyla istediğin bir rebase olduğu için
-çakışmada durur ve çakışma görünümünü verir — bu aynı zamanda Gitcito'nun
+çakışmada durur ve çakışma görünümünü verir — bu aynı zamanda Geminio'nun
 reddettiği sıralamayı elde etmenin yoludur: orada çöz, sonra durağı taşı.
 
 Geri alma önceki güzergâhı yeniden oynatır. Eski commit'leri diriltmez, çünkü
@@ -110,7 +110,7 @@ Gönder'e basın, tekrarlayın.
 Zincirlenmiş temeller her sunucunun anladığı şeydir; GitLab, Bitbucket ve Azure
 DevOps'ta olan da yalnızca budur. GitHub'da fazlası var: stacked pull requests
 önizlemesinden beri yığın, sunucu tarafında bir nesne. Pull request'ler
-oluştuktan sonra Gitcito onları — alttan üste — yığın olarak kaydeder; PR
+oluştuktan sonra Geminio onları — alttan üste — yığın olarak kaydeder; PR
 arayüzünde yığın haritasını, sunucu tarafında kademeli rebase'i ve en üstteki
 PR'da yapılan, altındaki tüm katmanları indiren bir merge'ü kazanırsın.
 

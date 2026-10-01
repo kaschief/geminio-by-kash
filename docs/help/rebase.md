@@ -21,7 +21,7 @@ The `git rebase -i` todo list, as a list you can drag.
 | **edit** | Stop here so you can amend |
 | **drop** | Throw the commit away |
 
-Drag rows to reorder. The editor never opens in a terminal — Gitcito writes the
+Drag rows to reorder. The editor never opens in a terminal — Geminio writes the
 todo for you.
 
 ## Autosquash, one click

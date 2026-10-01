@@ -20,7 +20,7 @@ Absorb robi za ciebie tę uczciwą rzecz.
 
 1. Dodaj poprawki do przechowalni.
 2. Narzędzia → **Wchłoń zmiany z przechowalni…** (albo <kbd>⌘K</kbd>).
-3. Gitcito robi blame na liniach, których dotyka każdy hunk z przechowalni,
+3. Geminio robi blame na liniach, których dotyka każdy hunk z przechowalni,
    znajduje, który z **twoich niewypchniętych commitów** je wprowadził,
    i pokazuje ci plan, zanim cokolwiek zrobi.
 

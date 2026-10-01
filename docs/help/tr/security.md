@@ -2,13 +2,13 @@
 title: Güvenlik ve sırlar
 category: Güvenlik
 order: 70
-summary: Maskeleme, korumalar, anahtar zinciri — ve Gitcito'nun yapmayı reddettikleri.
+summary: Maskeleme, korumalar, anahtar zinciri — ve Geminio'nun yapmayı reddettikleri.
 keywords: güvenlik sırlar maskeleme anahtar zinciri token korumalı dal büyük dosya gizlilik security secrets masking keychain safeStorage protected branch large file guard privacy
 ---
 
 # Güvenlik ve sırlar
 
-Gitcito'nun **arka ucu yoktur**. Tek ağ çağrıları Git sunucunuza ve, açarsanız,
+Geminio'nun **arka ucu yoktur**. Tek ağ çağrıları Git sunucunuza ve, açarsanız,
 yapay zekâ sağlayıcınıza gider.
 
 ![Güvenlik ayarları](../../screenshots/settings-security.webp)
@@ -46,7 +46,7 @@ değil, işletim sisteminizin anahtar zinciriyle (Electron `safeStorage`)
 şifrelenir.
 
 **Siz söyleyene kadar anahtar zincirine hiçbir şey dokunmaz.** Sistemin kendi
-izin penceresi belirmeden önce Gitcito neyin saklandığını, neyi
+izin penceresi belirmeden önce Geminio neyin saklandığını, neyi
 yapamayacağını (bir uygulama yalnızca kendi oluşturduğu kaydı geri okur —
 diğer parolalarınıza erişilemez) ve hayır demenin sorun olmadığını anlatır:
 o zaman token'lar yalnızca oturum boyunca bellekte yaşar, kasa kapalı kalır ve

@@ -20,7 +20,7 @@ Absorb doet het eerlijke werk voor je.
 
 1. Stage de fixes.
 2. Tools → **Gestagede wijzigingen absorberen…** (of <kbd>⌘K</kbd>).
-3. Gitcito blamet de regels die elke gestagede hunk raakt, zoekt uit welke van
+3. Geminio blamet de regels die elke gestagede hunk raakt, zoekt uit welke van
    **jouw ongepushte commits** ze introduceerde, en laat je het plan zien vóór er
    iets gebeurt.
 

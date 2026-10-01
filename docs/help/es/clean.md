@@ -16,7 +16,7 @@ contenido nunca estuvo en un commit, así que no hay entrada en el reflog, ni
 stash, ni deshacer, ni conjuro de `git` que lo traiga de vuelta.
 
 Por eso es la operación que la gente ejecuta en una terminal y luego lamenta. La
-versión de Gitcito enseña la lista entera antes de que pase nada.
+versión de Geminio enseña la lista entera antes de que pase nada.
 
 `⌘K` → **Eliminar archivos sin seguimiento**.
 
@@ -44,7 +44,7 @@ nadie. Su tamaño es la suma de lo que contiene.
 
 Una carpeta marcada como **repositorio propio** tiene su propio `.git`: un clon
 que dejaste caer dentro de este, o una prueba que nunca llegaste a enlazar. Git
-se niega a eliminarlos (quiere `-ff`, una opción que Gitcito no ofrece) — la
+se niega a eliminarlos (quiere `-ff`, una opción que Geminio no ofrece) — la
 Papelera sí se los lleva.
 
 ## Papelera o borrado

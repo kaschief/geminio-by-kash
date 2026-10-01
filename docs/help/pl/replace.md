@@ -48,7 +48,7 @@ wiedzy:
 - Są **lokalne, dopóki ich nie wypchniesz**: `git push origin "refs/replace/*"`
   je udostępnia, a każdy, kto sklonuje bez nich, widzi nietkniętą historię.
 - **Cofnij działa** — usunięcie referencji natychmiast przywraca prawdziwe
-  pochodzenie, a Gitcito zapisuje graft jako akcję odwracalną, jak wszystko inne.
+  pochodzenie, a Geminio zapisuje graft jako akcję odwracalną, jak wszystko inne.
 - `core.useReplaceRefs=false` sprawia, że git ignoruje je wszystkie naraz.
   Przełącznik tutaj zapisuje dokładnie to, a okno mówi o tym wprost, gdy jest
   wyłączony, bo repozytorium po cichu ignorujące własne podmiany to mylące
@@ -80,7 +80,7 @@ po sha i wciąż siedzą w każdym istniejącym klonie.
 - **Podmiana potrafi ukryć commit przed narzędziami, nie przed gitem.**
   `git cat-file` i [eksplorator obiektów](objects.md) nadal otworzą oryginał po
   sha.
-- **Gitcito nie oferuje `git replace --edit`** (ręcznego przepisania treści
+- **Geminio nie oferuje `git replace --edit`** (ręcznego przepisania treści
   obiektu). To robota dla edytora tekstu na surowym obiekcie i strzał w stopę
   z interfejsem dookoła.
 

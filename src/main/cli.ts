@@ -18,14 +18,14 @@ const CANDIDATE_DIRS =
       // on PATH by default on every modern distribution. /usr/local/bin stays
       // as the fallback for a system-wide install.
       [join(homedir(), '.local', 'bin'), '/usr/local/bin']
-const LINK_NAME = 'gitcito'
+const LINK_NAME = 'geminio'
 
 /** Path to the bundled shim script, inside the packaged app's resources (or the
  *  repo's `resources/` folder in dev). */
 function shimPath(): string {
   return app.isPackaged
-    ? join(process.resourcesPath, 'cli', 'gitcito')
-    : join(__dirname, '../../resources/cli/gitcito')
+    ? join(process.resourcesPath, 'cli', 'geminio')
+    : join(__dirname, '../../resources/cli/geminio')
 }
 
 /** First candidate dir that already exists, so we don't try to create new
@@ -116,10 +116,10 @@ async function uninstall(): Promise<{ ok: boolean; error?: string }> {
   }
 }
 
-// ─── `gitcito --wait` — the git editor ──────────────────────────────────────
+// ─── `geminio --wait` — the git editor ──────────────────────────────────────
 
 /**
- * Sentinel files a `gitcito --wait` shell process is currently blocked on.
+ * Sentinel files a `geminio --wait` shell process is currently blocked on.
  *
  * The shim polls for its sentinel and returns to git the moment it disappears,
  * so deleting one is the *only* signal that matters — and never deleting one

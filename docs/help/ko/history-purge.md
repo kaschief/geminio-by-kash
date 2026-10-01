@@ -57,7 +57,7 @@ keywords: 히스토리 제거 정리 재작성 유출 비밀 자격증명 용량
 
 ## 재작성이 실제로 하는 일
 
-Gitcito는 모든 브랜치와 태그를 `refs/gitcito/pre-purge/<timestamp>/…`로 복사한
+Geminio는 모든 브랜치와 태그를 `refs/gitcito/pre-purge/<timestamp>/…`로 복사한
 다음, 이렇게 실행해요.
 
 ```sh
@@ -108,9 +108,9 @@ git filter-branch --force \
   방법이거든요.
 - **내용이 아니라 경로 기준으로 재작성해요.** 자기 파일에 들어 있는 대신 소스
   파일 안에 붙여 넣어진 비밀 키를 제거하려면 내용 필터가 필요해요. 그건
-  `git filter-repo --replace-text`의 영역이고, Gitcito는 그것을 감싸지 않아요.
+  `git filter-repo --replace-text`의 영역이고, Geminio는 그것을 감싸지 않아요.
 - **`filter-branch`는 아주 큰 히스토리에서는 느려요.** 하지만 어디서나 git과
-  함께 딸려 오는 도구이고, 그래서 Gitcito가 그것을 써요. 커밋이 수만 개인
+  함께 딸려 오는 도구이고, 그래서 Geminio가 그것을 써요. 커밋이 수만 개인
   저장소라면 [터미널](terminal.md)에서 쓰는 `git filter-repo`가 더 빠른
   도구예요.
 - **다른 사람의 클론은 여러분의 저장소가 아니에요.** 그들은 다시 클론하기

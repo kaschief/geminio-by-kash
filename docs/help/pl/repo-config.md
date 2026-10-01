@@ -1,12 +1,12 @@
 ---
-title: Zasady repozytorium (.gitcito.json)
+title: Zasady repozytorium (.geminio.json)
 category: Narzędzia środowiska pracy
 order: 98
 summary: Zasady domu, które podróżują z repozytorium — chronione gałęzie, zakresy commitów, czego potrzebuje klon i lista przed pushem.
-keywords: gitcito.json konfiguracja repozytorium zasady doctor wymagania chronione gałęzie zakresy scopes trailers ticket linki do trackera lista kontrolna onboarding hooksPath node submoduły lfs env example
+keywords: geminio.json konfiguracja repozytorium zasady doctor wymagania chronione gałęzie zakresy scopes trailers ticket linki do trackera lista kontrolna onboarding hooksPath node submoduły lfs env example
 ---
 
-# Zasady repozytorium (`.gitcito.json`)
+# Zasady repozytorium (`.geminio.json`)
 
 Każdy projekt niesie zasady, których nie da się wywnioskować z kodu. *Nigdy nie
 pushuj wprost na `release/*`.* *Zakresy commitów to `api`, `web` i `infra`, i nic
@@ -15,7 +15,7 @@ z `.env.example`, zanim cokolwiek ruszy.* Takie zasady mieszkają w README,
 którego nikt nie czyta ponownie, w błędzie CI albo w głowie osoby, która jest tu
 najdłużej.
 
-`.gitcito.json` to miejsce, w którym repozytorium je zapisuje, żeby narzędzie
+`.geminio.json` to miejsce, w którym repozytorium je zapisuje, żeby narzędzie
 mogło z nich skorzystać. Leży w katalogu głównym repozytorium, jest wersjonowany
 jak każdy inny plik i dlatego podróżuje z klonem: każdy, kto otworzy projekt,
 dostaje te same zasady, a nowa osoba dostaje je pierwszego dnia, a nie przy
@@ -41,7 +41,7 @@ podstawie tego, co już jest: `.nvmrc` lub `engines.node`, `.gitmodules`,
 `filter=lfs` w `.gitattributes`, `.env.example` bez `.env` obok, gałęzie, które
 już chronisz lokalnie, oraz zakresy używane w ostatnich 500 tematach commitów.
 Nic nie zostaje zapisane, dopóki nie zapiszesz. W terminalu to samo robi
-`gitcito config init` (zobacz [wiersz poleceń](cli.md)).
+`geminio config init` (zobacz [wiersz poleceń](cli.md)).
 
 ## Co plik może powiedzieć
 
@@ -77,7 +77,7 @@ Nic nie zostaje zapisane, dopóki nie zapiszesz. W terminalu to samo robi
 | `version` | Musi być `1`. Plik z nowszego schematu jest ignorowany w całości, zamiast zgadywany. |
 | `protect` | Nazwy gałęzi, gdzie `*` pasuje do dowolnego ciągu znaków. **Dodawane** do gałęzi chronionych lokalnie — zobacz [chronione gałęzie](repo-settings.md). |
 | `links.tickets` | Wyrażenie regularne i szablon adresu. `$0` to całe dopasowanie, `$1`…`$9` jego grupy. Dopasowania w tematach i treściach commitów stają się linkami. |
-| `commit.scopes` | Zakresy, które proponuje kompozytor, zamiast pola tekstowego. Zadeklarowanie ich sprawia też, że nieznany zakres w `gitcito commit-check` staje się błędem, a nie poradą stylistyczną. |
+| `commit.scopes` | Zakresy, które proponuje kompozytor, zamiast pola tekstowego. Zadeklarowanie ich sprawia też, że nieznany zakres w `geminio commit-check` staje się błędem, a nie poradą stylistyczną. |
 | `commit.ticketFromBranch` | Wypełnia klucz zgłoszenia z nazwy gałęzi (`feature/ABC-123-cos` → `ABC-123`) — ale tylko w pustym kompozytorze, nigdy na tym, co właśnie piszesz. |
 | `commit.trailers` | Linie dopisywane do treści commita. `{ticket}` i `{branch}` są wypełniane; linia, której symbol nie ma czym się wypełnić, jest pomijana, a nie zapisywana w połowie. |
 | `requires.*` | Czego potrzebuje działający klon. Każdy wpis staje się wierszem doctora, poniżej. |
@@ -85,7 +85,7 @@ Nic nie zostaje zapisane, dopóki nie zapiszesz. W terminalu to samo robi
 
 ## Doctor
 
-`requires` to część odpowiadająca na *„sklonowałem i nie działa"*. Gitcito
+`requires` to część odpowiadająca na *„sklonowałem i nie działa"*. Geminio
 sprawdza je przy otwarciu repozytorium i pokazuje plakietkę ze stetoskopem na
 pasku stanu, gdy coś się nie zgadza. Kliknięcie otwiera zakładkę Config na
 wierszach doctora; **Sprawdź ponownie** uruchamia je jeszcze raz.
@@ -101,7 +101,7 @@ wierszach doctora; **Sprawdź ponownie** uruchamia je jeszcze raz.
 Dwa świadome ograniczenia. **Ostrzeżenie** nigdy nie znaczy „zepsute" — znaczy, że
 doctor nie mógł czegoś ustalić (nieczytelna specyfikacja Node przechodzi, zamiast
 wymyślać błąd, z którym nic nie zrobisz), a ostrzeżenia nie wywracają
-`gitcito doctor` w CI. I naprawa nigdy nie pochodzi z pliku: zbiór powyżej to
+`geminio doctor` w CI. I naprawa nigdy nie pochodzi z pliku: zbiór powyżej to
 cały zbiór, zamknięty na etapie kompilacji. Konfiguracja podaje mu wartość —
 ścieżkę do skopiowania, wartość dla `core.hooksPath` — a nigdy polecenia.
 
@@ -116,7 +116,7 @@ tę listę zamiast pola tekstowego — różnica między `feat(renderer)` a
 wiadomości, a `links.tickets` zamienia klucze z powrotem w linki wszędzie tam,
 gdzie commit jest wyświetlany.
 
-Te same zasady działają poza oknem: `gitcito commit-check` czyta ten plik, więc
+Te same zasady działają poza oknem: `geminio commit-check` czyta ten plik, więc
 hook `commit-msg` i CI egzekwują dokładnie to, co podpowiada kompozytor. Zobacz
 [wiersz poleceń](cli.md) i [commitowanie](committing.md).
 
@@ -124,7 +124,7 @@ hook `commit-msg` i CI egzekwują dokładnie to, co podpowiada kompozytor. Zobac
 
 `checklist.push` pojawia się jako potwierdzenie przed pierwszym pushem w sesji,
 po jednej linii na pozycję. To miejsce na to, co naprawdę jest kwestią oceny —
-*czy ktoś uprzedził wsparcie?* — bo Gitcito **nigdy tego za ciebie nie sprawdza**.
+*czy ktoś uprzedził wsparcie?* — bo Geminio **nigdy tego za ciebie nie sprawdza**.
 To przypomnienia, nie bramki: przeczytaj i pushuj albo anuluj. Pokazywane raz na
 repozytorium na sesję, bo okno przy każdym pushu to okno, którego nikt nie czyta.
 
@@ -147,7 +147,7 @@ Jest traktowany jak treść niezaufana, dokładnie tak jak wiadomość commita:
   repozytorium nie wkleiło ściany tekstu w okno ani tysiąca plakietek w panel.
 
 Błędne pole jest pomijane, nie jest fatalne. Reszta pliku dalej obowiązuje, a to,
-co pominięto, jest wypisane pod **Zignorowane przez Gitcito** w zakładce Config
+co pominięto, jest wypisane pod **Zignorowane przez Geminio** w zakładce Config
 wraz z powodem. Jedyny wyjątek to nieprawidłowy JSON albo nieznana `version` —
 tam nie ma czego ratować.
 
@@ -158,7 +158,7 @@ tam nie ma czego ratować.
 - **Żadnych zasad per gałąź czy per osoba.** Jeden plik, jeden zestaw zasad.
 - **Nie zastępuje CI.** Lista to tekst; doctor sprawdza środowisko, a nie twoją
   pracę.
-- **Nie może niczego osłabić.** Każde zabezpieczenie Gitcito pozostaje twoje.
+- **Nie może niczego osłabić.** Każde zabezpieczenie Geminio pozostaje twoje.
 
 **Zobacz też:** [Ustawienia repozytorium](repo-settings.md) ·
 [Wiersz poleceń](cli.md) · [Commitowanie](committing.md) ·

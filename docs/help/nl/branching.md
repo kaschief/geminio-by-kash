@@ -56,7 +56,7 @@ de rechtermuisknop op een branch in die dropdown om een lokale branch te
 hernoemen, de naam te kopiëren, hem in een nieuwe worktree uit te checken,
 hem in de actieve branch te mergen of hem te verwijderen. Remote branches
 bieden geen hernoemen en worden na bevestiging van hun remote verwijderd.
-Gitcito laat de merge weg wanneer de geselecteerde referentie al in de
+Geminio laat de merge weg wanneer de geselecteerde referentie al in de
 actieve branch zit, en schakelt het aanmaken van een worktree uit wanneer
 die branch al is uitgecheckt.
 
@@ -96,7 +96,7 @@ uitgecheckt moet opnieuw richten. Op een label in de grafiek verschijnt de optie
 alleen als de branch precies één remote volgt; bij meerdere kies je de branch in
 de zijbalk, zodat de upstream eenduidig is.
 
-**Grenzen:** Gitcito herschrijft niets dat naar de oude naam verwees — open pull
+**Grenzen:** Geminio herschrijft niets dat naar de oude naam verwees — open pull
 requests wijzen nog steeds naar de branch waartegen ze zijn geopend, en
 CI-regels die op een branchpatroon matchen, matchen niet meer. Een branch
 hernoemen die in een andere [worktree](worktrees.md) is uitgecheckt mislukt, en
@@ -119,7 +119,7 @@ op hun gewone plek eronder blijven staan.
 
 Dubbelklik een remote branch om de lokale branch aan te maken die hem volgt.
 Bestaat er al een lokale branch met die naam en is die **uiteengelopen**, dan
-vraagt Gitcito hoe je wilt verzoenen — rebasen, mergen of resetten — en biedt
+vraagt Geminio hoe je wilt verzoenen — rebasen, mergen of resetten — en biedt
 het aan de branch eerst te back-uppen.
 
 ![De vraag bij een uiteengelopen branch: rebasen, mergen of resetten, met een back-upoptie](../../screenshots/diverged-checkout.webp)

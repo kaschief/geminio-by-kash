@@ -12,7 +12,7 @@ import type { TranslationKey } from '../i18n'
  * writes `send` straight to the session's stdin.
  *
  * Detection is textual and therefore fallible — a config can always override it
- * with a `"gitcito": { "hotActions": [...] }` block (an empty array turns the
+ * with a `"geminio": { "hotActions": [...] }` block (an empty array turns the
  * buttons off).
  */
 
@@ -44,7 +44,7 @@ export interface HotAction {
   icon: HotIcon
   /** Dictionary key for the label. Absent only for a config's own override. */
   labelKey?: TranslationKey
-  /** Literal label from a `gitcito.hotActions` override (repo-authored copy). */
+  /** Literal label from a `geminio.hotActions` override (repo-authored copy). */
   label?: string
   /** Primary actions get a button of their own; the rest live in the ⋯ menu. */
   primary?: boolean
@@ -278,10 +278,10 @@ const ICONS = new Set<HotIcon>([
   'cloud'
 ])
 
-/** Read a `"gitcito": { "hotActions": [...] }` block off a config. Returns null
+/** Read a `"geminio": { "hotActions": [...] }` block off a config. Returns null
  *  when there is none, and an empty array when the repo turned the buttons off. */
 function overrideActions(config: LaunchConfig): HotAction[] | null {
-  const block = config.gitcito
+  const block = config.geminio ?? config.gitcito
   if (typeof block !== 'object' || block === null) return null
   const raw = (block as { hotActions?: unknown }).hotActions
   if (!Array.isArray(raw)) return null

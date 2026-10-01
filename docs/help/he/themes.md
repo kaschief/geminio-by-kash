@@ -8,7 +8,7 @@ keywords: ערכת נושא כהה בהיר מראה צבעים גודל גופ�
 
 # ערכות נושא ומראה
 
-ערכות נושא מובנות — Gitcito, Nord, Dracula, Solarized, GitHub, Monokai,
+ערכות נושא מובנות — Geminio, Nord, Dracula, Solarized, GitHub, Monokai,
 Midnight, Contrast ו־Daltonic — לכל אחת וריאנט בהיר וכהה.
 
 ![מעבר מבהיר לכהה](../../screenshots/clip-themes.webp)

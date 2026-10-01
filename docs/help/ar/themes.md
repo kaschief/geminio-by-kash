@@ -8,7 +8,7 @@ keywords: سمة سمات داكن فاتح مظهر ألوان حجم الخط 
 
 # السمات والمظهر
 
-سمات مدمجة — Gitcito وNord وDracula وSolarized وGitHub وMonokai وMidnight
+سمات مدمجة — Geminio وNord وDracula وSolarized وGitHub وMonokai وMidnight
 وContrast وDaltonic — لكل واحدة نسخة فاتحة وأخرى داكنة.
 
 ![التبديل من الفاتح إلى الداكن](../../screenshots/clip-themes.webp)

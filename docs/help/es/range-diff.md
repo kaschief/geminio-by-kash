@@ -12,7 +12,7 @@ Revisaste una rama. Alguien le hizo rebase y force-push. Un diff normal ya no
 sirve de nada: después de un rebase cada commit es un commit nuevo, así que todo
 parece nuevo.
 
-`git range-diff` empareja las dos versiones commit a commit, y Gitcito lee las
+`git range-diff` empareja las dos versiones commit a commit, y Geminio lee las
 posiciones antiguas directamente del **reflog** — así que no hubo que registrar
 nada por adelantado para que esto funcione.
 

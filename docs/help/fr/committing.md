@@ -43,13 +43,13 @@ faire votre commit.
 
 ## Amender
 
-Amender réécrit le dernier commit avec ce qui est indexé. Gitcito vous montre
+Amender réécrit le dernier commit avec ce qui est indexé. Geminio vous montre
 d'abord le message existant, pour que vous soyez en train d'éditer et non de
 retaper.
 
 **Amender le commit…** sur une ligne du graphe fait la même chose pour HEAD :
 il charge le message complet, fait passer le compositeur en mode amend et lui
-donne le focus. Un HEAD déjà poussé peut toujours être amendé, mais Gitcito
+donne le focus. Un HEAD déjà poussé peut toujours être amendé, mais Geminio
 prévient que mettre à jour le distant exigera un push forcé.
 
 **Annuler le commit…** est son pendant pour un HEAD non poussé : reset mixed

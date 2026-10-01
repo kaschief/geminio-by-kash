@@ -2,7 +2,7 @@
 title: Author avatars
 category: Make it yours
 order: 103
-summary: Gravatar photos where they exist, a generated blob avatar where they do not — and a title-bar face that reacts to the repository.
+summary: Your connected GitHub photo, Gravatar photos where they exist, a generated blob avatar where they do not — and a title-bar face that reacts to the repository.
 keywords: avatar avatars gravatar blobatar author photo picture identicon face offline privacy email hash mood expression animation motion sad mad happy thinking scared unsure sick sleepy detached stash dormant
 ---
 
@@ -10,17 +10,18 @@ keywords: avatar avatars gravatar blobatar author photo picture identicon face o
 
 A commit list is a wall of names, and names are slow to scan. A picture next to
 each one turns "who wrote this" into something you answer by glance rather than
-by reading. Gitcito puts one on every author it shows: in the graph's author
+by reading. Geminio puts one on every author it shows: in the graph's author
 column, in commit details next to the author and each co-author, in the
 co-author picker while you compose, in the profile switcher, and beside each
 profile in Settings.
 
 ## Where the picture comes from
 
-Two sources, tried in that order:
+Three sources, tried in that order:
 
 | Source | When it is used |
 |---|---|
+| **Connected GitHub account** | Your profile avatar, and authors matching the account’s public or verified email addresses (including GitHub no-reply addresses). |
 | **Gravatar** | The commit email has a Gravatar account. Fetched over HTTPS, keyed on a SHA-256 hash of the lowercased email. |
 | **Generated avatar** | Everything else — no Gravatar, no network, or the lookup turned off. Drawn locally from the email, never fetched. |
 
@@ -32,15 +33,15 @@ effectively never collide. It is drawn by
 at all — a repository full of authors nobody has a Gravatar for still gets a
 full set of distinguishable faces, offline, on first paint.
 
-Because the seed is the **commit email**, an author who commits under two
-addresses gets two avatars. That is deliberate — it is the same signal the
+For generated avatars the seed is the **commit email**, so an author who commits under two
+addresses gets two generated avatars. That is deliberate — it is the same signal the
 graph's author column gives you, and it is usually how you notice a machine
 account or a misconfigured `user.email`. Fix it with
 [author attributes](attributes.md) if the two addresses really are one person.
 
 ## The face in the title bar
 
-The avatar next to your profile name is the one avatar in Gitcito that stands for
+The avatar next to your profile name is the one avatar in Geminio that stands for
 **you, in this repository, right now** — so it is the only one that reacts to the
 repository's state. It pulls a face when something is up, and holds a neutral one
 the rest of the time.
@@ -97,13 +98,14 @@ setting that removes avatars entirely.
   hash is not a secret: anyone holding a candidate email can hash it and compare.
   If a repository's author list is something you would rather not hand to a third
   party, turn the lookup off before you open it.
-- **Only Gravatar.** Avatars you uploaded to GitHub, GitLab or Bitbucket are not
-  read — those need an authenticated host API call per author, which is a lot of
-  network for a decoration.
+- **GitHub matching is limited to the connected account.** Other contributors
+  use Gravatar or generated avatars. Private account emails can be matched only
+  when the token permits reading them; public and no-reply addresses still work.
+  Display names alone are never used to assign your photo to a commit.
 - **No overrides.** You cannot pin a chosen picture to an author, and you cannot
   swap the generated style. The avatar is a function of the email and nothing
   else.
-- **A Gravatar photo has no expression.** If your profile email has one, the
+- **A photo has no expression.** If your profile email has one, the
   title bar shows the photo and no face — a photograph cannot pull a face at you.
   Turn the lookup off if you would rather have the expressive blob.
 - **The face follows the active repository only.** On a tab that is not a

@@ -2,13 +2,13 @@
 title: Wiersz poleceń
 category: Narzędzia obszaru roboczego
 order: 93
-summary: `gitcito .` otwiera repozytorium — a `gitcito doctor` odpowiada, nie otwierając niczego.
+summary: `geminio .` otwiera repozytorium — a `geminio doctor` odpowiada, nie otwierając niczego.
 keywords: cli wiersz polecen terminal shim path instalacja otworzyc katalog pojedyncza instancja doctor status repos commit-check config editor completions wait core.editor blame show search czasowniki kod wyjscia ci hook
 ---
 
 # Wiersz poleceń
 
-Z terminala zadaje się dwa rodzaje pytań, a `gitcito` odpowiada na oba.
+Z terminala zadaje się dwa rodzaje pytań, a `geminio` odpowiada na oba.
 
 Pierwsze to *„pokaż mi to”* — jesteś w klonie, coś trzeba obejrzeć, a aplikacja
 jest właściwym miejscem, żeby to zrobić. Takie wywołania otwierają okno, jak
@@ -19,14 +19,14 @@ chcący odpowiedzi i kodu wyjścia zamiast okna. Te nigdy nie uruchamiają
 aplikacji: piszą na stdout i schodzą z drogi.
 
 ```sh
-gitcito .                        # otwórz ten katalog
-gitcito blame src/api.ts -l 84   # …na blame tego wiersza
-gitcito doctor                   # bez okna: sprawdza repo, kończy się 1 przy błędzie
+geminio .                        # otwórz ten katalog
+geminio blame src/api.ts -l 84   # …na blame tego wiersza
+geminio doctor                   # bez okna: sprawdza repo, kończy się 1 przy błędzie
 ```
 
 ## Instalacja
 
-Paleta poleceń (<kbd>⌘K</kbd>) → **Zainstaluj polecenie 'gitcito' w PATH**. Na
+Paleta poleceń (<kbd>⌘K</kbd>) → **Zainstaluj polecenie 'geminio' w PATH**. Na
 macOS tworzy dowiązanie symboliczne do małego shima w `/usr/local/bin` lub
 `/opt/homebrew/bin` i prosi o uprawnienia administratora tylko wtedy, gdy żaden z
 nich nie jest dla ciebie zapisywalny. Na Linuksie trafia do `~/.local/bin`, gdzie
@@ -36,28 +36,28 @@ jeszcze wspierany.
 Następnie, opcjonalnie:
 
 ```sh
-gitcito completions zsh >> ~/.zshrc     # albo bash, albo fish
+geminio completions zsh >> ~/.zshrc     # albo bash, albo fish
 ```
 
 ## Otwieranie
 
 | Polecenie | Otwiera |
 |-----------|---------|
-| `gitcito [ścieżka]` | Repozytorium (domyślnie: bieżący katalog) |
-| `gitcito open <nazwa>` | Repozytorium po **nazwie karty** — `gitcito open api` |
-| `gitcito diff` | Niezatwierdzone zmiany |
-| `gitcito graph` | Graf commitów |
-| `gitcito show <ref>` | Jeden commit — `HEAD~2`, tag, krótki hash |
-| `gitcito blame <plik>` | Blame pliku; z `-l 84` wprost na wiersz |
-| `gitcito search <zapytanie>` | Wyszukiwanie w kodzie z wpisanym zapytaniem |
-| `gitcito stack`, `stash`, `reflog`, `conflicts`, `todos`, `chat`, `settings` | Ten panel |
-| `gitcito ci`, `clean`, `bisect`, `absorb`, `snapshots`, `insights`, `terminal` | …i tak dalej |
+| `geminio [ścieżka]` | Repozytorium (domyślnie: bieżący katalog) |
+| `geminio open <nazwa>` | Repozytorium po **nazwie karty** — `geminio open api` |
+| `geminio diff` | Niezatwierdzone zmiany |
+| `geminio graph` | Graf commitów |
+| `geminio show <ref>` | Jeden commit — `HEAD~2`, tag, krótki hash |
+| `geminio blame <plik>` | Blame pliku; z `-l 84` wprost na wiersz |
+| `geminio search <zapytanie>` | Wyszukiwanie w kodzie z wpisanym zapytaniem |
+| `geminio stack`, `stash`, `reflog`, `conflicts`, `todos`, `chat`, `settings` | Ten panel |
+| `geminio ci`, `clean`, `bisect`, `absorb`, `snapshots`, `insights`, `terminal` | …i tak dalej |
 
-`gitcito help verbs` wypisuje pełną listę. Trzy opcje działają dla wszystkich:
+`geminio help verbs` wypisuje pełną listę. Trzy opcje działają dla wszystkich:
 `-n <nazwa>` ustawia wyświetlaną nazwę karty, `-g <grupa>` umieszcza je w karcie
 grupy (tworząc ją w razie potrzeby), a `-l <n>` wybiera wiersz.
 
-Gitcito działa w **pojedynczej instancji**: uruchomienie `gitcito` przy otwartej
+Geminio działa w **pojedynczej instancji**: uruchomienie `geminio` przy otwartej
 aplikacji przekazuje żądanie temu oknu, zamiast startować drugą kopię. Ścieżka
 już otwarta — jako karta albo wewnątrz grupy — dostaje **fokus**, a nie duplikat.
 Katalog, który nie jest jeszcze repozytorium, i tak się otworzy, proponując
@@ -68,14 +68,14 @@ Katalog, który nie jest jeszcze repozytorium, i tak się otworzy, proponując
 Te polecenia wypisują wynik i kończą pracę. Żadne okno się nie otwiera, a
 aplikacja nie musi nawet działać.
 
-### `gitcito status`
+### `geminio status`
 
 Gałąź, śledzenie, przed/za, katalog roboczy, schowki oraz — jeśli repozytorium ją
-dostarcza — [listę kontrolną przed pushem z `.gitcito.json`](repo-config.md).
+dostarcza — [listę kontrolną przed pushem z `.geminio.json`](repo-config.md).
 Kończy się kodem 1, gdy w katalogu roboczym są konflikty, więc
-`gitcito status || echo zablokowane` działa.
+`geminio status || echo zablokowane` działa.
 
-### `gitcito doctor [--fix]`
+### `geminio doctor [--fix]`
 
 Wykonuje te same kontrole co panel [konfiguracji repozytorium](repo-config.md):
 wersję Node, submoduły, LFS, `core.hooksPath`, wymagane pliki. **Kończy się
@@ -83,7 +83,7 @@ kodem 1, jeśli któraś zawiedzie** — i o to chodzi: reguły, które repozyto
 deklaruje, niewiele znaczą, jeśli widzi je tylko osoba z otwartym interfejsem:
 
 ```yaml
-- run: gitcito doctor          # w CI, przed czymkolwiek kosztownym
+- run: geminio doctor          # w CI, przed czymkolwiek kosztownym
 ```
 
 `--fix` stosuje naprawy, które doktor zna (inicjalizacja submodułów, `lfs pull`,
@@ -95,59 +95,59 @@ Ostrzeżenia nie powodują niepowodzenia. Ostrzeżenie znaczy, że doktor czego�
 zdołał ustalić, a nie że coś jest źle; przerywanie na tym builda uczyniłoby ten
 plik zbyt kosztownym w przyjęciu.
 
-### `gitcito commit-check [plik]`
+### `geminio commit-check [plik]`
 
 Sprawdza opis commita. Bez argumentu czyta `.git/COMMIT_EDITMSG`; `-m "…"`
 sprawdza podany tekst. Wie, co zadeklarowało repozytorium: nieznany zakres jest
-**błędem**, gdy `.gitcito.json` wymienia zakresy, a jedynie poradą stylistyczną,
+**błędem**, gdy `.geminio.json` wymienia zakresy, a jedynie poradą stylistyczną,
 gdy ich nie wymienia. Podepnij do hooka:
 
 ```sh
 # .husky/commit-msg
-gitcito commit-check "$1"
+geminio commit-check "$1"
 ```
 
-### `gitcito config init | show | check`
+### `geminio config init | show | check`
 
-`init` czyta repozytorium i proponuje `.gitcito.json` na podstawie tego, co już
+`init` czyta repozytorium i proponuje `.geminio.json` na podstawie tego, co już
 jest — `.nvmrc`, `.gitmodules`, `.env.example` bez `.env`, zakresy commitów
 używane w historii. `--dry-run` wypisuje zamiast zapisywać. `show` drukuje
 bieżący plik; `check` waliduje go i wypisuje każde pole, które zostałoby
 odrzucone.
 
-### `gitcito repos [filtr]`
+### `geminio repos [filtr]`
 
-Każde repozytorium, które Gitcito zna — najpierw otwarte karty, potem ostatnio
+Każde repozytorium, które Geminio zna — najpierw otwarte karty, potem ostatnio
 używane — wraz z grupą. `--paths` wypisuje same ścieżki, po jednej w wierszu, do
 skryptów:
 
 ```sh
-cd "$(gitcito repos --paths api | head -1)"
+cd "$(geminio repos --paths api | head -1)"
 ```
 
-## Gitcito jako edytor gita
+## Geminio jako edytor gita
 
 ```sh
-gitcito editor install
+geminio editor install
 ```
 
-ustawia `core.editor` i `sequence.editor` na `gitcito --wait`. Od tej chwili
+ustawia `core.editor` i `sequence.editor` na `geminio --wait`. Od tej chwili
 `git commit` (bez `-m`), `git commit --amend`, `git tag -a` i `git rebase -i`
-otwierają swój plik w Gitcito zamiast w vimie, z licznikiem znaków i tymi samymi
+otwierają swój plik w Geminio zamiast w vimie, z licznikiem znaków i tymi samymi
 podpowiedziami do opisu, które pokazuje kompozytor.
 
-![Edytor, który Gitcito otwiera, gdy git go zażąda](../../screenshots/cli-edit.webp)
+![Edytor, który Geminio otwiera, gdy git go zażąda](../../screenshots/cli-edit.webp)
 
 Kluczowe jest słowo **czeka**: git jest zablokowany na tym oknie. Zatem
 
 - **Zapisz i kontynuuj** zapisuje plik z powrotem, a git idzie dalej.
 - **Anuluj** zapisuje pusty plik, co git czyta jako *przerwij*.
-- Zamknięcie okna w jakikolwiek inny sposób — Escape, tło, wyjście z Gitcito —
+- Zamknięcie okna w jakikolwiek inny sposób — Escape, tło, wyjście z Geminio —
   liczy się jako Anuluj. Terminal czekający w nieskończoność byłby o wiele
   gorszy niż opis do przepisania.
 
 Dodaj `--local`, aby ograniczyć to do jednego repozytorium, i cofnij przez
-`gitcito editor uninstall`.
+`geminio editor uninstall`.
 
 ## Czego nie zrobi
 

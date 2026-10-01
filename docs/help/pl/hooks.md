@@ -15,12 +15,12 @@ Wypisz każdy hook w repozytorium, zobacz, które są prawdziwe, a które to wci
 
 ![Menedżer hooków](../../screenshots/hooks.webp)
 
-Gitcito wykrywa własne **`core.hooksPath`** (husky i spółka) oraz konfigurację
+Geminio wykrywa własne **`core.hooksPath`** (husky i spółka) oraz konfigurację
 **frameworku pre-commit** i mówi ci, kiedy hooki mieszkają gdzie indziej niż
 w `.git/hooks` — w przeciwnym razie edytowałbyś plik, którego git nigdy nie
 uruchamia.
 
-> Hooki uruchamiają się dla commitów Gitcito dokładnie tak samo, jak dla
+> Hooki uruchamiają się dla commitów Geminio dokładnie tak samo, jak dla
 > `git commit`. Hook, który zawiedzie, blokuje commit, a jego wyjście wraca
 > w błędzie.
 

@@ -8,8 +8,8 @@ keywords: idioma idiomas lengua language languages locale locales i18n internaci
 
 # Idiomas y escritura de derecha a izquierda
 
-La interfaz de Gitcito está traducida. El idioma es un
-ajuste de Gitcito, no del sistema operativo — quien tenga macOS en inglés pero
+La interfaz de Geminio está traducida. El idioma es un
+ajuste de Geminio, no del sistema operativo — quien tenga macOS en inglés pero
 prefiera leer en japonés lo cambia aquí, y a quien tenga el sistema en hebreo
 pero quiera la app en inglés nadie le lleva la contraria.
 
@@ -51,7 +51,7 @@ que apuntan a algún sitio apuntan al contrario.
 
 El cambio es inmediato y no hace falta reiniciar.
 
-![Gitcito en árabe, con la interfaz reflejada](../../screenshots/rtl.webp)
+![Geminio en árabe, con la interfaz reflejada](../../screenshots/rtl.webp)
 
 ### Lo que deliberadamente no se refleja
 
@@ -74,7 +74,7 @@ reordenar el texto de alrededor.
 
 Esto es honesto sobre dónde se queda:
 
-- **Gitcito nunca cambia la dirección de los mensajes de commit, los nombres de
+- **Geminio nunca cambia la dirección de los mensajes de commit, los nombres de
   rama ni el contenido de los archivos.** Se muestran tal como los escribió su
   autor. Un mensaje de commit en hebreo dentro de una lista aislada como LTR se
   ve en hebreo, pero la fila que lo rodea no se da la vuelta por él.

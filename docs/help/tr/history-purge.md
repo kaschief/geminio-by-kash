@@ -59,7 +59,7 @@ Sayı sıfırsa yol yanlıştır. Bu genellikle bir yazım hatası ya da eksik b
 
 ## Yeniden yazma aslında ne yapar
 
-Gitcito her dalı ve etiketi `refs/gitcito/pre-purge/<timestamp>/…` altına
+Geminio her dalı ve etiketi `refs/gitcito/pre-purge/<timestamp>/…` altına
 kopyalar, ardından şunu çalıştırır:
 
 ```sh
@@ -111,9 +111,9 @@ Anahtarı değiştirin. Sonra temizleyin ki bir sonraki klonlayan onu bulmasın.
 - **Yola göre yeniden yazar, içeriğe göre değil.** Kendi dosyasında yaşamak
   yerine bir kaynak dosyanın içine yapıştırılmış bir gizli anahtarı kaldırmak
   bir içerik filtresi gerektirir — orası `git filter-repo --replace-text`
-  alanıdır ve Gitcito onu sarmalamaz.
+  alanıdır ve Geminio onu sarmalamaz.
 - **`filter-branch` çok büyük geçmişlerde yavaştır.** Git ile her yerde birlikte
-  gelen araç odur; Gitcito'nun onu kullanmasının nedeni de budur. On binlerce
+  gelen araç odur; Geminio'nun onu kullanmasının nedeni de budur. On binlerce
   commit'i olan bir depoda [terminaldeki](terminal.md) `git filter-repo` daha
   hızlı araçtır.
 - **Başkalarının klonları sizin deponuz değildir.** Onlar yeniden klonlayana

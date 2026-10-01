@@ -359,7 +359,7 @@ function analyzerJobs(repoPath: string): { analyzer: Analyzer; dir: string }[] {
   return jobs
 }
 
-/** The sweep Gitcito would run: one entry per analyzer per project directory. */
+/** The sweep Geminio would run: one entry per analyzer per project directory. */
 export function analyzerPlan(repoPath: string): { id: string; dir: string }[] {
   return analyzerJobs(repoPath).map((j) => ({ id: j.analyzer.id, dir: j.dir }))
 }

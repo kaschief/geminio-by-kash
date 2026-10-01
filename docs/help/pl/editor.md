@@ -13,13 +13,13 @@ naprawiasz. Odległość między zauważeniem problemu w diffie a postawieniem
 kursora na tej linii w edytorze to wyszukanie pliku i przewinięcie — za każdym
 razem.
 
-Wskaż Gitcito swój edytor raz, a ta odległość znika: kliknij linię prawym
+Wskaż Geminio swój edytor raz, a ta odległość znika: kliknij linię prawym
 przyciskiem w widoku pliku albo blame, a otworzy się tam, na tej linii.
 
 ## Wybieranie
 
 **Ustawienia → Ogólne → Zewnętrzny edytor.** Lista wypisuje edytory, które
-Gitcito potrafi znaleźć na tej maszynie — szuka najpierw polecenia każdego
+Geminio potrafi znaleźć na tej maszynie — szuka najpierw polecenia każdego
 edytora, a potem, na macOS, pakietu aplikacji w `/Applications`
 i `~/Applications`. Skanowanie uruchamia się przy każdym otwarciu Ustawień, więc
 edytor zainstalowany pięć minut temu pojawia się bez restartu.
@@ -40,7 +40,7 @@ Rozpoznawane z pudełka:
 
 **Skok do linii wymaga polecenia edytora, nie jego ikony.** Pakiet `.app` na
 macOS uruchamia się przez `open`, które przyjmuje ścieżkę i nic więcej — więc
-edytor znaleziony wyłącznie jako pakiet otwiera plik na początku, a Gitcito mówi
+edytor znaleziony wyłącznie jako pakiet otwiera plik na początku, a Geminio mówi
 o tym pod listą, zamiast udawać, że jest inaczej.
 
 Naprawa leży po stronie edytora: w VS Code *Shell Command: Install 'code'
@@ -61,7 +61,7 @@ a skok do linii zadziała.
 
 Akcje liniowe pojawiają się tylko tam, gdzie numer linii jeszcze coś znaczy:
 plik pokazany na starym commicie albo blame przewinięty do wcześniejszej rewizji
-ma linie, które już nie odpowiadają temu, co jest na dysku — więc Gitcito nie
+ma linie, które już nie odpowiadają temu, co jest na dysku — więc Geminio nie
 oferuje tam skoku, zamiast odesłać cię w złe miejsce.
 
 ## Projekty Xcode i inne pakiety
@@ -87,11 +87,11 @@ Rozpoznawane: `.xcodeproj`, `.xcworkspace`, `.xcframework`, `.framework`,
 
 **Pakiet otwiera system, nie Twój edytor.** `.xcodeproj` podany edytorowi
 tekstu otwiera się jako folder pełen property list, czego nikt klikający nie
-chciał — więc Gitcito przekazuje go temu, co system z nim kojarzy, czyli na Macu
+chciał — więc Geminio przekazuje go temu, co system z nim kojarzy, czyli na Macu
 z Xcode właśnie Xcode'owi. Wybór edytora zostaje nietknięty i nadal rządzi każdym
 zwykłym plikiem.
 
-**To konwencja nazw, nie flaga systemu plików.** Gitcito patrzy na rozszerzenie,
+**To konwencja nazw, nie flaga systemu plików.** Geminio patrzy na rozszerzenie,
 więc katalog, który przypadkiem nazwałeś `notes.app`, też się zwinie, a na
 Linuksie czy Windowsie — gdzie to zwykłe foldery — kliknięcie otworzy menedżera
 plików zamiast IDE.
@@ -117,7 +117,7 @@ nazwa pliku nigdy nie zamieni się w składnię. Cztery symbole zastępcze:
 Symbol bez wartości zabiera ze sobą swoją flagę: `--line {line} {path}`
 uruchomione bez linii staje się samą ścieżką, nigdy zwisającym `--line`, które
 zjadłoby nazwę pliku jako swój argument. Szablon bez `{line}` oznacza po prostu,
-że Gitcito nie zaproponuje dla tego edytora akcji celujących w linię.
+że Geminio nie zaproponuje dla tego edytora akcji celujących w linię.
 
 ## Czym to nie jest
 
@@ -127,5 +127,5 @@ pokazuje systemowy wybór i pamięta jedną aplikację do otwierania
 konkretny z tych dwóch, więc gdy ustawione są oba, na ikonie na końcu wiersza
 w drzewie plików wygrywa edytor; oba zostają wypisane w menu kontekstowym.
 
-Gitcito nigdy nie odpala twojego edytora samo z siebie, a zamknięcie Gitcito
+Geminio nigdy nie odpala twojego edytora samo z siebie, a zamknięcie Geminio
 nigdy go nie zamyka: edytor jest uruchamiany odczepiony, jako własny proces.

@@ -8,12 +8,12 @@ keywords: credential helper passwort https fragt wieder osxkeychain wincred mana
 
 # Credential Helper
 
-Gitcito verwaltet drei verschiedene Arten von Geheimnissen, und man nimmt
+Geminio verwaltet drei verschiedene Arten von Geheimnissen, und man nimmt
 verständlicherweise an, es sei ein und dasselbe:
 
 | | Verwaltet von |
 |---|---|
-| API-Tokens der Hoster — PRs, Issues, CI-Checks | Gitcito, in deinem [OS-Schlüsselbund](security.md) |
+| API-Tokens der Hoster — PRs, Issues, CI-Checks | Geminio, in deinem [OS-Schlüsselbund](security.md) |
 | `git@…`-Transport | Deinem [SSH-Schlüssel](ssh-keys.md), über den ssh-Agent des Systems |
 | **`https://`-Transport** | **Gits eigenem Credential Helper** |
 
@@ -54,7 +54,7 @@ sind meist die Antwort auf „Warum verhält sich ausgerechnet dieser Host ander
 | `cache` | Arbeitsspeicher, für 15 Minuten. Nichts auf der Platte |
 | `store` | **Eine Klartextdatei in deinem Home-Verzeichnis. Unverschlüsselt** |
 
-Gitcito bietet an, was auf dieser Maschine tatsächlich installiert ist,
+Geminio bietet an, was auf dieser Maschine tatsächlich installiert ist,
 markiert den, der zu deinem Betriebssystem passt, und graut den Rest aus.
 
 **Der Scope zählt.** *Für jedes Repository* schreibt in deine globale
@@ -82,7 +82,7 @@ heraus, und jeder Push scheitert an einem 401, der nichts benennt. **Vergessen**
 bittet den konfigurierten Helper, seinen Eintrag für diesen Host zu löschen —
 `git credential reject`, gits eigener dokumentierter Weg.
 
-Dabei wird unterwegs nichts gelesen: Gitcito ruft niemals `git credential fill`
+Dabei wird unterwegs nichts gelesen: Geminio ruft niemals `git credential fill`
 auf, den Befehl, der ein gültiges Passwort auf die Standardausgabe schreiben
 würde.
 
@@ -90,16 +90,16 @@ Der nächste Push fragt dich einmal, und der Helper speichert die neue Antwort.
 
 ## Grenzen, die man kennen sollte
 
-- **Das ist gits Speicher, nicht Gitcitos.** Ihn zu ändern ändert auch, was dein
+- **Das ist gits Speicher, nicht Geminios.** Ihn zu ändern ändert auch, was dein
   Terminal tut — was genau der Sinn ist, aber man sollte es wissen, bevor man
   ihn ändert.
 - **Helper auf Systemebene werden angezeigt, sind aber nicht editierbar.** Sie
   stehen in einer Konfiguration, die nur ein Administrator schreiben kann.
-- **Gitcito kann nicht auflisten, was ein Helper vorhält.** Keine
+- **Geminio kann nicht auflisten, was ein Helper vorhält.** Keine
   Credential-API gibt das preis, ohne die Geheimnisse selbst herauszugeben —
   also meldet der Dialog die Konfiguration und löscht auf Anforderung, und sonst
   nichts.
-- **Ein Token, das du Gitcito gegeben hast, ist davon getrennt.** Eines zu
+- **Ein Token, das du Geminio gegeben hast, ist davon getrennt.** Eines zu
   widerrufen rührt das andere nicht an; siehe [Sicherheit](security.md) für die
   Schlüsselbund-Seite.
 

@@ -26,7 +26,7 @@ Bir depoyu gösterin, kod tabanını anlatan kısa bir wiki yazsın.
 
 ## Yazılan sayfalar
 
-Gitcito, deponun izlediği dosyalardan bir avuç sayfa planlar — önce belgeler ve
+Geminio, deponun izlediği dosyalardan bir avuç sayfa planlar — önce belgeler ve
 manifest'ler, ardından en çok değişenler — ve her sayfayı kapsadığı dosyalardan
 yazar.
 

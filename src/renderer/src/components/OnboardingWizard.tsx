@@ -17,7 +17,7 @@ import {
 import { APP_THEMES, applyAppTheme, findAppTheme } from '../theme/themes'
 import { settingsApi, shellApi } from '../infrastructure/api'
 import { AIPage, IntegrationsPage } from './SettingsPanel'
-import gitcitoLaunch from '../assets/gitcito-launch.png'
+import geminioLaunch from '../assets/geminio-launch.png'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -103,7 +103,7 @@ function WelcomeStep({
   return (
     <div className="onboarding-welcome">
       <div className="onboarding-logo">
-        <img src={gitcitoLaunch} alt="" draggable={false} className="onboarding-art" />
+        <img src={geminioLaunch} alt="" draggable={false} className="onboarding-art" />
       </div>
       <div className="onboarding-title">{t('onboarding.welcomeTitle')}</div>
       <div className="onboarding-subtitle">{t('onboarding.welcomeSubtitle')}</div>

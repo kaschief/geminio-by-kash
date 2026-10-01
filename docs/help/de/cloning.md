@@ -63,7 +63,7 @@ den echten Fehler.
   Hinweis darunter.
 - **Beim Klonen eines lokalen Ordners** ignoriert git `--depth` normalerweise
   komplett, weil es den Objektspeicher hardlinkt, statt ihn zu übertragen.
-  Gitcito klont deshalb über eine `file://`-URL, wenn du eine flache Kopie
+  Geminio klont deshalb über eine `file://`-URL, wenn du eine flache Kopie
   eines lokalen Repositorys anforderst — so bekommst du die Tiefe, die du
   angefordert hast.
 

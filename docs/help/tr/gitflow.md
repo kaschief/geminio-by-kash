@@ -27,11 +27,11 @@ birleştirip `develop`'ı unutmak ya da yanlış dalı etiketlemek gibi.
 | `release/*` | Kararlı hâle getirilen bir sürüm, develop'tan dallanır. |
 | `hotfix/*` | Acil bir düzeltme, **main**'den dallanır — üretim develop'ı bekleyemez. |
 
-Gitcito, `git flow` komut satırı aracının kullandığı `gitflow.*` git
+Geminio, `git flow` komut satırı aracının kullandığı `gitflow.*` git
 yapılandırma anahtarlarının aynısını okur ve yazar (`gitflow.branch.master`,
 `gitflow.prefix.feature`, …). Birinin daha önce `git flow init` çalıştırdığı bir
 depo anında tanınır ve burada kurulan bir depo sonrasında komut satırıyla da
-çalışır. Gitcito baştan sona düz git komutları çalıştırır — aracın kurulu olması
+çalışır. Geminio baştan sona düz git komutları çalıştırır — aracın kurulu olması
 gerekmez.
 
 **Kur**, bu anahtarları yazar ve entegrasyon dalı henüz yoksa onu yayınlanan
@@ -55,7 +55,7 @@ Ad sizin yazdığınızdır; önek yerleşimden gelir.
 **Bitir**, otomatikleştirmeye değen kısımdır, çünkü hepsi eksiksiz gerçekleşmesi
 gereken birkaç adımdan oluşur:
 
-| Tür | Gitcito ne yapar |
+| Tür | Geminio ne yapar |
 |------|-------------------|
 | Özellik | `--no-ff` ile develop'a birleştirir, dalı siler, sizi develop'ta bırakır |
 | Sürüm | main'e birleştirir, etiketler, develop'a birleştirir, dalı siler, sizi develop'ta bırakır |
@@ -77,7 +77,7 @@ işaretini kaldırın; varsayılandan fazlasını istiyorsanız bir etiket mesaj
   kaybetme biçimidir.
 - **Çakışan bir birleştirme her şeyi geri alır.** main'e birleştirme başarılı
   olup develop'a birleştirme çakışırsa, aksi hâlde yarım kalmış bir sürümle baş
-  başa kalırdınız. Gitcito her dalı bulunduğu yere geri döndürür ve çakışmayı
+  başa kalırdınız. Geminio her dalı bulunduğu yere geri döndürür ve çakışmayı
   bildirir. O dalı elle birleştirin, [çakışma çözücüde](conflicts.md) çözün ve
   akışı elinizle bitirmek size kalsın.
 - **Asla push yapmaz.** Bitirme yereldir. Hazır olduğunuzda main'i, develop'ı ve

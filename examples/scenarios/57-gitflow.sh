@@ -16,7 +16,7 @@ Branch layout:
 - `release/1.1.0` — ready to finish: merges into main, gets tagged, merges back
 
 The prefixes live in `git config gitflow.*`, the same keys the `git flow` CLI
-uses, so Gitcito and the CLI read the same repository the same way.
+uses, so Geminio and the CLI read the same repository the same way.
 EOF
 cat > "$R/app.js" <<'EOF'
 function main() {

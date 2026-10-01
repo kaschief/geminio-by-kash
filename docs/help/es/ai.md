@@ -33,10 +33,10 @@ aparentarlo. A Gemini se llega por el endpoint compatible con OpenAI de Google.
 
 Elige el proveedor **CLI local** para responder con una CLI de agente ya
 instalada y con sesión iniciada en esta máquina — `claude`, `gemini` o `codex`.
-Gitcito ejecuta el binario con tu indicación y lee su respuesta; no hay clave de
+Geminio ejecuta el binario con tu indicación y lee su respuesta; no hay clave de
 API que pegar ni token que guardar.
 
-Gitcito solo ejecuta un comando que tú configuraste como cuenta, y siempre con
+Geminio solo ejecuta un comando que tú configuraste como cuenta, y siempre con
 una lista de argumentos en vez de un shell, así que nada de un diff o del nombre
 de una rama puede interpretarse como un comando.
 
@@ -63,7 +63,7 @@ Al actualizar desde una versión anterior a las cuentas, esto se muestra una vez
 ## Modelos
 
 Las listas de modelos vienen del propio proveedor y se guardan en caché un día;
-**Obtener modelos** actualiza una al instante. Bajo la lista, Gitcito dice de
+**Obtener modelos** actualiza una al instante. Bajo la lista, Geminio dice de
 dónde salió: en directo, de caché (con la fecha), o la lista integrada de
 reserva y por qué.
 
@@ -76,7 +76,7 @@ el proveedor no la liste.
 Un proveedor al que aún no le has dado clave, o que está inalcanzable, recurre a
 una pequeña lista integrada en vez de a un desplegable vacío.
 
-Ningún proveedor publica una lista ordenada ni curada, así que el criterio es de Gitcito: las instantáneas con fecha se pliegan sobre el modelo del que son instantánea (`gpt-4o` cubre `gpt-4o-2024-08-06`), y lo que queda va ordenado de más nuevo a más viejo en vez de alfabéticamente. **Mostrar todos los modelos**, al final de la lista, devuelve todo lo que envió el proveedor.
+Ningún proveedor publica una lista ordenada ni curada, así que el criterio es de Geminio: las instantáneas con fecha se pliegan sobre el modelo del que son instantánea (`gpt-4o` cubre `gpt-4o-2024-08-06`), y lo que queda va ordenado de más nuevo a más viejo en vez de alfabéticamente. **Mostrar todos los modelos**, al final de la lista, devuelve todo lo que envió el proveedor.
 
 ## Qué puede hacer
 
@@ -95,7 +95,7 @@ Ningún proveedor publica una lista ordenada ni curada, así que el criterio es 
 ## Anclada, no adivinando
 
 La revisión ve el diff como **hunks etiquetados** y solo puede citar esas
-etiquetas; después Gitcito resuelve cada etiqueta a un archivo y una línea
+etiquetas; después Geminio resuelve cada etiqueta a un archivo y una línea
 reales. Un modelo que se invente una ubicación es **rechazado y se le vuelve a
 preguntar**, así que los hallazgos siempre apuntan a código que existe.
 

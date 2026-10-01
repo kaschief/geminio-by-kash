@@ -8,7 +8,7 @@ keywords: accessibilité accessibility a11y lecteur d'écran VoiceOver NVDA navi
 
 # Accessibilité
 
-Gitcito vise à être utilisable sans souris et lisible par un lecteur d'écran.
+Geminio vise à être utilisable sans souris et lisible par un lecteur d'écran.
 Cette page dit ce que cela signifie concrètement — et où sont les limites.
 
 ## Clavier

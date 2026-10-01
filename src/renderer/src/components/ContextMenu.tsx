@@ -139,13 +139,16 @@ export function ContextMenu(): React.JSX.Element {
       if (ref.current && !ref.current.contains(target)) closeContextMenu()
     }
     const onKey = (e: KeyboardEvent): void => {
-      if (e.key === 'Escape') closeContextMenu()
+      if (e.key === 'Escape' && useUIStore.getState().contextMenu) {
+        e.preventDefault()
+        closeContextMenu()
+      }
     }
-    window.addEventListener('mousedown', onDown)
+    window.addEventListener('pointerdown', onDown, true)
     window.addEventListener('keydown', onKey)
     window.addEventListener('blur', closeContextMenu)
     return () => {
-      window.removeEventListener('mousedown', onDown)
+      window.removeEventListener('pointerdown', onDown, true)
       window.removeEventListener('keydown', onKey)
       window.removeEventListener('blur', closeContextMenu)
     }

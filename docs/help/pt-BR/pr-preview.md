@@ -28,7 +28,7 @@ seu disco.
 | Bitbucket Cloud, Bitbucket Server | `refs/pull-requests/<n>/from` |
 | Azure DevOps | `refs/pull/<n>/merge` |
 
-O Gitcito sonda os quatro num único `ls-remote`, então uma forja desconhecida ou
+O Geminio sonda os quatro num único `ls-remote`, então uma forja desconhecida ou
 auto-hospedada funciona desde que siga uma dessas convenções.
 
 ## Abrindo
@@ -47,7 +47,7 @@ auto-hospedada funciona desde que siga uma dessas convenções.
 
 **Pull request** — o número, ou uma URL colada do navegador. `7`, `#7` e
 `https://github.com/owner/repo/pull/7` todos funcionam; os formatos de URL do
-GitLab, Bitbucket e Azure DevOps também. Aperte **Encontrar** e o Gitcito reporta a
+GitLab, Bitbucket e Azure DevOps também. Aperte **Encontrar** e o Geminio reporta a
 ref que resolveu e o commit para o qual ela aponta, antes de qualquer coisa ser
 buscada.
 
@@ -67,7 +67,7 @@ qual você não consegue ir embora não é uma pré-visualização.
 
 Pré-visualizar o mesmo pull request duas vezes reaproveita a mesma branch, movendo-a
 para a nova cabeça — útil quando o autor envia uma correção enquanto você está
-testando. Quando aquela branch já existe, o Gitcito diz isso e pergunta antes de
+testando. Quando aquela branch já existe, o Geminio diz isso e pergunta antes de
 resetá-la, porque qualquer commit que more só ali seria perdido.
 
 ## O que ele não vai fazer

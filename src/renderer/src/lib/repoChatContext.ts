@@ -10,9 +10,9 @@ import { accountLabel } from '../../../shared/aiAccounts'
  */
 
 /** Internal drags carry a repo-relative path (the file tree already sets it). */
-export const CHAT_PATH_MIME = 'application/x-gitcito-path'
+export const CHAT_PATH_MIME = 'application/x-geminio-path'
 /** Commit rows carry their hash on their own type, never the path one. */
-export const CHAT_COMMIT_MIME = 'application/x-gitcito-commit'
+export const CHAT_COMMIT_MIME = 'application/x-geminio-commit'
 
 export const MAX_CHAT_ATTACHMENTS = 8
 

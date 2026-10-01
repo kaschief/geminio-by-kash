@@ -29,14 +29,14 @@ repozytorium…** na dole otwiera launcher.
 
 | Akcja | Efekt |
 |---|---|
-| **Utwórz alias…** / **Zmień alias…** | Tylko nazwa wyświetlana. Gitcito nigdy nie zmienia nazwy folderu na dysku ani go nie przenosi. Ten sam alias podąża za repozytorium przez karty, grupy i przestrzenie robocze. |
+| **Utwórz alias…** / **Zmień alias…** | Tylko nazwa wyświetlana. Geminio nigdy nie zmienia nazwy folderu na dysku ani go nie przenosi. Ten sam alias podąża za repozytorium przez karty, grupy i przestrzenie robocze. |
 | **Usuń alias** | Widoczne, gdy alias istnieje. Przywraca nazwę folderu. |
 | **Pokaż worktree** | Ustawia fokus na tym repozytorium i otwiera sekcję worktree w panelu bocznym. |
 | **Nowe worktree…** | Ten sam dialog tworzenia worktree co z gałęzi. Nieaktywne, gdy ścieżka nie istnieje albo trwa merge/cherry-pick/rebase/revert. |
 | **Kopiuj nazwę repozytorium** | Kopiuje kanoniczną nazwę folderu, nie alias. |
 | **Kopiuj ścieżkę repozytorium** | Kopiuje ścieżkę bezwzględną. |
 | **Zobacz na GitHubie** | Origin, jeśli to github.com, w przeciwnym razie pierwszy dający się sparsować zdalny GitHub. Nieaktywne, gdy żadnego nie da się wyprowadzić. |
-| **Otwórz w terminalu** | Otwiera terminal Gitcito z tym repozytorium jako katalogiem roboczym. |
+| **Otwórz w terminalu** | Otwiera terminal Geminio z tym repozytorium jako katalogiem roboczym. |
 | **Pokaż w Finderze / Eksploratorze plików** | Podświetla folder repozytorium w systemowym menedżerze plików. |
 | **Otwórz w edytorze zewnętrznym** | Edytor skonfigurowany w Ustawieniach. Widoczne, ale nieaktywne, dopóki żaden nie jest ustawiony. |
 | **Usuń…** | Zamyka kartę albo wyrzuca chip z grupy. Używa tego samego ostrzeżenia o niezacommitowanej pracy co przycisk **×**. Nigdy nie kasuje plików z dysku. |

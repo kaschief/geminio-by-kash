@@ -10,7 +10,7 @@ keywords: avatar avatare gravatar blobatar autor foto bild identicon gesicht off
 
 Eine Commit-Liste ist eine Wand aus Namen, und Namen liest man langsam. Ein Bild
 neben jedem macht aus „wer hat das geschrieben“ eine Frage, die man mit einem Blick
-beantwortet. Gitcito gibt jedem angezeigten Autor eines: in der Autorenspalte des
+beantwortet. Geminio gibt jedem angezeigten Autor eines: in der Autorenspalte des
 Graphen, in den Commit-Details neben Autor und jedem Co-Autor, in der Co-Autoren-
 Auswahl beim Schreiben, im Profilwechsler und neben jedem Profil in den
 Einstellungen.
@@ -40,7 +40,7 @@ eine falsch gesetzte `user.email` auf. Korrigiere es mit
 
 ## Das Gesicht in der Titelleiste
 
-Der Avatar neben deinem Profilnamen ist der einzige Avatar in Gitcito, der für
+Der Avatar neben deinem Profilnamen ist der einzige Avatar in Geminio, der für
 **dich, in diesem Repository, jetzt** steht — also der einzige, der auf den Zustand
 des Repositorys reagiert. Er zieht ein Gesicht, wenn etwas los ist, und bleibt sonst
 neutral.

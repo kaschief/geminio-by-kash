@@ -8,8 +8,8 @@ keywords: sprache sprachen language languages locale locales i18n internationali
 
 # Sprachen & Rechts-nach-links
 
-Gitcitos Oberfläche ist übersetzt. Die Sprache ist eine
-Einstellung von Gitcito, keine des Betriebssystems — eine Entwicklerin auf einer
+Geminios Oberfläche ist übersetzt. Die Sprache ist eine
+Einstellung von Geminio, keine des Betriebssystems — eine Entwicklerin auf einer
 englischen macOS-Installation, die lieber Japanisch liest, stellt das hier ein,
 und ein Entwickler auf einem hebräischen System, der die App auf Englisch
 bevorzugt, wird nicht überstimmt.
@@ -52,7 +52,7 @@ irgendwohin zeigen, zeigen in die andere Richtung.
 
 Der Wechsel ist sofort wirksam und braucht keinen Neustart.
 
-![Gitcito auf Arabisch, mit gespiegeltem Layout](../../screenshots/rtl.webp)
+![Geminio auf Arabisch, mit gespiegeltem Layout](../../screenshots/rtl.webp)
 
 ### Was bewusst nicht gespiegelt wird
 
@@ -75,7 +75,7 @@ kann.
 
 Hier ist ehrlich gesagt, wo es aufhört:
 
-- **Commit-Nachrichten, Branch-Namen und Dateiinhalte werden von Gitcito
+- **Commit-Nachrichten, Branch-Namen und Dateiinhalte werden von Geminio
   niemals umgerichtet.** Sie werden so gezeigt, wie ihre Autorin sie geschrieben
   hat. Eine hebräische Commit-Nachricht in einer LTR-isolierten Liste erscheint
   als Hebräisch, aber die umgebende Zeile kippt nicht mit.

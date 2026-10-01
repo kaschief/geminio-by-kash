@@ -9,7 +9,7 @@ keywords: sign signing gpg ssh x509 verified signature badge trust 署名 検証
 # 署名付きコミット
 
 署名はリポジトリごとに有効にします（**設定 → リポジトリの歯車**）。GPG、SSH、
-X.509 のいずれかを、選んだ鍵とともに使えます。Gitcito はそのリポジトリに
+X.509 のいずれかを、選んだ鍵とともに使えます。Geminio はそのリポジトリに
 `commit.gpgsign`、`gpg.format`、`user.signingkey` を書き込みます — 他のどのツール
 も読む、まったく同じ設定です。
 

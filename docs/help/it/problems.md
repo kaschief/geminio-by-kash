@@ -10,7 +10,7 @@ keywords: problemi analizzatore diagnostica errori avvisi lint tsc typescript es
 
 Ogni progetto porta già con sé uno strumento che dice cosa non va — `tsc`,
 `dart analyze`, ESLint, Clippy, `go vet`, Ruff. Quello che nessuno dice è se sia
-**il tuo** diff ad aver introdotto i quaranta avvisi appena stampati. Gitcito sa
+**il tuo** diff ad aver introdotto i quaranta avvisi appena stampati. Geminio sa
 quali file sono sporchi, quindi la stessa lista risponde a quella domanda con un
 interruttore.
 
@@ -23,7 +23,7 @@ una riga apre il file esattamente lì. Prima della prima scansione mostra tratti
 
 ## Cosa esegue
 
-| Se il repository ha | Gitcito esegue |
+| Se il repository ha | Geminio esegue |
 |---------------------|----------------|
 | `pubspec.yaml` | `dart analyze --format=machine` |
 | `tsconfig.json` | `tsc --noEmit` |
@@ -49,7 +49,7 @@ strumento viene ricondotto a una sola forma, deduplicato e ordinato: due
 analizzatori che segnalano la stessa riga producono una riga sola.
 
 **Niente parte da solo.** `tsc --noEmit` su un repository grande sono decine di
-secondi, e questi comandi sono la toolchain del repository, non di Gitcito.
+secondi, e questi comandi sono la toolchain del repository, non di Geminio.
 Partono quando apri il pannello o premi aggiorna, mai da soli. È anche il motivo
 per cui la lista è un’istantanea: modifica un file e resta vecchia finché non la
 rilanci.
@@ -62,7 +62,7 @@ nella barra di stato e il suo comando.
 **L’output generato viene scartato.** Uno strumento puntato sulla radice del
 progetto analizza tutto ciò che trova, e ciò include `.next/build/chunks`, un
 `dist` impacchettato, una copia vendorizzata — centinaia di lamentele su codice
-scritto da una macchina che seppelliscono le poche sul tuo. Gitcito chiede a git
+scritto da una macchina che seppelliscono le poche sul tuo. Geminio chiede a git
 quali file sono ignorati e scarta quelli, ma mai un file *tracciato*: committare
 l’output generato è una scelta, e `git check-ignore` la rispetta. `node_modules`
 se ne va comunque.

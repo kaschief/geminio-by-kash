@@ -45,7 +45,7 @@ new_repo "$R"
 cat > "$R/README.md" <<'EOF'
 # submodule-states
 
-A superproject whose submodules demonstrate every Gitcito status badge:
+A superproject whose submodules demonstrate every Geminio status badge:
 - libs/core  — in-sync (clean)
 - libs/ui    — modified (checked out off the recorded commit)
 - libs/api   — uninitialized (deinitialized; use "Update" to check it out)

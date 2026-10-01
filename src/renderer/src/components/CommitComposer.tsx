@@ -123,7 +123,7 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
     histIdx.current = -1
     setSummary(applyCcType(summary, ty))
   }
-  // Scopes the repository itself declares in `.gitcito.json`. When it lists
+  // Scopes the repository itself declares in `.geminio.json`. When it lists
   // them, the composer stops being a free-text field and offers the real set —
   // which is the difference between `feat(renderer)` and `feat(rendererr)`.
   const repoConfig = repo.config?.config ?? null
@@ -240,6 +240,10 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
   const unstagedRef = useRef<HTMLDivElement>(null)
   const stagedRef = useRef<HTMLDivElement>(null)
   const [splitDragging, setSplitDragging] = useState(false)
+  const listsRef = useRef<HTMLDivElement>(null)
+  const messageRef = useRef<HTMLDivElement>(null)
+  const messageDragCleanup = useRef<(() => void) | null>(null)
+  useEffect(() => () => messageDragCleanup.current?.(), [])
 
   const status = repo.status
   const staged = status?.staged ?? []
@@ -448,6 +452,37 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
     window.addEventListener('pointerup', up)
   }
 
+  const startMessageDrag = (e: React.PointerEvent<HTMLDivElement>): void => {
+    if (e.button !== 0 || !messageRef.current || !listsRef.current) return
+    e.preventDefault()
+    messageDragCleanup.current?.()
+    e.currentTarget.setPointerCapture(e.pointerId)
+    const startY = e.clientY
+    const height = messageRef.current.offsetHeight
+    const max = Math.max(160, height + listsRef.current.offsetHeight - 112)
+    const previousCursor = document.body.style.cursor
+    const previousSelect = document.body.style.userSelect
+    document.body.style.cursor = 'row-resize'
+    document.body.style.userSelect = 'none'
+    const move = (ev: PointerEvent): void => {
+      setLayout({ composerMessageHeight: Math.max(160, Math.min(max, height + startY - ev.clientY)) })
+    }
+    const stop = (): void => {
+      document.body.style.cursor = previousCursor
+      document.body.style.userSelect = previousSelect
+      window.removeEventListener('pointermove', move)
+      window.removeEventListener('pointerup', stop)
+      window.removeEventListener('pointercancel', stop)
+      window.removeEventListener('blur', stop)
+      messageDragCleanup.current = null
+    }
+    messageDragCleanup.current = stop
+    window.addEventListener('pointermove', move)
+    window.addEventListener('pointerup', stop)
+    window.addEventListener('pointercancel', stop)
+    window.addEventListener('blur', stop)
+  }
+
   const currentFile = fileView && fileView.repoPath === path && fileView.source.type === 'wip' ? fileView.file : null
 
   const handleClick = (list: ListName) => (file: FileEntry, e: React.MouseEvent) => {
@@ -577,7 +612,7 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
     e.preventDefault()
     const targets = pathsFor(list, file)
     const targetFiles = files.filter((f) => targets.includes(f.path))
-    const label = targets.length > 1 ? `${targets.length} files` : `"${file.path}"`
+    const label = targets.length > 1 ? interp(t('composer.nFiles'), { n: targets.length }) : `"${file.path}"`
     useUIStore.getState().openContextMenu(e.clientX, e.clientY, [
       list === 'staged'
         ? { label: targets.length > 1 ? interp(t('composer.unstageFiles'), { n: targets.length }) : t('composer.unstageFile'), onClick: () => void repoActions.unstage(path, targets) }
@@ -917,7 +952,7 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
         <MatchSummary hits={contentHits} label={(n, files) => interp(t('search.summary'), { n, files })} />
       )}
 
-      <div className={`composer-lists${splitDragging ? ' dragging' : ''}`}>
+      <div ref={listsRef} className={`composer-lists${splitDragging ? ' dragging' : ''}`}>
         {conflicted.length > 0 && (
           <div className={`stage-section conflict-section${layout.composerConflictedCollapsed ? ' collapsed' : ''}`}>
             <div
@@ -1155,7 +1190,14 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
         </div>
       </div>
 
-      <div className="commit-box">
+      <div
+        className="resize-handle rh-y composer-message-rh"
+        onPointerDown={startMessageDrag}
+        role="separator"
+        aria-orientation="horizontal"
+        aria-label={t('composer.resizeMessage')}
+      />
+      <div ref={messageRef} className="commit-box" style={{ height: layout.composerMessageHeight ?? undefined }}>
         <div className="commit-summary-row">
           <button
             type="button"

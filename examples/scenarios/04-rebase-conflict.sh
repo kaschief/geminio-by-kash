@@ -76,6 +76,6 @@ EOF
 git -C "$R" add -A && git -C "$R" commit -qm "main: upgrade utils — date-fns + Intl"
 
 git -C "$R" checkout -q feature
-# left on feature; user rebases onto main in Gitcito
+# left on feature; user rebases onto main in Geminio
 
 summary "rebase-conflict" "rebase 'feature' onto main ⇒ conflicts on api.ts + utils.ts"

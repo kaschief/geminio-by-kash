@@ -18,7 +18,7 @@ wypakowania i własnego odczepionego HEAD, żeby się w tym nie pogubić.
 
 `⌘K` → **Subtree**.
 
-![Wciągnięty katalog znaleziony w historii, ze źródłem, które Gitcito dla niego pamięta](../../screenshots/subtree.webp)
+![Wciągnięty katalog znaleziony w historii, ze źródłem, które Geminio dla niego pamięta](../../screenshots/subtree.webp)
 
 ## Haczyk, o którym nikt nie wspomina
 
@@ -27,11 +27,11 @@ wypisujący każdy adres i ścieżkę. Subtree nie ma nic — tylko stopkę
 `git-subtree-dir:` na commicie, który wykonał import.
 
 Repozytorium może więc zawierać subtree i nie dawać ci żadnego sposobu, żeby
-sprawdzić, skąd ono przyszło. Gitcito robi, co może:
+sprawdzić, skąd ono przyszło. Geminio robi, co może:
 
 - Lista jest odkrywana z historii, przez czytanie tych stopek. Każde subtree
   dodane przez kogokolwiek i jakimkolwiek narzędziem się pojawia.
-- **Repozytorium źródłowe i referencja** są pamiętane przez Gitcito,
+- **Repozytorium źródłowe i referencja** są pamiętane przez Geminio,
   w konfiguracji gita tego repozytorium. Subtree odkryte z historii startuje
   z pustymi polami — wypełnij je raz, a od tej pory pull i push będą działać.
 
@@ -67,15 +67,15 @@ subtree.
 ## Ograniczenia warte wiedzy
 
 - **Push jest wolny.** Za każdym razem przelicza historię katalogu od zera. Na
-  dużym repozytorium to sekundy do minut, a nie natychmiast, i Gitcito może
+  dużym repozytorium to sekundy do minut, a nie natychmiast, i Geminio może
   jedynie na to czekać.
 - **Pull to merge**, więc może wejść w konflikt jak każdy merge — lądujesz
   [w edytorze konfliktów](conflicts.md).
 - **`git subtree` to skrypt z contrib**, nie wbudowane polecenie gita. Okrojona
-  instalacja gita może go nie mieć; Gitcito mówi to wprost, zamiast podawać
+  instalacja gita może go nie mieć; Geminio mówi to wprost, zamiast podawać
   dalej „'subtree' is not a git command".
 - **Zesquashowanej historii nie da się później od-squashować.** Tamte commity
   nigdy nie zostały zaimportowane.
-- Gitcito nie zamienia podmodułu w subtree ani odwrotnie.
+- Geminio nie zamienia podmodułu w subtree ani odwrotnie.
 
 Zobacz też: [Merge i rebase](merging.md) · [Hydraulika z interfejsem](lfs-sparse.md)

@@ -21,7 +21,7 @@ la dejaste, sin hacer stash.
   uno en una carpeta hermana y abrirlo como pestaña.
 - Una rama solo puede vivir en un worktree a la vez, así que hacer checkout de
   una rama que ya tiene otro worktree no puede funcionar: git se niega con
-  *already used by worktree at …*. Gitcito te lleva allí en su lugar: el menú de
+  *already used by worktree at …*. Geminio te lleva allí en su lugar: el menú de
   la rama dice *Ir a `x` en su worktree*, y el doble clic en la fila abre la
   pestaña de ese worktree en vez de fallar.
 

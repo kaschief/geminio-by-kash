@@ -15,6 +15,10 @@ correctly and API calls use the right account.
 Useful when the same machine does work and personal repositories, or when you
 have two GitHub accounts.
 
+The active profile's connected GitHub photo appears in the title bar and
+Settings, even when the profile has no explicit Git email. The title bar is
+an account indicator; profile management lives in Settings.
+
 ![A profile: git identity on one side, its integration tokens on the other](../screenshots/settings-profiles.webp)
 
 ## Per-repository binding

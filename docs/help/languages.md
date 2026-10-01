@@ -8,8 +8,8 @@ keywords: language languages locale locales i18n internationalization translatio
 
 # Languages & right-to-left
 
-Gitcito's interface is translated. The language is a
-Gitcito setting, not an OS one — a developer on an English macOS install who
+Geminio's interface is translated. The language is a
+Geminio setting, not an OS one — a developer on an English macOS install who
 would rather read Japanese sets it here, and a developer on a Hebrew system who
 prefers the app in English is not overruled.
 
@@ -49,7 +49,7 @@ panels and toolbars reverse, icons that point somewhere point the other way.
 
 Switching is immediate and needs no restart.
 
-![Gitcito in Arabic, with the layout mirrored](../screenshots/rtl.webp)
+![Geminio in Arabic, with the layout mirrored](../screenshots/rtl.webp)
 
 ### What deliberately does not mirror
 
@@ -72,7 +72,7 @@ commit message, a filename — cannot reorder the text around it.
 This is honest about where it stops:
 
 - **Commit messages, branch names and file contents are never re-directed by
-  Gitcito.** They are shown as their author wrote them. A Hebrew commit message
+  Geminio.** They are shown as their author wrote them. A Hebrew commit message
   in an LTR-isolated list renders as Hebrew, but the surrounding row does not
   flip to accommodate it.
 - **Third-party surfaces keep their own direction** — the terminal is xterm,

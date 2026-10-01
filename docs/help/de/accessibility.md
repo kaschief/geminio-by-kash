@@ -8,7 +8,7 @@ keywords: barrierefreiheit accessibility a11y screenreader VoiceOver NVDA tastat
 
 # Barrierefreiheit
 
-Gitcito soll ohne Maus bedienbar und für einen Screenreader lesbar sein. Diese
+Geminio soll ohne Maus bedienbar und für einen Screenreader lesbar sein. Diese
 Seite sagt, was das konkret bedeutet — und wo die Grenzen liegen.
 
 ## Tastatur

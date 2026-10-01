@@ -1,7 +1,7 @@
 /**
  * External diff and merge tools.
  *
- * Gitcito does not keep its own table of Kaleidoscope/Beyond Compare/Meld
+ * Geminio does not keep its own table of Kaleidoscope/Beyond Compare/Meld
  * invocations: git already ships one, knows which of them are installed, and
  * lets a user add their own with `difftool.<name>.cmd`. So the whole feature is
  * a reader for `git difftool --tool-help` plus two commands. Anything the user

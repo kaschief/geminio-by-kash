@@ -10,7 +10,7 @@ keywords: commit bewerken edit herschrijven rewrite geschiedenis history amend v
 
 De typfout zit in een commit van drie weken geleden. De gebruikelijke oplossing is
 een interactieve rebase: stoppen bij de commit, bewerken, doorgaan, bidden. De
-oplossing van Gitcito: rechtsklik op de commit, **Deze commit bewerken**, pas de
+oplossing van Geminio: rechtsklik op de commit, **Deze commit bewerken**, pas de
 tekst aan, klaar. De penknop in het paneel met commitdetails opent dezelfde
 editor.
 

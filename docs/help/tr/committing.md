@@ -43,12 +43,12 @@ engellemez.
 
 ## Amend
 
-Amend, son commit'i hazırlanmış olan neyse onunla yeniden yazar. Gitcito size
+Amend, son commit'i hazırlanmış olan neyse onunla yeniden yazar. Geminio size
 önce mevcut mesajı gösterir; böylece baştan yazmak yerine düzenlemiş olursunuz.
 
 **Commit’i düzelt…** grafikteki bir satırda HEAD için aynı şeyi yapar: mesajın
 tamamını yükler, besteci panelini amend kipine alır ve ona odaklanır. Zaten
-push edilmiş bir HEAD yine de düzeltilebilir; ama Gitcito, uzak depoyu
+push edilmiş bir HEAD yine de düzeltilebilir; ama Geminio, uzak depoyu
 güncellemenin bir force push gerektireceği konusunda uyarır.
 
 **Commit’i geri al…** ise push edilmemiş bir HEAD için olan kardeşidir: üst

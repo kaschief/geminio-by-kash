@@ -2,7 +2,7 @@
 title: Depolar
 category: Eşitleme ve çoklu depo
 order: 52
-summary: Gitcito'nun bildiği her depo, açık olsun olmasın, tek aranabilir listede.
+summary: Geminio'nun bildiği her depo, açık olsun olmasın, tek aranabilir listede.
 keywords: depolar kayıt tüm depolar favoriler yıldız son tarama klasör göz at bul aç yönet depo yönetimi renk bölüm ton vurgu çalışma alanları klasörlerden ağaç üret toplu içe aktarma repositories registry favourites starred recent scan folder workspaces
 ---
 
@@ -11,7 +11,7 @@ keywords: depolar kayıt tüm depolar favoriler yıldız son tarama klasör göz
 [Komuta merkezi](mission-control.md) "açık depolarımın hangisinin bana
 ihtiyacı var?" sorusunu yanıtlar. Yalnızca etkin çalışma alanının sekmelerini
 bilir. Depolar başka bir soruyu yanıtlar: **o depo nerede, ve herhangi bir
-yerde açık mı?** Gitcito'nun hiç gördüğü her şeyi kapsar. Her çalışma alanı,
+yerde açık mı?** Geminio'nun hiç gördüğü her şeyi kapsar. Her çalışma alanı,
 her sekme ve işaret ettiğiniz klasörleri tarayarak buldukları.
 
 ![Depolar sayfası: açık, favori, son ve çalışma alanı depoları için renkli
@@ -62,7 +62,7 @@ Bilmeye değer üç şey:
   renkleri alır ve bir çalışma alanı eklemek üsttekileri asla yeniden
   boyamaz. Yalnızca değiştirdiğiniz renkler saklanır.
 - Renk **bu sayfaya özgüdür**. Burada bir çalışma alanının bölümünü boyamak
-  Gitcito'nun geri kalanında o alan hakkında hiçbir şey söylemez. Sekme
+  Geminio'nun geri kalanında o alan hakkında hiçbir şey söylemez. Sekme
   rengi ayrı bir ayardır.
 - Renk, tam güçle uygulanmak yerine yüzeyin düşük bir yüzdesine **karıştırılır**,
   böylece doygun bir seçim açık ve koyu temalarda okunabilir bir arka plan
@@ -72,8 +72,8 @@ On bölümden fazlasında palet tekrarlanır, iki başlık aynı tonu paylaşabi
 
 ## Bir depoyu ne tanınır kılar
 
-Burada bir satır, Gitcito onu bir noktada **açtığında** veya bir **tarama
-klasörünün** altında bulduğunda vardır. Diskte, Gitcito'ya hiç söylemediğiniz
+Burada bir satır, Geminio onu bir noktada **açtığında** veya bir **tarama
+klasörünün** altında bulduğunda vardır. Diskte, Geminio'ya hiç söylemediğiniz
 bir yerde durduğu için hiçbir şey dizine alınmaz.
 
 Bu sayfayı açmak, şu anda **bir sekmede açık** olanı da dizinler, böylece
@@ -103,7 +103,7 @@ liste bir yığın değil bir tablo gibi okunur.
 
 Sondaki eylemler dururken görünür, üzerine gelince değil: **sekmede aç**,
 ve sağ tıkla aynı [depo bağlam menüsünü](repo-menu.md) açan bir **⋮**. Bu,
-Gitcito'nun her yerinde kullanılan menüdür, bu sayfaya özel iki girdiyle
+Geminio'nun her yerinde kullanılan menüdür, bu sayfaya özel iki girdiyle
 genişletilmiştir:
 
 | Eylem | Ne yapar |
@@ -152,7 +152,7 @@ Tekrarlamak güvenlidir. İkinci bir tarama **ekler ve asla silmez**:
 - Yeni depolar eşleşen çalışma alanına eklenir.
 - Elle taşıdığınız, yeniden adlandırdığınız veya çıkardığınız depolar
   bıraktığınız gibi kalır.
-- **Yeniden adlandırdığınız** bir çalışma alanı yine tanınır. Gitcito
+- **Yeniden adlandırdığınız** bir çalışma alanı yine tanınır. Geminio
   geldiği klasörü hatırlar, bu yüzden kopya yaratmak yerine birleştirir.
 - Diskten silinen bir depo sekmesini tutar ve eksik görünür.
 
@@ -208,7 +208,7 @@ toplu pull'u. Araç çubuğundan **tek** bir depoya pull yapmak etkilenmez,
 ## Eylem çubuğu
 
 **Klasör aç…**, **Klonla…** ve **Tarama klasörü ekle…**. Bir depoyu
-Gitcito'nun kaydına getirmenin üç yolu, zaten orada olanı aradığınız aynı
+Geminio'nun kaydına getirmenin üç yolu, zaten orada olanı aradığınız aynı
 sayfadan.
 
 ## WIP özeti

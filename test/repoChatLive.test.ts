@@ -17,11 +17,11 @@ live('prepares a license file action through an OpenAI-compatible provider', asy
   const model = process.env.GITCITO_LIVE_MODEL
   expect(endpoint && apiKey && model).toBeTruthy()
 
-  const repo = mkdtempSync(join(tmpdir(), 'gitcito-live-chat-'))
+  const repo = mkdtempSync(join(tmpdir(), 'geminio-live-chat-'))
   roots.push(repo)
   execFileSync('git', ['-C', repo, 'init'])
-  execFileSync('git', ['-C', repo, 'config', 'user.name', 'Gitcito Test'])
-  execFileSync('git', ['-C', repo, 'config', 'user.email', 'gitcito@example.invalid'])
+  execFileSync('git', ['-C', repo, 'config', 'user.name', 'Geminio Test'])
+  execFileSync('git', ['-C', repo, 'config', 'user.email', 'geminio@example.invalid'])
   writeFileSync(join(repo, 'LICENSE'), 'MIT License\n\nCopyright MyAppDesk\n')
   execFileSync('git', ['-C', repo, 'add', 'LICENSE'])
   execFileSync('git', ['-C', repo, 'commit', '-m', 'test: seed license'])

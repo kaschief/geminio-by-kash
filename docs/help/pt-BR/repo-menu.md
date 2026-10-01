@@ -29,14 +29,14 @@ remoção. **Abrir repositório…** no rodapé abre o launcher.
 
 | Ação | Efeito |
 |---|---|
-| **Criar alias…** / **Alterar alias…** | Só um nome de exibição. O Gitcito nunca renomeia nem move a pasta no disco. O mesmo alias segue o repositório por abas, grupos e workspaces. |
+| **Criar alias…** / **Alterar alias…** | Só um nome de exibição. O Geminio nunca renomeia nem move a pasta no disco. O mesmo alias segue o repositório por abas, grupos e workspaces. |
 | **Remover alias** | Aparece quando um alias existe. Restaura o nome da pasta. |
 | **Mostrar worktrees** | Foca este repositório e abre a seção de worktrees da barra lateral. |
 | **Nova worktree…** | O mesmo diálogo de criar worktree usado a partir de uma branch. Desabilitado enquanto o caminho está faltando ou um merge/rebase/cherry-pick/revert está em andamento. |
 | **Copiar nome do repositório** | Copia o nome canônico da pasta, não o alias. |
 | **Copiar caminho do repositório** | Copia o caminho absoluto. |
 | **Ver no GitHub** | O origin se for github.com, senão o primeiro remoto GitHub interpretável. Desabilitado quando nenhum pode ser derivado. |
-| **Abrir no terminal** | Abre o terminal do Gitcito com este repositório como diretório de trabalho. |
+| **Abrir no terminal** | Abre o terminal do Geminio com este repositório como diretório de trabalho. |
 | **Mostrar no Finder / Explorador de Arquivos** | Destaca a pasta do repositório no gerenciador de arquivos da plataforma. |
 | **Abrir no editor externo** | O editor configurado nas Configurações. Visível, mas desabilitado até um ser definido. |
 | **Remover…** | Fecha a aba ou tira o chip do grupo. Usa o mesmo aviso de trabalho não commitado do botão **×**. Nunca apaga arquivos do disco. |

@@ -58,7 +58,7 @@ dan blijft het veld een gewoon tekstvak en meldt de kloon zelf de echte fout.
   één branch* uitgevinkt laten juist wat de andere branches terugvraagt
   (`--no-single-branch`), en daarom verandert de hint eronder.
 - **Een lokale map klonen** negeert `--depth` normaal volledig, omdat git de
-  objectopslag hardlinkt in plaats van op te halen. Gitcito kloont via een
+  objectopslag hardlinkt in plaats van op te halen. Geminio kloont via een
   `file://`-URL wanneer je om een shallow kopie van een lokale repository vraagt,
   zodat de diepte die je vroeg de diepte is die je krijgt.
 

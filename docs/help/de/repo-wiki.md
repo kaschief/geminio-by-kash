@@ -28,7 +28,7 @@ erklärt.
 
 ## Die geschriebenen Seiten
 
-Gitcito plant eine Handvoll Seiten aus den Dateien, die das Repository trackt —
+Geminio plant eine Handvoll Seiten aus den Dateien, die das Repository trackt —
 zuerst Dokumentation und Manifeste, dann das, was sich am meisten ändert — und
 schreibt jede Seite aus den Dateien, die sie abdeckt.
 

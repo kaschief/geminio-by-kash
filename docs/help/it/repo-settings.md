@@ -16,12 +16,12 @@ appartengono a **questo** repository, non all'applicazione.
 | Scheda | Cosa contiene |
 |---|---|
 | **Generali** | Branch protetti (una selezione multipla di branch, conservata nella configurazione git), firma |
-| **Config** | Le [regole che questo repository porta con sé](repo-config.md) in `.gitcito.json`, e il doctor che le controlla |
+| **Config** | Le [regole che questo repository porta con sé](repo-config.md) in `.geminio.json`, e il doctor che le controlla |
 | **Info** | Note e campi liberi su questo repository, conservati in locale |
 | **Cassaforte** | Le voci della [cassaforte](vault.md) di questo repository |
 | **Insight** | Il [cruscotto della storia](insights.md) |
 | **Analytics** | Quello che hai fatto in questo repository, conteggiato in locale |
-| **Cronologia** · **Log** | Il registro delle operazioni: ogni comando git eseguito da Gitcito, con il suo output |
+| **Cronologia** · **Log** | Il registro delle operazioni: ogni comando git eseguito da Geminio, con il suo output |
 
 Il registro delle operazioni è quello onesto: quando qualcosa si comporta in modo
 strano, mostra il comando esatto e l'errore esatto, così una segnalazione di bug

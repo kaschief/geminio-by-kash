@@ -15,12 +15,12 @@ Somt elke hook in de repository op, laat zien welke echt zijn en welke nog
 
 ![De hookbeheerder](../../screenshots/hooks.webp)
 
-Gitcito detecteert een eigen **`core.hooksPath`** (husky en consorten) en een
+Geminio detecteert een eigen **`core.hooksPath`** (husky en consorten) en een
 config voor een **pre-commit-framework**, en vertelt je wanneer de hooks ergens
 anders wonen dan in `.git/hooks` — anders zou je een bestand bewerken dat git
 nooit draait.
 
-> Hooks draaien bij commits van Gitcito precies zoals bij `git commit`. Een hook
+> Hooks draaien bij commits van Geminio precies zoals bij `git commit`. Een hook
 > die faalt blokkeert de commit, en zijn uitvoer komt terug in de foutmelding.
 
 ## Slimme .gitignore

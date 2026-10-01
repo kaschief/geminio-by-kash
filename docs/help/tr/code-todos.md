@@ -71,7 +71,7 @@ Bir satıra tıklamak dosyayı o satırda açar.
 ## Yapmadıkları
 
 - **Okur, asla yazmaz.** "Tamamlandı" işareti yoktur: bir TODO'yu kapatmanın yolu
-  satırı silip bunu işlemektir. Gitcito'nun sizin için tuttuğu liste için
+  satırı silip bunu işlemektir. Geminio'nun sizin için tuttuğu liste için
   [todos](todos.md) sayfasına bakın; o bambaşka bir şeydir: kaynakta değil,
   uygulamada yaşayan özel notlar.
 - **Yok sayılan dosyalar atlanır**, `node_modules` ile birlikte, içindeki

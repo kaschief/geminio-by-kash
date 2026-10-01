@@ -86,7 +86,7 @@ opcionais disparam quando uma revisão é pedida ou o CI termina.
 ## Tokens
 
 Tokens por perfil para várias contas ou organizações, guardados no keychain do seu
-sistema. O Gitcito também pode pegar emprestado o que o seu **credential helper do
+sistema. O Geminio também pode pegar emprestado o que o seu **credential helper do
 git** já guarda, então uma organização em que você já se autenticou muitas vezes
 não precisa de configuração nenhuma. Veja [Segurança e segredos](security.md).
 

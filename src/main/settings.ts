@@ -296,7 +296,7 @@ export function registerSettingsHandlers(): void {
   ipcMain.handle('settings:exportFile', async (_e, data: unknown) => {
     const { canceled, filePath } = await dialog.showSaveDialog({
       title: 'Export Settings',
-      defaultPath: 'gitcito-settings.json',
+      defaultPath: 'geminio-settings.json',
       filters: [{ name: 'JSON', extensions: ['json'] }]
     })
     if (canceled || !filePath) return false

@@ -12,7 +12,7 @@ export const ar = {
   'foot.reportIssue': 'الإبلاغ عن مشكلة',
   'foot.sponsor': 'الرعاية',
 
-  'meta.title': 'Gitcito — كل ما في git، مع واجهة تُظهره لك',
+  'meta.title': 'Geminio — كل ما في git، مع واجهة تُظهره لك',
   'meta.description':
     'عميل Git مكتوب بالكامل بأسلوب vibe coding. مجاني. رسم الالتزامات، والتحضير سطرًا سطرًا، وإعادة الأساس، وأشجار العمل، والوحدات الفرعية، وLFS — إضافة إلى أمور قليلة لم تكن تعلم أن git قادر عليها.',
 
@@ -22,11 +22,11 @@ export const ar = {
   'hero.download': 'نزّله لمنصّتك',
   'hero.source': 'عرض الشيفرة',
   'hero.terms': 'مجاني · MIT · v{version}',
-  'hero.graphAlt': 'رسم الالتزامات في Gitcito',
+  'hero.graphAlt': 'رسم الالتزامات في Geminio',
 
   'features.title': 'أمور قليلة لم تكن تعلم أن git قادر عليها',
   'features.sub':
-    'لا شيء من هذه هو سبب استخدام Gitcito — القائمة أعلاه هي السبب. وهي موجودة لأن git يعرف الجواب أصلًا؛ وGitcito يسأله فحسب.',
+    'لا شيء من هذه هو سبب استخدام Geminio — القائمة أعلاه هي السبب. وهي موجودة لأن git يعرف الجواب أصلًا؛ وGeminio يسأله فحسب.',
 
   'ordinary.title': 'ما الذي تحصل عليه',
   'ordinary.sub':
@@ -48,7 +48,7 @@ export const ar = {
   'download.title': 'التنزيل',
   'download.sub': 'أحدث إصدار: <strong>v{version}</strong>. وكل بناء يُنشر من CI.',
   'download.cli':
-    'أو افتح مستودعًا من طرفيتك بالأمر <code>gitcito .</code> — انظر <a href="{cli}">سطر الأوامر</a>.',
+    'أو افتح مستودعًا من طرفيتك بالأمر <code>geminio .</code> — انظر <a href="{cli}">سطر الأوامر</a>.',
   'download.macNote': 'معالجات Apple &amp; Intel · موقّع وموثّق',
   'download.winNote': 'مثبّت (x64)',
   'download.linuxNote': 'AppImage · deb',
@@ -57,12 +57,12 @@ export const ar = {
   'handbook.title': 'دليل من {pages} صفحة، مدمج في التطبيق',
   'handbook.sub': 'كل ميزة مشروحة — دون اتصال داخل التطبيق، وهنا أيضًا.',
 
-  'sponsor.title': 'ارعَ Gitcito',
+  'sponsor.title': 'ارعَ Geminio',
   'sponsor.body':
     'مجاني، برخصة MIT، بلا خادم خلفي، وبلا تتبّع، وبلا شيء يُباع لك إضافيًا — فلا شيء هنا لتشتريه. الرعاية تدفع ثمن شهادة Apple Developer التي تحتاجها بنى macOS الموقّعة، وثمن الدليل والترجمات. وبلاغات العلل لا تقل عن ذلك قيمة.',
   'sponsor.cta': 'الرعاية عبر GitHub',
 
-  'doc.titleSuffix': 'دليل Gitcito',
+  'doc.titleSuffix': 'دليل Geminio',
   'doc.filter': 'تصفية الصفحات…',
   'doc.filterLabel': 'تصفية الصفحات',
   'doc.edit': 'حرّر هذه الصفحة على GitHub',
@@ -115,5 +115,5 @@ export const ar = {
     'بلا خادم خلفي. تُشفَّر الرموز ومدخلات الخزنة بسلسلة مفاتيح نظامك — ولا شيء يمسّ تلك السلسلة قبل أن تُخبَر بالسبب وتوافق.',
   'feature.cli.title': 'واجهة Git رسومية بسطر أوامر حقيقي',
   'feature.cli.body':
-    'الأمر `gitcito .` يفتح المستودع، و`gitcito blame src/api.ts -l 84` يفتحه عند ذلك السطر تحديدًا، أما `gitcito doctor` فلا يفتح نافذة إطلاقًا: يفحص ما يشترطه المستودع ويخرج برمز تقرؤه أدوات التكامل المستمر لديك.'
+    'الأمر `geminio .` يفتح المستودع، و`geminio blame src/api.ts -l 84` يفتحه عند ذلك السطر تحديدًا، أما `geminio doctor` فلا يفتح نافذة إطلاقًا: يفحص ما يشترطه المستودع ويخرج برمز تقرؤه أدوات التكامل المستمر لديك.'
 }

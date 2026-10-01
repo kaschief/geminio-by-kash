@@ -9,7 +9,7 @@ keywords: ondertekenen sign signing gpg ssh x509 verified handtekening signature
 # Ondertekende commits
 
 Zet ondertekenen aan per repository (**Instellingen → repo-tandwiel**): GPG, SSH
-of X.509, met de sleutel die jij kiest. Gitcito schrijft `commit.gpgsign`,
+of X.509, met de sleutel die jij kiest. Geminio schrijft `commit.gpgsign`,
 `gpg.format` en `user.signingkey` voor die repository — dezelfde config die elk
 ander gereedschap leest.
 

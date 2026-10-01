@@ -2,13 +2,13 @@
 title: Beveiliging & geheimen
 category: Beveiliging
 order: 70
-summary: Maskeren, bewakingen, de sleutelhanger — en wat Gitcito weigert te doen.
+summary: Maskeren, bewakingen, de sleutelhanger — en wat Geminio weigert te doen.
 keywords: beveiliging security geheimen secrets maskeren masking sleutelhanger keychain safeStorage tokens beschermde branch groot bestand bewaking privacy
 ---
 
 # Beveiliging & geheimen
 
-Gitcito heeft **geen backend**. De enige netwerkoproepen gaan naar je Git-host
+Geminio heeft **geen backend**. De enige netwerkoproepen gaan naar je Git-host
 en, als je dat aanzet, naar je AI-provider.
 
 ![Beveiligingsinstellingen](../../screenshots/settings-security.webp)
@@ -45,7 +45,7 @@ besturingssysteem (Electron `safeStorage`), nooit met een sleutel in het
 instellingenbestand.
 
 **Er raakt niets de sleutelhanger tot jij het zegt.** Nog voor het eigen
-toestemmingsvenster van het systeem kan verschijnen, legt Gitcito uit wat er
+toestemmingsvenster van het systeem kan verschijnen, legt Geminio uit wat er
 opgeslagen wordt, wat het niet kan (een app leest alleen ooit de regel terug die
 het zelf aanmaakte — je andere wachtwoorden zijn onbereikbaar), en dat nee zeggen
 prima is: tokens leven dan alleen in het geheugen voor die sessie, de kluis blijft

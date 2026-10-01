@@ -10,7 +10,7 @@ keywords: 문제 분석기 진단 오류 경고 lint tsc typescript eslint dart 
 
 모든 프로젝트에는 무엇이 잘못됐는지 알려 주는 도구가 이미 들어 있습니다 —
 `tsc`, `dart analyze`, ESLint, Clippy, `go vet`, Ruff. 하지만 방금 찍힌 마흔 개의
-경고를 **내 diff**가 만들었는지는 어느 도구도 알려 주지 않습니다. Gitcito는 어떤
+경고를 **내 diff**가 만들었는지는 어느 도구도 알려 주지 않습니다. Geminio는 어떤
 파일이 더러운지 알고 있으므로, 같은 목록이 그 질문에 토글 하나로 답합니다.
 
 ![문제 독과 상태 표시줄 카운터](../../screenshots/problems.webp)
@@ -21,7 +21,7 @@ keywords: 문제 분석기 진단 오류 경고 lint tsc typescript eslint dart 
 
 ## 무엇을 실행하는가
 
-| 저장소에 있는 것 | Gitcito가 실행하는 것 |
+| 저장소에 있는 것 | Geminio가 실행하는 것 |
 |------------------|----------------------|
 | `pubspec.yaml` | `dart analyze --format=machine` |
 | `tsconfig.json` | `tsc --noEmit` |
@@ -45,7 +45,7 @@ keywords: 문제 분석기 진단 오류 경고 lint tsc typescript eslint dart 
 중복이 제거되고 정렬됩니다. 두 분석기가 같은 줄을 보고해도 한 줄입니다.
 
 **스스로 돌지 않습니다.** 큰 저장소에서 `tsc --noEmit`은 수십 초이고, 이 명령들은
-Gitcito가 아니라 저장소의 툴체인입니다. 독을 열거나 새로 고침을 누를 때 시작하며,
+Geminio가 아니라 저장소의 툴체인입니다. 독을 열거나 새로 고침을 누를 때 시작하며,
 결코 알아서 돌지 않습니다. 목록이 스냅숏인 이유도 그것입니다. 파일을 고치면 다시
 실행하기 전까지는 낡은 목록입니다.
 
@@ -55,7 +55,7 @@ Gitcito가 아니라 저장소의 툴체인입니다. 독을 열거나 새로 �
 
 **생성된 산출물은 버립니다.** 프로젝트 루트를 향한 도구는 찾은 것을 모두 검사하고,
 거기에는 `.next/build/chunks`, 번들된 `dist`, 벤더링된 사본도 들어갑니다 — 기계가 쓴
-코드에 대한 수백 건의 불평이 당신 코드에 대한 몇 건을 묻어 버립니다. Gitcito는 git에
+코드에 대한 수백 건의 불평이 당신 코드에 대한 몇 건을 묻어 버립니다. Geminio는 git에
 어떤 파일이 무시되는지 물어 그것들을 버리되, *추적 중인* 파일은 절대 버리지 않습니다.
 산출물을 커밋하는 것은 선택이고 `git check-ignore`는 그 선택을 존중합니다.
 `node_modules`는 어차피 빠집니다.

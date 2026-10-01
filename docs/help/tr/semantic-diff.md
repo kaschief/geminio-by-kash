@@ -12,7 +12,7 @@ Yalnızca ad değiştiren bir sembol, satır bazlı diff'te bir dosyanın tamame
 silinmesi ve bir dosyanın tamamen eklenmesi olarak görünür. Teknik olarak
 doğrudur ve tamamen işe yaramazdır.
 
-Gitcito her dosya diff'inin üstünde bir **Ne değişti** şeridi gösterir:
+Geminio her dosya diff'inin üstünde bir **Ne değişti** şeridi gösterir:
 dosyanın her iki sürümü de **tree-sitter** ile ayrıştırılır — düzenli ifadeler
 değil, gerçek sözdizimi ağaçları — ve bildirimleri birbiriyle eşleştirilir.
 

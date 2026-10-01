@@ -23,7 +23,7 @@ arrastrar.
 | **drop** | Tirar el commit a la basura |
 
 Arrastra las filas para reordenar. El editor nunca se abre en un terminal —
-Gitcito escribe el todo por ti.
+Geminio escribe el todo por ti.
 
 ## Autosquash, de un clic
 

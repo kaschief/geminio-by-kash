@@ -8,7 +8,7 @@ keywords: theme 主题 themes dark 深色 light 浅色 appearance 外观 colors 
 
 # 主题与外观
 
-内置主题——Gitcito、Nord、Dracula、Solarized、GitHub、Monokai、Midnight、
+内置主题——Geminio、Nord、Dracula、Solarized、GitHub、Monokai、Midnight、
 Contrast 和 Daltonic——每一套都有浅色和深色两个变体。
 
 ![从浅色切到深色](../../screenshots/clip-themes.webp)

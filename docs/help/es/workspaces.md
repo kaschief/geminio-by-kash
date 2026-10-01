@@ -74,7 +74,7 @@ Un espacio de trabajo es **una tira de pestañas entera, guardada**. Cambiar de
 espacio intercambia todas las pestañas a la vez: `Trabajo` y `Personal` dejan de
 pisarse.
 
-El nombre del espacio está arriba a la izquierda, junto a la marca de Gitcito.
+El nombre del espacio está arriba a la izquierda, junto a la marca de Geminio.
 Haz clic para cambiar, crear, renombrar, reordenar o borrar. Al lado está el
 indicador que abre el [Centro de control](mission-control.md) del espacio en el
 que estás.

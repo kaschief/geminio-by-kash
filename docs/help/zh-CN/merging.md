@@ -14,7 +14,7 @@ keywords: merge 合并 rebase 变基 fast-forward 快进 compare 比较 refs 引
 
 ## 把一个引用拖到另一个上面
 
-全 app 里最快的手势：拎起一个分支，丢到另一个上面。Gitcito 会弹出一个小菜单，列出这一放可能意味着什么，在你做出选择之前什么都不做。
+全 app 里最快的手势：拎起一个分支，丢到另一个上面。Geminio 会弹出一个小菜单，列出这一放可能意味着什么，在你做出选择之前什么都不做。
 
 ![把一个分支拖到另一个上面，弹出这一放可能意味着什么的菜单](../../screenshots/clip-branch-drop.webp)
 

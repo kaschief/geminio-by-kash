@@ -18,7 +18,7 @@ beforeEach(() => {
 
 const dirs: string[] = []
 function tempRepo(): string {
-  const d = mkdtempSync(join(tmpdir(), 'gitcito-reg-'))
+  const d = mkdtempSync(join(tmpdir(), 'geminio-reg-'))
   dirs.push(d)
   return d
 }
@@ -84,7 +84,7 @@ describe('repoRegistry', () => {
   })
 
   it('keeps an opened repo opened when a scan finds it again', async () => {
-    const parent = mkdtempSync(join(tmpdir(), 'gitcito-scanroot-'))
+    const parent = mkdtempSync(join(tmpdir(), 'geminio-scanroot-'))
     dirs.push(parent)
     const dir = join(parent, 'alpha')
     mkdirSync(join(dir, '.git'), { recursive: true })
@@ -98,7 +98,7 @@ describe('repoRegistry', () => {
   })
 
   it('adds a repo found only by a scan as scanned, unopened', async () => {
-    const parent = mkdtempSync(join(tmpdir(), 'gitcito-scanroot-'))
+    const parent = mkdtempSync(join(tmpdir(), 'geminio-scanroot-'))
     dirs.push(parent)
     const dir = join(parent, 'beta')
     mkdirSync(join(dir, '.git'), { recursive: true })
@@ -112,7 +112,7 @@ describe('repoRegistry', () => {
   })
 
   it('counts only what a scan added, not the registry it returns', async () => {
-    const parent = mkdtempSync(join(tmpdir(), 'gitcito-scanroot-'))
+    const parent = mkdtempSync(join(tmpdir(), 'geminio-scanroot-'))
     dirs.push(parent)
     for (const name of ['one', 'two']) {
       mkdirSync(join(parent, name, '.git'), { recursive: true })
@@ -151,7 +151,7 @@ describe('repoRegistry', () => {
   })
 
   it('does not lose entries when remembers race a scan (write queue)', async () => {
-    const parent = mkdtempSync(join(tmpdir(), 'gitcito-scanroot-'))
+    const parent = mkdtempSync(join(tmpdir(), 'geminio-scanroot-'))
     dirs.push(parent)
     const scanned = join(parent, 'gamma')
     mkdirSync(join(scanned, '.git'), { recursive: true })

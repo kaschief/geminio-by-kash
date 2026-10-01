@@ -30,14 +30,14 @@ apre il launcher.
 
 | Azione | Effetto |
 |---|---|
-| **Crea alias…** / **Modifica alias…** | Solo un nome visualizzato. Gitcito non rinomina né sposta mai la cartella su disco. Lo stesso alias segue il repository fra schede, gruppi e aree di lavoro. |
+| **Crea alias…** / **Modifica alias…** | Solo un nome visualizzato. Geminio non rinomina né sposta mai la cartella su disco. Lo stesso alias segue il repository fra schede, gruppi e aree di lavoro. |
 | **Rimuovi alias** | Compare quando esiste un alias. Ripristina il nome della cartella. |
 | **Mostra worktree** | Porta in primo piano questo repository e apre la sezione worktree della barra laterale. |
 | **Nuovo worktree…** | La stessa finestra di creazione worktree usata da un branch. Disabilitato quando il percorso manca o è in corso un merge/rebase/cherry-pick/revert. |
 | **Copia nome del repository** | Copia il nome canonico della cartella, non l'alias. |
 | **Copia percorso del repository** | Copia il percorso assoluto. |
 | **Apri su GitHub** | Origin se è github.com, altrimenti il primo remote GitHub interpretabile. Disabilitato quando non se ne può ricavare nessuno. |
-| **Apri nel terminale** | Apre il terminale di Gitcito con questo repository come directory di lavoro. |
+| **Apri nel terminale** | Apre il terminale di Geminio con questo repository come directory di lavoro. |
 | **Mostra nel Finder / in Esplora file** | Evidenzia la cartella del repository nel gestore file della piattaforma. |
 | **Apri nell’editor esterno** | L'editor configurato nelle impostazioni. Visibile ma disabilitato finché non ne imposti uno. |
 | **Rimuovi…** | Chiude la scheda o toglie la pillola dal gruppo. Usa lo stesso avviso di lavoro non committato del pulsante **×**. Non elimina mai file dal disco. |

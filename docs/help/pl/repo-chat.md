@@ -104,7 +104,7 @@ dymek prawym przyciskiem: **Kopiuj** bierze zaznaczenie, **Kopiuj wiadomość**
 całą wiadomość — odpowiedź jest kopiowana jako jej źródło Markdown — a gdy
 kliknięcie trafiło w link, **Kopiuj link** jego adres.
 
-Linki otwierają się w domyślnej przeglądarce, nigdy wewnątrz Gitcito — zarówno
+Linki otwierają się w domyślnej przeglądarce, nigdy wewnątrz Geminio — zarówno
 linki Markdown w odpowiedziach, jak i zwykłe adresy `https://` w twoich
 wiadomościach.
 
@@ -136,7 +136,7 @@ Czat repozytorium może proponować dokładne edycje, tworzenie lub całkowitą
 podmianę plików oraz ich usunięcie, a potem akcje Gita: wzorce ignorowania,
 stage, unstage, commit, stash, odrzucenie, gałąź, przełączenie, tag oraz —
 ponieważ pokazuje mu się listę gałęzi i ostatnie commity — merge, rebase, revert
-i cherry-pick. Gitcito liczy rozwijany diff lokalnie. Istniejące pliki muszą
+i cherry-pick. Geminio liczy rozwijany diff lokalnie. Istniejące pliki muszą
 pochodzić z przeczytanych dowodów; cele niebezpieczne, sekretne, ignorowane,
 generowane, binarne, nieaktualne, zbyt duże i osiągane przez dowiązania
 symboliczne są odrzucane. Reset, przepisywanie historii, kasowanie gałęzi i
@@ -148,11 +148,11 @@ już wykonano, a baner konfliktu przejmuje kontrolę dokładnie tak, jak przy te
 samej operacji uruchomionej z paska.
 
 Cała partia jest ponownie sprawdzana przed pierwszym zapisem i wycofywana, gdy
-któryś krok zawiedzie. Przed commitem Gitcito sprawdza też, czy coś jest w stage.
+któryś krok zawiedzie. Przed commitem Geminio sprawdza też, czy coś jest w stage.
 Karta oznacza akcje ukończone, nieudane i pominięte oraz zachowuje wynik
 częściowy. Potem osobne wywołanie bez akcji podsumowuje rzeczywisty rezultat.
 
-**Może też napisać `.gitcito.json`.** Czat dostaje kształt
+**Może też napisać `.geminio.json`.** Czat dostaje kształt
 [własnego pliku konfiguracyjnego repozytorium](repo-config.md), więc *dodaj
 odnośniki do zgłoszeń dla JIRA-1234* albo *chroń gałęzie release* staje się
 akcją na pliku pisaną wobec prawdziwego schematu, a nie wiarygodnie wyglądającymi
@@ -195,7 +195,7 @@ startem planu, a nie z jego wnętrza.
 ### Cofnięcie planu
 
 Plan zatwierdza się jako całość, więc jako całość się go cofa. Przed pierwszą
-akcją mogącą cokolwiek zmienić Gitcito zapisuje, gdzie stała gałąź, i robi
+akcją mogącą cokolwiek zmienić Geminio zapisuje, gdzie stała gałąź, i robi
 migawkę drzewa roboczego; ukończona karta oferuje wtedy **Cofnij plan**.
 Przenosi gałąź z powrotem na ten commit i przywraca drzewo, co odrzuca wszystko,
 co plan wytworzył — dlatego najpierw pyta i nazywa commit, do którego wraca.
@@ -239,7 +239,7 @@ Szkic można edytować — nic nie zostanie wysłane, póki nie naciśniesz Wyś
   zawsze prosi o potwierdzenie. Przy wyłączonym ustawieniu **Proponowanie
   akcji Gita na czacie** nawet nie proponuje.
 - **Rozmowy żyją tylko w pamięci.** Każde repozytorium ma własny wątek; wyjście z
-  Gitcito je porzuca.
+  Geminio je porzuca.
 
 ## Jak otworzyć
 

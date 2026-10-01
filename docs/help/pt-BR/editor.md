@@ -12,14 +12,14 @@ Um cliente Git é onde você lê código; raramente é onde você o conserta. A
 distância entre notar um problema num diff e ter o cursor naquela linha no seu
 editor é uma busca de arquivo e uma rolagem — toda vez.
 
-Aponte o Gitcito para o seu editor uma vez e essa distância some: clique com o
+Aponte o Geminio para o seu editor uma vez e essa distância some: clique com o
 botão direito numa linha na visão de arquivo ou de blame e ela abre lá, naquela
 linha.
 
 ## Escolhendo um
 
 **Configurações → Geral → Editor externo.** O dropdown lista os editores que o
-Gitcito consegue encontrar nesta máquina — ele procura primeiro pelo comando de cada
+Geminio consegue encontrar nesta máquina — ele procura primeiro pelo comando de cada
 editor e depois, no macOS, pelo bundle da aplicação em `/Applications` e
 `~/Applications`. A varredura roda toda vez que você abre as Configurações, então um
 editor instalado cinco minutos atrás aparece sem precisar reiniciar.
@@ -40,7 +40,7 @@ Reconhecidos de fábrica:
 
 **Pular para uma linha precisa do comando do editor, não do ícone dele.** Um bundle
 `.app` do macOS é lançado através do `open`, que aceita um caminho e mais nada — então
-um editor encontrado só como bundle abre o arquivo no topo, e o Gitcito diz isso
+um editor encontrado só como bundle abre o arquivo no topo, e o Geminio diz isso
 embaixo do dropdown em vez de fingir o contrário.
 
 O conserto é do lado do editor: o *Shell Command: Install 'code' command in PATH* do
@@ -61,7 +61,7 @@ linha funciona.
 
 As ações de linha só aparecem onde o número da linha ainda significa alguma coisa:
 um arquivo mostrado num commit antigo, ou um blame rebobinado para uma revisão
-anterior, tem linhas que não correspondem mais ao que está em disco, então o Gitcito
+anterior, tem linhas que não correspondem mais ao que está em disco, então o Geminio
 não oferece pulo ali em vez de te mandar para o lugar errado.
 
 ## Projetos do Xcode e outros pacotes
@@ -87,11 +87,11 @@ que economiza.
 
 **O pacote abre pelo sistema, não pelo seu editor.** Um `.xcodeproj` entregue a
 um editor de texto abre como uma pasta de property lists, que não é o que quem
-clicou queria — então o Gitcito entrega ao que o sistema associa a ele, o que num
+clicou queria — então o Geminio entrega ao que o sistema associa a ele, o que num
 Mac com Xcode instalado é o Xcode. Sua escolha de editor não muda; ela continua
 valendo para qualquer arquivo comum.
 
-**É uma convenção de nomes, não uma marca do sistema de arquivos.** O Gitcito
+**É uma convenção de nomes, não uma marca do sistema de arquivos.** O Geminio
 olha a extensão, então um diretório que você chamou de `notes.app` também fecha,
 e no Linux ou Windows — onde são pastas comuns — clicar abre o gerenciador de
 arquivos em vez de uma IDE.
@@ -116,7 +116,7 @@ então um nome de arquivo nunca pode virar sintaxe. Quatro marcadores: `{path}`,
 
 Um marcador sem valor leva a flag dele junto: `--line {line} {path}` rodado sem
 linha vira apenas o caminho, nunca um `--line` solto que engoliria o nome do arquivo
-como argumento. Um template sem `{line}` simplesmente significa que o Gitcito não vai
+como argumento. Um template sem `{line}` simplesmente significa que o Geminio não vai
 oferecer ações precisas por linha para aquele editor.
 
 ## O que isto não é
@@ -127,5 +127,5 @@ uma pasta no Finder. O editor é o mais específico dos dois, então onde os doi
 configurados o editor ganha no ícone de fim de linha da árvore de arquivos; os dois
 continuam listados no menu de botão direito.
 
-O Gitcito nunca lança o seu editor sozinho, e fechar o Gitcito nunca o fecha: o
+O Geminio nunca lança o seu editor sozinho, e fechar o Geminio nunca o fecha: o
 editor é iniciado destacado, como um processo próprio.

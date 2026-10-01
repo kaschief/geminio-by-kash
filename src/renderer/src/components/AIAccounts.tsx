@@ -21,7 +21,7 @@ import { interp, useT, type TranslationKey } from '../i18n'
 /**
  * The AI accounts editor.
  *
- * Gitcito held one provider, one key and one model. That made "use Claude for
+ * Geminio held one provider, one key and one model. That made "use Claude for
  * chat and a cheap OpenAI model for commit messages" impossible, and it made
  * the model picker a list frozen at release time. An account is now a named
  * connection, several can coexist, and each AI surface points at one of them.

@@ -2,7 +2,7 @@
 # 51. host-remotes — one repo per hosting provider, to exercise credential
 # resolution without needing an account on any of them.
 #
-# Gitcito no longer asks for a token per provider up front: it resolves the
+# Geminio no longer asks for a token per provider up front: it resolves the
 # credential from the remote URL, preferring one configured in Settings and
 # otherwise borrowing whatever git's own credential helper holds for that host.
 # Azure DevOps is the interesting case — its organization and project live in
@@ -10,7 +10,7 @@
 # remotes under *different* orgs must resolve independently.
 #
 # Nothing here reaches the network. The remotes are unreachable on purpose:
-# what is being checked is which credential Gitcito goes looking for, and that
+# what is being checked is which credential Geminio goes looking for, and that
 # a rejected one produces a readable message rather than a JSON parse error.
 R="$ROOT/host-remotes"
 new_repo "$R"

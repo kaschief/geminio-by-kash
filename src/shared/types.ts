@@ -448,10 +448,10 @@ export interface RefTip {
   subject: string
 }
 
-/** Whether the user has let Gitcito use the OS keychain (safeStorage). */
+/** Whether the user has let Geminio use the OS keychain (safeStorage). */
 export type KeychainConsent = 'granted' | 'declined' | 'unset'
 
-/** What Gitcito is about to encrypt, so the explainer can say why it asks. */
+/** What Geminio is about to encrypt, so the explainer can say why it asks. */
 export type KeychainReason = 'tokens' | 'vault' | 'settings'
 
 /** What a declaration is, for the semantic-diff labels. */
@@ -807,6 +807,8 @@ export interface ConnectedOrg {
 }
 
 export interface ConnectedAccount {
+  /** Provider-confirmed addresses used to match commit authors to this account. */
+  emails?: string[]
   login: string // username/handle
   name?: string // display name, if different from login
   avatarUrl?: string
@@ -1553,7 +1555,7 @@ export interface RepoChatExecutionResult {
 // ─── Launch configurations (VS Code-style .vscode/launch.json) ──────────────
 
 /** One entry from a `.vscode/launch.json` `configurations` array. Only the
- *  fields Gitcito actually runs are typed; the rest is preserved opaquely. */
+ *  fields Geminio actually runs are typed; the rest is preserved opaquely. */
 export interface LaunchConfig {
   name: string
   type?: string
@@ -1583,7 +1585,7 @@ export interface LaunchConfig {
   [key: string]: unknown
 }
 
-/** One entry from a `.vscode/tasks.json` `tasks` array (subset Gitcito runs). */
+/** One entry from a `.vscode/tasks.json` `tasks` array (subset Geminio runs). */
 export interface LaunchTask {
   label: string
   type?: string
@@ -1596,7 +1598,7 @@ export interface LaunchTask {
   dependsOn?: string | string[]
   /** "sequence" runs dependsOn one-by-one; otherwise they're independent. */
   dependsOrder?: 'sequence' | 'parallel'
-  /** A watch/server task that never exits — Gitcito won't block the launch on it. */
+  /** A watch/server task that never exits — Geminio won't block the launch on it. */
   isBackground?: boolean
   [key: string]: unknown
 }
@@ -1612,7 +1614,7 @@ export interface LaunchInput {
   /** Options for a `pickString`. Each is either a raw value or {label,value}. */
   options?: (string | { label?: string; value: string })[]
   password?: boolean
-  /** Gitcito: replace ${fileValue:name} in description/default with a JSON/YAML scalar. */
+  /** Geminio: replace ${fileValue:name} in description/default with a JSON/YAML scalar. */
   fileValues?: Record<string, { file: string; key: string }>
 }
 
@@ -1765,7 +1767,7 @@ export function emptyAIUsageStat(): AIUsageStat {
   return { requests: 0, promptTokens: 0, completionTokens: 0, totalTokens: 0, cost: 0 }
 }
 
-/** Activity events recorded as the user drives gitcito. */
+/** Activity events recorded as the user drives geminio. */
 export type ActivityEvent =
   | 'commit'
   | 'amend'
@@ -2028,7 +2030,7 @@ export interface SecureSharePreviewEntry {
 export type SecureShareError =
   | 'invalid' // not a .gitcito bundle / malformed
   | 'bad-password' // wrong password or tampered payload (GCM auth failed)
-  | 'unsupported-version' // bundle written by a newer gitcito
+  | 'unsupported-version' // bundle written by a newer geminio
   | 'read-failed'
   | 'write-failed'
 
@@ -2088,7 +2090,7 @@ export interface CloneOptions {
   recurseSubmodules?: boolean
 }
 
-/** The three git-flow branch kinds Gitcito automates. */
+/** The three git-flow branch kinds Geminio automates. */
 export type GitflowKind = 'feature' | 'release' | 'hotfix'
 
 /**
@@ -2188,7 +2190,7 @@ export interface PushRemoteResult {
  * A directory in this repository whose contents came from another repository via
  * `git subtree`. Unlike a submodule there is no `.gitmodules` to read: git
  * records only a `git-subtree-dir:` trailer on the commit that did the import,
- * so the url and ref are remembered by Gitcito unless the user supplies them.
+ * so the url and ref are remembered by Geminio unless the user supplies them.
  */
 export interface SubtreeInfo {
   /** Directory inside this repo, e.g. `vendor/parser`. */
@@ -2285,7 +2287,7 @@ export interface DiffDriverInfo {
   scope: 'repo' | 'global'
 }
 
-/** A converter Gitcito knows how to wire up, if it is installed. */
+/** A converter Geminio knows how to wire up, if it is installed. */
 export interface DiffDriverSuggestion {
   /** Driver name, used as `diff=<name>` in .gitattributes. */
   name: string
@@ -2293,9 +2295,9 @@ export interface DiffDriverSuggestion {
   patterns: string[]
   /** The textconv command line. */
   textconv: string
-  /** The binary it needs ('' when Gitcito ships the converter itself). */
+  /** The binary it needs ('' when Geminio ships the converter itself). */
   binary: string
-  /** True when the converter is the one Gitcito ships — nothing to install. */
+  /** True when the converter is the one Geminio ships — nothing to install. */
   bundled?: boolean
   available: boolean
 }
@@ -2453,7 +2455,7 @@ export interface MaintenanceStats {
   gcLog: string
 }
 
-/** The maintenance jobs Gitcito will run, in the order they cost. */
+/** The maintenance jobs Geminio will run, in the order they cost. */
 export type MaintenanceTask = 'gc' | 'aggressive' | 'commitGraph' | 'prune'
 
 /** Size on disk before and after a maintenance run. */
@@ -2639,7 +2641,7 @@ export interface RepoFolder {
   folders: RepoFolder[]
 }
 
-/** One repository Gitcito knows about, whether or not it is open. The registry
+/** One repository Geminio knows about, whether or not it is open. The registry
  *  file is a cache: lose it and a rescan rebuilds it. */
 export interface RegistryRepo {
   /** Canonical absolute path — the identity, and the key used everywhere else. */
@@ -2659,7 +2661,7 @@ export interface RegistryRepo {
   missing: boolean
 }
 
-/** A folder Gitcito scans for repositories. A preference, not an index. */
+/** A folder Geminio scans for repositories. A preference, not an index. */
 export interface RepoScanRoot {
   path: string
   /** How deep to descend. 3 covers ~/Code/<client>/<repo>; deeper gets slow
@@ -2822,7 +2824,7 @@ export interface AppSettings {
   repoProfiles: Record<string, string>
   /**
    * Display aliases keyed by canonical repository path. An alias changes only
-   * the name Gitcito shows — it never renames or moves the directory on disk.
+   * the name Geminio shows — it never renames or moves the directory on disk.
    * Path-keyed (not stored on RepoRef) so the same repo across tabs, groups and
    * workspaces cannot diverge.
    */
@@ -2845,6 +2847,8 @@ export interface AppSettings {
   repoSectionColors: Record<string, string>
   /** How a multi-repo pull reconciles when the user has not said otherwise. */
   pullMode: 'default' | 'ff-only' | 'rebase'
+  /** Default action of the toolbar's combined Pull / Fetch button. */
+  toolbarPullAction?: 'fetch' | 'default' | 'ff-only' | 'rebase'
   appThemeId: string
   codeThemeId: string
   themeMode: ThemeMode
@@ -2881,9 +2885,10 @@ export interface AppSettings {
   graphStyle: GraphStyle
   /** User-defined graph palettes, shown alongside the built-in ones. */
   customGraphPalettes: GraphPalette[]
-  /** Per-repository layout overrides (graph columns + sidebar sections), keyed
-   *  by repo path. A repo with no entry inherits the global defaults. */
+  /** Repository-specific branch pins and folder expansion; old layouts are migrated. */
   repoLayouts: Record<string, RepoLayout>
+  sharedLayoutVersion?: 1
+  sidebarExpanded?: Record<string, boolean>
   /** Per-repository todo lists, keyed by canonical repo path. Absent for a
    *  repository nobody has written a todo for. */
   repoTodos?: Record<string, RepoTodo[]>
@@ -2892,7 +2897,7 @@ export interface AppSettings {
   /**
    * When the Problems dock is allowed to run the project's analyzers. They are
    * the repository's own toolchain — `tsc`, `eslint`, `cargo clippy` — so this
-   * is about how much of your machine Gitcito may spend without being asked.
+   * is about how much of your machine Geminio may spend without being asked.
    *
    * `onOpen` sweeps when the dock is opened with nothing to show (the default),
    * `manual` only ever sweeps on the refresh button, and `off` hides the
@@ -3296,8 +3301,8 @@ export function defaultSettings(): AppSettings {
     favouriteRepos: [],
     repoSectionColors: {},
     pullMode: 'default',
-    appThemeId: 'gitcito',
-    codeThemeId: 'gitcito',
+    appThemeId: 'geminio',
+    codeThemeId: 'geminio',
     themeMode: 'auto',
     codeFontSize: 12,
     customAppThemes: [],
@@ -3351,7 +3356,7 @@ export function defaultSettings(): AppSettings {
   }
 }
 
-// ─── .gitcito.json — the repository's own house rules ────────────────────────
+// ─── .geminio.json — the repository's own house rules ────────────────────────
 //
 // An optional file committed at the root of a repository. Unlike everything in
 // AppSettings, it travels with the clone: whoever opens the repo inherits it.
@@ -3410,7 +3415,7 @@ export interface RepoConfig {
   }
 }
 
-/** Why a field of `.gitcito.json` was rejected. Rendered from the dictionary. */
+/** Why a field of `.geminio.json` was rejected. Rendered from the dictionary. */
 export type RepoConfigIssueCode =
   | 'json'
   | 'version'
@@ -3443,7 +3448,7 @@ export type DoctorStatus = 'ok' | 'warn' | 'fail'
 /**
  * A repair the doctor can perform. Deliberately a closed union: the config
  * supplies *data* (a path, a config value), never a command. Nothing a
- * repository ships can make Gitcito run something of its choosing.
+ * repository ships can make Geminio run something of its choosing.
  */
 export type DoctorFix =
   | { kind: 'submodules' }

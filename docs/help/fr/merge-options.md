@@ -36,7 +36,7 @@ sans cette boîte de dialogue.
 
 **`-X ours` n'est pas `-s ours`.** Le commutateur d'ici ne décide que des
 sections qui s'opposent réellement ; tous les autres changements de l'autre
-branche fusionnent normalement. La stratégie appelée `ours` — que Gitcito ne
+branche fusionnent normalement. La stratégie appelée `ours` — que Geminio ne
 propose pas — prend votre arbre en bloc et jette l'autre côté, produisant un
 commit de fusion qui prétend contenir un travail qu'il ne contient pas. Cette
 distinction est la chose la plus mal comprise des fusions git.

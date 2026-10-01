@@ -12,7 +12,7 @@ keywords: ssh chiave chiavi agent ssh-add ssh-keygen ed25519 publickey permissio
 
 ## Perché questa sezione sta accanto ai token
 
-Gitcito autentica due cose diverse, e le persone danno per scontato — non a torto
+Geminio autentica due cose diverse, e le persone danno per scontato — non a torto
 — che siano una sola:
 
 | | Autenticato da |
@@ -55,7 +55,7 @@ questo.
 
 **Prova la connessione** esiste perché la risposta di ssh è fuorviante: GitHub ti
 autentica con successo e *poi* esce con un codice di errore, dato che non offre
-una shell. Gitcito legge il messaggio invece del codice di uscita, e mostra sotto
+una shell. Geminio legge il messaggio invece del codice di uscita, e mostra sotto
 l'output grezzo così puoi verificare la sua interpretazione.
 
 ## I limiti, detti chiaramente
@@ -68,17 +68,17 @@ l'output grezzo così puoi verificare la sua interpretazione.
   rifiutato. Sovrascrivere una chiave privata revoca in silenzio il tuo accesso a
   tutto ciò che si fida di lei, e nessuna finestra di conferma rende la cosa
   recuperabile.
-- **Le passphrase non vengono conservate da Gitcito.** Ne digiti una quando
+- **Le passphrase non vengono conservate da Geminio.** Ne digiti una quando
   generi o quando aggiungi all'agente; viene passata a `ssh-keygen`/`ssh-add` e
   poi scartata. Farla sopravvivere ai riavvii è compito del portachiavi di
   sistema, tramite `ssh-add`.
 - **Nessuna modifica di `~/.ssh/config`**, nessun alias di host, nessuna scelta
   della chiave per repository. Quelle cose vivono nella tua configurazione ssh, e
-  Gitcito quel file lo lascia stare.
+  Geminio quel file lo lascia stare.
 
 ## Cosa non lascia mai la tua macchina
 
-**Gitcito non legge, non mostra e non trasmette mai una chiave privata.** La
+**Geminio non legge, non mostra e non trasmette mai una chiave privata.** La
 sezione elenca le metà pubbliche e le impronte. L'unica cosa che viene mai
 inviata da qualche parte è la chiave pubblica su cui premi esplicitamente
 **Carica** — e va a GitHub, con il tuo token, dopo una conferma che ne nomina

@@ -8,7 +8,7 @@ keywords: remisage remisages remiser stash stashes partiel partial keep-index ap
 
 # Remisages
 
-Remiser dans Gitcito n'est pas du tout ou rien.
+Remiser dans Geminio n'est pas du tout ou rien.
 
 | Action | Ce qu'elle fait |
 |---|---|
@@ -30,7 +30,7 @@ bouton *Appliquer n fichiers*) ne restaure que la sélection.
 ## Quand un remisage refuse de s'appliquer
 
 Si appliquer un remisage devait écraser des fichiers non suivis, git s'arrête.
-Gitcito propose de les écraser et de réessayer, plutôt que de vous laisser
+Geminio propose de les écraser et de réessayer, plutôt que de vous laisser
 chercher l'incantation.
 
 Si l'arborescence a trop bougé, **remisage → branche** recrée la branche depuis

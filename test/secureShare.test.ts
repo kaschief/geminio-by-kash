@@ -14,8 +14,8 @@ let repo: string
 let outside: string
 
 beforeAll(() => {
-  outside = mkdtempSync(join(tmpdir(), 'gitcito-secure-outside-'))
-  repo = mkdtempSync(join(tmpdir(), 'gitcito-secure-repo-'))
+  outside = mkdtempSync(join(tmpdir(), 'geminio-secure-outside-'))
+  repo = mkdtempSync(join(tmpdir(), 'geminio-secure-repo-'))
   writeFileSync(join(repo, '.env'), 'API_KEY=abc\n')
   mkdirSync(join(repo, 'app'))
   writeFileSync(join(repo, 'app', '.env.prod'), 'NODE_ENV=production\n')

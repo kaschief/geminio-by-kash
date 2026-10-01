@@ -41,6 +41,11 @@ half where its own content is.
 
 ![Split diff with word-level highlighting](../screenshots/split-diff.webp)
 
+![Diff, find and selection controls in a narrow window](../screenshots/sidecar-diff.webp)
+
+The header controls scroll horizontally when the pane is narrow. Find and
+selected-line actions float within the viewer without moving the code.
+
 ### Hunk headers
 
 Each hunk opens with a header such as `@@ -396,7 +396,7 @@ if barstate.islast`.

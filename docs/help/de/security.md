@@ -2,13 +2,13 @@
 title: Sicherheit & Geheimnisse
 category: Sicherheit
 order: 70
-summary: Maskierung, Wächter, der Schlüsselbund — und was Gitcito sich weigert zu tun.
+summary: Maskierung, Wächter, der Schlüsselbund — und was Geminio sich weigert zu tun.
 keywords: sicherheit geheimnisse secrets maskierung masking schlüsselbund keychain safeStorage tokens geschützter branch protected branch große datei large file wächter guard privatsphäre
 ---
 
 # Sicherheit & Geheimnisse
 
-Gitcito hat **kein Backend**. Die einzigen Netzwerkaufrufe gehen an deinen
+Geminio hat **kein Backend**. Die einzigen Netzwerkaufrufe gehen an deinen
 Git-Host und, falls du es einschaltest, an deinen KI-Anbieter.
 
 ![Sicherheitseinstellungen](../../screenshots/settings-security.webp)
@@ -45,7 +45,7 @@ Betriebssystems verschlüsselt (Electron `safeStorage`), niemals mit einem
 Schlüssel in der Einstellungsdatei.
 
 **Nichts rührt den Schlüsselbund an, bevor du es sagst.** Noch bevor der
-Berechtigungsdialog des Systems auftauchen kann, erklärt Gitcito, was gespeichert
+Berechtigungsdialog des Systems auftauchen kann, erklärt Geminio, was gespeichert
 wird, was es nicht kann (eine App liest immer nur den Eintrag zurück, den sie
 selbst angelegt hat — deine anderen Passwörter sind unerreichbar) und dass Nein
 sagen völlig in Ordnung ist: Tokens leben dann nur für die Sitzung im

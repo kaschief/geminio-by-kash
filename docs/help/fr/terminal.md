@@ -36,13 +36,13 @@ important, car les gestionnaires de versions et `brew shellenv` s'y installent
 en général — un outil comme `fvm`, `nvm` ou `pyenv` qui marche dans votre
 terminal marche aussi ici.
 
-Gitcito demande également son vrai `PATH` à votre shell de login au démarrage et
+Geminio demande également son vrai `PATH` à votre shell de login au démarrage et
 le fusionne dans tout ce qu'il lance, car une application graphique ouverte
 depuis le Dock n'hérite presque de rien. Si une commande reste introuvable,
 vérifiez qu'elle est dans le `PATH` d'un shell de login et pas seulement d'un
 shell interactif.
 
-Tout ce que vous lancez ici est invisible pour le verrouillage propre à Gitcito :
+Tout ce que vous lancez ici est invisible pour le verrouillage propre à Geminio :
 un long `git rebase` tapé à la main et un clic dans l'interface peuvent donc
 encore entrer en collision — l'application se rafraîchit depuis le disque quand
 le terminal change quelque chose.

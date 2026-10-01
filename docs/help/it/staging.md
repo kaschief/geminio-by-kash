@@ -62,7 +62,7 @@ copiare il percorso della cartella.
 
 ## Prima di committare
 
-Gitcito controlla alcune cose e chiede una volta, mai in silenzio:
+Geminio controlla alcune cose e chiede una volta, mai in silenzio:
 
 - un file che sembra un **segreto** (`.env`, `*.pem`, `id_rsa`…),
 - un blob **molto grande** (soglia in Impostazioni → Sicurezza),

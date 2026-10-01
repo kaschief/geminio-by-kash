@@ -57,7 +57,7 @@ O menu suspenso de branches na barra de ferramentas lista branches locais e
 remotos. Clique com o botão direito em qualquer branch desse menu para
 renomear um branch local, copiar seu nome, abri-lo em um novo worktree,
 mesclá-lo no branch ativo ou excluí-lo. Branches remotos omitem a renomeação
-e são excluídos do remoto após confirmação. O Gitcito omite a mesclagem
+e são excluídos do remoto após confirmação. O Geminio omite a mesclagem
 quando a referência selecionada já está contida no branch ativo e desativa a
 criação de worktree quando esse branch já está em checkout.
 
@@ -97,7 +97,7 @@ tinha em checkout precisa reapontar. Num selo do grafo, só aparece quando a
 branch acompanha exatamente um remoto; com vários, escolha a branch na barra
 lateral para o upstream ficar inequívoco.
 
-**Limites:** o Gitcito não reescreve nada que referenciava o nome antigo — pull
+**Limites:** o Geminio não reescreve nada que referenciava o nome antigo — pull
 requests abertos continuam apontando para a branch com que foram abertos, e
 regras de CI que casam com um padrão de branch deixam de casar. Renomear uma
 branch que está em checkout em outro [worktree](worktrees.md) falha, e o git diz
@@ -119,7 +119,7 @@ lugar normal delas mais abaixo.
 ## Fazendo checkout de uma branch remota
 
 Dê duplo clique numa branch remota para criar a branch local que a rastreia. Se
-uma branch local com esse nome já existir e tiver **divergido**, o Gitcito pergunta
+uma branch local com esse nome já existir e tiver **divergido**, o Geminio pergunta
 como reconciliar — rebase, merge ou reset — e oferece fazer backup da branch antes.
 
 ![O aviso de branch divergente: rebase, merge ou reset, com uma opção de backup](../../screenshots/diverged-checkout.webp)

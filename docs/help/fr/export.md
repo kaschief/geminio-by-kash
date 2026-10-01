@@ -60,7 +60,7 @@ ensuite `bundle/main` à vos conditions, exactement comme vous le feriez pour un
 branche de n'importe quel autre distant.
 
 Pour démarrer un *nouveau* dépôt depuis un bundle, clonez plutôt depuis le
-fichier dans un terminal : `git clone work.bundle myrepo`. Gitcito importe dans
+fichier dans un terminal : `git clone work.bundle myrepo`. Geminio importe dans
 un dépôt ouvert ; il ne clone pas depuis un fichier.
 
 ## Archives
@@ -97,7 +97,7 @@ dans le dépôt plutôt que dans le script de release de quelqu'un.
 - **Un bundle est une copie complète** sauf si vous utilisez une plage. Mettre en
   bundle un dépôt de 2 Go écrit un fichier de 2 Go, et cela prend autant de temps
   qu'un clone.
-- **Les bundles vides sont refusés** par git, pas par Gitcito : une plage sans
+- **Les bundles vides sont refusés** par git, pas par Geminio : une plage sans
   rien entre ses deux bouts produit une erreur plutôt qu'un fichier inutile.
 - **L'import ne fusionne pas.** Les références arrivent sous `bundle/…` et y
   restent tant que vous n'en faites rien.

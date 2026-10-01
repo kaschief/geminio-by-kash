@@ -13,7 +13,7 @@ eronder: `main → api → ui`. Drie kleine PR's reviewen is beter dan één eno
 
 ![Een branchstapel](../../screenshots/branch-stack.webp)
 
-Gitcito tekent hem als een **route**: bovenaan een startbranch, daaronder één stop
+Geminio tekent hem als een **route**: bovenaan een startbranch, daaronder één stop
 per niveau. De PR van elke stop richt zich op de stop erboven, en de eerste landt op
 de startbranch. Een stop toont zijn eigen commits, of hij een restack nodig heeft
 en, eenmaal ingediend, zijn PR-nummer.
@@ -53,7 +53,7 @@ Alles wat de volgorde verandert — een wissel, een verplaatsing, een andere sta
 **speelt** de ketting **opnieuw af**: de eigen commits van elke stop worden op hun
 nieuwe basis gerebaset. Het kan dus **conflicteren**, net als een restack. Twee stops die dezelfde regels raken wisselen niet zonder
 mens, en dan **gebeurt er niets**: de hele bewerking wordt teruggedraaid —
-punten, ouderlinks en de halve rebase — en Gitcito noemt de twee stops die
+punten, ouderlinks en de halve rebase — en Geminio noemt de twee stops die
 botsen. Een aangetikt keuzemenu hoort je niet midden in een rebase achter te
 laten.
 
@@ -113,7 +113,7 @@ Merge van onder naar boven, druk op Indienen, herhaal.
 Geketende bases zijn wat elke host begrijpt, en op GitLab, Bitbucket en Azure
 DevOps is dat alles. GitHub kan meer: sinds de preview van stacked pull requests
 is een stapel een object op de server. Zodra de pull requests bestaan meldt
-Gitcito ze als stapel aan — van onder naar boven — en krijg je de stapelkaart in
+Geminio ze als stapel aan — van onder naar boven — en krijg je de stapelkaart in
 de PR-UI, een cascading rebase aan de serverkant, en een merge op de bovenste PR
 die elk niveau eronder mee laat landen.
 

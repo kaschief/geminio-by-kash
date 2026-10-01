@@ -34,10 +34,10 @@ Google.
 
 Choisissez le fournisseur **CLI locale** pour répondre avec une CLI d'agent déjà
 installée et connectée sur cette machine — `claude`, `gemini` ou `codex`.
-Gitcito lance le binaire avec votre requête et lit sa réponse ; aucune clé d'API
+Geminio lance le binaire avec votre requête et lit sa réponse ; aucune clé d'API
 à coller, aucun jeton stocké.
 
-Gitcito n'exécute qu'une commande que vous avez configurée comme compte, et
+Geminio n'exécute qu'une commande que vous avez configurée comme compte, et
 toujours avec une liste d'arguments plutôt qu'un shell : rien dans un diff ou un
 nom de branche ne peut être interprété comme une commande.
 
@@ -67,7 +67,7 @@ En venant d'une version antérieure aux comptes, ceci s'affiche une fois. Le fou
 
 Les listes de modèles viennent du fournisseur lui-même et sont mises en cache un
 jour ; **Récupérer les modèles** en actualise une immédiatement. Sous la liste,
-Gitcito indique d'où elle vient : en direct, depuis le cache (avec la date), ou
+Geminio indique d'où elle vient : en direct, depuis le cache (avec la date), ou
 la liste intégrée de repli et pourquoi.
 
 La liste est filtrée aux modèles capables de répondre à une requête de chat : les
@@ -79,7 +79,7 @@ fournisseur ne l'annonce pas.
 Un fournisseur auquel vous n'avez pas encore donné de clé, ou injoignable, se
 rabat sur une petite liste intégrée plutôt que sur une liste déroulante vide.
 
-Aucun fournisseur ne publie de liste classée ou triée sur le volet ; la mise en forme est donc celle de Gitcito : les instantanés datés sont repliés sur le modèle dont ils sont un instantané (`gpt-4o` couvre `gpt-4o-2024-08-06`), et le reste est trié du plus récent au plus ancien plutôt qu'alphabétiquement. **Afficher tous les modèles**, en bas de la liste, ramène tout ce que le fournisseur a renvoyé.
+Aucun fournisseur ne publie de liste classée ou triée sur le volet ; la mise en forme est donc celle de Geminio : les instantanés datés sont repliés sur le modèle dont ils sont un instantané (`gpt-4o` couvre `gpt-4o-2024-08-06`), et le reste est trié du plus récent au plus ancien plutôt qu'alphabétiquement. **Afficher tous les modèles**, en bas de la liste, ramène tout ce que le fournisseur a renvoyé.
 
 ## Ce que cela sait faire
 
@@ -98,7 +98,7 @@ Aucun fournisseur ne publie de liste classée ou triée sur le volet ; la mise e
 ## Ancré, pas devinant
 
 La revue voit le diff comme des **sections étiquetées** et ne peut citer que ces
-étiquettes ; Gitcito résout ensuite chaque étiquette vers un fichier et une ligne
+étiquettes ; Geminio résout ensuite chaque étiquette vers un fichier et une ligne
 réels. Un modèle qui invente un emplacement est **rejeté et réinterrogé** : les
 observations pointent donc toujours vers du code qui existe.
 

@@ -2,7 +2,7 @@
 title: Menü çubuğu
 category: Buradan başlayın
 order: 5
-summary: Gitcito'nun macOS menülerinde ne var ve Windows ile Linux'ta neden menü çubuğu yok.
+summary: Geminio'nun macOS menülerinde ne var ve Windows ile Linux'ta neden menü çubuğu yok.
 keywords: menü çubuğu menü uygulama dosya düzen görünüm pencere yardım depo macos yerel hakkında çık
 ---
 
@@ -21,7 +21,7 @@ kullananların sahip olmadığı bir özelliktir.
 
 | Menü | İçeriği |
 |---|---|
-| **Gitcito** | Hakkında, güncelleme denetimi, [Ayarlar](repo-settings.md), standart gizleme ve çıkış öğeleri |
+| **Geminio** | Hakkında, güncelleme denetimi, [Ayarlar](repo-settings.md), standart gizleme ve çıkış öğeleri |
 | **Dosya** | Yeni sekme, depo açma veya [klonlama](cloning.md), son kullanılanları açma, sekme kapatma ve geri açma |
 | **Düzen** | Kes, kopyala, yapıştır, geri al — klavyenizin zaten yaptığı metin düzenleme — artı [kodda arama](search.md) |
 | **Görünüm** | Komut paleti, kenar çubuğu ve panel anahtarları, [terminal](terminal.md), [mission control](mission-control.md), [kasa](vault.md), yakınlaştırma |
@@ -39,16 +39,16 @@ Her öğenin yanındaki tuşlar, gerçekten atadığınız tuşlardır. Ayarlar'
 <kbd>⌘K</kbd> tuşunu yeniden atayın, Görünüm menüsü bunu söyler.
 
 Bu, menünün o birleşimleri sahiplenmeden *göstermesi* sayesinde çalışır:
-klavyeyi hâlâ Gitcito'nun kendi işleyişi yönetir; bir kısayolun imlecin
+klavyeyi hâlâ Geminio'nun kendi işleyişi yönetir; bir kısayolun imlecin
 bulunduğu yere göre farklı davranabilmesi de bundandır. Bu yolla
-gösterilemeyecek tek şey Gitcito'ya ait olmayan bir kısayoldur — <kbd>⌘F</kbd>
+gösterilemeyecek tek şey Geminio'ya ait olmayan bir kısayoldur — <kbd>⌘F</kbd>
 okuduğunuz dosyaya veya diff'e aittir, bu yüzden hiçbir menü öğesi onu
 sahiplenmez.
 
 ## Sınırlar
 
 - **Yalnızca macOS.** Windows ve Linux'ta pencere çerçevesizdir — başlık
-  çubuğunu Gitcito çizer ve menü çubuğuna yer kalmaz. O platformlarda aynı
+  çubuğunu Geminio çizer ve menü çubuğuna yer kalmaz. O platformlarda aynı
   komutlar [komut paleti](search.md) ve [klavye kısayolları](keyboard.md)
   üzerinden gelir.
 - **Yeniden yükle ve Geliştirici araçları yalnızca geliştirme

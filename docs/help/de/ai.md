@@ -32,10 +32,10 @@ scheinen. Gemini wird über Googles OpenAI-kompatiblen Endpunkt angesprochen.
 
 Wähle den Anbieter **Lokale CLI**, um mit einer Agent-CLI zu antworten, die auf
 diesem Rechner bereits installiert und angemeldet ist — `claude`, `gemini` oder
-`codex`. Gitcito startet das Programm mit deiner Eingabe und liest die Antwort;
+`codex`. Geminio startet das Programm mit deiner Eingabe und liest die Antwort;
 es gibt keinen API-Schlüssel einzufügen und kein Token wird gespeichert.
 
-Gitcito führt nur einen Befehl aus, den du als Konto eingerichtet hast, und
+Geminio führt nur einen Befehl aus, den du als Konto eingerichtet hast, und
 immer mit einer Argumentliste statt einer Shell — nichts aus einem Diff oder
 einem Branch-Namen kann also als Befehl gelesen werden.
 
@@ -63,7 +63,7 @@ Beim Upgrade von einer Version vor den Konten erscheint das einmal. Anbieter und
 ## Modelle
 
 Modelllisten kommen vom Anbieter selbst und werden einen Tag zwischengespeichert;
-**Modelle abrufen** aktualisiert eine sofort. Unter der Liste sagt Gitcito, woher
+**Modelle abrufen** aktualisiert eine sofort. Unter der Liste sagt Geminio, woher
 sie stammt — live, aus dem Cache (mit Zeitpunkt) oder aus der eingebauten
 Ersatzliste, und warum.
 
@@ -77,7 +77,7 @@ Ein Anbieter, dem du noch keinen Schlüssel gegeben hast, oder der nicht
 erreichbar ist, fällt auf eine kleine eingebaute Liste zurück statt auf ein
 leeres Auswahlfeld.
 
-Kein Anbieter veröffentlicht eine sortierte oder kuratierte Liste, die Aufbereitung stammt also von Gitcito: datierte Snapshots klappen in das Modell zusammen, von dem sie ein Snapshot sind (`gpt-4o` deckt `gpt-4o-2024-08-06` ab), und der Rest steht nach Aktualität statt alphabetisch. **Alle Modelle zeigen** am Ende der Liste holt alles zurück, was der Anbieter geliefert hat.
+Kein Anbieter veröffentlicht eine sortierte oder kuratierte Liste, die Aufbereitung stammt also von Geminio: datierte Snapshots klappen in das Modell zusammen, von dem sie ein Snapshot sind (`gpt-4o` deckt `gpt-4o-2024-08-06` ab), und der Rest steht nach Aktualität statt alphabetisch. **Alle Modelle zeigen** am Ende der Liste holt alles zurück, was der Anbieter geliefert hat.
 
 ## Was es kann
 
@@ -96,7 +96,7 @@ Kein Anbieter veröffentlicht eine sortierte oder kuratierte Liste, die Aufberei
 ## Verankert, nicht geraten
 
 Das Review sieht den Diff als **beschriftete Hunks** und darf nur diese
-Beschriftungen zitieren; Gitcito löst dann jede Beschriftung zu einer echten
+Beschriftungen zitieren; Geminio löst dann jede Beschriftung zu einer echten
 Datei und Zeile auf. Ein Modell, das eine Fundstelle erfindet, wird
 **abgelehnt und erneut gefragt** — Befunde zeigen also immer auf Code, den es
 wirklich gibt.

@@ -27,7 +27,7 @@ nota*, digite, **Salvar nota**. Várias linhas são bem-vindas.
 
 ![Escrevendo uma nota embaixo da mensagem de um commit já enviado, e depois salvando](../../screenshots/clip-commit-note.webp)
 
-Salvar uma nota é uma ação comum do Gitcito — ela mostra um toast, e **Desfazer**
+Salvar uma nota é uma ação comum do Geminio — ela mostra um toast, e **Desfazer**
 devolve o texto anterior, inclusive restaurando uma nota que você removeu.
 
 Apagar o texto e salvar remove a nota; não existe nota vazia.
@@ -35,7 +35,7 @@ Apagar o texto e salvar remove a nota; não existe nota vazia.
 ## Encontrando uma
 
 Notas são invisíveis num log normal, que é a principal razão de as pessoas nunca
-descobrirem que elas existem. O Gitcito marca um commit que carrega uma com um
+descobrirem que elas existem. O Geminio marca um commit que carrega uma com um
 pequeno ícone de nota na coluna de mensagem do grafo, de forma que a anotação seja
 encontrável sem que você já saiba que ela está lá.
 
@@ -57,11 +57,11 @@ git fetch <remote> +refs/notes/commits:refs/notes/commits
 ```
 
 Só a ref de notas de commit viaja — as refs locais da máquina do próprio
-Gitcito (como os veredictos do [CI local](local-ci.md)) deliberadamente não são
+Geminio (como os veredictos do [CI local](local-ci.md)) deliberadamente não são
 publicadas.
 
 Alguns hosts também precisam que notas estejam habilitadas ou permitidas do lado
-deles; uma rejeição ali é política do host, não um limite do Gitcito.
+deles; uma rejeição ali é política do host, não um limite do Geminio.
 
 Sem remote compartilhado, ou sem acesso de escrita? O
 [Compartilhamento seguro](secure-share.md) pode empacotar as notas de um
@@ -71,7 +71,7 @@ divergentes.
 
 ## Limites
 
-- **Uma única ref de notas.** O Gitcito lê e escreve a `refs/notes/commits`
+- **Uma única ref de notas.** O Geminio lê e escreve a `refs/notes/commits`
   padrão. Namespaces personalizados (`git notes --ref=review`) não são expostos —
   um repositório que os use não vai ver essas notas aqui.
 - **Sem merge de notas divergentes.** Se duas pessoas anotam o mesmo commit e as

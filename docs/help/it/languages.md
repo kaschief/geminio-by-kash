@@ -8,8 +8,8 @@ keywords: lingua lingue language locale i18n internazionalizzazione traduzione r
 
 # Lingue e scrittura da destra a sinistra
 
-L'interfaccia di Gitcito è tradotta. La lingua è
-un'impostazione di Gitcito, non del sistema operativo — chi sviluppa su un macOS
+L'interfaccia di Geminio è tradotta. La lingua è
+un'impostazione di Geminio, non del sistema operativo — chi sviluppa su un macOS
 in inglese ma preferisce leggere in giapponese la imposta qui, e chi sviluppa su
 un sistema in ebraico ma preferisce l'app in inglese non viene scavalcato.
 
@@ -51,7 +51,7 @@ qualche parte puntano dall'altra.
 
 Il passaggio è immediato e non richiede alcun riavvio.
 
-![Gitcito in arabo, con il layout rispecchiato](../../screenshots/rtl.webp)
+![Geminio in arabo, con il layout rispecchiato](../../screenshots/rtl.webp)
 
 ### Cosa deliberatamente non viene rispecchiato
 
@@ -75,7 +75,7 @@ il testo attorno a sé.
 Su dove si ferma questa cosa è onesta:
 
 - **Messaggi di commit, nomi dei branch e contenuti dei file non vengono mai
-  ridirezionati da Gitcito.** Sono mostrati come li ha scritti il loro autore. Un
+  ridirezionati da Geminio.** Sono mostrati come li ha scritti il loro autore. Un
   messaggio di commit in ebraico dentro un elenco isolato in LTR viene mostrato
   in ebraico, ma la riga attorno non si ribalta per assecondarlo.
 - **Le superfici di terze parti mantengono la propria direzione** — il terminale

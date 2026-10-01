@@ -10,7 +10,7 @@ keywords: ci local act actions workflow flujo de trabajo runner docker pipeline 
 
 El ciclo push–esperar–cruz roja–arreglar–push desperdicia diez minutos por
 vuelta. Con [act](https://nektosact.com) los mismos workflows se ejecutan en
-contenedores Docker en tu máquina, y Gitcito los dirige: elige un workflow,
+contenedores Docker en tu máquina, y Geminio los dirige: elige un workflow,
 pulsa Ejecutar y observa el mismo log que imprimiría la CI — antes de que nada
 salga de tu máquina.
 
@@ -18,10 +18,10 @@ salga de tu máquina.
 
 ## Una integración, no un runtime incluido
 
-Gitcito deliberadamente **no** incluye act ni Docker — una app que arrastra
+Geminio deliberadamente **no** incluye act ni Docker — una app que arrastra
 consigo un runtime de contenedores es lo contrario de un cliente git. Es una
 integración opcional: actívala en **Ajustes → Integraciones** (o en el propio
-diálogo), y Gitcito detecta qué está instalado y te guía por el resto —
+diálogo), y Geminio detecta qué está instalado y te guía por el resto —
 `brew install act`, un daemon de Docker en marcha, listo. Nada se ejecuta hasta
 que las tres condiciones se cumplen: activada, act instalado, Docker accesible.
 
@@ -63,7 +63,7 @@ probó. Hacer clic derecho en un commit del grafo ofrece directamente
 
 El coste se anuncia antes de que nada se ejecute, no se descubre después:
 escribe una revisión o un rango (`main..HEAD`, `HEAD~5..`, un sha), pulsa
-**Vista previa**, y Gitcito muestra cuántos commits coinciden con la
+**Vista previa**, y Geminio muestra cuántos commits coinciden con la
 especificación y qué N más recientes — el presupuesto explícito, con un tope
 de 50 — se ejecutarían realmente. Un barrido los ejecuta **secuencialmente**
 (act más Docker pesa lo bastante como para que ejecuciones paralelas se

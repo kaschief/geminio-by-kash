@@ -84,7 +84,7 @@ La case à cocher enregistre le dépôt auprès de **`git maintenance`**, qui
 empaquette et préfetche selon une planification exécutée par votre système
 d'exploitation (launchd, systemd ou le Planificateur de tâches).
 
-Rien ici n'est spécifique à Gitcito : la même planification sert votre terminal,
+Rien ici n'est spécifique à Geminio : la même planification sert votre terminal,
 et `git maintenance unregister` la défait depuis n'importe où. Décocher la case
 fait exactement cela, et laisse la planification en place pour les autres dépôts
 qui y sont enregistrés.
@@ -104,7 +104,7 @@ qui y sont enregistrés.
   dans un commit, il est atteignable, et gc le gardera pour toujours — cela
   relève de [retirer un fichier de l'historique](history-purge.md), une opération
   différente et bien plus perturbatrice.
-- **Gitcito ne lance jamais gc dans votre dos.** Le `gc --auto` propre à git,
+- **Geminio ne lance jamais gc dans votre dos.** Le `gc --auto` propre à git,
   lui, peut toujours le faire, comme il l'a toujours fait ; si l'un échoue il
   laisse une note dans `.git/gc.log`, que ce panneau fait remonter.
 

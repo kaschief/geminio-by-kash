@@ -8,7 +8,7 @@ keywords: thème thèmes theme themes sombre dark clair light apparence appearan
 
 # Thèmes et apparence
 
-Thèmes intégrés — Gitcito, Nord, Dracula, Solarized, GitHub, Monokai,
+Thèmes intégrés — Geminio, Nord, Dracula, Solarized, GitHub, Monokai,
 Midnight, Contrast et Daltonic — chacun avec une variante claire et une variante
 sombre.
 

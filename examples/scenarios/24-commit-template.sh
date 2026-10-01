@@ -1,13 +1,13 @@
 # shellcheck shell=bash disable=SC2154
 # 24. commit-template — repo with a committed .gitmessage and commit.template set.
-# Gitcito should prefill the commit composer from the template's non-comment lines
+# Geminio should prefill the commit composer from the template's non-comment lines
 # (the '#' guidance lines are stripped). A dirty file is left staged-able so you
 # have something to commit with the prefilled message.
 R="$ROOT/commit-template"
 new_repo "$R"
 
 # The template: real scaffold lines (prefilled) + '#' comments (stripped by git
-# and by Gitcito, so they never end up in the actual commit).
+# and by Geminio, so they never end up in the actual commit).
 cat > "$R/.gitmessage" <<'EOF'
 <type>(<scope>): <short summary>
 
@@ -33,7 +33,7 @@ cat > "$R/README.md" <<'EOF'
 
 This repo sets `commit.template = .gitmessage` (see `git config commit.template`).
 
-Open it in Gitcito and look at the commit box: it should be prefilled from the
+Open it in Geminio and look at the commit box: it should be prefilled from the
 template — the first scaffold line becomes the summary, the rest the body, and
 the `#` comment lines are dropped.
 

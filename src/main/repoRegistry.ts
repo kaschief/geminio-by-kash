@@ -6,7 +6,7 @@ import type { RegistryRepo, RepoScanResult, RepoScanRoot } from '../shared/types
 import { gitDirOf, readHeadBranch, readOriginOwner } from './repoMeta'
 import { scanForRepos } from './repoScan'
 
-// Every repository Gitcito knows about, whether or not it is open. Kept in its
+// Every repository Geminio knows about, whether or not it is open. Kept in its
 // own file rather than in settings: it is a cache of what is on *this* disk,
 // while settings are preferences you would carry to another machine. Losing
 // this file costs a rescan; losing settings costs information.

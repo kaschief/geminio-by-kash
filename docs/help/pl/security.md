@@ -2,13 +2,13 @@
 title: Bezpieczeństwo i sekrety
 category: Bezpieczeństwo
 order: 70
-summary: Maskowanie, zabezpieczenia, pęk kluczy — i to, czego Gitcito robić odmawia.
+summary: Maskowanie, zabezpieczenia, pęk kluczy — i to, czego Geminio robić odmawia.
 keywords: bezpieczeństwo sekrety maskowanie pęk kluczy tokeny chroniona gałąź duży plik prywatność security secrets masking keychain safeStorage protected branch guard privacy
 ---
 
 # Bezpieczeństwo i sekrety
 
-Gitcito **nie ma żadnego backendu**. Jedyne wywołania sieciowe idą do twojego
+Geminio **nie ma żadnego backendu**. Jedyne wywołania sieciowe idą do twojego
 hostingu Gita i — jeśli to włączysz — do twojego dostawcy AI.
 
 ![Ustawienia bezpieczeństwa](../../screenshots/settings-security.webp)
@@ -45,7 +45,7 @@ Tokeny i wpisy [sejfu](vault.md) są szyfrowane pękiem kluczy twojego systemu
 (`safeStorage` z Electrona), nigdy kluczem trzymanym w pliku ustawień.
 
 **Nic nie dotyka pęku kluczy, dopóki tego nie powiesz.** Zanim zdąży pojawić się
-systemowe okno uprawnień, Gitcito wyjaśnia, co zostanie zapisane, czego nie
+systemowe okno uprawnień, Geminio wyjaśnia, co zostanie zapisane, czego nie
 potrafi (aplikacja zawsze odczyta wyłącznie wpis, który sama utworzyła — twoje
 pozostałe hasła są nieosiągalne) i że odmowa jest w porządku: tokeny żyją wtedy
 w pamięci tylko na czas sesji, sejf zostaje zamknięty, a włączyć to możesz

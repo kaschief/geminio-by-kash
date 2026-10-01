@@ -101,7 +101,7 @@ baloncuğa sağ tıklayın: **Kopyala** seçimi, **Mesajı kopyala** mesajın
 tamamını alır — bir yanıt Markdown kaynağı olarak kopyalanır — ve tıklama bir
 bağlantıya denk geldiyse **Bağlantıyı kopyala** adresini alır.
 
-Bağlantılar her zaman varsayılan tarayıcınızda açılır, asla Gitcito içinde
+Bağlantılar her zaman varsayılan tarayıcınızda açılır, asla Geminio içinde
 değil — yanıtlardaki Markdown bağlantıları da kendi mesajlarınızdaki düz
 `https://` adresleri de.
 
@@ -133,7 +133,7 @@ Depo sohbeti tam düzenlemeler, dosya oluşturma veya bütünüyle değiştirme 
 silme önerebilir; ardından Git eylemleri gelir: yok sayma desenleri, hazırlama,
 hazırlıktan çıkarma, commit, zula, değişiklikleri atma, dal, dal değiştirme,
 etiket ve — dal listesi ile son commit’ler kendisine gösterildiği için — merge,
-rebase, revert ve cherry-pick. Açılır diff’i Gitcito yerelde hesaplar. Var olan
+rebase, revert ve cherry-pick. Açılır diff’i Geminio yerelde hesaplar. Var olan
 dosyalar okunan kanıttan gelmelidir; güvensiz, gizli, yok sayılan, üretilmiş,
 ikili, bayatlamış, fazla büyük ve sembolik bağla erişilen hedefler reddedilir.
 Reset, geçmişi yeniden yazma, dal silme ve her türlü zorlamalı işlem yalnızca
@@ -144,11 +144,11 @@ kart o satırı başarısız işaretler ve o ana dek çalışanların sayısın�
 çakışma şeridi, aynı işlem araç çubuğundan başlatılmış gibi devreye girer.
 
 Dosya grubunun tamamı ilk yazmadan önce yeniden doğrulanır ve bir adım başarısız
-olursa geri alınır. Commit öncesinde Gitcito stage’de değişiklik bulunduğunu da
+olursa geri alınır. Commit öncesinde Geminio stage’de değişiklik bulunduğunu da
 denetler. Kart tamamlanan, başarısız ve atlanan her eylemi ve kısmi sonucu
 gösterir. Ardından eylemsiz ayrı bir model çağrısı gerçek sonucu özetler.
 
-**`.gitcito.json` dosyasını da yazabilir.** Sohbete
+**`.geminio.json` dosyasını da yazabilir.** Sohbete
 [deponun kendi yapılandırma dosyasının](repo-config.md) biçimi verilir; böylece
 *JIRA-1234 için bilet bağlantıları ekle* ya da *release dallarını koru*,
 yükleyicinin reddedeceği makul görünen anahtarlar yerine gerçek şemaya göre
@@ -191,7 +191,7 @@ kutularıdır; dolayısıyla plan başlamadan önce yanıtlanır, planın içind
 ### Bir planı geri alma
 
 Plan toplu onaylanır, dolayısıyla toplu geri alınır. Bir şeyi değiştirebilecek
-ilk eylemden önce Gitcito dalın nerede olduğunu kaydeder ve çalışma ağacının
+ilk eylemden önce Geminio dalın nerede olduğunu kaydeder ve çalışma ağacının
 anlık görüntüsünü alır; biten kart bunun üzerine **Planı geri al** sunar. Dalı o
 commit’e döndürür ve ağacı geri yükler; bu, planın ürettiği her şeyi atmak
 demektir, bu yüzden önce onay ister ve dönülecek commit’i adıyla söyler. Açılan
@@ -235,7 +235,7 @@ Taslak düzenlenebilir — Gönder’e basana kadar hiçbir şey gönderilmez.
   zaman onay ister. **Sohbette git eylemleri önerilsin** kapalıyken önermez
   bile.
 - **Konuşmalar yalnızca bellekte yaşar.** Her depo kendi başlığını tutar;
-  Gitcito’dan çıkınca silinirler.
+  Geminio’dan çıkınca silinirler.
 
 ## Nasıl açılır
 

@@ -61,7 +61,7 @@ Ein Rechtsklick auf einen Branch in diesem Dropdown benennt einen lokalen
 Branch um, kopiert seinen Namen, checkt ihn in einem neuen Worktree aus,
 mergt ihn in den aktiven Branch oder löscht ihn. Remote-Branches bieten kein
 Umbenennen an und werden nach einer Bestätigung von ihrem Remote gelöscht.
-Gitcito blendet den Merge aus, wenn die gewählte Referenz bereits im aktiven
+Geminio blendet den Merge aus, wenn die gewählte Referenz bereits im aktiven
 Branch enthalten ist, und deaktiviert das Anlegen eines Worktrees, wenn der
 Branch schon ausgecheckt ist.
 
@@ -101,7 +101,7 @@ ihn ausgecheckt hatte, muss neu zeigen. An einem Graph-Badge erscheint die
 Option nur, wenn der Branch genau ein Remote verfolgt; bei mehreren wähle den
 Branch in der Seitenleiste, damit der Upstream eindeutig ist.
 
-**Grenzen:** Gitcito schreibt nichts um, was auf den alten Namen verwies —
+**Grenzen:** Geminio schreibt nichts um, was auf den alten Namen verwies —
 offene Pull Requests zeigen weiter auf den Branch, gegen den sie geöffnet
 wurden, und CI-Regeln mit Branch-Muster greifen nicht mehr. Einen Branch
 umzubenennen, der in einem anderen [Worktree](worktrees.md) ausgecheckt ist,
@@ -125,7 +125,7 @@ Repository gemerkt, und bleiben zugleich an ihrem gewohnten Platz darunter.
 
 Doppelklicke einen Remote-Branch, um den lokalen Branch anzulegen, der ihn
 trackt. Existiert bereits ein lokaler Branch dieses Namens und ist er
-**divergiert**, fragt Gitcito, wie abgeglichen werden soll — rebasen, mergen
+**divergiert**, fragt Geminio, wie abgeglichen werden soll — rebasen, mergen
 oder zurücksetzen — und bietet an, den Branch vorher zu sichern.
 
 ![Die Abfrage bei divergiertem Branch: rebasen, mergen oder zurücksetzen, mit Backup-Option](../../screenshots/diverged-checkout.webp)

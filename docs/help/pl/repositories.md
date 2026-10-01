@@ -2,7 +2,7 @@
 title: Repozytoria
 category: Synchronizacja i wiele repozytoriów
 order: 52
-summary: Każde repozytorium, które Gitcito zna, otwarte albo nie, na jednej przeszukiwalnej liście.
+summary: Każde repozytorium, które Geminio zna, otwarte albo nie, na jednej przeszukiwalnej liście.
 keywords: repozytoria rejestr wszystkie repozytoria ulubione gwiazdka ostatnie skan folder przeglądaj znajdź otwórz zarządzaj zarządzanie repozytoriami kolor sekcja odcień podświetlenie przestrzenie z folderów drzewo generuj import masowy repositories registry favourites starred recent scan folder workspaces
 ---
 
@@ -12,7 +12,7 @@ keywords: repozytoria rejestr wszystkie repozytoria ulubione gwiazdka ostatnie s
 otwartych repozytoriów mnie potrzebuje?". Zna tylko karty aktywnej
 przestrzeni roboczej. Repozytoria odpowiadają na inne: **gdzie jest to
 repozytorium i czy w ogóle jest gdzieś otwarte?** Obejmują wszystko, co
-Gitcito kiedykolwiek widział. Każdą przestrzeń, każdą kartę, oraz to, co
+Geminio kiedykolwiek widział. Każdą przestrzeń, każdą kartę, oraz to, co
 znajdzie, skanując foldery, które mu wskażesz.
 
 ![Strona Repozytoria: kolorowe sekcje otwartych, ulubionych, ostatnich i
@@ -65,7 +65,7 @@ Trzy rzeczy warte zapamiętania:
   kolory przy każdym starcie, a dodanie przestrzeni nigdy nie przekolorowuje
   tych powyżej. Zapisują się tylko kolory, które zmienisz.
 - Kolor jest **lokalny dla tej strony**. Pokolorowanie tu sekcji przestrzeni
-  nic nie mówi o tej przestrzeni gdzie indziej w Gitcito. Kolor jej karty to
+  nic nie mówi o tej przestrzeni gdzie indziej w Geminio. Kolor jej karty to
   osobne ustawienie.
 - Kolor jest **rozcieńczany** do niskiego procentu powierzchni, zamiast
   leżeć pełną siłą, żeby nasycony wybór zostawał czytelnym tłem w jasnym i
@@ -77,7 +77,7 @@ więc dzielić odcień.
 
 ## Co sprawia, że repozytorium jest znane
 
-Wiersz pojawia się tutaj, gdy Gitcito je kiedyś **otworzył**, albo znalazł
+Wiersz pojawia się tutaj, gdy Geminio je kiedyś **otworzył**, albo znalazł
 pod **folderem do skanowania**. Nic nie jest indeksowane tylko dlatego, że
 leży na dysku w miejscu, o którym nigdy mu nie wspomniałeś.
 
@@ -110,7 +110,7 @@ pierwszej i lista czyta się jak tabela, nie jak stos.
 Końcowe akcje widać w spoczynku, nie dopiero po najechaniu: **otwórz w
 karcie** oraz **⋮**, które otwiera to samo [menu kontekstowe
 repozytorium](repo-menu.md) co kliknięcie prawym. To menu używane wszędzie
-w Gitcito, rozszerzone o dwa wpisy właściwe tej stronie:
+w Geminio, rozszerzone o dwa wpisy właściwe tej stronie:
 
 | Akcja | Co robi |
 |---|---|
@@ -158,7 +158,7 @@ Bezpieczne do powtórzenia. Drugi skan **dodaje i nigdy nie usuwa**:
 - Nowe repozytoria dopisywane są do pasującej przestrzeni.
 - Te, które przeniosłeś, przemianowałeś albo usunąłeś ręcznie, zostają jak
   je zostawiłeś.
-- Przestrzeń, którą **przemianowałeś**, nadal jest rozpoznawana. Gitcito
+- Przestrzeń, którą **przemianowałeś**, nadal jest rozpoznawana. Geminio
   pamięta folder, z którego wyszła, więc scala zamiast tworzyć duplikat.
 - Repozytorium skasowane z dysku trzyma kartę i pokazuje się jako
   brakujące.
@@ -215,7 +215,7 @@ zostaje nietknięty, bo to menu i tak pyta, jakiego pulla chcesz.
 ## Pasek akcji
 
 **Otwórz folder…**, **Klonuj…** i **Dodaj folder do skanowania…**. Trzy
-sposoby, żeby włożyć repozytorium do rejestru Gitcito, z tej samej strony,
+sposoby, żeby włożyć repozytorium do rejestru Geminio, z tej samej strony,
 na której szukasz już znanego.
 
 ## Podsumowanie WIP

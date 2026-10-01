@@ -30,14 +30,14 @@ ouvre le lanceur.
 
 | Action | Effet |
 |---|---|
-| **Créer un alias…** / **Modifier l’alias…** | Un nom d'affichage, rien de plus. Gitcito ne renomme ni ne déplace jamais le dossier sur le disque. Le même alias suit le dépôt à travers les onglets, les groupes et les espaces de travail. |
+| **Créer un alias…** / **Modifier l’alias…** | Un nom d'affichage, rien de plus. Geminio ne renomme ni ne déplace jamais le dossier sur le disque. Le même alias suit le dépôt à travers les onglets, les groupes et les espaces de travail. |
 | **Supprimer l’alias** | Affiché quand un alias existe. Restaure le nom du dossier. |
 | **Afficher les worktrees** | Met ce dépôt au premier plan et ouvre la section des worktrees de la barre latérale. |
 | **Nouveau worktree…** | La même invite de création de worktree que depuis une branche. Désactivé quand le chemin est introuvable ou qu'une fusion, un rebase, un cherry-pick ou un revert est en cours. |
 | **Copier le nom du dépôt** | Copie le nom canonique du dossier, pas l'alias. |
 | **Copier le chemin du dépôt** | Copie le chemin absolu. |
 | **Voir sur GitHub** | Origin s'il pointe vers github.com, sinon le premier distant GitHub analysable. Désactivé quand aucun ne peut être déduit. |
-| **Ouvrir dans le terminal** | Ouvre le terminal de Gitcito avec ce dépôt comme répertoire de travail. |
+| **Ouvrir dans le terminal** | Ouvre le terminal de Geminio avec ce dépôt comme répertoire de travail. |
 | **Afficher dans le Finder / l’Explorateur de fichiers** | Met le dossier du dépôt en évidence dans le gestionnaire de fichiers de la plateforme. |
 | **Ouvrir dans l’éditeur externe** | L'éditeur configuré dans les réglages. Visible mais désactivé tant qu'aucun n'est défini. |
 | **Retirer…** | Ferme l'onglet ou enlève la pastille du groupe. Utilise le même avertissement de travail non validé que le bouton **×**. Cela ne supprime jamais de fichiers du disque. |

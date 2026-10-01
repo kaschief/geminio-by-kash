@@ -8,7 +8,7 @@ keywords: dil diller yerel ayar locale i18n uluslararasılaştırma çeviri rtl 
 
 # Diller ve sağdan sola
 
-Gitcito'nun arayüzü çevrilmiştir. Dil, işletim sisteminin değil Gitcito'nun bir
+Geminio'nun arayüzü çevrilmiştir. Dil, işletim sisteminin değil Geminio'nun bir
 ayarıdır — İngilizce bir macOS kurulumundaki, Japonca okumayı tercih eden bir
 geliştirici burayı ayarlar; İbranice bir sistemdeki, uygulamayı İngilizce
 isteyen bir geliştiricinin tercihi de geçersiz kılınmaz.
@@ -49,7 +49,7 @@ araç çubukları ters döner, bir yeri işaret eden simgeler öbür yönü gös
 
 Geçiş anında olur, yeniden başlatma gerektirmez.
 
-![Yerleşimi aynalanmış hâliyle Arapça Gitcito](../../screenshots/rtl.webp)
+![Yerleşimi aynalanmış hâliyle Arapça Geminio](../../screenshots/rtl.webp)
 
 ### Bilinçli olarak aynalanmayanlar
 
@@ -72,7 +72,7 @@ sırasını bozamaz.
 
 Bu özellik nerede durduğu konusunda dürüsttür:
 
-- **Commit mesajlarının, dal adlarının ve dosya içeriklerinin yönü Gitcito
+- **Commit mesajlarının, dal adlarının ve dosya içeriklerinin yönü Geminio
   tarafından asla değiştirilmez.** Yazarları nasıl yazdıysa öyle gösterilirler.
   Soldan sağa yalıtılmış bir listedeki İbranice bir commit mesajı İbranice
   olarak görünür, ama onu barındıran satır ona uymak için ters dönmez.

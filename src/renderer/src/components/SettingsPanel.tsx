@@ -1,3 +1,4 @@
+import { setGitHubAccount } from '../stores/githubAccount'
 import { useAiReady } from './useAiReady'
 import { PATH_DEPTHS, displayPath } from '../lib/pathDisplay'
 import { formatAbsoluteDate } from '../lib/commitDate'
@@ -115,8 +116,11 @@ import { AIAccountsEditor } from './AIAccounts'
 import { LanguagePicker } from './LanguagePicker'
 import { ShortcutEditor } from './CheatsheetModal'
 import madLogo from '../assets/mad-high.png'
+import { RepoSettingsModal } from './RepoSettingsModal'
+import { FolderGit2 } from 'lucide-react'
 
 type SettingsPage =
+  | 'repository'
   | 'profile'
   | 'layout'
   | 'workspaces'
@@ -370,7 +374,7 @@ const INTEGRATIONS = [
     field: 'githubToken',
     kind: 'pat',
     placeholder: 'ghp_…',
-    tokenUrl: 'https://github.com/settings/tokens/new?scopes=repo&description=Gitcito'
+    tokenUrl: 'https://github.com/settings/tokens/new?scopes=repo&description=Geminio'
   },
   {
     id: 'azure',
@@ -389,7 +393,7 @@ const INTEGRATIONS = [
     field: 'gitlabToken',
     kind: 'pat',
     placeholder: 'glpat-…',
-    tokenUrl: 'https://gitlab.com/-/user_settings/personal_access_tokens?name=Gitcito&scopes=read_api,read_repository'
+    tokenUrl: 'https://gitlab.com/-/user_settings/personal_access_tokens?name=Geminio&scopes=read_api,read_repository'
   },
   {
     id: 'bitbucket',
@@ -448,7 +452,10 @@ export function IntegrationsPage({
       void hostingApi
         .whoAmI(active.id, token, whoAmIOrg, interactive)
         .then((info) => {
-          if (alive) setAccount(info)
+          if (alive) {
+            setAccount(info)
+            if (active.id === 'github') setGitHubAccount(profile, info)
+          }
         })
         .catch((err: Error) => {
           if (alive) setAccountError(err.message)
@@ -460,7 +467,7 @@ export function IntegrationsPage({
         alive = false
       }
     },
-    [active.id, token, whoAmIOrg, azureOrgRequired]
+    [active.id, token, profile.id, whoAmIOrg, azureOrgRequired]
   )
 
   // Silent on mount — opening Settings must never pop four sign-in windows.
@@ -518,12 +525,14 @@ export function IntegrationsPage({
         )}
       </div>
 
+      {active.id === 'github' && <p className="settings-hint">{t('settings.githubConnectionHint')}</p>}
+
       <div className="connected-account">
         {loadingAccount && <span className="settings-hint">{t('settings.loadingAccount')}</span>}
         {!loadingAccount && accountError && <span className="connected-account-error">{accountError}</span>}
         {!loadingAccount && !account && !(active.id === 'azure' && !whoAmIOrg) && (
           <button className="btn ghost small" type="button" onClick={() => check(true)}>
-            {t('settings.signInWithGit')}
+            {t(active.id === 'github' ? 'settings.connectGitHub' : 'settings.signInWithGit')}
           </button>
         )}
         {!loadingAccount && account && (
@@ -2907,7 +2916,7 @@ function RerereCard(): React.JSX.Element {
 /**
  * Chooses `diff.tool` and `merge.tool`. The lists come from git itself, so a
  * tool someone added by hand with `difftool.<name>.cmd` shows up here without
- * Gitcito knowing anything about it.
+ * Geminio knowing anything about it.
  *
  * Needs a repository only because git config is read through one — the values
  * are written globally, since a favourite comparison app is a property of the
@@ -2986,7 +2995,7 @@ function DiffToolCard(): React.JSX.Element {
 /**
  * Picks the external editor used by every "Open in <editor>" action. Detection
  * runs each time the card mounts rather than being cached: installing an editor
- * while Gitcito is open should be one settings visit away, not a restart.
+ * while Geminio is open should be one settings visit away, not a restart.
  */
 function EditorCard(): React.JSX.Element {
   const editor = useSettingsStore((s) => s.settings.editor)
@@ -3233,7 +3242,7 @@ function SshKeysCard(): React.JSX.Element {
           try {
             // The comment is what identifies the key on the host's list later,
             // so it defaults to the profile's git identity.
-            await sshApi.generate(name, profile.gitEmail || profile.gitName || 'gitcito', '')
+            await sshApi.generate(name, profile.gitEmail || profile.gitName || 'geminio', '')
             toast('success', t('ssh.generated'))
             await reload()
           } catch (err) {
@@ -3389,7 +3398,7 @@ function ShortcutsPage(): React.JSX.Element {
   )
 }
 
-/** Folders Gitcito walks looking for repositories. Preferences, not a live
+/** Folders Geminio walks looking for repositories. Preferences, not a live
  *  view — "Scan now" is explicit because a scan spawns a process per
  *  candidate folder and nobody wants that running unasked. */
 function ScanRootsSection(): React.JSX.Element {
@@ -3879,7 +3888,7 @@ export function OperationLogSection(): React.JSX.Element {
         Operation log
       </h4>
       <p className="settings-hint">
-        Every git operation gitcito ran, with success/failure, filterable by repository. Stored locally on this machine.
+        Every git operation geminio ran, with success/failure, filterable by repository. Stored locally on this machine.
       </p>
       <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap', marginTop: 12 }}>
         <button className="btn ghost small" onClick={open}>
@@ -3922,7 +3931,7 @@ function readLastPage(): SettingsPage {
   return stored && (PAGE_IDS as string[]).includes(stored) ? (stored as SettingsPage) : 'general'
 }
 
-export function SettingsPanel({ initialPage, initialThemeTab }: { initialPage?: SettingsPage; initialThemeTab?: 'theme' | 'graph' } = {}): React.JSX.Element {
+export function SettingsPanel({ initialPage, initialThemeTab, repoPath, initialRepoTab }: { initialPage?: SettingsPage; initialThemeTab?: 'theme' | 'graph'; repoPath?: string; initialRepoTab?: React.ComponentProps<typeof RepoSettingsModal>['initialTab'] } = {}): React.JSX.Element {
   const { settings, addProfile, deleteProfile } = useSettingsStore()
   const openModal = useUIStore((s) => s.openModal)
   const closeModal = useUIStore((s) => s.closeModal)
@@ -3937,6 +3946,7 @@ export function SettingsPanel({ initialPage, initialThemeTab }: { initialPage?: 
     settings.skippedUpdateVersion
   )
   const t = useT()
+  const repository = repoPath ?? useSettingsStore.getState().activeRepo()?.path
 
   useEffect(() => {
     localStorage.setItem(LAST_PAGE_KEY, page)
@@ -3998,7 +4008,7 @@ export function SettingsPanel({ initialPage, initialThemeTab }: { initialPage?: 
                   className="profile-item"
                   onClick={() => setSelectedId(p.id)}
                 >
-                  <UserCircle2 size={15} />
+                  <Avatar ownAccount profileId={p.id} email={p.gitEmail} name={p.name} size={20} />
                   <span>{p.name}</span>
                   {p.id === settings.activeProfileId && <BadgeCheck size={13} className="profile-active-mark" />}
                 </button>
@@ -4030,6 +4040,12 @@ export function SettingsPanel({ initialPage, initialThemeTab }: { initialPage?: 
                 <span>{t(p.key)}</span>
               </button>
             ))}
+            {repository && (
+              <button className={`profile-item ${page === 'repository' ? 'selected' : ''}`} onClick={() => setPage('repository')}>
+                <FolderGit2 size={13} />
+                <span>{t('settings.repository')}</span>
+              </button>
+            )}
           </div>
 
           <div className="settings-footer">
@@ -4079,6 +4095,7 @@ export function SettingsPanel({ initialPage, initialThemeTab }: { initialPage?: 
         </aside>
 
         <div className="settings-form">
+          {page === 'repository' && repository && <RepoSettingsModal key={repository} repoPath={repository} initialTab={initialRepoTab} />}
           {page === 'profile' && <ProfilePage profile={profile} edit={edit} />}
           {page === 'workspaces' && <WorkspacesPage />}
           {page === 'integrations' && (

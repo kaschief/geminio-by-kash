@@ -12,7 +12,7 @@ keywords: ssh clé key clés keys agent ssh-add ssh-keygen ed25519 publickey per
 
 ## Pourquoi cette section est à côté des jetons
 
-Gitcito authentifie deux choses différentes, et on suppose raisonnablement
+Geminio authentifie deux choses différentes, et on suppose raisonnablement
 qu'elles n'en font qu'une :
 
 | | Authentifié par |
@@ -55,7 +55,7 @@ généralement cela.
 
 **Tester la connexion** existe parce que la réponse propre de ssh induit en
 erreur : GitHub vous authentifie avec succès *puis* sort avec un code d'échec,
-puisqu'il n'offre pas de shell. Gitcito lit le message plutôt que le code de
+puisqu'il n'offre pas de shell. Geminio lit le message plutôt que le code de
 sortie, et affiche la sortie brute en dessous pour que vous puissiez vérifier sa
 lecture.
 
@@ -69,17 +69,17 @@ lecture.
   refusé. Écraser une clé privée révoque silencieusement votre accès à tout ce
   qui lui fait confiance, et aucune boîte de dialogue de confirmation ne rend
   cela récupérable.
-- **Les phrases secrètes ne sont pas stockées par Gitcito.** Vous en tapez une à
+- **Les phrases secrètes ne sont pas stockées par Geminio.** Vous en tapez une à
   la génération ou à l'ajout dans l'agent ; elle est transmise à
   `ssh-keygen`/`ssh-add` puis abandonnée. La conserver d'un redémarrage à l'autre
   est le travail du trousseau du système, via `ssh-add`.
 - **Aucune édition de `~/.ssh/config`**, pas d'alias d'hôtes, pas de sélection de
-  clé par dépôt. Cela vit dans votre configuration ssh, et Gitcito ne touche pas
+  clé par dépôt. Cela vit dans votre configuration ssh, et Geminio ne touche pas
   à ce fichier.
 
 ## Ce qui ne quitte jamais votre machine
 
-**Gitcito ne lit, n'affiche et ne transmet jamais une clé privée.** La section
+**Geminio ne lit, n'affiche et ne transmet jamais une clé privée.** La section
 liste des moitiés publiques et des empreintes. La seule chose jamais envoyée où
 que ce soit est la clé publique sur laquelle vous appuyez explicitement
 **Téléverser** — et elle part vers GitHub, sous votre propre jeton, après une

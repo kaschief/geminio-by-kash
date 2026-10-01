@@ -7,7 +7,7 @@ import type { RepoHost } from '../shared/types'
  * Every machine that can `git clone` a private repo already has a working
  * credential for it — stored by osxkeychain, or minted on demand by Git
  * Credential Manager (which does the Entra ID / OAuth dance for Azure DevOps
- * and GitHub). Gitcito used to ignore all of that and demand its own PAT per
+ * and GitHub). Geminio used to ignore all of that and demand its own PAT per
  * provider per profile, which is why multi-org Azure DevOps was painful: one
  * PAT field cannot hold four organizations' tokens.
  *
@@ -223,6 +223,8 @@ export function clearCredentialCache(): void {
   inFlight.clear()
   blocked.clear()
   ghStatus = null
+  ghToken = null
+  ghTokenInFlight = null
 }
 
 /**
@@ -235,7 +237,7 @@ export function isJwt(token: string): boolean {
 
 /**
  * The token a host's REST API should use, preferring one the user typed into
- * Settings and falling back to whatever git already has for that remote.
+ * Settings, then the GitHub CLI login, then Git's credential helper.
  * Returns the source too, so a 401 can invalidate a borrowed credential.
  */
 export async function apiToken(
@@ -244,8 +246,46 @@ export async function apiToken(
   opts: FillOpts = {}
 ): Promise<{ token: string; cred?: GitCredential } | null> {
   if (configured?.trim()) return { token: configured.trim() }
+  // Reuse the CLI login on github.com without changing global Git settings.
+  // Never offer this token to another host (including lookalike host names).
+  if (isGithubRemote(remoteUrl)) {
+    const token = await githubCliToken(!!opts.interactive)
+    if (token) return { token }
+  }
   const cred = await credentialFor(remoteUrl, opts)
   return cred ? { token: cred.password, cred } : null
+}
+
+/** Hosting API access is independent of whether Git transports over SSH. */
+function isGithubRemote(url: string): boolean {
+  if (/^[^@/]+@github\.com:/i.test(url)) return true
+  try {
+    const parsed = new URL(url)
+    return ['https:', 'http:', 'ssh:'].includes(parsed.protocol) && parsed.hostname.toLowerCase() === 'github.com'
+  } catch {
+    return false
+  }
+}
+
+// Tokens stay in main-process memory; gh owns their secure persistence.
+let ghToken: { value: string | null; at: number } | null = null
+let ghTokenInFlight: Promise<string | null> | null = null
+
+function githubCliToken(interactive: boolean): Promise<string | null> {
+  if (ghToken && Date.now() - ghToken.at < TTL_MS && !interactive) return Promise.resolve(ghToken.value)
+  if (ghTokenInFlight) return ghTokenInFlight
+  const startedIn = generation
+  const pending = new Promise<string | null>((resolve) => {
+    execFile('gh', ['auth', 'token', '--hostname', 'github.com'], { timeout: TIMEOUT_SILENT_MS }, (err, stdout) => {
+      const value = err ? null : stdout.trim() || null
+      if (startedIn === generation) ghToken = { value, at: Date.now() }
+      resolve(value)
+    })
+  }).finally(() => {
+    if (ghTokenInFlight === pending) ghTokenInFlight = null
+  })
+  ghTokenInFlight = pending
+  return pending
 }
 
 /** Whether any credential helper is configured at all — used to explain the setup state. */

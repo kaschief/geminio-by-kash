@@ -180,7 +180,7 @@ export function CommandPalette(): React.JSX.Element {
               id: 'cli-install',
               title: t('cmd.cliInstall'),
               group: 'Actions',
-              keywords: 'terminal shell path command line open gitcito',
+              keywords: 'terminal shell path command line open geminio',
               icon: <TerminalSquare size={15} />,
               run: act(() => {
                 void cliApi.install().then((res) => {
@@ -292,10 +292,10 @@ export function CommandPalette(): React.JSX.Element {
       { id: 'wiki', title: t('cmd.wiki'), group: 'Actions', keywords: 'wiki docs documentation deepwiki overview architecture ai generated', icon: <BookOpen size={15} />, run: act(() => useSettingsStore.getState().openPageTab({ type: 'wiki', repoPath: path })) },
       { id: 'changelog-gen', title: t('cmd.changelogGen'), group: 'Actions', keywords: 'conventional commits release notes changelog', icon: <FileText size={15} />, run: act(() => ui.openModal({ kind: 'changelog-gen', repoPath: path })) },
       { id: 'vault', title: t('cmd.vault'), group: 'Actions', keywords: 'secrets vault credentials keychain env password store', icon: <KeyRound size={15} />, run: act(() => useSettingsStore.getState().openPageTab({ type: 'vault' })) },
-      { id: 'secure-export', title: t('cmd.secureExport'), group: 'Actions', keywords: 'share export env secrets encrypted bundle gitcito file send', icon: <Lock size={15} />, run: act(() => ui.openModal({ kind: 'secure-share', repoPath: path, initialMode: 'export' })) },
-      { id: 'secure-import', title: t('cmd.secureImport'), group: 'Actions', keywords: 'share import env secrets encrypted bundle gitcito file receive', icon: <Lock size={15} />, run: act(() => ui.openModal({ kind: 'secure-share', repoPath: path, initialMode: 'import' })) },
-      { id: 'ws-secure-export', title: t('cmd.wsSecureExport'), group: 'Actions', keywords: 'workspace share export multi repo vault secrets encrypted bundle gitcito global', icon: <Lock size={15} />, run: act(() => ui.openModal({ kind: 'secure-workspace', initialMode: 'export' })) },
-      { id: 'ws-secure-import', title: t('cmd.wsSecureImport'), group: 'Actions', keywords: 'workspace share import multi repo vault secrets encrypted bundle gitcito global', icon: <Lock size={15} />, run: act(() => ui.openModal({ kind: 'secure-workspace', initialMode: 'import' })) },
+      { id: 'secure-export', title: t('cmd.secureExport'), group: 'Actions', keywords: 'share export env secrets encrypted bundle geminio file send', icon: <Lock size={15} />, run: act(() => ui.openModal({ kind: 'secure-share', repoPath: path, initialMode: 'export' })) },
+      { id: 'secure-import', title: t('cmd.secureImport'), group: 'Actions', keywords: 'share import env secrets encrypted bundle geminio file receive', icon: <Lock size={15} />, run: act(() => ui.openModal({ kind: 'secure-share', repoPath: path, initialMode: 'import' })) },
+      { id: 'ws-secure-export', title: t('cmd.wsSecureExport'), group: 'Actions', keywords: 'workspace share export multi repo vault secrets encrypted bundle geminio global', icon: <Lock size={15} />, run: act(() => ui.openModal({ kind: 'secure-workspace', initialMode: 'export' })) },
+      { id: 'ws-secure-import', title: t('cmd.wsSecureImport'), group: 'Actions', keywords: 'workspace share import multi repo vault secrets encrypted bundle geminio global', icon: <Lock size={15} />, run: act(() => ui.openModal({ kind: 'secure-workspace', initialMode: 'import' })) },
       { id: 'code-search', title: t('cmd.codeSearch'), group: 'Actions', keywords: 'grep find text content history pickaxe', icon: <Search size={15} />, run: act(() => ui.openModal({ kind: 'code-search', repoPath: path })) },
       { id: 'filter-path', title: t('cmd.filterPath'), group: 'Actions', keywords: 'path file folder history touched commits filter', icon: <FolderTree size={15} />, run: act(() => ui.openModal({ kind: 'input', title: t('cmdp.filterTitle'), label: t('cmdp.filterLabel'), placeholder: 'src/main', submitLabel: t('cmdp.filterSubmit'), onSubmit: (v) => ui.setPathFilter(v.trim() || null) })) },
       ...(aiEnabled ? [{ id: 'ai-assistant', title: t('aiWizard.configTitle'), group: 'Actions', keywords: 'ai config wizard generate claude cursor copilot instructions', icon: <Sparkles size={15} />, run: act(() => ui.openModal({ kind: 'ai-config-wizard', repoPath: path, repoName: repo.name })) } as Command] : []),

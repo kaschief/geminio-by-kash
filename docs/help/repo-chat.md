@@ -110,7 +110,7 @@ a bubble: **Copy** takes the selection, **Copy message** the whole message —
 an answer is copied as its Markdown source — and, when the click landed on a
 link, **Copy link** takes its address.
 
-Links open in your default browser, never inside Gitcito — Markdown links in
+Links open in your default browser, never inside Geminio — Markdown links in
 answers and plain `https://` addresses in your own messages alike.
 
 When a message mentions an image — a repository path like `docs/logo.png`, or
@@ -140,7 +140,7 @@ Repository chat can propose exact edits, whole-file creation or replacement,
 and file deletion, followed by Git actions: ignore patterns, stage, unstage,
 commit, stash, discard, branch, checkout, tag, and — because chat is shown the
 branch list and the recent commits — merge, rebase, revert, and cherry-pick.
-Gitcito computes each expandable diff locally. Existing files must come from
+Geminio computes each expandable diff locally. Existing files must come from
 evidence the assistant read; unsafe, secret, ignored, generated, binary, stale,
 oversized, and symlinked targets are refused. Reset, history rewriting, deleting
 a branch and every force operation remain available only in their dedicated UI.
@@ -150,7 +150,7 @@ the card marks the row failed and keeps the count of what already ran, and the
 conflict banner takes over exactly as it would for the same operation started
 from the toolbar.
 
-**It can also write `.gitcito.json`.** Chat is handed the shape of
+**It can also write `.geminio.json`.** Chat is handed the shape of
 [the repository's own config file](repo-config.md), so *add ticket links for
 JIRA-1234* or *protect the release branches* becomes a file action written
 against the real schema instead of plausible-looking keys the loader would
@@ -192,7 +192,7 @@ than from inside it.
 ### Undoing a plan
 
 A plan is approved as a batch, so it is undone as a batch. Before the first
-action that can change anything, Gitcito records where the branch was and takes
+action that can change anything, Geminio records where the branch was and takes
 a snapshot of the working tree; a finished card then offers **Undo plan**. It
 moves the branch back to that commit and restores the tree, which throws away
 whatever the plan produced, so it confirms first and names the commit it is
@@ -210,7 +210,7 @@ With **Always ask**, the same kind of change remains pending until you choose
 ![Repository chat file action awaiting approval](../screenshots/repo-chat-file-action-approval.webp)
 
 The complete file batch is rechecked before the first write and rolls back if
-one step fails. Before a commit, Gitcito also verifies that something is staged.
+one step fails. Before a commit, Geminio also verifies that something is staged.
 The card marks every completed, failed, and skipped row and keeps partial counts.
 Afterward, a separate action-free model call summarizes the actual result; if
 that summary fails, the card remains the authoritative record.
@@ -246,12 +246,12 @@ nothing is sent until you press Send.
   [secret masking](security.md).
 - **Binaries and files over 512 KB** from outside the repository are skipped the
   same way. Inside the repository the usual readable-source rules apply.
-- **The model never writes directly.** It returns structured proposals; Gitcito
+- **The model never writes directly.** It returns structured proposals; Geminio
   validates them, computes the diff, and runs them only under
   [your approval rules](#approval-modes). Destructive Git work always confirms.
   With action proposals off, chat does not even propose changes.
 - **Conversations live in memory only.** Switching repositories keeps each
-  thread separate; quitting Gitcito discards them.
+  thread separate; quitting Geminio discards them.
 
 ## Opening it
 

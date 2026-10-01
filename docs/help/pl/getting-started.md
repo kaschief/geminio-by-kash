@@ -8,7 +8,7 @@ keywords: wprowadzenie start pierwsze kroki otwórz sklonuj karty graf commit in
 
 # Pierwsze kroki
 
-Gitcito otwiera katalog i pokazuje jego historię. Nic nie zostaje zapisane do
+Geminio otwiera katalog i pokazuje jego historię. Nic nie zostaje zapisane do
 twojego repozytorium, dopóki o to nie poprosisz.
 
 ![Świeżo otwarte repozytorium, jeszcze bez commitów](../../screenshots/empty-repo.webp)
@@ -20,7 +20,7 @@ twojego repozytorium, dopóki o to nie poprosisz.
 - **Sklonuj** je z adresu URL lub prosto z hostingu — zobacz
   [klonowanie](cloning.md), żeby poznać opcje, dzięki którym ogromne
   repozytorium klonuje się szybko.
-- Z terminala `gitcito .` otwiera bieżący katalog w działającej aplikacji —
+- Z terminala `geminio .` otwiera bieżący katalog w działającej aplikacji —
   zobacz [wiersz poleceń](cli.md).
 - Katalog, który nie jest jeszcze repozytorium Gita, też się otworzy — aplikacja
   zaproponuje jego zainicjowanie.
@@ -56,5 +56,5 @@ niczego, co znajdą wyłącznie użytkownicy zaawansowani.
    [pojedyncze linie](staging.md).
 3. Napisz wiadomość i naciśnij **Commit**.
 
-Cała reszta Gitcito jest opcjonalna.
+Cała reszta Geminio jest opcjonalna.
 

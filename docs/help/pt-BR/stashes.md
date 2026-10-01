@@ -8,7 +8,7 @@ keywords: stash stashes parcial partial keep-index apply pop drop untracked não
 
 # Stashes
 
-Dar stash no Gitcito não é tudo ou nada.
+Dar stash no Geminio não é tudo ou nada.
 
 | Ação | O que faz |
 |---|---|
@@ -28,7 +28,7 @@ direito (ou o botão *Aplicar n arquivos*) restaura só a seleção.
 
 ## Quando um stash não aplica
 
-Se aplicar um stash fosse atropelar arquivos não rastreados, o git para. O Gitcito
+Se aplicar um stash fosse atropelar arquivos não rastreados, o git para. O Geminio
 oferece sobrescrevê-los e tentar de novo, em vez de deixar você descobrir o
 encantamento sozinho.
 

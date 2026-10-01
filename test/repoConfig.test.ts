@@ -16,7 +16,7 @@ const git = (dir: string, ...args: string[]): string =>
 
 afterAll(cleanupFixtures)
 
-describe('reading and writing .gitcito.json', () => {
+describe('reading and writing .geminio.json', () => {
   it('reports a repository that has none, without inventing a config', async () => {
     const dir = cloneFixture('project-tree')
     const result = await readRepoConfig(dir)
@@ -32,7 +32,7 @@ describe('reading and writing .gitcito.json', () => {
     expect(back.exists).toBe(true)
     expect(back.config).toEqual({ version: 1, protect: ['main'], commit: { scopes: ['ui'] } })
     // It is a plain tracked file, so it shows up as a working-tree change.
-    expect(git(dir, 'status', '--porcelain')).toContain('.gitcito.json')
+    expect(git(dir, 'status', '--porcelain')).toContain('.geminio.json')
   })
 
   it('re-validates on write rather than trusting the caller', async () => {
@@ -43,7 +43,7 @@ describe('reading and writing .gitcito.json', () => {
   it('keeps the good half of a file with a bad field', async () => {
     const dir = cloneFixture('project-tree')
     writeFileSync(
-      join(dir, '.gitcito.json'),
+      join(dir, '.geminio.json'),
       JSON.stringify({ version: 1, protect: ['main'], requires: { hooksPath: '../elsewhere' } })
     )
     const result = await readRepoConfig(dir)

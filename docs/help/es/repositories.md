@@ -2,7 +2,7 @@
 title: Repositorios
 category: Sincronizar y muchos repos
 order: 52
-summary: Todos los repositorios que Gitcito conoce, abiertos o no, en una lista buscable.
+summary: Todos los repositorios que Geminio conoce, abiertos o no, en una lista buscable.
 keywords: repositorios registro todos los repos favoritos destacados recientes escanear carpeta explorar buscar abrir gestionar gestión de repositorios color sección tinte resaltar espacios de trabajo desde carpetas árbol generar importación masiva repositories registry favourites starred recent scan folder workspaces
 ---
 
@@ -11,7 +11,7 @@ keywords: repositorios registro todos los repos favoritos destacados recientes e
 El [centro de control](mission-control.md) responde "¿cuál de mis repositorios
 abiertos me necesita?". Solo conoce las pestañas del espacio de trabajo activo.
 Repositorios responde otra pregunta: **¿dónde está ese repo, y está abierto
-en algún sitio?** Cubre todo lo que Gitcito ha visto alguna vez: cada espacio
+en algún sitio?** Cubre todo lo que Geminio ha visto alguna vez: cada espacio
 de trabajo, cada pestaña, y lo que encuentre al escanear las carpetas que le
 señales.
 
@@ -66,7 +66,7 @@ Tres cosas que conviene saber:
   mismos colores en cada arranque, y añadir un espacio de trabajo nunca
   recolorea las de arriba. Solo se guardan los colores que cambias.
 - El color es **local a esta página**. Teñir aquí la sección de un espacio no
-  dice nada de ese espacio en el resto de Gitcito. El color de su pestaña es
+  dice nada de ese espacio en el resto de Geminio. El color de su pestaña es
   otro ajuste.
 - El color se **mezcla** a un porcentaje bajo de la superficie en vez de
   aplicarse a plena potencia, así que un tinte saturado sigue siendo un fondo
@@ -77,7 +77,7 @@ compartir tinte.
 
 ## Qué hace que un repositorio sea conocido
 
-Aquí hay una fila cuando Gitcito lo ha **abierto** en algún momento, o lo ha
+Aquí hay una fila cuando Geminio lo ha **abierto** en algún momento, o lo ha
 encontrado bajo una **carpeta de escaneo**. Nada se indexa solo por existir en
 disco en un sitio del que nunca le hablaste.
 
@@ -110,7 +110,7 @@ primera y la lista se lee como tabla, no como pila.
 Las acciones del final se muestran en reposo, no al pasar el ratón: **abrir en
 una pestaña**, y un **⋮** que abre el mismo [menú contextual del
 repositorio](repo-menu.md) que un clic derecho. Ese menú es el de todo
-Gitcito, ampliado con dos entradas propias de esta página:
+Geminio, ampliado con dos entradas propias de esta página:
 
 | Acción | Qué hace |
 |---|---|
@@ -157,7 +157,7 @@ Se puede repetir sin miedo. Un segundo escaneo **añade y nunca quita**:
 
 - Los repositorios nuevos se añaden al espacio de trabajo que corresponde.
 - Los que moviste, renombraste o quitaste a mano se quedan como los dejaste.
-- Un espacio que **renombraste** sigue reconociéndose. Gitcito recuerda la
+- Un espacio que **renombraste** sigue reconociéndose. Geminio recuerda la
   carpeta de la que salió, así que fusiona en vez de crear un duplicado.
 - Un repositorio borrado del disco conserva su pestaña y se muestra ausente.
 
@@ -215,7 +215,7 @@ qué tipo de pull quieres.
 ## La barra de acciones
 
 **Abrir carpeta…**, **Clonar…** y **Añadir carpeta de escaneo…**. Tres formas
-de meter un repositorio en el registro de Gitcito, desde la misma página en
+de meter un repositorio en el registro de Geminio, desde la misma página en
 la que buscas uno que ya está.
 
 ## Resumen WIP

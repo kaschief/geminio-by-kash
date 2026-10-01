@@ -1,6 +1,6 @@
 // Local CI: run the repository's GitHub Actions workflows on this machine via
 // nektos/act — deliberately an *optional integration*, not a bundled runtime.
-// Gitcito only orchestrates: it detects act and Docker, lists workflow files,
+// Geminio only orchestrates: it detects act and Docker, lists workflow files,
 // spawns `act` and streams its output. Installing the tools is the user's
 // explicit choice, guided by the UI.
 import { ipcMain } from 'electron'
@@ -123,7 +123,7 @@ async function runAt(
 ): Promise<{ sha: string; exit: number | null; ok: boolean; recorded: boolean }> {
   assertWorkflowFilename(workflowFile)
   const full = (await git(repoPath, ['rev-parse', '--verify', `${sha}^{commit}`])).trim()
-  const dir = await mkdtemp(join(tmpdir(), 'gitcito-ci-'))
+  const dir = await mkdtemp(join(tmpdir(), 'geminio-ci-'))
   // Bypasses gitService's repo lock on purpose, like the rest of this module:
   // a CI run can hold the repo for minutes, and the worktree add/remove pair
   // only touches worktree metadata.

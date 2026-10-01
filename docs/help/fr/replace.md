@@ -49,7 +49,7 @@ conséquences qu'il vaut la peine de connaître :
   `git push origin "refs/replace/*"` les partage, et quiconque clone sans eux
   voit l'historique intact.
 - **L'annulation fonctionne** — supprimer la référence restaure l'ascendance
-  réelle immédiatement, et Gitcito enregistre la greffe comme une action
+  réelle immédiatement, et Geminio enregistre la greffe comme une action
   annulable, comme n'importe quelle autre.
 - `core.useReplaceRefs=false` fait ignorer tous les remplacements d'un coup par
   git. La bascule d'ici écrit exactement cela, et la boîte de dialogue le signale
@@ -82,7 +82,7 @@ récupérables par sha, et toujours dans chaque clone existant.
 - **Un remplacement peut cacher un commit aux outils, pas à git.**
   `git cat-file` et l'[explorateur d'objets](objects.md) ouvrent toujours
   l'original par son sha.
-- **Gitcito ne propose pas `git replace --edit`** (réécrire à la main le contenu
+- **Geminio ne propose pas `git replace --edit`** (réécrire à la main le contenu
   d'un objet). C'est le travail d'un éditeur de texte sur un objet brut, et un
   tire-au-pied avec une interface autour.
 

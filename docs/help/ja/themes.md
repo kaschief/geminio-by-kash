@@ -8,7 +8,7 @@ keywords: theme themes テーマ dark ダーク light ライト appearance 外�
 
 # テーマと外観
 
-組み込みテーマ — Gitcito、Nord、Dracula、Solarized、GitHub、Monokai、
+組み込みテーマ — Geminio、Nord、Dracula、Solarized、GitHub、Monokai、
 Midnight、Contrast、Daltonic — それぞれにライトとダークの2種類があります。
 
 ![ライトからダークへの切り替え](../../screenshots/clip-themes.webp)

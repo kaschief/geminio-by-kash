@@ -15,7 +15,7 @@ is the single git operation with **nothing behind it**. The content was never in
 a commit, so there is no reflog entry, no stash, no undo, and no `git` incantation
 that brings it back.
 
-That is why it is the operation people run in a terminal and regret. Gitcito's
+That is why it is the operation people run in a terminal and regret. Geminio's
 version shows the whole list before anything happens.
 
 `⌘K` → **Remove untracked files**.
@@ -42,7 +42,7 @@ what it holds.
 
 A folder marked **own repository** has its own `.git`: a clone you dropped inside
 this one, or a spike you never linked up. Git refuses to remove those (it wants
-`-ff`, a flag Gitcito does not offer) — the Trash takes them.
+`-ff`, a flag Geminio does not offer) — the Trash takes them.
 
 ## Trash or delete
 

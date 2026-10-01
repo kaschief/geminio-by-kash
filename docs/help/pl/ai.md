@@ -32,11 +32,11 @@ osiągane przez zgodny z OpenAI endpoint Google.
 ### Subskrypcja zamiast klucza API
 
 Wybierz dostawcę **Lokalne CLI**, aby odpowiadało CLI agenta już zainstalowane i
-zalogowane na tej maszynie — `claude`, `gemini` lub `codex`. Gitcito uruchamia
+zalogowane na tej maszynie — `claude`, `gemini` lub `codex`. Geminio uruchamia
 program z twoim zapytaniem i czyta odpowiedź; nie ma klucza API do wklejenia ani
 tokenu do przechowania.
 
-Gitcito uruchamia wyłącznie polecenie, które sam skonfigurowałeś jako konto, i
+Geminio uruchamia wyłącznie polecenie, które sam skonfigurowałeś jako konto, i
 zawsze z listą argumentów zamiast powłoki — nic z diffa ani z nazwy gałęzi nie
 może zostać wzięte za polecenie.
 
@@ -63,7 +63,7 @@ Przy aktualizacji z wersji sprzed kont pojawia się to raz. Dotychczasowy dostaw
 ## Modele
 
 Listy modeli pochodzą od samego dostawcy i są zapisywane w pamięci podręcznej na
-dobę; **Pobierz modele** odświeża jedną natychmiast. Pod listą Gitcito mówi,
+dobę; **Pobierz modele** odświeża jedną natychmiast. Pod listą Geminio mówi,
 skąd ona pochodzi — na żywo, z pamięci podręcznej (wraz z datą) albo z wbudowanej
 listy zapasowej, i dlaczego.
 
@@ -76,7 +76,7 @@ wymienia.
 Dostawca, któremu nie dałeś jeszcze klucza, albo nieosiągalny, cofa się do małej
 listy wbudowanej zamiast pokazywać pustą listę rozwijaną.
 
-Żaden dostawca nie publikuje listy uporządkowanej ani wyselekcjonowanej, więc porządkuje ją Gitcito: datowane migawki zwijają się do modelu, którego są migawką (`gpt-4o` obejmuje `gpt-4o-2024-08-06`), a reszta idzie od najnowszych, nie alfabetycznie. **Pokaż wszystkie modele** na dole listy przywraca wszystko, co przysłał dostawca.
+Żaden dostawca nie publikuje listy uporządkowanej ani wyselekcjonowanej, więc porządkuje ją Geminio: datowane migawki zwijają się do modelu, którego są migawką (`gpt-4o` obejmuje `gpt-4o-2024-08-06`), a reszta idzie od najnowszych, nie alfabetycznie. **Pokaż wszystkie modele** na dole listy przywraca wszystko, co przysłał dostawca.
 
 ## Co potrafi
 
@@ -95,7 +95,7 @@ listy wbudowanej zamiast pokazywać pustą listę rozwijaną.
 ## Osadzone, nie zgadywane
 
 Recenzja widzi diff jako **oznaczone hunki** i wolno jej cytować wyłącznie te
-oznaczenia; Gitcito następnie rozwiązuje każde z nich na prawdziwy plik i linię.
+oznaczenia; Geminio następnie rozwiązuje każde z nich na prawdziwy plik i linię.
 Model, który wymyśli lokalizację, zostaje **odrzucony i zapytany ponownie** —
 więc ustalenia zawsze wskazują na kod, który istnieje.
 

@@ -2,7 +2,7 @@
 title: Repository
 category: Sincronizzazione e più repo
 order: 52
-summary: Ogni repository che Gitcito conosce, aperto o no, in un elenco ricercabile.
+summary: Ogni repository che Geminio conosce, aperto o no, in un elenco ricercabile.
 keywords: repository registro tutti i repo preferiti stellati recenti scansione cartella sfogliare trovare aprire gestire gestione repository colore sezione tinta evidenziare aree di lavoro da cartelle albero generare importazione massiva repositories registry favourites starred recent scan folder workspaces
 ---
 
@@ -11,7 +11,7 @@ keywords: repository registro tutti i repo preferiti stellati recenti scansione 
 [Mission control](mission-control.md) risponde a "quale dei miei repository
 aperti ha bisogno di me?". Conosce solo le schede dell'area di lavoro attiva.
 Repository risponde a un'altra domanda: **dov'è quel repo, ed è proprio
-aperto da qualche parte?** Copre tutto ciò che Gitcito ha mai visto. Ogni
+aperto da qualche parte?** Copre tutto ciò che Geminio ha mai visto. Ogni
 area di lavoro, ogni scheda, più ciò che trova scansionando le cartelle che
 gli indichi.
 
@@ -68,7 +68,7 @@ Tre cose da sapere:
   stessi colori a ogni avvio, e aggiungere un'area di lavoro non ricolora
   mai quelle sopra. Vengono salvati solo i colori che cambi.
 - Il colore è **locale a questa pagina**. Tingere qui la sezione di un'area
-  non dice nulla di quell'area altrove in Gitcito. Il colore della sua
+  non dice nulla di quell'area altrove in Geminio. Il colore della sua
   scheda è un'impostazione a parte.
 - Il colore è **diluito** a una percentuale bassa della superficie invece
   che applicato a piena forza, così una scelta satura resta uno sfondo
@@ -80,10 +80,10 @@ possono condividere una tinta.
 
 ## Cosa rende noto un repository
 
-Una riga esiste qui quando Gitcito lo ha **aperto** a un certo punto, o lo
+Una riga esiste qui quando Geminio lo ha **aperto** a un certo punto, o lo
 ha trovato sotto una **cartella da scansionare**. Niente viene indicizzato
 solo perché esiste su disco in un posto di cui non hai mai parlato a
-Gitcito.
+Geminio.
 
 Aprire questa pagina indicizza anche ciò che hai **aperto in una scheda**,
 ed è così che i repository ripristinati all'avvio ottengono una riga senza
@@ -115,7 +115,7 @@ come una pila.
 Le azioni in coda si vedono da ferme, non rivelate al passaggio del mouse:
 **apri in una scheda**, e un **⋮** che apre lo stesso [menu contestuale del
 repository](repo-menu.md) di un clic destro. È il menu usato ovunque in
-Gitcito, esteso con due voci specifiche di questa pagina:
+Geminio, esteso con due voci specifiche di questa pagina:
 
 | Azione | Cosa fa |
 |---|---|
@@ -165,7 +165,7 @@ mai**:
 - I repository nuovi vengono accodati all'area di lavoro corrispondente.
 - Quelli che hai spostato, rinominato o rimosso a mano restano come li hai
   lasciati.
-- Un'area che hai **rinominato** viene ancora riconosciuta. Gitcito ricorda
+- Un'area che hai **rinominato** viene ancora riconosciuta. Geminio ricorda
   la cartella da cui è nata, quindi unisce invece di creare un duplicato.
 - Un repository cancellato dal disco tiene la sua scheda e si mostra
   mancante.
@@ -224,7 +224,7 @@ tipo di pull vuoi.
 ## La barra delle azioni
 
 **Apri cartella…**, **Clona…** e **Aggiungi cartella da scansionare…**. Tre
-modi per portare un repository nel registro di Gitcito, dalla stessa pagina
+modi per portare un repository nel registro di Geminio, dalla stessa pagina
 in cui ne cerchi uno che c'è già.
 
 ## Riepilogo WIP

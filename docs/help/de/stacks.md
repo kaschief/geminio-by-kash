@@ -14,7 +14,7 @@ reviewen.
 
 ![Ein Branch-Stack](../../screenshots/branch-stack.webp)
 
-Gitcito zeichnet ihn als **Route**: oben ein Start-Branch, darunter eine Station
+Geminio zeichnet ihn als **Route**: oben ein Start-Branch, darunter eine Station
 pro Ebene. Der PR jeder Station zielt auf die Station darüber, und die erste landet
 auf dem Start-Branch. Eine Station zeigt ihre eigenen Commits, ob sie ein Restack
 braucht, und nach dem Einreichen ihre PR-Nummer.
@@ -54,13 +54,13 @@ Alles, was die Reihenfolge ändert — ein Tausch, ein Zug, ein anderer Start �
 **spielt** die Kette **neu ab**: die eigenen Commits jeder Station werden auf ihre
 neue Basis rebased. Zwei Stationen, die dieselben Zeilen anfassen, tauschen
 nicht ohne einen Menschen, und dann **passiert nichts**: die ganze Änderung wird
-zurückgenommen — Spitzen, Parent-Links und der halbe Rebase — und Gitcito nennt
+zurückgenommen — Spitzen, Parent-Links und der halbe Rebase — und Geminio nennt
 die beiden Stationen, die sich beißen. Ein angestupstes Dropdown darf einen nicht
 mitten im Rebase zurücklassen.
 
 **Restack** ist die andere Hälfte der Abmachung: ein Rebase, den du beim Namen
 verlangt hast, hält beim Konflikt an und übergibt die Konfliktansicht — was auch
-der Weg zu dem Umordnen ist, das Gitcito abgelehnt hat: dort auflösen, dann die
+der Weg zu dem Umordnen ist, das Geminio abgelehnt hat: dort auflösen, dann die
 Station verschieben.
 
 Das Widerrufen spielt die vorherige Route nach. Es erweckt nicht die alten Commits,
@@ -116,7 +116,7 @@ unten nach oben mergen, Einreichen drücken, wiederholen.
 Verkettete Basen versteht jeder Host, und auf GitLab, Bitbucket und Azure DevOps
 sind sie alles, was es gibt. GitHub kann mehr: seit der Vorschau auf stacked pull
 requests ist ein Stapel ein Objekt auf dem Server. Sobald die Pull Requests
-existieren, meldet Gitcito sie als Stapel an — von unten nach oben — und du
+existieren, meldet Geminio sie als Stapel an — von unten nach oben — und du
 bekommst die Stapelkarte in der PR-Oberfläche, einen serverseitigen Cascading
 Rebase und einen Merge auf dem obersten PR, der jede darunterliegende Ebene
 mitlandet.

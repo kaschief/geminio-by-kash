@@ -10,7 +10,7 @@ keywords: problemy analizator diagnostyka błędy ostrzeżenia lint tsc typescri
 
 Każdy projekt ma już narzędzie, które powie, co jest z nim nie tak — `tsc`,
 `dart analyze`, ESLint, Clippy, `go vet`, Ruff. Żadne z nich nie powie, czy to
-**twój** diff dołożył czterdzieści ostrzeżeń, które właśnie wypisało. Gitcito
+**twój** diff dołożył czterdzieści ostrzeżeń, które właśnie wypisało. Geminio
 wie, które pliki są brudne, więc ta sama lista odpowiada na to jednym
 przełącznikiem.
 
@@ -23,7 +23,7 @@ otwiera plik w tym miejscu. Przed pierwszym przebiegiem pokazuje myślniki zamia
 
 ## Co uruchamia
 
-| Jeśli repozytorium ma | Gitcito uruchamia |
+| Jeśli repozytorium ma | Geminio uruchamia |
 |-----------------------|-------------------|
 | `pubspec.yaml` | `dart analyze --format=machine` |
 | `tsconfig.json` | `tsc --noEmit` |
@@ -49,7 +49,7 @@ trafia do jednej postaci, bez duplikatów i posortowane: dwa analizatory
 zgłaszające ten sam wiersz dają jeden wiersz.
 
 **Nic nie startuje samo.** `tsc --noEmit` w dużym repozytorium to dziesiątki
-sekund, a te polecenia to łańcuch narzędzi repozytorium, nie Gitcito. Ruszają,
+sekund, a te polecenia to łańcuch narzędzi repozytorium, nie Geminio. Ruszają,
 gdy otworzysz panel albo naciśniesz odświeżenie — nigdy z własnej woli. Dlatego
 lista jest zdjęciem chwili: zmień plik, a będzie nieaktualna do kolejnego
 uruchomienia.
@@ -62,7 +62,7 @@ stanu i jej polecenie.
 **Wynik builda odpada.** Narzędzie wycelowane w katalog główny projektu sprawdza
 wszystko, co znajdzie, a znajduje też `.next/build/chunks`, spakowany `dist`,
 wciągniętą kopię — setki uwag o kodzie napisanym przez maszynę, które zasypują tę
-garstkę o twoim. Gitcito pyta gita, które pliki są ignorowane, i te odrzuca, ale
+garstkę o twoim. Geminio pyta gita, które pliki są ignorowane, i te odrzuca, ale
 nigdy pliku *śledzonego*: commitowanie wyniku builda to decyzja, którą
 `git check-ignore` szanuje. `node_modules` leci tak czy siak.
 

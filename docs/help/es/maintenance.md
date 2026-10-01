@@ -82,7 +82,7 @@ La casilla registra el repositorio en **`git maintenance`**, que empaqueta y
 hace prefetch según una planificación que ejecuta tu sistema operativo (launchd,
 systemd o el Programador de tareas).
 
-Nada de esto es específico de Gitcito: la misma planificación sirve a tu
+Nada de esto es específico de Geminio: la misma planificación sirve a tu
 terminal, y `git maintenance unregister` la deshace desde cualquier sitio.
 Desmarcar la casilla hace exactamente eso, y deja la planificación en pie para
 los demás repositorios que estén registrados.
@@ -101,7 +101,7 @@ los demás repositorios que estén registrados.
   en un commit, es alcanzable, y gc lo conservará para siempre — eso es
   [eliminar un fichero del historial](history-purge.md), una operación distinta
   y mucho más disruptiva.
-- **Gitcito nunca ejecuta gc a tus espaldas.** El propio `gc --auto` de git
+- **Geminio nunca ejecuta gc a tus espaldas.** El propio `gc --auto` de git
   todavía puede hacerlo, como siempre; si falla deja una nota en `.git/gc.log`,
   que este panel te muestra.
 

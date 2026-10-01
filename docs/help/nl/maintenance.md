@@ -81,7 +81,7 @@ Het vinkje registreert de repository bij **`git maintenance`**, dat packt en
 prefetcht volgens een schema dat je besturingssysteem draait (launchd, systemd of
 Taakplanner).
 
-Niets hiervan is eigen aan Gitcito: hetzelfde schema bedient je terminal, en
+Niets hiervan is eigen aan Geminio: hetzelfde schema bedient je terminal, en
 `git maintenance unregister` draait het van waar dan ook terug. Het vinkje
 weghalen doet precies dat, en laat het schema staan voor welke andere
 repository's dan ook geregistreerd zijn.
@@ -100,7 +100,7 @@ repository's dan ook geregistreerd zijn.
   MB in een commit, dan is die bereikbaar en houdt gc hem voor eeuwig vast — dat
   is [een bestand uit de geschiedenis verwijderen](history-purge.md), een andere
   en veel ingrijpender operatie.
-- **Gitcito draait nooit stiekem gc.** De eigen `gc --auto` van git kan dat nog
+- **Geminio draait nooit stiekem gc.** De eigen `gc --auto` van git kan dat nog
   steeds doen, zoals altijd; faalt er een, dan laat die een notitie achter in
   `.git/gc.log`, die dit paneel naar boven haalt.
 

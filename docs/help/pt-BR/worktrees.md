@@ -21,7 +21,7 @@ sem stash nenhum.
   criar um numa pasta irmã e abri-lo como aba.
 - Uma branch só vive em uma worktree por vez, então dar checkout numa branch que
   outra worktree já segura não tem como funcionar — o git recusa com *already used
-  by worktree at …*. O Gitcito te leva até lá: o menu da branch diz *Ir para `x`
+  by worktree at …*. O Geminio te leva até lá: o menu da branch diz *Ir para `x`
   na sua worktree*, e o duplo clique na linha abre a aba daquela worktree em vez
   de falhar.
 

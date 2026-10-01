@@ -1,12 +1,12 @@
 ---
-title: Depo kuralları (.gitcito.json)
+title: Depo kuralları (.geminio.json)
 category: Çalışma alanı araçları
 order: 98
 summary: Depoyla birlikte seyahat eden ev kuralları — korumalı dallar, commit kapsamları, bir klonun neye ihtiyacı olduğu ve push öncesi liste.
-keywords: gitcito.json depo yapılandırması kurallar doctor gereksinimler korumalı dallar kapsam scopes trailers ticket takipçi bağlantıları kontrol listesi onboarding hooksPath node altmodüller lfs env example
+keywords: geminio.json depo yapılandırması kurallar doctor gereksinimler korumalı dallar kapsam scopes trailers ticket takipçi bağlantıları kontrol listesi onboarding hooksPath node altmodüller lfs env example
 ---
 
-# Depo kuralları (`.gitcito.json`)
+# Depo kuralları (`.geminio.json`)
 
 Her projede koddan çıkarılamayacak kurallar vardır. *`release/*` dalına asla
 doğrudan push etme.* *Commit kapsamları `api`, `web` ve `infra`; başkası yok.*
@@ -15,7 +15,7 @@ doğrudan push etme.* *Commit kapsamları `api`, `web` ve `infra`; başkası yok
 okumadığı bir README'de, bir CI hatasında ya da burada en uzun süredir çalışan
 kişinin kafasında yaşar.
 
-`.gitcito.json`, deponun bu kuralları yazdığı ve aracın onlara göre
+`.geminio.json`, deponun bu kuralları yazdığı ve aracın onlara göre
 davranabildiği yerdir. Depo kökünde durur, diğer dosyalar gibi versiyonlanır ve
 böylece klonla birlikte seyahat eder: projeyi açan herkes aynı kuralları alır ve
 yeni gelen kişi bunları ilk reddedilen push'ta değil, ilk gün öğrenir.
@@ -39,7 +39,7 @@ Depoda henüz yoksa, **Depoyu oku** hâlihazırda var olandan bir öneri çıkar
 `.nvmrc` ya da `engines.node`, bir `.gitmodules`, `.gitattributes` içindeki
 `filter=lfs`, yanında `.env` bulunmayan bir `.env.example`, yerelde zaten
 koruduğun dallar ve son 500 commit başlığının kullandığı kapsamlar. Sen
-kaydedene kadar hiçbir şey yazılmaz. Terminalden `gitcito config init` aynı işi
+kaydedene kadar hiçbir şey yazılmaz. Terminalden `geminio config init` aynı işi
 yapar (bkz. [komut satırı](cli.md)).
 
 ## Dosya neler söyleyebilir
@@ -76,7 +76,7 @@ yapar (bkz. [komut satırı](cli.md)).
 | `version` | `1` olmalı. Daha yeni bir şemadan gelen dosya tahmin edilmek yerine bütünüyle yok sayılır. |
 | `protect` | Dal adları; `*` herhangi bir metin dizisiyle eşleşir. Yerelde koruduğun dallara **eklenir** — bkz. [korumalı dallar](repo-settings.md). |
 | `links.tickets` | Bir düzenli ifade ve bir adres şablonu. `$0` eşleşmenin tamamı, `$1`…`$9` grupları. Commit başlıklarındaki ve gövdelerindeki eşleşmeler bağlantıya dönüşür. |
-| `commit.scopes` | Besteci'nin serbest metin yerine sunduğu kapsamlar. Bunları bildirmek, `gitcito commit-check` içinde bilinmeyen bir kapsamı biçim tavsiyesinden hataya çevirir. |
+| `commit.scopes` | Besteci'nin serbest metin yerine sunduğu kapsamlar. Bunları bildirmek, `geminio commit-check` içinde bilinmeyen bir kapsamı biçim tavsiyesinden hataya çevirir. |
 | `commit.ticketFromBranch` | Ticket anahtarını dal adından doldurur (`feature/ABC-123-sey` → `ABC-123`) — ama yalnızca boş bir bestecide, yazmakta olduğun metnin üzerine asla. |
 | `commit.trailers` | Commit gövdesine eklenen satırlar. `{ticket}` ve `{branch}` doldurulur; yer tutucusunu dolduracak bir şey bulamayan satır yarım yazılmak yerine atılır. |
 | `requires.*` | Çalışan bir klonun neye ihtiyacı olduğu. Her girdi aşağıdaki doctor satırlarından biri olur. |
@@ -84,7 +84,7 @@ yapar (bkz. [komut satırı](cli.md)).
 
 ## Doctor
 
-`requires`, *"klonladım ama çalışmıyor"* sorusunu yanıtlayan kısımdır. Gitcito
+`requires`, *"klonladım ama çalışmıyor"* sorusunu yanıtlayan kısımdır. Geminio
 depoyu açtığında bunları denetler ve bir şey eksikse durum çubuğunda steteskoplu
 bir rozet gösterir. Rozete tıklamak Config sekmesini doctor satırlarında açar;
 **Yeniden denetle** hepsini tekrar çalıştırır.
@@ -99,7 +99,7 @@ bir rozet gösterir. Rozete tıklamak Config sekmesini doctor satırlarında aç
 
 İki bilinçli sınır. Bir **uyarı** asla "bozuk" demek değildir; doctor bir şeyi
 belirleyemedi demektir (okunamayan bir Node belirtimi, elinden bir şey
-gelmeyeceğin bir hata uydurmak yerine geçer) ve uyarılar CI'da `gitcito doctor`
+gelmeyeceğin bir hata uydurmak yerine geçer) ve uyarılar CI'da `geminio doctor`
 komutunu düşürmez. Onarım da asla dosyanın verdiği bir şey değildir: yukarıdaki
 küme kümenin tamamıdır ve derleme zamanında kapalıdır. Yapılandırma ona bir değer
 verir — kopyalanacak bir yol, `core.hooksPath` için bir değer — asla bir komut
@@ -116,7 +116,7 @@ listeyi sunar — `feat(renderer)` ile `feat(rendererr)` arasındaki fark.
 `links.tickets` ise anahtarları, commit'in görüntülendiği her yerde tekrar
 bağlantıya çevirir.
 
-Aynı kurallar pencerenin dışında da geçerlidir: `gitcito commit-check` bu dosyayı
+Aynı kurallar pencerenin dışında da geçerlidir: `geminio commit-check` bu dosyayı
 okur, böylece bir `commit-msg` hook'u ve CI tam olarak besteci'nin önerdiğini
 dayatır. Bkz. [komut satırı](cli.md) ve [commit atmak](committing.md).
 
@@ -124,7 +124,7 @@ dayatır. Bkz. [komut satırı](cli.md) ve [commit atmak](committing.md).
 
 `checklist.push`, oturumun ilk push'undan önce bir onay olarak gösterilir; madde
 başına bir satır. Gerçekten insan kararı gerektiren şeyin yeri burasıdır —
-*destek ekibine haber veren oldu mu?* — çünkü Gitcito **bunları senin yerine asla
+*destek ekibine haber veren oldu mu?* — çünkü Geminio **bunları senin yerine asla
 denetlemez**. Bunlar hatırlatmadır, kapı değil: oku ve push et ya da vazgeç. Depo
 başına oturumda bir kez gösterilir, çünkü her push'ta çıkan bir pencere kimsenin
 okumadığı bir penceredir.
@@ -149,7 +149,7 @@ commit mesajı gibi güvenilmeyen içerik olarak ele alınır:
   bin rozet yapıştıramaz.
 
 Hatalı bir alan atılır, ölümcül değildir. Dosyanın kalanı yine geçerlidir ve
-atılanlar Config sekmesinde **Gitcito tarafından yok sayıldı** başlığı altında
+atılanlar Config sekmesinde **Geminio tarafından yok sayıldı** başlığı altında
 gerekçesiyle listelenir. Tek istisna geçersiz JSON ya da bilinmeyen bir
 `version`'dır; orada kurtarılacak bir şey yoktur.
 
@@ -159,7 +159,7 @@ gerekçesiyle listelenir. Tek istisna geçersiz JSON ya da bilinmeyen bir
   onlar klon başına verdiğin bir karardır.
 - **Dal başına ya da kişi başına kural yok.** Tek dosya, tek kural kümesi.
 - **CI'nın yerini almaz.** Liste metindir; doctor ortamı denetler, işini değil.
-- **Hiçbir şeyi zayıflatamaz.** Gitcito'nun her koruması yine senindir.
+- **Hiçbir şeyi zayıflatamaz.** Geminio'nun her koruması yine senindir.
 
 **Ayrıca bkz.:** [Depo başına ayarlar](repo-settings.md) ·
 [Komut satırı](cli.md) · [Commit atmak](committing.md) ·

@@ -12,7 +12,7 @@ Você revisou uma branch. Alguém fez rebase nela e deu force-push. Um diff norm
 agora não vale nada: depois de um rebase, todo commit é um commit novo, então
 tudo parece novo.
 
-O `git range-diff` pareia as duas versões commit a commit, e o Gitcito lê as
+O `git range-diff` pareia as duas versões commit a commit, e o Geminio lê as
 posições antigas direto do **reflog** — ou seja, nada precisou ser registrado com
 antecedência para isso funcionar.
 

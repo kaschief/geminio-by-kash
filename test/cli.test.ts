@@ -8,7 +8,7 @@ import type { RepoConfig } from '../src/shared/types'
 
 describe('parseCliOpenArgs', () => {
   it('returns null without --open', () => {
-    expect(parseCliOpenArgs(['/Applications/Gitcito.app', '--name=x'])).toBeNull()
+    expect(parseCliOpenArgs(['/Applications/Geminio.app', '--name=x'])).toBeNull()
   })
 
   it('reads every flag the shim can pass', () => {
@@ -51,9 +51,9 @@ describe('parseCliOpenArgs', () => {
   })
 
   it('carries an edit request and its sentinel', () => {
-    const payload = parseCliOpenArgs(['--open=/repo', '--edit=/repo/.git/COMMIT_EDITMSG', '--wait=/tmp/gitcito-wait.aB'])
+    const payload = parseCliOpenArgs(['--open=/repo', '--edit=/repo/.git/COMMIT_EDITMSG', '--wait=/tmp/geminio-wait.aB'])
     expect(payload?.edit).toBe('/repo/.git/COMMIT_EDITMSG')
-    expect(payload?.wait).toBe('/tmp/gitcito-wait.aB')
+    expect(payload?.wait).toBe('/tmp/geminio-wait.aB')
   })
 })
 

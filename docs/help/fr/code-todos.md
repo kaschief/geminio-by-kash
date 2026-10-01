@@ -75,7 +75,7 @@ Cliquer une ligne ouvre le fichier à la ligne concernée.
 
 - **Il lit, il n’écrit jamais.** Pas de « marquer comme fait » : la façon de
   fermer un TODO est de supprimer la ligne et de valider. Pour une liste que
-  Gitcito garde pour vous, voyez [todos](todos.md), qui est tout autre chose :
+  Geminio garde pour vous, voyez [todos](todos.md), qui est tout autre chose :
   des notes privées qui vivent dans l’application, pas dans le code.
 - **Les fichiers ignorés sont sautés**, `node_modules` compris, quoi que disent
   les étiquettes à l’intérieur. Les fichiers non suivis, eux, sont inclus : un

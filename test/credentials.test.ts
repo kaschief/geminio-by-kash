@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 /**
  * The credential helper is mocked here, not run for real: the behaviour under
- * test is how often Gitcito *asks* git, and a real osxkeychain would raise the
+ * test is how often Geminio *asks* git, and a real osxkeychain would raise the
  * very dialog this suite exists to keep quiet.
  */
 type ExecCallback = (err: (Error & { killed?: boolean }) | null, stdout: string) => void
@@ -125,4 +125,63 @@ describe('credentialFor — background polling', () => {
     expect((await fresh)?.password).toBe('tok')
     expect(await credentialFor(URL)).not.toBeNull()
   })
+})
+
+describe('GitHub CLI account reuse', () => {
+  it('keeps an explicitly configured token authoritative', async () => {
+    const { apiToken } = await import('../src/main/credentials')
+    expect(await apiToken(URL, ' explicit ')).toEqual({ token: 'explicit' })
+    expect(spawns).toHaveLength(0)
+  })
+
+  it('shares the CLI lookup, keeps its token out of Git helpers, and refreshes on reconnect', async () => {
+    const { apiToken } = await import('../src/main/credentials')
+    const first = apiToken(URL, '')
+    const second = apiToken(URL, '')
+    await flush()
+    expect(spawns).toHaveLength(1)
+    expect(spawns[0].args).toEqual(['auth', 'token', '--hostname', 'github.com'])
+    spawns[0].answer(null, 'cli-token\n')
+    expect(await first).toEqual({ token: 'cli-token' })
+    expect(await second).toEqual({ token: 'cli-token' })
+    expect(fills()).toHaveLength(0)
+    const reconnect = apiToken(URL, '', { interactive: true })
+    await flush()
+    spawns[1].answer(null, 'new-token\n')
+    expect(await reconnect).toEqual({ token: 'new-token' })
+  })
+
+  it('falls back to Git when the CLI is missing or signed out', async () => {
+    const { apiToken } = await import('../src/main/credentials')
+    const result = apiToken(URL, '')
+    await flush()
+    answerFailed(spawns[0])
+    await flush()
+    answerOk(fills()[0])
+    expect(await result).toEqual({ token: 'tok', cred: { username: 'me', password: 'tok' } })
+  })
+
+  it('never borrows a GitHub token for another host', async () => {
+    const { apiToken } = await import('../src/main/credentials')
+    const result = apiToken('https://github.com.example.org/acme/repo', '')
+    await flush()
+    expect(spawns.every((s) => !s.args.includes('token'))).toBe(true)
+    answerFailed(fills()[0])
+    expect(await result).toBeNull()
+  })
+})
+
+
+describe('GitHub CLI credentials for SSH remotes', () => {
+  it.each(['git@github.com:acme/widgets.git', 'ssh://git@github.com/acme/widgets.git'])(
+    'reuses the hosting login for %s without changing SSH transport', async (url) => {
+      const { apiToken } = await import('../src/main/credentials')
+      const result = apiToken(url, '')
+      await flush()
+      expect(spawns[0].args).toEqual(['auth', 'token', '--hostname', 'github.com'])
+      spawns[0].answer(null, 'cli-token')
+      expect(await result).toEqual({ token: 'cli-token' })
+      expect(fills()).toHaveLength(0)
+    }
+  )
 })

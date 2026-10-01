@@ -11,7 +11,7 @@ keywords: radar de conflictos conflict radar previsualizar merge preview choque 
 Descubrir que una rama da conflicto fusionándola es una forma cara de hacer una
 pregunta. El radar la responde antes.
 
-Gitcito fusiona cada rama contra una base que tú eliges **dentro de la base de
+Geminio fusiona cada rama contra una base que tú eliges **dentro de la base de
 datos de objetos** (`git merge-tree --write-tree`). Sin checkout, sin tocar el
 índice, sin tocar el árbol de trabajo, sin nada que limpiar después. Tu trabajo
 sin commitear puede quedarse exactamente donde está mientras corre el escaneo.

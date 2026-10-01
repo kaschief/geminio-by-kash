@@ -8,7 +8,7 @@ keywords: intro primeros pasos abrir clonar clone pestañas tabs grafo graph com
 
 # Primeros pasos
 
-Gitcito abre una carpeta y te enseña su historial. No escribe nada en tu
+Geminio abre una carpeta y te enseña su historial. No escribe nada en tu
 repositorio hasta que se lo pidas.
 
 ![Un repositorio recién abierto, todavía sin commits](../../screenshots/empty-repo.webp)
@@ -20,7 +20,7 @@ repositorio hasta que se lo pidas.
 - **Clona** uno desde una URL o directamente desde tu hosting — mira
   [clonar](cloning.md) para las opciones que hacen que un repositorio enorme se
   clone rápido.
-- Desde un terminal, `gitcito .` abre la carpeta actual en la app que ya está
+- Desde un terminal, `geminio .` abre la carpeta actual en la app que ya está
   en marcha — mira [la línea de comandos](cli.md).
 - Una carpeta que todavía no es un repositorio Git también se abre, y te ofrece
   inicializarla.
@@ -56,5 +56,5 @@ nada que solo encuentren los usuarios avanzados.
 2. Prepáralo — el archivo entero, un hunk, o [líneas sueltas](staging.md).
 3. Escribe un mensaje y pulsa **Commit**.
 
-Todo lo demás en Gitcito es opcional.
+Todo lo demás en Geminio es opcional.
 

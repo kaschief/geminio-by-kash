@@ -28,11 +28,11 @@ Branch taggen.
 | `release/*` | Eine Version, die stabilisiert wird, abgezweigt von develop. |
 | `hotfix/*` | Ein dringender Fix, abgezweigt von **main** — Produktion kann nicht auf develop warten. |
 
-Gitcito liest und schreibt dieselben `gitflow.*`-Git-Config-Keys, die auch die
+Geminio liest und schreibt dieselben `gitflow.*`-Git-Config-Keys, die auch die
 `git flow`-CLI verwendet (`gitflow.branch.master`, `gitflow.prefix.feature`, …).
 Ein Repository, auf dem jemand bereits `git flow init` ausgeführt hat, wird
 sofort erkannt, und ein hier eingerichtetes Repository funktioniert danach mit
-der CLI. Gitcito führt durchgehend einfache Git-Kommandos aus — die CLI muss
+der CLI. Geminio führt durchgehend einfache Git-Kommandos aus — die CLI muss
 nicht installiert sein.
 
 **Einrichten** schreibt diese Keys und erstellt den Integrations-Branch aus dem
@@ -57,7 +57,7 @@ Der Name ist das, was du tippst; das Präfix kommt aus dem Aufbau.
 **Abschließen** ist der Teil, der sich zu automatisieren lohnt, weil es mehrere
 Schritte sind, die alle passieren müssen:
 
-| Art | Was Gitcito tut |
+| Art | Was Geminio tut |
 |------|-------------------|
 | Feature | Mergt mit `--no-ff` in develop, löscht den Branch, lässt dich auf develop |
 | Release | Mergt in main, taggt es, mergt in develop, löscht den Branch, lässt dich auf develop |
@@ -80,7 +80,7 @@ schreibe eine Tag-Nachricht, wenn du mehr willst als den Standard.
   Leute sie verlieren.
 - **Ein konfliktbehafteter Merge rollt die ganze Sache zurück.** Wenn der Merge
   in main gelingt, der Merge in develop aber Konflikte hat, bliebe dir sonst ein
-  halbfertiges Release. Gitcito stellt jeden Branch dort wieder her, wo er war,
+  halbfertiges Release. Geminio stellt jeden Branch dort wieder her, wo er war,
   und meldet den Konflikt. Merge diesen Branch manuell, löse ihn im
   [Konfliktlöser](conflicts.md) auf, und den Flow schließt du von Hand ab.
 - **Es pusht nie.** Abschließen ist lokal. Pushe main, develop und den neuen Tag,

@@ -23,7 +23,7 @@ Bu, "az önce yanlış dalı resetledim" düğmesidir.
 
 ## WIP anlık görüntüleri
 
-Commit'lenmemiş çalışma, reflog'un kurtaramadığı tek şeydir; bu yüzden Gitcito
+Commit'lenmemiş çalışma, reflog'un kurtaramadığı tek şeydir; bu yüzden Geminio
 onun anlık görüntüsünü alır: **çalışma dizininin tamamı — değiştirilmiş,
 hazırlanmış ve izlenmeyen dosyalar** — kullanılıp atılan bir indeks üzerinden
 commit'lenir ve `refs/gitcito/wip` altına sabitlenir. Ne gerçek indeksinize ne
@@ -59,7 +59,7 @@ saklanır.
 ## Rehberli bisect
 
 Commit'leri iyi ve kötü olarak işaretleyin, aralığın daraldığını izleyin, ilk
-kötü commit'te karar kılın. Gitcito kaç adım kaldığını takip eder; böylece
+kötü commit'te karar kılın. Geminio kaç adım kaldığını takip eder; böylece
 cevaptan iki soru mu yoksa on soru mu uzakta olduğunuzu bilirsiniz.
 
 ![Rehberli bisect](../../screenshots/bisect.webp)
@@ -77,7 +77,7 @@ komutunuzu çalıştırır ve çıkış kodunu okur:
 | başka herhangi bir şey | Kötü |
 
 Bir test paketi zaten bu dili konuşur; `npm test` genelde bu yüzden tek başına
-cevabın tamamıdır. Gitcito bu projenin kendi betiklerini tek tıkla doldurulacak
+cevabın tamamıdır. Geminio bu projenin kendi betiklerini tek tıkla doldurulacak
 biçimde sunar, çalışırken çıktıyı akıtır ve siz tek bir soruya cevap vermeden
 ilk kötü commit'te karar kılar.
 
@@ -108,13 +108,13 @@ Unable to create '…/refs/remotes/origin/x.lock': File exists.
 
 Depo bozulmuş değil. Yolda duran yalnızca bir dosya var.
 
-Gitcito önce birkaç kez yeniden dener, çünkü *çalışan* bir git'in tuttuğu kilit
+Geminio önce birkaç kez yeniden dener, çünkü *çalışan* bir git'in tuttuğu kilit
 genelde milisaniyeler içinde serbest kalır. Kalmazsa hata, bir metin duvarı
 yerine bir pencere açar: diskte duran her kilit, her birinin yaşı ve onları
 kaldırıp başarısız olan işlemi yeniden çalıştıran tek bir düğme.
 
 **Bütün mesele yaş.** 30 saniyeden genç bir kilidin hâlâ çalışan bir git'e ait
-olduğu varsayılır ve Gitcito onu silmeyi reddeder; bunun yerine bekleyip yeniden
+olduğu varsayılır ve Geminio onu silmeyi reddeder; bunun yerine bekleyip yeniden
 denemeyi önerir. Daha eskiler, en eskiden başlayarak kaldırılmak üzere sunulur ve
 pencere kabul etmeden önce neye bakman gerektiğini açıkça söyler: şu anda bu
 depoda çalışan bir düzenleyici, uçbirim ya da başka bir Git istemcisi

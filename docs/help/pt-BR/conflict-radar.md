@@ -11,7 +11,7 @@ keywords: radar de conflitos conflict radar merge prévia preview colisão risco
 Descobrir que uma branch conflita fazendo merge dela é um jeito caro de fazer uma
 pergunta. O radar responde antes.
 
-O Gitcito faz merge de cada branch numa base à sua escolha **dentro do banco de
+O Geminio faz merge de cada branch numa base à sua escolha **dentro do banco de
 objetos** (`git merge-tree --write-tree`). Sem checkout, sem mudança no índice, sem
 mudança na árvore de trabalho, nada para limpar depois. Seu trabalho não commitado
 pode ficar exatamente onde está enquanto a varredura roda.

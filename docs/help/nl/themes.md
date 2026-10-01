@@ -8,7 +8,7 @@ keywords: thema thema's theme themes donker dark licht light uiterlijk kleuren l
 
 # Thema's & uiterlijk
 
-Ingebouwde thema's — Gitcito, Nord, Dracula, Solarized, GitHub, Monokai,
+Ingebouwde thema's — Geminio, Nord, Dracula, Solarized, GitHub, Monokai,
 Midnight, Contrast en Daltonic — elk met een lichte en een donkere variant.
 
 ![Van licht naar donker wisselen](../../screenshots/clip-themes.webp)

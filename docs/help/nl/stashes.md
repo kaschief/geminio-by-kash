@@ -8,7 +8,7 @@ keywords: stash stashes gedeeltelijk partial keep-index apply pop drop untracked
 
 # Stashes
 
-Stashen in Gitcito is geen alles-of-niets.
+Stashen in Geminio is geen alles-of-niets.
 
 | Actie | Wat het doet |
 |---|---|
@@ -29,7 +29,7 @@ bestanden toepassen*) zet alleen de selectie terug.
 ## Wanneer een stash niet toe te passen is
 
 Zou het toepassen van een stash untracked bestanden overschrijven, dan stopt git.
-Gitcito biedt aan ze te overschrijven en het opnieuw te proberen, in plaats van
+Geminio biedt aan ze te overschrijven en het opnieuw te proberen, in plaats van
 jou de bezwering te laten uitpuzzelen.
 
 Is de boom te ver verschoven, dan maakt **stash → branch** de branch opnieuw

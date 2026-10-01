@@ -12,7 +12,7 @@ Zrecenzowałeś gałąź. Ktoś ją zrebase'ował i zrobił force push. Zwykły 
 teraz bezwartościowy: po rebasie każdy commit jest nowym commitem, więc wszystko
 wygląda na nowe.
 
-`git range-diff` paruje obie wersje commit po commicie, a Gitcito wyczytuje stare
+`git range-diff` paruje obie wersje commit po commicie, a Geminio wyczytuje stare
 pozycje prosto z **reflogu** — nic więc nie musiało być zawczasu nigdzie
 zapisane, żeby to zadziałało.
 

@@ -25,7 +25,7 @@ Aponte para um repositório e ele escreve uma wiki curta explicando a base de c�
 
 ## As páginas escritas
 
-O Gitcito planeja um punhado de páginas a partir dos arquivos que o repositório
+O Geminio planeja um punhado de páginas a partir dos arquivos que o repositório
 rastreia — documentação e manifestos primeiro, depois o que mais muda — e escreve
 cada página a partir dos arquivos que ela cobre.
 

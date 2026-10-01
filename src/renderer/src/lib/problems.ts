@@ -5,7 +5,7 @@ import type { Problem, ProblemSeverity } from '../../../shared/types'
  *
  * The filter that matters is `changedOnly`. A flat list of every warning in the
  * repository is the same list an IDE gives you and it ages into wallpaper —
- * what nobody else can answer is "did *my* diff cause these", and Gitcito knows
+ * what nobody else can answer is "did *my* diff cause these", and Geminio knows
  * exactly which files are dirty. Hence a toggle, not a separate view.
  */
 

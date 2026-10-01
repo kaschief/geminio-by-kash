@@ -2,13 +2,13 @@
 title: 보안과 비밀
 category: 보안
 order: 70
-summary: 마스킹, 가드, 키체인 — 그리고 Gitcito가 하지 않는 일.
+summary: 마스킹, 가드, 키체인 — 그리고 Geminio가 하지 않는 일.
 keywords: 보안 security 비밀 secrets 마스킹 masking 키체인 keychain safeStorage 토큰 tokens 보호된 브랜치 protected branch 대용량 파일 large file guard 개인정보 privacy
 ---
 
 # 보안과 비밀
 
-Gitcito에는 **백엔드가 없어요**. 네트워크 호출은 Git 호스트로, 그리고 켜 두었다면
+Geminio에는 **백엔드가 없어요**. 네트워크 호출은 Git 호스트로, 그리고 켜 두었다면
 AI 공급자로 나가는 것이 전부예요.
 
 ![보안 설정](../../screenshots/settings-security.webp)
@@ -44,7 +44,7 @@ Apple 서명 자료도 포함됩니다: `*.mobileprovision`, `*.provisionprofile
 `safeStorage`)으로 암호화돼요.
 
 **당신이 허락하기 전에는 키체인에 아무것도 닿지 않아요.** 시스템 자체의 권한
-대화 상자가 뜨기 전에, Gitcito가 무엇이 저장되는지, 무엇은 할 수 없는지(앱은
+대화 상자가 뜨기 전에, Geminio가 무엇이 저장되는지, 무엇은 할 수 없는지(앱은
 자기가 만든 항목만 다시 읽을 수 있어요 — 당신의 다른 비밀번호에는 손이 닿지
 않아요), 그리고 거절해도 괜찮다는 사실을 설명해요. 거절하면 토큰은 그 세션
 동안만 메모리에 머물고, 금고는 닫힌 채로 있으며, 나중에 **설정 → 보안 → OS

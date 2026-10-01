@@ -21,7 +21,7 @@ yapmadan.
   klasörde bir tane oluşturulur ve sekme olarak açılır.
 - Bir dal aynı anda yalnızca bir çalışma ağacında yaşar; başka bir ağacın tuttuğu
   dala geçmek bu yüzden işleyemez — git *already used by worktree at …* diyerek
-  reddeder. Gitcito bunun yerine sizi oraya götürür: dalın menüsünde *`x` dalına
+  reddeder. Geminio bunun yerine sizi oraya götürür: dalın menüsünde *`x` dalına
   worktree'sinde git* yazar ve satıra çift tıklamak, hata vermek yerine o çalışma
   ağacının sekmesini açar.
 

@@ -73,7 +73,7 @@ ervoor opent dan een eigen tabblad — openen moet altijd iets openen.
 Een workspace is een **hele opgeslagen tabbladenstrook**. Wisselen verwisselt elk
 tabblad tegelijk: `Werk` en `Privé` trappen elkaar niet meer op de tenen.
 
-De naam van de workspace staat linksboven, naast het Gitcito-merkteken. Klik erop
+De naam van de workspace staat linksboven, naast het Geminio-merkteken. Klik erop
 om te wisselen, aan te maken, te hernoemen, te herordenen of te verwijderen.
 Ernaast zit de meter die [Mission control](mission-control.md) opent voor de
 workspace waarin je zit.

@@ -22,7 +22,7 @@ keywords: etkileşimli rebase interactive squash fixup reword drop edit autosqua
 | **drop** | Commit'i çöpe at |
 
 Sıralamayı değiştirmek için satırları sürükleyin. Düzenleyici asla bir terminalde
-açılmaz — todo dosyasını sizin yerinize Gitcito yazar.
+açılmaz — todo dosyasını sizin yerinize Geminio yazar.
 
 ## Tek tıkla autosquash
 

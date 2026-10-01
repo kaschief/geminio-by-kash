@@ -18,7 +18,7 @@ function reportIssueUrl(message: string): string {
   const title = message.split('\n')[0].slice(0, 120)
   const body = `**Error**\n\n\`\`\`\n${message}\n\`\`\`\n`
   const params = new URLSearchParams({ title, body })
-  return `https://github.com/MyAppDesk/gitcito/issues/new?${params.toString()}`
+  return `https://github.com/kaschief/geminio-by-kash/issues/new?${params.toString()}`
 }
 
 function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }): React.JSX.Element {

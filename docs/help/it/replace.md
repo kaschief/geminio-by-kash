@@ -47,7 +47,7 @@ conoscere:
 - Sono **locali finché non le pubblichi**: `git push origin "refs/replace/*"` le
   condivide, e chiunque cloni senza di esse vede la storia intatta.
 - **L'annullamento funziona** — eliminare il ref ripristina immediatamente la
-  discendenza vera, e Gitcito registra il graft come azione annullabile al pari
+  discendenza vera, e Geminio registra il graft come azione annullabile al pari
   di qualsiasi altra.
 - `core.useReplaceRefs=false` fa sì che git le ignori tutte in un colpo solo.
   L'interruttore qui scrive esattamente quello, e la finestra lo dice quando è
@@ -80,7 +80,7 @@ ancora in ogni clone esistente.
 - **Una sostituzione può nascondere un commit agli strumenti, non a git.**
   `git cat-file` e l'[esploratore di oggetti](objects.md) aprono comunque
   l'originale per sha.
-- **Gitcito non offre `git replace --edit`** (riscrivere a mano il contenuto di
+- **Geminio non offre `git replace --edit`** (riscrivere a mano il contenuto di
   un oggetto). Quello è lavoro da editor di testo su un oggetto grezzo, ed è un
   colpo nel piede con un'interfaccia attorno.
 

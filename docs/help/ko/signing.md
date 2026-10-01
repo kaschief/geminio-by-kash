@@ -9,7 +9,7 @@ keywords: 서명 sign signing gpg ssh x509 검증됨 verified 서명 signature �
 # 서명된 커밋
 
 저장소별로 서명을 켜세요 (**설정 → 저장소 톱니바퀴**). GPG, SSH, X.509 중에서
-고른 키로요. Gitcito는 그 저장소에 `commit.gpgsign`, `gpg.format`,
+고른 키로요. Geminio는 그 저장소에 `commit.gpgsign`, `gpg.format`,
 `user.signingkey` 를 써요 — 다른 도구들도 똑같이 읽는 바로 그 설정이에요.
 
 | | |

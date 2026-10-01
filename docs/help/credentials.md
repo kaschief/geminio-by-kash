@@ -8,12 +8,12 @@ keywords: credential helper password https asks again osxkeychain wincred manage
 
 # Credential helper
 
-Gitcito holds three different kinds of secret, and people reasonably assume they
+Geminio holds three different kinds of secret, and people reasonably assume they
 are one thing:
 
 | | Held by |
 |---|---|
-| Host API tokens — PRs, issues, CI checks | Gitcito, in your [OS keychain](security.md) |
+| Host API tokens — PRs, issues, CI checks | Geminio, in your [OS keychain](security.md) |
 | `git@…` transport | Your [SSH key](ssh-keys.md), via the system ssh agent |
 | **`https://` transport** | **Git's own credential helper** |
 
@@ -54,7 +54,7 @@ this one host behave differently".
 | `cache` | Memory, for 15 minutes. Nothing on disk |
 | `store` | **A plain file in your home directory. Unencrypted** |
 
-Gitcito offers what is actually installed on this machine, marks the one that
+Geminio offers what is actually installed on this machine, marks the one that
 fits your OS, and greys out the rest.
 
 **Scope matters.** *For every repository* writes to your global config, which is
@@ -81,21 +81,21 @@ and every push fails with a 401 that names nothing. **Forget** asks the
 configured helper to erase its entry for that host — `git credential reject`,
 which is git's own documented route.
 
-Nothing is read on the way: Gitcito never calls `git credential fill`, the
+Nothing is read on the way: Geminio never calls `git credential fill`, the
 command that would print a live password to standard output.
 
 The next push asks you once, and the helper stores the new answer.
 
 ## Limits worth knowing
 
-- **This is git's store, not Gitcito's.** Changing it changes what your terminal
+- **This is git's store, not Geminio's.** Changing it changes what your terminal
   does too — which is the point, and worth knowing before you change it.
 - **System-level helpers are shown, not editable.** They live in a config only
   an administrator can write.
-- **Gitcito cannot list what a helper holds.** No credential API exposes that
+- **Geminio cannot list what a helper holds.** No credential API exposes that
   without handing over the secrets, so the dialog reports configuration and
   erases on request, and nothing else.
-- **A token you gave Gitcito is separate.** Revoking one does not touch the
+- **A token you gave Geminio is separate.** Revoking one does not touch the
   other; see [security](security.md) for the keychain side.
 
 See also: [Security](security.md) · [SSH keys](ssh-keys.md) ·

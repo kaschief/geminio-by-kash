@@ -2,7 +2,7 @@
 title: De menubalk
 category: Begin hier
 order: 5
-summary: Wat er in Gitcito's macOS-menu's zit, en waarom Windows en Linux geen menubalk hebben.
+summary: Wat er in Geminio's macOS-menu's zit, en waarom Windows en Linux geen menubalk hebben.
 keywords: menubalk menu applicatie bestand bewerken weergave venster help repository macos native over afsluiten
 ---
 
@@ -21,7 +21,7 @@ die Windows- en Linux-gebruikers niet hebben.
 
 | Menu | Bevat |
 |---|---|
-| **Gitcito** | Over, controle op updates, [Instellingen](repo-settings.md), de standaardopties om te verbergen en af te sluiten |
+| **Geminio** | Over, controle op updates, [Instellingen](repo-settings.md), de standaardopties om te verbergen en af te sluiten |
 | **Bestand** | Nieuw tabblad, een repository openen of [klonen](cloning.md), recent geopend, tabbladen sluiten en heropenen |
 | **Bewerken** | Knippen, kopiëren, plakken, ongedaan maken — de tekstbewerking die je toetsenbord al doet — plus [zoeken in code](search.md) |
 | **Weergave** | Commandopalet, de schakelaars voor zijbalk en paneel, de [terminal](terminal.md), [mission control](mission-control.md), de [kluis](vault.md), zoomen |
@@ -38,16 +38,16 @@ valt — het menu is een leesbare samenvatting van wat de app je nu toestaat.
 De toetsen naast elk item zijn de toetsen die je daadwerkelijk hebt gekoppeld.
 Koppel <kbd>⌘K</kbd> opnieuw in Instellingen en het menu Weergave zegt het.
 
-Dat werkt omdat het menu die combinaties *toont* zonder ze op te eisen: Gitcito's
+Dat werkt omdat het menu die combinaties *toont* zonder ze op te eisen: Geminio's
 eigen toetsafhandeling blijft de baas, en juist daardoor kan een sneltoets zich
 anders gedragen afhankelijk van waar de cursor staat. Het enige wat zo niet te
-tonen is, is een sneltoets die Gitcito niet bezit — <kbd>⌘F</kbd> hoort bij het
+tonen is, is een sneltoets die Geminio niet bezit — <kbd>⌘F</kbd> hoort bij het
 bestand of de diff die je leest, dus geen menu-item eist die op.
 
 ## De grenzen
 
 - **Alleen macOS.** Op Windows en Linux is het venster randloos — de titelbalk
-  wordt door Gitcito getekend en een menubalk kan nergens staan. Daar leiden het
+  wordt door Geminio getekend en een menubalk kan nergens staan. Daar leiden het
   [commandopalet](search.md) en de [sneltoetsen](keyboard.md) naar dezelfde
   opdrachten.
 - **Herladen en de Ontwikkelaarstools verschijnen alleen in ontwikkelbuilds.**

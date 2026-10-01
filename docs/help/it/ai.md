@@ -33,10 +33,10 @@ Google.
 
 Scegli il provider **CLI locale** per rispondere con una CLI agente già
 installata e autenticata su questa macchina — `claude`, `gemini` o `codex`.
-Gitcito esegue il binario con il tuo prompt e ne legge la risposta; non c'è
+Geminio esegue il binario con il tuo prompt e ne legge la risposta; non c'è
 nessuna chiave API da incollare né alcun token da conservare.
 
-Gitcito esegue soltanto un comando che hai configurato come account, e sempre
+Geminio esegue soltanto un comando che hai configurato come account, e sempre
 con un elenco di argomenti invece di una shell: nulla in un diff o nel nome di un
 ramo può essere interpretato come un comando.
 
@@ -63,7 +63,7 @@ Aggiornando da una versione precedente agli account, questo compare una volta. I
 ## Modelli
 
 Gli elenchi dei modelli arrivano dal provider stesso e restano in cache per un
-giorno; **Recupera modelli** ne aggiorna uno all'istante. Sotto l'elenco Gitcito
+giorno; **Recupera modelli** ne aggiorna uno all'istante. Sotto l'elenco Geminio
 dice da dove viene — in diretta, dalla cache (con la data) o dall'elenco
 integrato di riserva, e perché.
 
@@ -75,7 +75,7 @@ Ollama appena scaricato è sempre utilizzabile anche se il provider non lo elenc
 Un provider a cui non hai ancora dato una chiave, o irraggiungibile, ripiega su
 un piccolo elenco integrato invece che su un menu vuoto.
 
-Nessun provider pubblica un elenco ordinato o curato, quindi la selezione è di Gitcito: le istantanee datate vengono ripiegate sul modello di cui sono un'istantanea (`gpt-4o` copre `gpt-4o-2024-08-06`), e il resto è ordinato dal più recente anziché alfabeticamente. **Mostra tutti i modelli**, in fondo all'elenco, riporta tutto ciò che il provider ha restituito.
+Nessun provider pubblica un elenco ordinato o curato, quindi la selezione è di Geminio: le istantanee datate vengono ripiegate sul modello di cui sono un'istantanea (`gpt-4o` copre `gpt-4o-2024-08-06`), e il resto è ordinato dal più recente anziché alfabeticamente. **Mostra tutti i modelli**, in fondo all'elenco, riporta tutto ciò che il provider ha restituito.
 
 ## Cosa sa fare
 
@@ -94,7 +94,7 @@ Nessun provider pubblica un elenco ordinato o curato, quindi la selezione è di 
 ## Ancorata, non improvvisata
 
 La review vede il diff come **hunk etichettati** e può citare solo quelle
-etichette; poi è Gitcito a risolvere ogni etichetta in un file e una riga reali.
+etichette; poi è Geminio a risolvere ogni etichetta in un file e una riga reali.
 Un modello che si inventa una posizione viene **rifiutato e interrogato di
 nuovo**, così le segnalazioni puntano sempre a codice che esiste davvero.
 

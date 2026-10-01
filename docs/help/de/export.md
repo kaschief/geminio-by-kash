@@ -60,7 +60,7 @@ Lokal bewegt sich nichts: kein Branch wird fast-forwardet, keine Arbeit wird
 eigenen Bedingungen aus — genau wie einen Branch von jedem anderen Remote.
 
 Um stattdessen ein *neues* Repository aus einem Bundle zu starten, klone im
-Terminal aus der Datei: `git clone work.bundle myrepo`. Gitcito importiert in ein
+Terminal aus der Datei: `git clone work.bundle myrepo`. Geminio importiert in ein
 geöffnetes Repository; es klont nicht aus einer Datei.
 
 ## Archive
@@ -96,7 +96,7 @@ Regel lebt im Repository statt in irgendjemandes Release-Skript.
 - **Ein Bundle ist eine vollständige Kopie**, außer du nutzt einen Bereich. Ein
   2-GB-Repository zu bundeln schreibt eine 2-GB-Datei und dauert so lange wie ein
   Clone.
-- **Leere Bundles werden abgelehnt** — von git, nicht von Gitcito: Ein Bereich,
+- **Leere Bundles werden abgelehnt** — von git, nicht von Geminio: Ein Bereich,
   zwischen dessen Enden nichts liegt, erzeugt einen Fehler statt einer nutzlosen
   Datei.
 - **Der Import mergt nicht.** Refs landen unter `bundle/…` und bleiben dort, bis

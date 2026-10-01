@@ -67,10 +67,10 @@ export function ChangeGutterPopup({
       else if (e.key === 'ArrowUp') onPrev()
       else if (e.key === 'ArrowDown') onNext()
     }
-    document.addEventListener('mousedown', onDown)
+    document.addEventListener('pointerdown', onDown, true)
     window.addEventListener('keydown', onKey)
     return () => {
-      document.removeEventListener('mousedown', onDown)
+      document.removeEventListener('pointerdown', onDown, true)
       window.removeEventListener('keydown', onKey)
     }
   }, [onClose, onPrev, onNext])

@@ -29,7 +29,7 @@ ajouté. Un seul fetch, et le code est sur votre disque.
 | Bitbucket Cloud, Bitbucket Server | `refs/pull-requests/<n>/from` |
 | Azure DevOps | `refs/pull/<n>/merge` |
 
-Gitcito sonde les quatre en un seul `ls-remote` : une forge inconnue ou
+Geminio sonde les quatre en un seul `ls-remote` : une forge inconnue ou
 auto-hébergée fonctionne donc du moment qu'elle suit l'une de ces conventions.
 
 ## L'ouvrir
@@ -48,7 +48,7 @@ auto-hébergée fonctionne donc du moment qu'elle suit l'une de ces conventions.
 
 **Pull request** — le numéro, ou une URL de navigateur collée. `7`, `#7` et
 `https://github.com/owner/repo/pull/7` fonctionnent tous ; les formes d'URL de
-GitLab, Bitbucket et Azure DevOps aussi. Appuyez sur **Trouver** et Gitcito
+GitLab, Bitbucket et Azure DevOps aussi. Appuyez sur **Trouver** et Geminio
 indique la référence qu'il a résolue et le commit vers lequel elle pointe, avant
 que quoi que ce soit ne soit récupéré.
 
@@ -69,7 +69,7 @@ ne peut pas repartir n'est pas une prévisualisation.
 
 Prévisualiser deux fois la même pull request réutilise la même branche, en la
 déplaçant sur la nouvelle tête — pratique quand l'auteur pousse un correctif
-pendant que vous testez. Quand cette branche existe déjà, Gitcito le dit et
+pendant que vous testez. Quand cette branche existe déjà, Geminio le dit et
 demande confirmation avant de la réinitialiser, parce que tout commit qui ne
 vivrait que là serait perdu.
 

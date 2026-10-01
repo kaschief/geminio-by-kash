@@ -10,7 +10,7 @@ keywords: yerel ci iş akışı çalıştırıcı konteyner boru hattı push ön
 
 Push et–bekle–kırmızı çarpı–düzelt–push et döngüsü her turda on dakika harcar.
 [act](https://nektosact.com) ile aynı iş akışları makinenizdeki Docker
-konteynerlerinde çalışır ve onları Gitcito yönetir: bir iş akışı seçin,
+konteynerlerinde çalışır ve onları Geminio yönetir: bir iş akışı seçin,
 Çalıştır'a basın, CI'ın basacağı logun aynısını izleyin — daha hiçbir şey
 makinenizden ayrılmadan.
 
@@ -18,10 +18,10 @@ makinenizden ayrılmadan.
 
 ## Bir entegrasyon, paketlenmiş bir çalışma zamanı değil
 
-Gitcito bilerek act veya Docker **içermez** — yanında bir konteyner çalışma
+Geminio bilerek act veya Docker **içermez** — yanında bir konteyner çalışma
 zamanı sürükleyen bir uygulama, git istemcisinin tam zıddıdır. Bu isteğe bağlı
 bir entegrasyondur: **Ayarlar → Entegrasyonlar**'dan (veya diyaloğun
-kendisinden) etkinleştirin; Gitcito neyin kurulu olduğunu algılar ve gerisi
+kendisinden) etkinleştirin; Geminio neyin kurulu olduğunu algılar ve gerisi
 için size yol gösterir — `brew install act`, çalışan bir Docker daemon'ı,
 bitti. Üç koşul da sağlanana kadar hiçbir şey çalışmaz: etkin, act kurulu,
 Docker erişilebilir.
@@ -63,7 +63,7 @@ Grafikte bir commit'e sağ tıklamak doğrudan **Bu commit üzerinde yerel CI
 
 Maliyet, bir şey çalışmadan önce söylenir, sonradan keşfedilmez: bir revizyon
 veya aralık yazın (`main..HEAD`, `HEAD~5..`, bir sha), **Önizleme**'ye basın;
-Gitcito, belirtimin kaç commit'le eşleştiğini ve en yeni hangi N commit'in —
+Geminio, belirtimin kaç commit'le eşleştiğini ve en yeni hangi N commit'in —
 50 ile sınırlı açık bütçe — gerçekten çalışacağını gösterir. Bir tarama
 bunları **sırayla** çalıştırır (act artı Docker, paralel çalıştırmaların
 makine için kavga edeceği kadar ağırdır), her çalıştırmanın logunu canlı

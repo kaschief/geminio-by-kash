@@ -51,12 +51,19 @@ with a hundred.
 ![Graph filtered down to one path](../screenshots/graph-path-filter.webp)
 
 - **Columns**: show, hide, resize and reorder branch, message, author, date,
-  SHA, signature and deployment columns. **Double-click a column edge** to fit
-  the column to its widest content on screen. The edge beside the message fits
-  the column to its right (the message fills what is left), and the graph
-  column goes back to fitting its lanes. Each column has a maximum, so the
+  SHA, signature and deployment columns. Right-click any column header to
+  open the same column menu as the icon at the right; click a check mark to
+  show or hide a column. Order, widths and visibility apply across all your
+  repositories. **Double-click a column edge** to fit
+  all columns to the widest content in the loaded history, including rows
+  outside the viewport. Each fitted column uses at most 35% of the graph,
+  within its minimum and maximum widths. The message fills what is left,
+  and the graph column goes back to fitting its lanes. Each column has a maximum, so the
   table never scrolls sideways into empty space; when a narrow window does make
   it scroll, the headings move with the rows.
+
+![Column visibility menu opened from a column header](../screenshots/graph-columns-menu.webp)
+
 - **Dates**: *Date format in the graph* (Settings) picks Relative ("3d"), Date
   & time ("15 Sep 2026, 17:22") or ISO ("2026-09-15 17:22"). With relative
   dates, the row under the pointer shows its exact date and time in place.
@@ -69,6 +76,8 @@ with a hundred.
   mini-graph preview.
 
 ![Graph style settings with live preview](../screenshots/settings-graph.webp)
+
+![Graph and commit details at Sidecar size](../screenshots/sidecar-graph.webp)
 
 ## Where stashes sit
 

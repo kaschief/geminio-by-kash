@@ -8,7 +8,7 @@ keywords: stash stashes partial keep-index apply pop drop untracked branch chang
 
 # Stashes
 
-Stashing in Gitcito is not all-or-nothing.
+Stashing in Geminio is not all-or-nothing.
 
 | Action | What it does |
 |---|---|
@@ -28,12 +28,12 @@ files* button) restores just the selection.
 
 ## When a stash will not apply
 
-If applying a stash would clobber untracked files, git stops. Gitcito offers to
+If applying a stash would clobber untracked files, git stops. Geminio offers to
 overwrite them and retry, rather than leaving you to work out the incantation.
 
 If files the stash touches have uncommitted edits, git refuses too. Often those
 edits *are* the stash: a pull that set your changes aside and put them back
-leaves the stash in the list as well. Gitcito checks for that. When your working
+leaves the stash in the list as well. Geminio checks for that. When your working
 directory already holds exactly what the stash would restore, it says the
 stash is already applied and offers to drop it. Your changes stay where they
 are. Otherwise it names the files in the way, so you can commit or stash them

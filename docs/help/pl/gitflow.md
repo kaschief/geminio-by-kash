@@ -27,10 +27,10 @@ o osiemnastej w dniu wydania — merge hotfixa do `main` i zapomnienie o
 | `release/*` | Stabilizowana wersja, odbita od develop. |
 | `hotfix/*` | Pilna poprawka, odbita od **main** — produkcja nie może czekać na develop. |
 
-Gitcito czyta i zapisuje te same klucze konfiguracji `gitflow.*`, których używa
+Geminio czyta i zapisuje te same klucze konfiguracji `gitflow.*`, których używa
 CLI `git flow` (`gitflow.branch.master`, `gitflow.prefix.feature`, …).
 Repozytorium, na którym ktoś już uruchomił `git flow init`, jest rozpoznawane
-od razu, a repozytorium skonfigurowane tutaj działa potem z CLI. Gitcito
+od razu, a repozytorium skonfigurowane tutaj działa potem z CLI. Geminio
 uruchamia przez cały czas zwykłe polecenia gita — CLI nie musi być
 zainstalowane.
 
@@ -55,7 +55,7 @@ Nazwa to to, co wpiszesz; prefiks bierze się z układu.
 **Zakończ** to ta część warta zautomatyzowania, bo to kilka kroków, z których
 wszystkie muszą się wydarzyć:
 
-| Rodzaj | Co robi Gitcito |
+| Rodzaj | Co robi Geminio |
 |------|-------------------|
 | Feature | Merguje do develop przez `--no-ff`, usuwa gałąź, zostawia cię na develop |
 | Release | Merguje do main, taguje, merguje do develop, usuwa gałąź, zostawia cię na develop |
@@ -76,7 +76,7 @@ wiadomość taga, jeśli chcesz czegoś więcej niż domyślnej.
   razy, a robienie tego wokół niezacommitowanej pracy to sposób, w jaki ludzie
   ją tracą.
 - **Konfliktujący merge cofa całość.** Gdyby merge do main się powiódł, a merge
-  do develop wszedł w konflikt, zostałbyś z na wpół skończonym wydaniem. Gitcito
+  do develop wszedł w konflikt, zostałbyś z na wpół skończonym wydaniem. Geminio
   przywraca każdą gałąź tam, gdzie była, i zgłasza konflikt. Zmerguj tamtą gałąź
   ręcznie, rozwiąż ją w [edytorze konfliktów](conflicts.md), a resztę przepływu
   dokończysz własnoręcznie.

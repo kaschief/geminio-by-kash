@@ -34,7 +34,7 @@ questa finestra.
 
 **`-X ours` non è `-s ours`.** L'opzione qui decide solo gli hunk che si scontrano
 davvero; ogni altra modifica dell'altro branch si fonde normalmente. La strategia
-chiamata `ours` — che Gitcito non offre — prende il tuo albero in blocco e butta
+chiamata `ours` — che Geminio non offre — prende il tuo albero in blocco e butta
 via l'altro lato, producendo un commit di merge che dichiara di contenere lavoro
 che non contiene. Quella distinzione è la cosa più fraintesa in assoluto sui
 merge di git.

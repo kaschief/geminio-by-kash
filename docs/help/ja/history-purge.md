@@ -59,7 +59,7 @@ keywords: purge 消去 history 履歴 rewrite 書き換え filter-branch bfg fil
 
 ## 書き換えが実際にやること
 
-Gitcito はすべてのブランチとタグを `refs/gitcito/pre-purge/<timestamp>/…` にコピー
+Geminio はすべてのブランチとタグを `refs/gitcito/pre-purge/<timestamp>/…` にコピー
 してから、次を実行します。
 
 ```sh
@@ -111,10 +111,10 @@ git はそれらを回収しません。
   作業を失う経路そのものだからです。
 - **書き換えの単位はパスであって、内容ではありません。** 独立したファイルではなく
   ソースファイルに貼り付けられてしまった秘密情報を消すには内容フィルターが必要で、
-  それは `git filter-repo --replace-text` の領分であり、Gitcito はそれを包んでいま
+  それは `git filter-repo --replace-text` の領分であり、Geminio はそれを包んでいま
   せん。
 - **`filter-branch` は非常に大きな履歴では遅いです。** それでも、どこでも git に付属
-  してくるのがこれであり、だから Gitcito が使うのもこれです。数万コミットあるリポジ
+  してくるのがこれであり、だから Geminio が使うのもこれです。数万コミットあるリポジ
   トリでは、[ターミナル](terminal.md) で `git filter-repo` を使うほうが速い道具です。
 - **他人のクローンはあなたのリポジトリではありません。** 彼らは再クローンするまで
   古い履歴を持ち続けます。

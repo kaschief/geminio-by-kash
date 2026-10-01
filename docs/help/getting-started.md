@@ -8,8 +8,8 @@ keywords: intro first steps open clone tabs graph commit
 
 # Getting started
 
-Gitcito opens a folder and shows you its history. Nothing is written to your
-repository until you ask for it.
+Geminio is Kash's desktop Git client. Open a folder to explore its history,
+review changes and work with your GitHub account.
 
 ![A freshly opened repository with no commits yet](../screenshots/empty-repo.webp)
 
@@ -19,7 +19,7 @@ repository until you ask for it.
   screen.
 - **Clone** one from a URL or straight from your host — see [cloning](cloning.md)
   for the options that make a huge repository quick to clone.
-- From a terminal, `gitcito .` opens the current folder in the running app —
+- From a terminal, `geminio .` opens the current folder in the running app —
   see [the command line](cli.md).
 - A folder that is not a Git repository yet still opens, offering to
   initialise it.
@@ -31,6 +31,18 @@ repository until you ask for it.
 | Left | Branches, remotes, tags, stashes, worktrees — and the **Files** tab for the working tree |
 | Middle | The commit graph, and whatever you select from it |
 | Right | The commit composer, or the details of the selected commit |
+
+## Set up your workspace
+
+Use the **Settings** gear in the title bar for appearance, integrations and
+other preferences. **Repository** inside the same window holds settings for
+the current repository. Connect GitHub under **Integrations**; an existing
+GitHub CLI login can be reused.
+
+Column order, widths and visibility, plus sidebar section arrangement, are
+shared across repositories. Right-click a graph header to choose columns, and
+drag the divider above the commit message to resize its section. The Pull
+button's dropdown chooses whether its main action fetches or pulls.
 
 ## Finding everything else
 
@@ -54,5 +66,5 @@ only power users can find.
 2. Stage it — the whole file, a hunk, or [single lines](staging.md).
 3. Write a message and press **Commit**.
 
-Everything else in Gitcito is optional.
+Everything else in Geminio is optional.
 

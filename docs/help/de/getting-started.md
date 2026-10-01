@@ -8,7 +8,7 @@ keywords: einführung intro erste schritte first steps öffnen open clone klonen
 
 # Erste Schritte
 
-Gitcito öffnet einen Ordner und zeigt dir seine Historie. In dein Repository wird
+Geminio öffnet einen Ordner und zeigt dir seine Historie. In dein Repository wird
 nichts geschrieben, bevor du nicht darum bittest.
 
 ![Ein frisch geöffnetes Repository, noch ohne Commits](../../screenshots/empty-repo.webp)
@@ -20,7 +20,7 @@ nichts geschrieben, bevor du nicht darum bittest.
 - **Klone** eines von einer URL oder direkt von deinem Hoster — unter
   [Klonen](cloning.md) stehen die Optionen, die ein riesiges Repository schnell
   klonbar machen.
-- Aus einem Terminal öffnet `gitcito .` den aktuellen Ordner in der laufenden
+- Aus einem Terminal öffnet `geminio .` den aktuellen Ordner in der laufenden
   App — siehe [die Kommandozeile](cli.md).
 - Ein Ordner, der noch kein Git-Repository ist, lässt sich trotzdem öffnen; dabei
   wird angeboten, ihn zu initialisieren.
@@ -56,5 +56,5 @@ erreichbar — es gibt also nichts, das nur Power-User finden.
 2. Stage sie — die ganze Datei, einen Hunk oder [einzelne Zeilen](staging.md).
 3. Schreib eine Nachricht und drück **Commit**.
 
-Alles andere in Gitcito ist optional.
+Alles andere in Geminio ist optional.
 

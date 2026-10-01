@@ -6,8 +6,8 @@ import type { AppTheme, CodeTheme, ThemeMode, AppThemeColors, CodeThemeColors } 
 
 export const APP_THEMES: AppTheme[] = [
   {
-    id: 'gitcito',
-    name: 'Gitcito',
+    id: 'geminio',
+    name: 'Geminio',
     builtin: true,
     light: {
       bg0: '#eef0f8',
@@ -364,8 +364,8 @@ export const APP_THEMES: AppTheme[] = [
 
 export const CODE_THEMES: CodeTheme[] = [
   {
-    id: 'gitcito',
-    name: 'Gitcito',
+    id: 'geminio',
+    name: 'Geminio',
     builtin: true,
     light: {
       bg: 'transparent',

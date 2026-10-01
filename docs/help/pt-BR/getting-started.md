@@ -8,7 +8,7 @@ keywords: introdução primeiros passos começar abrir clonar clone abas tabs gr
 
 # Primeiros passos
 
-O Gitcito abre uma pasta e mostra o histórico dela. Nada é escrito no seu
+O Geminio abre uma pasta e mostra o histórico dela. Nada é escrito no seu
 repositório até você pedir.
 
 ![Um repositório recém-aberto, ainda sem nenhum commit](../../screenshots/empty-repo.webp)
@@ -20,7 +20,7 @@ repositório até você pedir.
 - **Clone** um a partir de uma URL ou direto do seu host — veja
   [clonagem](cloning.md) para as opções que deixam um repositório gigante rápido
   de clonar.
-- Pelo terminal, `gitcito .` abre a pasta atual no app que já está rodando —
+- Pelo terminal, `geminio .` abre a pasta atual no app que já está rodando —
   veja [a linha de comando](cli.md).
 - Uma pasta que ainda não é um repositório Git também abre, oferecendo
   inicializá-la.
@@ -56,5 +56,5 @@ usuários avançados consigam encontrar.
 2. Prepare-o — o arquivo inteiro, um hunk, ou [linhas isoladas](staging.md).
 3. Escreva uma mensagem e aperte **Commit**.
 
-Todo o resto no Gitcito é opcional.
+Todo o resto no Geminio é opcional.
 

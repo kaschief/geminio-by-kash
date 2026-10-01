@@ -11,7 +11,7 @@ keywords: problèmes analyseur diagnostics erreurs avertissements lint tsc types
 Chaque projet embarque déjà un outil qui vous dit ce qui ne va pas — `tsc`,
 `dart analyze`, ESLint, Clippy, `go vet`, Ruff. Ce qu’aucun ne vous dit, c’est si
 c’est **votre** diff qui a introduit les quarante avertissements qu’il vient
-d’afficher. Gitcito sait quels fichiers sont modifiés : la même liste répond à
+d’afficher. Geminio sait quels fichiers sont modifiés : la même liste répond à
 cette question avec un seul interrupteur.
 
 ![Le panneau Problèmes et le compteur de la barre d’état](../../screenshots/problems.webp)
@@ -23,7 +23,7 @@ clic sur une ligne ouvre le fichier à cet endroit. Avant le premier balayage, i
 
 ## Ce qui est exécuté
 
-| Si le dépôt contient | Gitcito exécute |
+| Si le dépôt contient | Geminio exécute |
 |----------------------|-----------------|
 | `pubspec.yaml` | `dart analyze --format=machine` |
 | `tsconfig.json` | `tsc --noEmit` |
@@ -50,7 +50,7 @@ analyseurs signalant la même ligne donnent une seule entrée.
 
 **Rien ne se lance tout seul.** `tsc --noEmit` sur un gros dépôt, ce sont des
 dizaines de secondes, et ces commandes sont la chaîne d’outils du dépôt, pas
-celle de Gitcito. Elles démarrent quand vous ouvrez le panneau ou appuyez sur
+celle de Geminio. Elles démarrent quand vous ouvrez le panneau ou appuyez sur
 actualiser, jamais d’elles-mêmes. C’est aussi pourquoi la liste est un
 instantané : modifiez un fichier et elle est périmée jusqu’à la relance.
 
@@ -62,7 +62,7 @@ barre d’état et sa commande.
 **La sortie générée est écartée.** Un outil pointé sur la racine du projet
 analyse tout ce qu’il trouve, et cela inclut `.next/build/chunks`, un `dist`
 bundlé, une copie vendorisée — des centaines de plaintes sur du code écrit par
-une machine, qui enterrent la poignée qui parle du vôtre. Gitcito demande à git
+une machine, qui enterrent la poignée qui parle du vôtre. Geminio demande à git
 quels fichiers sont ignorés et les écarte, sans jamais écarter un fichier
 *suivi* : committer la sortie générée est un choix, et `git check-ignore` le
 respecte. `node_modules` part de toute façon.

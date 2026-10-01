@@ -2,7 +2,7 @@
 title: Flutter DevTools
 category: Herramientas del espacio de trabajo
 order: 93
-summary: La vista de red, la línea de tiempo, el inspector y el perfilador de memoria, en una pestaña de Gitcito.
+summary: La vista de red, la línea de tiempo, el inspector y el perfilador de memoria, en una pestaña de Geminio.
 keywords: devtools flutter dart red network timeline inspector memoria perfilador webview panel embebido vm service
 ---
 
@@ -10,10 +10,10 @@ keywords: devtools flutter dart red network timeline inspector memoria perfilado
 
 DevTools ya tiene la vista de red, la línea de tiempo, el inspector de widgets y
 el perfilador de memoria, y es una app Flutter web servida en tu propia máquina.
-Así que Gitcito no reimplementa nada de eso, ni habla él mismo con el Dart VM
+Así que Geminio no reimplementa nada de eso, ni habla él mismo con el Dart VM
 Service: detecta la dirección y la embebe.
 
-![DevTools abierto en una pestaña de Gitcito](../../screenshots/devtools.webp)
+![DevTools abierto en una pestaña de Geminio](../../screenshots/devtools.webp)
 
 `flutter run` imprime la línea en cuanto el VM service está levantado:
 
@@ -65,14 +65,14 @@ La vista embebida va con correa corta, porque esta app maneja credenciales:
 - **Solo loopback.** `127.0.0.1`, `localhost`, `::1`. Un intento de cargar
   cualquier otra dirección se rechaza, y una redirección hacia ella también.
 - **Sin preload, sin node integration, con aislamiento de contexto.** La página
-  no tiene ningún puente hacia Gitcito.
+  no tiene ningún puente hacia Geminio.
 - **Los enlaces se abren en tu navegador de verdad**, en una ventana normal, no
   dentro del panel.
 
 ## Los límites
 
 - **Es DevTools, no algo nuestro.** Lo que pueda esa versión, lo puede el panel;
-  lo que no, tampoco nosotros. No hay una vista de red con sabor a Gitcito.
+  lo que no, tampoco nosotros. No hay una vista de red con sabor a Geminio.
 - **Solo Flutter se anuncia así.** Un programa Dart normal imprime una URL del VM
   service pero ninguna dirección de DevTools, así que no aparece botón.
 - **Un panel en blanco significa que la app se paró.** DevTools lo sirve *la app

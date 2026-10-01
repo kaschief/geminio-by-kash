@@ -20,7 +20,7 @@ O Absorb faz a coisa honesta por você.
 
 1. Prepare as correções.
 2. Ferramentas → **Absorver mudanças preparadas…** (ou <kbd>⌘K</kbd>).
-3. O Gitcito dá blame nas linhas que cada hunk preparado toca, descobre qual dos
+3. O Geminio dá blame nas linhas que cada hunk preparado toca, descobre qual dos
    **seus commits ainda não enviados** as introduziu, e mostra o plano antes de
    fazer qualquer coisa.
 

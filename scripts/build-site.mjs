@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Static site generator for gitcito's GitHub Pages.
+ * Static site generator for geminio's GitHub Pages.
  *
  * Two outputs from one source of truth:
  *   - a landing page, whose feature copy is the same one the README carries;
@@ -24,8 +24,8 @@ const HELP_DIR = join(ROOT, 'docs/help')
 const SHOTS_DIR = join(ROOT, 'docs/screenshots')
 const OUT = join(ROOT, 'dist-site')
 
-const REPO = 'MyAppDesk/gitcito'
-const SITE_URL = 'https://myappdesk.github.io/gitcito'
+const REPO = 'kaschief/geminio-by-kash'
+const SITE_URL = 'https://kaschief.github.io/geminio-by-kash'
 const RELEASES = `https://github.com/${REPO}/releases`
 const LATEST = `${RELEASES}/latest`
 const SPONSOR = 'https://github.com/sponsors/cgutierr-zgz'
@@ -171,9 +171,9 @@ const head = (title, description, depth, opts = {}) => {
 <meta property="og:title" content="${esc(title)}" />
 <meta property="og:description" content="${esc(description)}" />
 <meta property="og:type" content="website" />
-<meta property="og:image" content="https://myappdesk.github.io/gitcito/assets/og-image.jpg" />
+<meta property="og:image" content="https://kaschief.github.io/geminio-by-kash/assets/og-image.jpg" />
 <meta name="theme-color" content="#0b0e1a" />
-<link rel="icon" href="${base}assets/gitcito-mark.png" />
+<link rel="icon" href="${base}assets/geminio-mark.png" />
 <link rel="stylesheet" href="${base}styles.css" />
 ${alternates}</head>
 <body>`
@@ -192,8 +192,8 @@ const nav = (depth, locale = 'en') => {
     locale === 'en' ? `${base}help/getting-started.html` : `${base}help/${locale}/getting-started.html`
   return `<header class="nav">
   <a class="brand" href="${home}">
-    <img src="${base}assets/gitcito-mark.png" alt="" width="26" height="26" />
-    <span>Gitcito</span>
+    <img src="${base}assets/geminio-mark.png" alt="" width="26" height="26" />
+    <span>Geminio</span>
   </a>
   <nav>
     <a href="${handbook}">${t('nav.handbook')}</a>
@@ -304,7 +304,7 @@ function landing(locale = 'en') {
 ${nav(depth, locale)}
 <main>
   <section class="hero">
-    <img class="hero-mark" src="${base}assets/gitcito-mark.png" alt="" width="86" height="86" />
+    <img class="hero-mark" src="${base}assets/geminio-mark.png" alt="" width="86" height="86" />
     <h1>${t('hero.title')}</h1>
     <p class="lede">${t('hero.lede')}</p>
     <div class="cta">
@@ -723,7 +723,7 @@ for (const [locale, pageList] of localeSets) {
 
 // Every screenshot the handbook and the landing can reference, plus the mark.
 for (const file of readdirSync(SHOTS_DIR)) copyFileSync(join(SHOTS_DIR, file), join(OUT, 'assets', file))
-copyFileSync(join(ROOT, 'docs/gitcito-mark.png'), join(OUT, 'assets/gitcito-mark.png'))
+copyFileSync(join(ROOT, 'docs/geminio-mark.png'), join(OUT, 'assets/geminio-mark.png'))
 // The share card is a 1200x630 JPEG: the screenshots are WebP now, and LinkedIn
 // and Facebook are unreliable with it. JPEG is the format every scraper agrees
 // on, and a quarter of the PNG's bytes for a photo-like screenshot.

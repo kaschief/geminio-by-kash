@@ -9,7 +9,7 @@ keywords: edit commit rewrite history amend past reword fix typo cascade replay 
 # Edit any commit
 
 The typo is in a commit from three weeks ago. The usual fix is an interactive
-rebase: stop at the commit, edit, continue, pray. Gitcito's fix is: right-click
+rebase: stop at the commit, edit, continue, pray. Geminio's fix is: right-click
 the commit, **Edit this commit**, change the text, done. The pen button in the
 commit details panel opens the same editor.
 

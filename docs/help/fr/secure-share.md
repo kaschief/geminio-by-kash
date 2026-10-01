@@ -10,7 +10,7 @@ keywords: partage sécurisé secure share export exporter import importer bundle
 
 Mettre en route une nouvelle machine — ou un nouveau coéquipier — veut
 d'habitude dire tout ressaisir. Le partage sécurisé emballe tout dans un seul
-fichier `.gitcito` chiffré à la place : les fonctions d'équipe de Gitcito n'ont
+fichier `.geminio` chiffré à la place : les fonctions d'équipe de Geminio n'ont
 **aucun backend**, le fichier *est* donc le transport. Envoyez-le comme vous
 envoyez déjà vos fichiers ; le mot de passe voyage séparément.
 
@@ -40,7 +40,7 @@ reclone pas le monde entier.
 
 Une section **structure de l'espace de travail** recrée l'espace de travail avec
 les dépôts que vous possédez déjà ; ceux qui vous manquent sont listés avec leur
-distant pour que vous puissiez les cloner d'abord puis réimporter — Gitcito ne
+distant pour que vous puissiez les cloner d'abord puis réimporter — Geminio ne
 clone jamais à votre place ici. Une section **notes de commit** prévisualise ce
 qui atterrirait — nouvelles, identiques, différentes, ou accrochées à des
 commits que vous n'avez pas — et les notes différentes ne sont remplacées que si

@@ -105,7 +105,7 @@ messaggio** l'intero messaggio — una risposta viene copiata come sorgente
 Markdown — e, se il clic è caduto su un link, **Copia link** ne prende
 l'indirizzo.
 
-I link si aprono nel browser predefinito, mai dentro Gitcito — sia i link
+I link si aprono nel browser predefinito, mai dentro Geminio — sia i link
 Markdown nelle risposte sia gli indirizzi `https://` nei tuoi messaggi.
 
 Quando un messaggio menziona un'immagine — un percorso del repository come
@@ -138,7 +138,7 @@ La chat del repository può proporre modifiche esatte, creazione o sostituzione
 di interi file e la loro eliminazione, poi azioni Git: pattern di ignore, stage,
 unstage, commit, stash, scarto, branch, cambio di branch, tag e — poiché le
 vengono mostrati l'elenco dei branch e i commit recenti — merge, rebase, revert
-e cherry-pick. Gitcito calcola in locale il diff espandibile. I file esistenti
+e cherry-pick. Geminio calcola in locale il diff espandibile. I file esistenti
 devono provenire dalle prove lette; destinazioni non sicure, segrete, ignorate,
 generate, binarie, obsolete, troppo grandi o raggiunte via symlink vengono
 rifiutate. Reset, riscrittura della cronologia, eliminazione di branch e ogni
@@ -150,12 +150,12 @@ quanto è già stato eseguito, e il banner dei conflitti prende il posto esattam
 come per la stessa operazione avviata dalla barra.
 
 L'intero gruppo viene ricontrollato prima della prima scrittura e ripristinato se
-un passaggio fallisce. Prima di un commit, Gitcito verifica che ci siano modifiche
+un passaggio fallisce. Prima di un commit, Geminio verifica che ci siano modifiche
 in stage. La scheda indica ogni azione completata, fallita o saltata e conserva i
 risultati parziali. Poi una chiamata separata, senza azioni, riepiloga il risultato
 effettivo.
 
-**Può anche scrivere `.gitcito.json`.** Alla chat viene data la forma del
+**Può anche scrivere `.geminio.json`.** Alla chat viene data la forma del
 [file di configurazione del repository](repo-config.md), così *aggiungi i link
 ai ticket per JIRA-1234* o *proteggi i branch di release* diventa un'azione su
 file scritta contro lo schema reale, non chiavi plausibili che il loader
@@ -199,7 +199,7 @@ parta, non dall'interno.
 ### Annullare un piano
 
 Un piano si approva in blocco, quindi si annulla in blocco. Prima della prima
-azione capace di cambiare qualcosa, Gitcito registra dov'era il branch e scatta
+azione capace di cambiare qualcosa, Geminio registra dov'era il branch e scatta
 uno snapshot dell'albero di lavoro; la scheda conclusa offre allora **Annulla il
 piano**. Riporta il branch a quel commit e ripristina l'albero, buttando via ciò
 che il piano ha prodotto: perciò chiede conferma e nomina il commit di ritorno.
@@ -244,7 +244,7 @@ Invia.
   distruttivo chiede sempre conferma. Con **Proponi azioni git in chat**
   disattivata, non propone nemmeno.
 - **Le conversazioni vivono solo in memoria.** Ogni repository tiene il suo filo;
-  chiudendo Gitcito si perdono.
+  chiudendo Geminio si perdono.
 
 ## Come aprirla
 

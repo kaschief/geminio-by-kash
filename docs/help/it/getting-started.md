@@ -8,7 +8,7 @@ keywords: introduzione primi passi apri clone schede tabs grafo graph commit
 
 # Primi passi
 
-Gitcito apre una cartella e ti mostra la sua storia. Nel tuo repository non viene
+Geminio apre una cartella e ti mostra la sua storia. Nel tuo repository non viene
 scritto niente finché non lo chiedi tu.
 
 ![Un repository appena aperto, ancora senza commit](../../screenshots/empty-repo.webp)
@@ -20,7 +20,7 @@ scritto niente finché non lo chiedi tu.
 - **Clonane** uno da un URL o direttamente dal tuo host — vedi
   [clonare](cloning.md) per le opzioni che rendono rapido il clone di un
   repository enorme.
-- Da terminale, `gitcito .` apre la cartella corrente nell'app già in esecuzione
+- Da terminale, `geminio .` apre la cartella corrente nell'app già in esecuzione
   — vedi [la riga di comando](cli.md).
 - Una cartella che non è ancora un repository Git si apre lo stesso, e ti propone
   di inizializzarla.
@@ -56,5 +56,5 @@ niente che solo gli utenti esperti riescono a trovare.
 2. Mettilo in stage — l'intero file, un hunk, o [singole righe](staging.md).
 3. Scrivi un messaggio e premi **Commit**.
 
-Tutto il resto in Gitcito è opzionale.
+Tutto il resto in Geminio è opzionale.
 

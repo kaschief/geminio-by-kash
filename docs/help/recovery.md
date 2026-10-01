@@ -22,7 +22,7 @@ This is the "I just reset the wrong branch" button.
 
 ## WIP snapshots
 
-Uncommitted work is the one thing the reflog cannot save, so Gitcito snapshots
+Uncommitted work is the one thing the reflog cannot save, so Geminio snapshots
 it: the **whole working tree — modified, staged and untracked files** —
 committed through a throwaway index and pinned under `refs/gitcito/wip`.
 Neither your real index nor your stash list is touched.
@@ -54,7 +54,7 @@ local hidden refs: never pushed, safe from `git gc`, newest 50 kept.
 ## Guided bisect
 
 Mark commits good and bad, watch the range narrow, land on the first bad commit.
-Gitcito tracks how many steps are left, so you know whether you are two
+Geminio tracks how many steps are left, so you know whether you are two
 questions from the answer or ten.
 
 ![Guided bisect](../screenshots/bisect.webp)
@@ -72,7 +72,7 @@ its exit code:
 | anything else | Bad |
 
 A test suite already speaks that language, which is why `npm test` is usually
-the whole answer. Gitcito offers this project's own scripts as one-click fills,
+the whole answer. Geminio offers this project's own scripts as one-click fills,
 streams the output while it runs, and lands on the first bad commit without you
 answering a single question.
 
@@ -102,13 +102,13 @@ Unable to create '…/refs/remotes/origin/x.lock': File exists.
 
 The repository is not damaged. A file is simply in the way.
 
-Gitcito retries a handful of times first, because a lock held by a *running*
+Geminio retries a handful of times first, because a lock held by a *running*
 git usually clears within milliseconds. When it does not, the failure opens a
 dialog instead of a wall of text: every lock still on disk, how old each one is,
 and one button that removes them and re-runs the action that failed.
 
 **Age is the whole argument.** A lock younger than 30 seconds is presumed to
-belong to a git that is still working, and Gitcito refuses to delete it — it
+belong to a git that is still working, and Geminio refuses to delete it — it
 offers to wait and retry instead. Older ones are offered for removal, oldest
 first, and the dialog says plainly what to check before agreeing: that no
 editor, terminal or other Git client is working in this repository right now.

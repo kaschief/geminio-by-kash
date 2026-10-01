@@ -63,7 +63,7 @@ dossiers copient toujours le chemin du dossier.
 
 ## Avant de valider
 
-Gitcito vérifie quelques points et demande une fois, jamais en silence :
+Geminio vérifie quelques points et demande une fois, jamais en silence :
 
 - un fichier qui ressemble à un **secret** (`.env`, `*.pem`, `id_rsa`…),
 - un blob **très volumineux** (seuil dans Réglages → Sécurité),

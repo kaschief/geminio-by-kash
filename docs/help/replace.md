@@ -47,7 +47,7 @@ worth knowing:
 - They are **local until pushed**: `git push origin "refs/replace/*"` shares
   them, and anyone who clones without them sees the untouched history.
 - **Undo works** — dropping the ref restores the real ancestry immediately, and
-  Gitcito records the graft as an undoable action like anything else.
+  Geminio records the graft as an undoable action like anything else.
 - `core.useReplaceRefs=false` makes git ignore all of them at once. The toggle
   here writes exactly that, and the dialog says so when it is off, because a
   repository that quietly ignores its own replacements is a confusing place.
@@ -76,7 +76,7 @@ clone.
   yours can legitimately disagree.
 - **A replacement can hide a commit from tools, not from git.** `git cat-file`
   and the [object explorer](objects.md) still open the original by sha.
-- **Gitcito does not offer `git replace --edit`** (rewriting an object's content
+- **Geminio does not offer `git replace --edit`** (rewriting an object's content
   by hand). That is a text editor's job on a raw object, and a footgun with a UI
   around it.
 

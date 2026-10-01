@@ -8,7 +8,7 @@ keywords: erişilebilirlik accessibility a11y ekran okuyucu VoiceOver NVDA klavy
 
 # Erişilebilirlik
 
-Gitcito, fare olmadan kullanılabilir ve bir ekran okuyucu için okunabilir
+Geminio, fare olmadan kullanılabilir ve bir ekran okuyucu için okunabilir
 olmayı hedefler. Bu sayfa bunun somut olarak ne anlama geldiğini — ve
 sınırların nerede olduğunu — söyler.
 

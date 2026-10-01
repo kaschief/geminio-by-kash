@@ -8,7 +8,7 @@ keywords: intro premiers pas débuter ouvrir cloner clone onglets tabs graphe gr
 
 # Premiers pas
 
-Gitcito ouvre un dossier et vous montre son historique. Rien n'est écrit dans
+Geminio ouvre un dossier et vous montre son historique. Rien n'est écrit dans
 votre dépôt tant que vous ne le demandez pas.
 
 ![Un dépôt fraîchement ouvert, encore sans aucun commit](../../screenshots/empty-repo.webp)
@@ -20,7 +20,7 @@ votre dépôt tant que vous ne le demandez pas.
 - **Clonez-en un** depuis une URL ou directement depuis votre hébergeur — voir
   [le clonage](cloning.md) pour les options qui rendent rapide le clonage d'un
   dépôt énorme.
-- Depuis un terminal, `gitcito .` ouvre le dossier courant dans l'application
+- Depuis un terminal, `geminio .` ouvre le dossier courant dans l'application
   déjà lancée — voir [la ligne de commande](cli.md).
 - Un dossier qui n'est pas encore un dépôt Git s'ouvre quand même, en vous
   proposant de l'initialiser.
@@ -56,5 +56,5 @@ seuls les utilisateurs avancés puissent trouver.
 2. Indexez-le — le fichier entier, une section, ou [ligne par ligne](staging.md).
 3. Écrivez un message et appuyez sur **Commit**.
 
-Tout le reste dans Gitcito est optionnel.
+Tout le reste dans Geminio est optionnel.
 

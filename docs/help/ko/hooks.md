@@ -15,11 +15,11 @@ keywords: 훅 hooks pre-commit husky core.hooksPath gitignore 무시 ignore 추�
 
 ![훅 관리자](../../screenshots/hooks.webp)
 
-Gitcito는 사용자 정의 **`core.hooksPath`**(husky와 그 친구들)와 **pre-commit
+Geminio는 사용자 정의 **`core.hooksPath`**(husky와 그 친구들)와 **pre-commit
 프레임워크** 설정을 감지해서, 훅이 `.git/hooks`가 아닌 다른 곳에 있으면 알려 줘요 —
 그러지 않으면 git이 절대 실행하지 않는 파일을 고치고 있게 되니까요.
 
-> 훅은 Gitcito의 커밋에서도 `git commit`에서와 똑같이 실행돼요. 실패한 훅은 커밋을
+> 훅은 Geminio의 커밋에서도 `git commit`에서와 똑같이 실행돼요. 실패한 훅은 커밋을
 > 막고, 그 출력은 오류 메시지에 담겨 돌아와요.
 
 ## 똑똑한 .gitignore

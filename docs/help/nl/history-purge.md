@@ -58,7 +58,7 @@ mapprefix, geen afwezigheid.
 
 ## Wat de herschrijving werkelijk doet
 
-Gitcito kopieert elke branch en tag naar
+Geminio kopieert elke branch en tag naar
 `refs/gitcito/pre-purge/<timestamp>/…`, en draait dan:
 
 ```sh
@@ -111,9 +111,9 @@ Roteer de sleutel. Purge daarna, zodat de volgende die kloont hem niet vindt.
 - **Het herschrijft op pad, niet op inhoud.** Een geheim verwijderen dat in een
   bronbestand geplakt is in plaats van in een eigen bestand te wonen vraagt een
   inhoudsfilter — dat is het terrein van `git filter-repo --replace-text`, en
-  Gitcito zet daar geen schil omheen.
+  Geminio zet daar geen schil omheen.
 - **`filter-branch` is traag bij zeer grote geschiedenissen.** Het is wat overal
-  met git meekomt, en daarom gebruikt Gitcito het. Bij een repository met
+  met git meekomt, en daarom gebruikt Geminio het. Bij een repository met
   tienduizenden commits is `git filter-repo` in de [terminal](terminal.md) de
   snellere tool.
 - **De klonen van anderen zijn niet jouw repository.** Zij houden de oude

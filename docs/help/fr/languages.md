@@ -8,8 +8,8 @@ keywords: langue langues language languages locale locales i18n internationalisa
 
 # Langues et droite-à-gauche
 
-L'interface de Gitcito est traduite. La langue est un réglage de
-Gitcito, pas du système — un développeur sur un macOS en anglais qui préfère lire
+L'interface de Geminio est traduite. La langue est un réglage de
+Geminio, pas du système — un développeur sur un macOS en anglais qui préfère lire
 le japonais le règle ici, et un développeur sur un système en hébreu qui préfère
 l'application en anglais n'est pas contredit.
 
@@ -51,7 +51,7 @@ pointent quelque part pointent dans l'autre sens.
 
 Le changement est immédiat et ne demande aucun redémarrage.
 
-![Gitcito en arabe, avec la mise en page en miroir](../../screenshots/rtl.webp)
+![Geminio en arabe, avec la mise en page en miroir](../../screenshots/rtl.webp)
 
 ### Ce qui, délibérément, ne passe pas en miroir
 
@@ -75,7 +75,7 @@ puisse pas réordonner le texte autour d'elle.
 Voici où cela s'arrête, honnêtement :
 
 - **Les messages de commit, les noms de branche et le contenu des fichiers ne
-  sont jamais réorientés par Gitcito.** Ils sont affichés tels que leur auteur les
+  sont jamais réorientés par Geminio.** Ils sont affichés tels que leur auteur les
   a écrits. Un message de commit en hébreu dans une liste isolée en
   gauche-à-droite s'affiche en hébreu, mais la ligne qui l'entoure ne bascule pas
   pour lui faire de la place.

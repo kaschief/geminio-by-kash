@@ -152,7 +152,7 @@ describe('grouping and filtering', () => {
 /** The scan is `git grep`, so the only honest test runs one against a real repo. */
 describe('scanTodos', () => {
   it('finds markers in tracked and untracked files and skips ignored ones', async () => {
-    const dir = mkdtempSync(join(tmpdir(), 'gitcito-todoscan-'))
+    const dir = mkdtempSync(join(tmpdir(), 'geminio-todoscan-'))
     try {
       execFileSync('git', ['init', '-q'], { cwd: dir })
       mkdirSync(join(dir, 'src'))

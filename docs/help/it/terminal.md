@@ -37,12 +37,12 @@ La shell parte come **shell di login**, come in Terminal.app o iTerm, quindi
 gestori di versioni e `brew shellenv` di solito si installano lì: uno strumento
 come `fvm`, `nvm` o `pyenv` che funziona nel tuo terminale funziona anche qui.
 
-Gitcito chiede inoltre alla tua shell di login il suo `PATH` reale all'avvio e
+Geminio chiede inoltre alla tua shell di login il suo `PATH` reale all'avvio e
 lo unisce a tutto ciò che lancia, perché un'app grafica aperta dal Dock non
 eredita quasi nulla. Se un comando resta introvabile, verifica che sia nel
 `PATH` di una shell di login e non solo di una interattiva.
 
-Tutto quello che esegui qui è invisibile al meccanismo di lock di Gitcito, quindi
+Tutto quello che esegui qui è invisibile al meccanismo di lock di Geminio, quindi
 un lungo `git rebase` digitato a mano e un clic nell'interfaccia possono ancora
 scontrarsi — l'app si aggiorna da disco quando il terminale cambia qualcosa.
 

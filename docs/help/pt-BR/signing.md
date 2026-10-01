@@ -9,7 +9,7 @@ keywords: assinar assinatura sign signing gpg ssh x509 verificado verified signa
 # Commits assinados
 
 Ligue a assinatura por repositório (**Configurações → engrenagem do repo**): GPG,
-SSH ou X.509, com a chave que você escolher. O Gitcito escreve `commit.gpgsign`,
+SSH ou X.509, com a chave que você escolher. O Geminio escreve `commit.gpgsign`,
 `gpg.format` e `user.signingkey` para aquele repositório — a mesma configuração que
 qualquer outra ferramenta lê.
 

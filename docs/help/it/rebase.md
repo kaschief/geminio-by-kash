@@ -22,7 +22,7 @@ La lista di cose da fare di `git rebase -i`, come un elenco che puoi trascinare.
 | **drop** | Butta via il commit |
 
 Trascina le righe per riordinarle. L'editor non si apre mai in un terminale —
-è Gitcito a scrivere la todo al posto tuo.
+è Geminio a scrivere la todo al posto tuo.
 
 ## Autosquash, con un clic
 

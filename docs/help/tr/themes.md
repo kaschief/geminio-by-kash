@@ -8,7 +8,7 @@ keywords: tema temalar theme themes koyu dark açık light görünüm appearance
 
 # Temalar ve görünüm
 
-Yerleşik temalar — Gitcito, Nord, Dracula, Solarized, GitHub, Monokai,
+Yerleşik temalar — Geminio, Nord, Dracula, Solarized, GitHub, Monokai,
 Midnight, Contrast ve Daltonic — her biri açık ve koyu varyantıyla.
 
 ![Açıktan koyuya geçiş](../../screenshots/clip-themes.webp)

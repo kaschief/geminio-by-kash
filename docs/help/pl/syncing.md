@@ -23,7 +23,7 @@ refów `origin/*`, a potem git staje z *"There is no tracking information for th
 current branch"*. Nic nie zostało pobrane i nic się nie zepsuło: druga połowa po
 prostu nie miała celu.
 
-Gitcito czyta ten błąd i podaje naprawę jako przycisk, wybierając którą — zależnie
+Geminio czyta ten błąd i podaje naprawę jako przycisk, wybierając którą — zależnie
 od tego, czy remote ma już tę gałąź:
 
 | | |
@@ -85,7 +85,7 @@ zdalnych to podwójna ekspozycja, a nie połowa ostrożności.
 ## Gałęzie, na których nie jesteś
 
 `git pull` przesuwa tylko HEAD — dlatego większość klientów każe najpierw
-przełączyć się na gałąź, żeby ją zaktualizować. Gitcito nie: kliknij prawym
+przełączyć się na gałąź, żeby ją zaktualizować. Geminio nie: kliknij prawym
 przyciskiem dowolną gałąź lokalną — na pasku bocznym albo na jej etykiecie w
 [grafie](graph.md) — i dostaniesz **Pobierz \<gałąź\>** oraz **Wypchnij
 \<gałąź\>**, działające na *tej* gałęzi.

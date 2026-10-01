@@ -2,7 +2,7 @@
 title: Flutter DevTools
 category: Outils d’espace de travail
 order: 93
-summary: La vue réseau, la timeline, l’inspecteur et le profileur mémoire, dans un onglet Gitcito.
+summary: La vue réseau, la timeline, l’inspecteur et le profileur mémoire, dans un onglet Geminio.
 keywords: devtools flutter dart réseau network timeline inspecteur mémoire profileur webview panneau intégré vm service
 ---
 
@@ -10,10 +10,10 @@ keywords: devtools flutter dart réseau network timeline inspecteur mémoire pro
 
 DevTools possède déjà la vue réseau, la timeline, l’inspecteur de widgets et le
 profileur mémoire — et c’est une application Flutter web servie par votre propre
-machine. Gitcito n’en réimplémente donc rien, et ne parle pas lui-même au Dart VM
+machine. Geminio n’en réimplémente donc rien, et ne parle pas lui-même au Dart VM
 Service : il repère l’adresse et l’intègre.
 
-![DevTools ouvert dans un onglet Gitcito](../../screenshots/devtools.webp)
+![DevTools ouvert dans un onglet Geminio](../../screenshots/devtools.webp)
 
 `flutter run` affiche la ligne dès que le service VM est prêt :
 
@@ -67,7 +67,7 @@ identifiants :
 - **Loopback uniquement.** `127.0.0.1`, `localhost`, `::1`. Un attachement avec
   une autre adresse est refusé, et une redirection vers elle aussi.
 - **Pas de preload, pas d’intégration Node, isolation de contexte activée.** La
-  page n’a aucun pont vers Gitcito.
+  page n’a aucun pont vers Geminio.
 - **Les liens s’ouvrent dans votre vrai navigateur**, dans une fenêtre normale,
   pas dans le panneau.
 
@@ -75,7 +75,7 @@ identifiants :
 
 - **C’est DevTools, pas le nôtre.** Ce que cette version sait faire, le panneau
   le fait ; ce qu’elle ne sait pas, nous non plus. Il n’y a pas de vue réseau
-  façon Gitcito.
+  façon Geminio.
 - **Seul Flutter s’annonce ainsi.** Un programme Dart ordinaire affiche une URL
   de service VM mais aucune adresse DevTools : aucun bouton n’apparaît.
 - **Un panneau vide signifie que l’application s’est arrêtée.** DevTools est

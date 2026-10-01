@@ -8,7 +8,7 @@ keywords: stash stashe częściowy keep-index apply pop drop nieśledzone gałą
 
 # Stashe
 
-Stashowanie w Gitcito nie jest na zasadzie wszystko albo nic.
+Stashowanie w Geminio nie jest na zasadzie wszystko albo nic.
 
 | Akcja | Co robi |
 |---|---|
@@ -28,7 +28,7 @@ Listę plików zaznacza się grupowo tymi samymi gestami co przy
 
 ## Kiedy stash nie chce się nałożyć
 
-Jeśli nałożenie stasha zadeptałoby pliki nieśledzone, git staje. Gitcito
+Jeśli nałożenie stasha zadeptałoby pliki nieśledzone, git staje. Geminio
 proponuje ich nadpisanie i ponowną próbę, zamiast zostawiać cię z wymyślaniem
 zaklęcia.
 

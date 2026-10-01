@@ -16,7 +16,7 @@ errado sempre; veja [opções de merge](merge-options.md).
 
 ## Arraste uma ref sobre outra
 
-O gesto mais rápido do app: pegue uma branch e solte em cima de outra. O Gitcito
+O gesto mais rápido do app: pegue uma branch e solte em cima de outra. O Geminio
 abre um menuzinho com o que aquele drop poderia significar, e não faz nada até
 você escolher.
 

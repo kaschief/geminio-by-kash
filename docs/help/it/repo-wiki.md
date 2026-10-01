@@ -26,7 +26,7 @@ Puntala a un repository e scrive una breve wiki che spiega la base di codice.
 
 ## Le pagine scritte
 
-Gitcito pianifica una manciata di pagine a partire dai file tracciati dal
+Geminio pianifica una manciata di pagine a partire dai file tracciati dal
 repository — prima documentazione e manifest, poi ciò che cambia di più — e
 scrive ogni pagina a partire dai file che copre.
 

@@ -29,7 +29,7 @@ Un fetch, y el código está en tu disco.
 | Bitbucket Cloud, Bitbucket Server | `refs/pull-requests/<n>/from` |
 | Azure DevOps | `refs/pull/<n>/merge` |
 
-Gitcito sondea las cuatro en un solo `ls-remote`, así que una forja desconocida o
+Geminio sondea las cuatro en un solo `ls-remote`, así que una forja desconocida o
 autoalojada funciona mientras siga una de estas convenciones.
 
 ## Cómo abrirlo
@@ -48,7 +48,7 @@ normalmente `origin`. No el fork.
 
 **Pull request** — el número, o una URL pegada del navegador. `7`, `#7` y
 `https://github.com/owner/repo/pull/7` valen todos; y también las formas de URL
-de GitLab, Bitbucket y Azure DevOps. Pulsa **Buscar** y Gitcito te dice qué ref
+de GitLab, Bitbucket y Azure DevOps. Pulsa **Buscar** y Geminio te dice qué ref
 ha resuelto y a qué commit apunta, antes de traerse nada.
 
 **Rama remota** — la segunda pestaña, para cuando no hay ninguna ref de PR que
@@ -67,7 +67,7 @@ puedes marcharte no es una previsualización.
 
 Previsualizar dos veces el mismo pull request reutiliza la misma rama,
 moviéndola a la nueva cabeza — muy útil cuando el autor publica un arreglo
-mientras tú lo estás probando. Si esa rama ya existe, Gitcito lo dice y pregunta
+mientras tú lo estás probando. Si esa rama ya existe, Geminio lo dice y pregunta
 antes de resetearla, porque cualquier commit que viviera solo ahí se perdería.
 
 ## Lo que no va a hacer

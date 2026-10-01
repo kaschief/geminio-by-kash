@@ -72,7 +72,7 @@ Un clic su una riga apre il file a quella riga.
 ## Che cosa non fa
 
 - **Legge, non scrive mai.** Non c’è nessun «segna come fatto»: un TODO si chiude
-  cancellando la riga e facendo commit. Per un elenco che Gitcito tiene per te
+  cancellando la riga e facendo commit. Per un elenco che Geminio tiene per te
   vedi [todos](todos.md), che è tutt’altra cosa: note private che vivono
   nell’app, non nel codice.
 - **I file ignorati vengono saltati**, `node_modules` compreso, qualunque cosa

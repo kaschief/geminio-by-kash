@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Builds a synthetic repository the size of a large corporate monorepo, so the
-# slow paths in Gitcito can be measured on a laptop instead of guessed at.
+# slow paths in Geminio can be measured on a laptop instead of guessed at.
 #
 # This is NOT part of the playground. The playground is wiped and rebuilt on
 # every `npm run playground`, and a monster repo is not something you want
@@ -116,7 +116,7 @@ EOF
 started=$SECONDS
 
 # fsync=none for the import only — passed with -c rather than written to the
-# config, so the finished repo behaves like any other repo when Gitcito uses it.
+# config, so the finished repo behaves like any other repo when Geminio uses it.
 echo "→ fast-import…"
 node "$REPO_ROOT/examples/monster-repo.mjs" \
   | git -C "$DIR" -c core.fsync=none -c core.fsyncMethod=writeout-only \

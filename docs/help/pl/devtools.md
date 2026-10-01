@@ -2,18 +2,18 @@
 title: Flutter DevTools
 category: Narzędzia przestrzeni roboczej
 order: 93
-summary: Widok sieci, oś czasu, inspektor i profiler pamięci w karcie Gitcito.
+summary: Widok sieci, oś czasu, inspektor i profiler pamięci w karcie Geminio.
 keywords: devtools flutter dart sieć network oś czasu inspektor pamięć profiler webview panel osadzony vm service
 ---
 
 # Flutter DevTools
 
 DevTools ma już widok sieci, oś czasu, inspektor widgetów i profiler pamięci — a
-przy tym jest aplikacją Flutter web serwowaną na twojej własnej maszynie. Gitcito
+przy tym jest aplikacją Flutter web serwowaną na twojej własnej maszynie. Geminio
 niczego z tego nie odtwarza i sam nie rozmawia z Dart VM Service: zauważa adres i
 osadza go.
 
-![DevTools otwarte w karcie Gitcito](../../screenshots/devtools.webp)
+![DevTools otwarte w karcie Geminio](../../screenshots/devtools.webp)
 
 `flutter run` wypisuje tę linię, gdy tylko usługa VM wstanie:
 
@@ -64,14 +64,14 @@ poświadczenia:
 - **Tylko loopback.** `127.0.0.1`, `localhost`, `::1`. Podpięcie innego adresu
   jest odrzucane, przekierowanie do niego również.
 - **Bez preloadu, bez node integration, z izolacją kontekstu.** Strona nie ma
-  żadnego mostu do Gitcito.
+  żadnego mostu do Geminio.
 - **Odnośniki otwierają się w prawdziwej przeglądarce**, w zwykłym oknie, nie w
   panelu.
 
 ## Ograniczenia
 
 - **To DevTools, nie nasze dzieło.** Co potrafi tamta wersja, potrafi panel;
-  czego nie potrafi, nie potrafimy i my. Nie ma widoku sieci w wersji Gitcito.
+  czego nie potrafi, nie potrafimy i my. Nie ma widoku sieci w wersji Geminio.
 - **Tylko Flutter ogłasza się w ten sposób.** Zwykły program w Darcie wypisuje URL
   usługi VM, ale żadnego adresu DevTools — więc przycisk się nie pojawia.
 - **Pusty panel znaczy, że aplikacja się zatrzymała.** DevTools serwuje *działająca

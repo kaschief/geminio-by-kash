@@ -2,7 +2,7 @@
 title: A barra de menus
 category: Comece por aqui
 order: 5
-summary: O que há nos menus do Gitcito no macOS, e por que Windows e Linux não têm barra de menus.
+summary: O que há nos menus do Geminio no macOS, e por que Windows e Linux não têm barra de menus.
 keywords: barra de menus menu aplicativo arquivo editar visualizar janela ajuda repositório macos nativo sobre encerrar
 ---
 
@@ -21,7 +21,7 @@ usa Windows e Linux não tem.
 
 | Menu | Contém |
 |---|---|
-| **Gitcito** | Sobre, busca de atualizações, [Ajustes](repo-settings.md), os itens padrão de ocultar e encerrar |
+| **Geminio** | Sobre, busca de atualizações, [Ajustes](repo-settings.md), os itens padrão de ocultar e encerrar |
 | **Arquivo** | Nova aba, abrir ou [clonar](cloning.md) um repositório, abrir recente, fechar e reabrir abas |
 | **Editar** | Recortar, copiar, colar, desfazer — a edição de texto que seu teclado já faz — mais a [busca no código](search.md) |
 | **Visualizar** | Paleta de comandos, os interruptores da barra lateral e do painel, o [terminal](terminal.md), o [mission control](mission-control.md), o [cofre](vault.md), zoom |
@@ -39,16 +39,16 @@ As teclas ao lado de cada item são as que você realmente atribuiu. Reatribua
 <kbd>⌘K</kbd> nos Ajustes e o menu Visualizar passa a dizer isso.
 
 Isso funciona porque o menu *exibe* essas combinações sem reivindicá-las: o
-tratamento de teclado do próprio Gitcito continua no comando, e é o que permite
+tratamento de teclado do próprio Geminio continua no comando, e é o que permite
 que um atalho se comporte de forma diferente conforme onde está o cursor. A
-única coisa que isso não mostra é um atalho que o Gitcito não possui —
+única coisa que isso não mostra é um atalho que o Geminio não possui —
 <kbd>⌘F</kbd> pertence ao arquivo ou diff que você está lendo, então nenhum item
 de menu o reivindica.
 
 ## Os limites
 
 - **Somente macOS.** No Windows e no Linux a janela não tem moldura — a barra de
-  título é desenhada pelo Gitcito e não há onde uma barra de menus morar. Essas
+  título é desenhada pelo Geminio e não há onde uma barra de menus morar. Essas
   plataformas recebem os mesmos comandos pela [paleta de comandos](search.md) e
   pelos [atalhos de teclado](keyboard.md).
 - **Recarregar e as Ferramentas de desenvolvimento aparecem apenas em builds de

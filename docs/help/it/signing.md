@@ -9,7 +9,7 @@ keywords: firma firmare signing gpg ssh x509 verificato signature badge fiducia
 # Commit firmati
 
 Attiva la firma per singolo repository (**Impostazioni → ingranaggio del repo**):
-GPG, SSH o X.509, con la chiave che scegli. Gitcito scrive `commit.gpgsign`,
+GPG, SSH o X.509, con la chiave che scegli. Geminio scrive `commit.gpgsign`,
 `gpg.format` e `user.signingkey` per quel repository — la stessa configurazione
 che legge qualsiasi altro strumento.
 

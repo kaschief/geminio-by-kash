@@ -2,13 +2,13 @@
 title: Run & debug (launch.json)
 category: Workspace tools
 order: 91
-summary: Run your VS Code launch configs without leaving Gitcito.
+summary: Run your VS Code launch configs without leaving Geminio.
 keywords: launch.json run debug vscode configs tasks preLaunchTask input background compound compounds stopAll serverReadyAction parallel sessions hot reload hot restart device simulator emulator run target flutter metro expo vite nodemon vitest jest mocha ava wrangler dotnet watch adb simctl avd xcodebuild capacitor
 ---
 
 # Run & debug
 
-Gitcito reads your `.vscode/launch.json` — the root one and any nested ones,
+Geminio reads your `.vscode/launch.json` — the root one and any nested ones,
 grouped with dividers — and runs the config you pick in the integrated terminal.
 
 ![The launch picker and floating toolbar](../screenshots/launch-configs.webp)
@@ -31,7 +31,7 @@ grouped with dividers — and runs the config you pick in the integrated termina
 - **`serverReadyAction`** is honoured: when the session's output matches the
   configured pattern, the announced URL opens in your browser
   (`openExternally`; `debugWithChrome` / `debugWithEdge` also open the browser
-  — Gitcito cannot attach a debugger to it).
+  — Geminio cannot attach a debugger to it).
 
 ![A compound running two parallel sessions](../screenshots/launch-compound.webp)
 
@@ -43,7 +43,7 @@ restarting one restarts just that member. If the toolbar sits on top of
 something you need, drag it aside by its grip — the position is remembered,
 and a double-click on the grip re-centres it.
 
-What Gitcito deliberately does **not** do: it runs your programs in real
+What Geminio deliberately does **not** do: it runs your programs in real
 terminals, but it is not a debugger — no breakpoints, no variable inspection,
 no Debug Adapter Protocol. Attach-only configs still work when they carry a
 `preLaunchTask` (the task is the work); a pure attach has nothing to run.
@@ -60,7 +60,7 @@ Most dev runtimes already reload on a keystroke: `flutter run` on **r**, Metro o
 launch config to get the same result is the slow road — it kills the process,
 re-runs every `preLaunchTask` and throws the app's state away.
 
-So Gitcito reads the command a config really spawns — following an `npm run dev`
+So Geminio reads the command a config really spawns — following an `npm run dev`
 into your `package.json` scripts — and puts that runtime's keys on the debug
 toolbar. Pressing one writes the keystroke to the session's stdin, exactly as if
 you had typed it into the terminal yourself.
@@ -85,7 +85,7 @@ sends a key nothing reads is worse than no button, because it looks like it
 worked.
 
 **The limits.** Detection is textual: it matches the program name on the command
-line, so a config that starts your dev server through a wrapper script Gitcito
+line, so a config that starts your dev server through a wrapper script Geminio
 cannot read gets nothing. Nothing acknowledges the keystroke either — the button
 flashes, and the process's own output is the real answer. A paused or exited
 session accepts no input, so the buttons grey out.
@@ -97,7 +97,7 @@ session accepts no input, so the buttons grey out.
   "name": "API (watch)",
   "type": "node-terminal",
   "command": "./scripts/dev.sh",
-  "gitcito": { "hotActions": [{ "label": "Reload", "send": "r", "icon": "reload" }] }
+  "geminio": { "hotActions": [{ "label": "Reload", "send": "r", "icon": "reload" }] }
 }
 ```
 
@@ -112,7 +112,7 @@ An empty `hotActions` array turns the buttons off for that config.
 
 A config that builds a mobile app has to be told where to run it. That choice is
 not Flutter's alone — React Native, Expo, Capacitor and xcodebuild all take a
-target and each spells it differently — so Gitcito asks once, next to the
+target and each spells it differently — so Geminio asks once, next to the
 **LAUNCH** tab, and writes the answer in the form that config's runtime reads.
 The picker only appears when some config in the repo can actually take a device.
 
@@ -146,11 +146,11 @@ the menu — a short list should explain itself.
 Every launched config also gets `GITCITO_DEVICE_ID`, `GITCITO_DEVICE_NAME` and
 `GITCITO_DEVICE_PLATFORM` in its environment, plus `ANDROID_SERIAL` when the
 target is a real Android device. That is what lets a wrapper script, a Gradle
-task or a bare `adb` hit the same handset without Gitcito rewriting anything.
+task or a bare `adb` hit the same handset without Geminio rewriting anything.
 
 **Starting a cold device.** Anything under *Not running* boots when you pick it:
 `flutter emulators --launch`, `xcrun simctl boot` (plus the Simulator window), or
-`emulator -avd` detached — so quitting Gitcito does not take your Android
+`emulator -avd` detached — so quitting Geminio does not take your Android
 emulator down with it.
 
 **The limits.** A config that already names a device — an explicit `-d`, a
@@ -167,7 +167,7 @@ existing.
 
 ## Input values from JSON and YAML
 
-An input can show the current version or prefill a value from a workspace file. Gitcito reads the file when you press Launch, before showing the prompts. No VS Code extension is needed.
+An input can show the current version or prefill a value from a workspace file. Geminio reads the file when you press Launch, before showing the prompts. No VS Code extension is needed.
 
 Add fileValues to a promptString or pickString input. Each named value supplies a file path relative to the launch configuration folder and a dot-separated property key. Use ${fileValue:name} in description or default. An empty default keeps the text field optional.
 
@@ -184,4 +184,4 @@ Add fileValues to a promptString or pickString input. Each named value supplies 
 }
 ```
 
-Only JSON, YAML and YML files within that folder are supported, up to 1 MiB. Values must be strings, numbers or booleans. Missing files, malformed data, missing properties and paths outside the folder abort the launch with an error. No commands or JavaScript expressions are evaluated. Files are read again for each new launch; Restart reuses the original answers. These fields are a Gitcito addition to launch.json; VS Code does not expand them natively.
+Only JSON, YAML and YML files within that folder are supported, up to 1 MiB. Values must be strings, numbers or booleans. Missing files, malformed data, missing properties and paths outside the folder abort the launch with an error. No commands or JavaScript expressions are evaluated. Files are read again for each new launch; Restart reuses the original answers. These fields are a Geminio addition to launch.json; VS Code does not expand them natively.

@@ -20,7 +20,7 @@ Les tâches sont cette liste, attachée au dépôt où vous vous trouvez.
 
 ## Où elles vivent
 
-Nulle part dans votre dépôt. Une tâche est rangée avec les réglages de Gitcito,
+Nulle part dans votre dépôt. Une tâche est rangée avec les réglages de Geminio,
 indexée par le chemin du dépôt, ce qui a trois conséquences utiles à connaître :
 
 - **Rien n'est committé.** Aucun fichier n'apparaît dans `git status` : une

@@ -58,7 +58,7 @@ prefisso di directory, non un'assenza.
 
 ## Cosa fa davvero la riscrittura
 
-Gitcito copia ogni branch e tag in
+Geminio copia ogni branch e tag in
 `refs/gitcito/pre-purge/<timestamp>/…`, poi esegue:
 
 ```sh
@@ -110,9 +110,9 @@ Ruota la chiave. Poi purga, così chi clonerà dopo non la troverà.
 - **Riscrive per percorso, non per contenuto.** Rimuovere un segreto incollato
   dentro un file sorgente, invece che residente in un file suo, richiede un
   filtro sul contenuto — è territorio di `git filter-repo --replace-text`, e
-  Gitcito non lo incapsula.
+  Geminio non lo incapsula.
 - **`filter-branch` è lento su storie molto grandi.** È ciò che viene distribuito
-  con git ovunque, ed è per questo che è ciò che Gitcito usa. Su un repository
+  con git ovunque, ed è per questo che è ciò che Geminio usa. Su un repository
   con decine di migliaia di commit, `git filter-repo` nel
   [terminale](terminal.md) è lo strumento più veloce.
 - **I cloni degli altri non sono il tuo repository.** Conservano la vecchia

@@ -10,7 +10,7 @@ keywords: sorunlar çözümleyici tanılama hatalar uyarılar lint tsc typescrip
 
 Her proje zaten neyin yanlış olduğunu söyleyecek bir araçla gelir — `tsc`,
 `dart analyze`, ESLint, Clippy, `go vet`, Ruff. Hiçbirinin söylemediği şey ise az
-önce bastığı kırk uyarıyı **senin** diff’inin getirip getirmediği. Gitcito hangi
+önce bastığı kırk uyarıyı **senin** diff’inin getirip getirmediği. Geminio hangi
 dosyaların kirli olduğunu bilir; aynı liste bu soruyu tek bir düğmeyle
 cevaplıyor.
 
@@ -23,7 +23,7 @@ orada açar. İlk taramadan önce sıfır yerine tire gösterir: henüz kimse ba
 
 ## Ne çalıştırır
 
-| Depoda şu varsa | Gitcito şunu çalıştırır |
+| Depoda şu varsa | Geminio şunu çalıştırır |
 |-----------------|--------------------------|
 | `pubspec.yaml` | `dart analyze --format=machine` |
 | `tsconfig.json` | `tsc --noEmit` |
@@ -52,14 +52,14 @@ betikleri de tam olarak böyle çözümler. Her şey paralel çalışır ve her 
 bildiren iki çözümleyici tek bir satır üretir.
 
 **Hiçbir şey kendi başına çalışmaz.** Büyük bir depoda `tsc --noEmit` onlarca
-saniyedir ve bu komutlar Gitcito’nun değil, deponun kendi araç zinciridir. Paneli
+saniyedir ve bu komutlar Geminio’nun değil, deponun kendi araç zinciridir. Paneli
 açtığında ya da yenilediğinde başlarlar, asla kendiliğinden. Liste bu yüzden bir
 anlık görüntüdür: bir dosyayı düzenle, yeniden çalıştırana kadar bayattır.
 
 **Üretilmiş çıktı elenir.** Proje köküne yöneltilmiş bir araç bulduğu her şeyi
 denetler; bulduğu şeylerin arasında `.next/build/chunks`, paketlenmiş bir `dist`,
 depoya alınmış bir kopya da vardır — makine yazımı koda dair yüzlerce şikâyet,
-seninkine dair bir avuç şikâyeti gömer. Gitcito git’e hangi dosyaların yok
+seninkine dair bir avuç şikâyeti gömer. Geminio git’e hangi dosyaların yok
 sayıldığını sorar ve onları eler; *izlenen* bir dosyayı ise asla elemez: üretilmiş
 çıktıyı commit’lemek bir tercihtir ve `git check-ignore` buna saygı duyar.
 `node_modules` her hâlükârda gider.

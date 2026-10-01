@@ -13,7 +13,7 @@ Uma pilha é uma corrente de branches em que cada uma se constrói sobre a de ba
 
 ![Uma pilha de branches](../../screenshots/branch-stack.webp)
 
-O Gitcito desenha isso como uma **rota**: um branch de início no topo, depois uma
+O Geminio desenha isso como uma **rota**: um branch de início no topo, depois uma
 parada por nível. A PR de cada parada aponta para a parada acima, e a primeira
 aterrissa no branch de início. Cada parada mostra os próprios commits, se precisa
 de restack e, depois de enviada, o número da PR.
@@ -53,7 +53,7 @@ Tudo que muda a ordem — uma troca, um movimento, outro início — **reproduz*
 cadeia: os commits próprios de cada parada são rebaseados na nova base. Então pode
 dar **conflito**, igual a um restack. Duas paradas que mexem nas mesmas linhas não trocam de
 lugar sem gente, e quando isso acontece **não acontece nada**: a edição inteira é
-desfeita — pontas, vínculos de pai e o rebase pela metade — e o Gitcito diz quais
+desfeita — pontas, vínculos de pai e o rebase pela metade — e o Geminio diz quais
 duas paradas batem. Um menu que você encostou não deve largar você no meio de um
 rebase.
 
@@ -110,7 +110,7 @@ atualizada. Mescle de baixo para cima, aperte Enviar, repita.
 Bases encadeadas são o que qualquer host entende, e no GitLab, Bitbucket e Azure
 DevOps é tudo o que existe. O GitHub tem mais: desde o preview de stacked pull
 requests, uma pilha é um objeto no servidor. Assim que os pull requests existem,
-o Gitcito registra tudo como pilha — de baixo para cima — e você ganha o mapa da
+o Geminio registra tudo como pilha — de baixo para cima — e você ganha o mapa da
 pilha na UI, um rebase em cascata no servidor e um merge no PR de cima que faz
 aterrissar todos os níveis abaixo.
 

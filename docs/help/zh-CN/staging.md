@@ -51,7 +51,7 @@ keywords: staging 暂存 stage unstage 取消暂存 discard 丢弃 hunk 变更�
 
 ## 提交之前
 
-Gitcito 会检查几件事，并且只问你一次，绝不悄悄放行：
+Geminio 会检查几件事，并且只问你一次，绝不悄悄放行：
 
 - 看起来像**机密**的文件（`.env`、`*.pem`、`id_rsa`…），
 - **超大**的二进制对象（阈值在 设置 → 安全 中），

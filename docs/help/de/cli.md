@@ -2,13 +2,13 @@
 title: Die Kommandozeile
 category: Arbeitsbereich-Werkzeuge
 order: 93
-summary: `gitcito .` öffnet ein Repository — und `gitcito doctor` antwortet, ohne etwas zu öffnen.
+summary: `geminio .` öffnet ein Repository — und `geminio doctor` antwortet, ohne etwas zu öffnen.
 keywords: cli kommandozeile terminal shim path installieren öffnen ordner einzelinstanz doctor status repos commit-check config editor completions wait core.editor blame show search verben exitcode ci hook
 ---
 
 # Die Kommandozeile
 
-Aus einem Terminal werden zwei Arten von Fragen gestellt, und `gitcito`
+Aus einem Terminal werden zwei Arten von Fragen gestellt, und `geminio`
 beantwortet beide.
 
 Die erste lautet *„zeig mir das“* — du bist in einem Klon, etwas will angesehen
@@ -21,14 +21,14 @@ eines Fensters. Diese starten die App nie: sie schreiben auf stdout und gehen au
 dem Weg.
 
 ```sh
-gitcito .                        # diesen Ordner öffnen
-gitcito blame src/api.ts -l 84   # …beim Blame dieser Zeile
-gitcito doctor                   # kein Fenster: prüft das Repo, Exit 1 bei Fehlern
+geminio .                        # diesen Ordner öffnen
+geminio blame src/api.ts -l 84   # …beim Blame dieser Zeile
+geminio doctor                   # kein Fenster: prüft das Repo, Exit 1 bei Fehlern
 ```
 
 ## Installieren
 
-Befehlspalette (<kbd>⌘K</kbd>) → **'gitcito'-Befehl im PATH installieren**. Unter
+Befehlspalette (<kbd>⌘K</kbd>) → **'geminio'-Befehl im PATH installieren**. Unter
 macOS wird ein kleiner Shim nach `/usr/local/bin` oder `/opt/homebrew/bin`
 verlinkt; Administratorrechte werden nur verlangt, wenn keines von beiden für
 dich schreibbar ist. Unter Linux landet er in `~/.local/bin` und braucht gar
@@ -38,28 +38,28 @@ unterstützt.
 Danach, optional:
 
 ```sh
-gitcito completions zsh >> ~/.zshrc     # oder bash, oder fish
+geminio completions zsh >> ~/.zshrc     # oder bash, oder fish
 ```
 
 ## Dinge öffnen
 
 | Befehl | Öffnet |
 |--------|--------|
-| `gitcito [pfad]` | Das Repository (Standard: das aktuelle Verzeichnis) |
-| `gitcito open <name>` | Ein Repository über seinen **Tab-Namen** — `gitcito open api` |
-| `gitcito diff` | Die Arbeitskopie-Änderungen |
-| `gitcito graph` | Den Commit-Graphen |
-| `gitcito show <ref>` | Einen Commit — `HEAD~2`, ein Tag, ein kurzer Hash |
-| `gitcito blame <datei>` | Blame für eine Datei; mit `-l 84` direkt zur Zeile |
-| `gitcito search <suche>` | Die Codesuche, Suchbegriff bereits eingetragen |
-| `gitcito stack`, `stash`, `reflog`, `conflicts`, `todos`, `chat`, `settings` | Dieses Panel |
-| `gitcito ci`, `clean`, `bisect`, `absorb`, `snapshots`, `insights`, `terminal` | …und so weiter |
+| `geminio [pfad]` | Das Repository (Standard: das aktuelle Verzeichnis) |
+| `geminio open <name>` | Ein Repository über seinen **Tab-Namen** — `geminio open api` |
+| `geminio diff` | Die Arbeitskopie-Änderungen |
+| `geminio graph` | Den Commit-Graphen |
+| `geminio show <ref>` | Einen Commit — `HEAD~2`, ein Tag, ein kurzer Hash |
+| `geminio blame <datei>` | Blame für eine Datei; mit `-l 84` direkt zur Zeile |
+| `geminio search <suche>` | Die Codesuche, Suchbegriff bereits eingetragen |
+| `geminio stack`, `stash`, `reflog`, `conflicts`, `todos`, `chat`, `settings` | Dieses Panel |
+| `geminio ci`, `clean`, `bisect`, `absorb`, `snapshots`, `insights`, `terminal` | …und so weiter |
 
-`gitcito help verbs` gibt die vollständige Liste aus. Drei Optionen gelten für
+`geminio help verbs` gibt die vollständige Liste aus. Drei Optionen gelten für
 alle: `-n <name>` setzt den angezeigten Tab-Namen, `-g <gruppe>` legt es in einen
 Gruppen-Tab (der bei Bedarf entsteht), und `-l <n>` wählt eine Zeile.
 
-Gitcito ist eine **Einzelinstanz**: `gitcito` bei geöffneter App reicht die
+Geminio ist eine **Einzelinstanz**: `geminio` bei geöffneter App reicht die
 Anfrage an dieses Fenster weiter, statt eine zweite Kopie zu starten. Ein bereits
 geöffneter Pfad — als Tab oder in einer Gruppe — wird **fokussiert**, nicht
 dupliziert. Ein Verzeichnis, das noch kein Repository ist, öffnet trotzdem und
@@ -70,14 +70,14 @@ bietet „Repository hier initialisieren“ an.
 Diese geben aus und beenden sich. Es öffnet sich kein Fenster, und die App muss
 nicht einmal laufen.
 
-### `gitcito status`
+### `geminio status`
 
 Branch, Tracking, Vorsprung/Rückstand, Arbeitskopie, Stashes und — falls das
 Repository sie mitbringt — die [Push-Checkliste aus
-`.gitcito.json`](repo-config.md). Exit 1, wenn die Arbeitskopie Konflikte hat,
-also funktioniert `gitcito status || echo blockiert`.
+`.geminio.json`](repo-config.md). Exit 1, wenn die Arbeitskopie Konflikte hat,
+also funktioniert `geminio status || echo blockiert`.
 
-### `gitcito doctor [--fix]`
+### `geminio doctor [--fix]`
 
 Führt dieselben Prüfungen aus wie das Panel für die
 [Repository-Konfiguration](repo-config.md): Node-Version, Submodule, LFS,
@@ -86,7 +86,7 @@ genau darum geht es: Regeln, die ein Repository deklariert, sind wenig wert, wen
 nur die Person mit offener Oberfläche sie je sieht:
 
 ```yaml
-- run: gitcito doctor          # in der CI, vor allem Teuren
+- run: geminio doctor          # in der CI, vor allem Teuren
 ```
 
 `--fix` wendet die Reparaturen an, die der Doktor kennt (Submodule
@@ -98,58 +98,58 @@ Warnungen lassen den Lauf nicht scheitern. Eine Warnung heißt, dass der Doktor
 etwas nicht feststellen konnte, nicht dass etwas falsch ist; Builds daran
 scheitern zu lassen, machte die Datei zu teuer in der Anschaffung.
 
-### `gitcito commit-check [datei]`
+### `geminio commit-check [datei]`
 
 Prüft eine Commit-Nachricht. Ohne Argument liest sie `.git/COMMIT_EDITMSG`;
 `-m "…"` prüft eine Zeichenkette. Sie weiß, was das Repository deklariert hat:
-ein unbekannter Scope ist ein **Fehler**, wenn `.gitcito.json` Scopes auflistet,
+ein unbekannter Scope ist ein **Fehler**, wenn `.geminio.json` Scopes auflistet,
 und sonst bloß ein Stilhinweis. In einen Hook einbauen:
 
 ```sh
 # .husky/commit-msg
-gitcito commit-check "$1"
+geminio commit-check "$1"
 ```
 
-### `gitcito config init | show | check`
+### `geminio config init | show | check`
 
-`init` liest das Repository und schlägt eine `.gitcito.json` aus dem vor, was
+`init` liest das Repository und schlägt eine `.geminio.json` aus dem vor, was
 ohnehin schon da ist — `.nvmrc`, `.gitmodules`, ein `.env.example` ohne `.env`,
 die Commit-Scopes, die die Historie verwendet. `--dry-run` gibt aus, statt zu
 schreiben. `show` druckt die aktuelle Datei; `check` validiert sie und listet
 jedes Feld auf, das verworfen würde.
 
-### `gitcito repos [filter]`
+### `geminio repos [filter]`
 
-Jedes Repository, das Gitcito kennt — offene Tabs zuerst, dann die zuletzt
+Jedes Repository, das Geminio kennt — offene Tabs zuerst, dann die zuletzt
 benutzten — mit seiner Gruppe. `--paths` gibt nackte Pfade aus, einen pro Zeile,
 zum Skripten:
 
 ```sh
-cd "$(gitcito repos --paths api | head -1)"
+cd "$(geminio repos --paths api | head -1)"
 ```
 
-## Gitcito als Editor von git
+## Geminio als Editor von git
 
 ```sh
-gitcito editor install
+geminio editor install
 ```
 
-setzt `core.editor` und `sequence.editor` auf `gitcito --wait`. Ab dann öffnen
+setzt `core.editor` und `sequence.editor` auf `geminio --wait`. Ab dann öffnen
 `git commit` (ohne `-m`), `git commit --amend`, `git tag -a` und `git rebase -i`
-ihre Datei in Gitcito statt in vim, mit Zeichenzähler und denselben Hinweisen
+ihre Datei in Geminio statt in vim, mit Zeichenzähler und denselben Hinweisen
 zur Commit-Nachricht wie im Composer.
 
-![Der Editor, den Gitcito öffnet, wenn git einen verlangt](../../screenshots/cli-edit.webp)
+![Der Editor, den Geminio öffnet, wenn git einen verlangt](../../screenshots/cli-edit.webp)
 
 Entscheidend ist das Wort **wartet**: git hängt an diesem Dialog. Also
 
 - **Speichern & fortfahren** schreibt die Datei zurück, und git macht weiter.
 - **Abbrechen** schreibt eine leere Datei, was git als *Abbruch* liest.
-- Den Dialog anders zu schließen — Escape, der Hintergrund, Gitcito beenden —
+- Den Dialog anders zu schließen — Escape, der Hintergrund, Geminio beenden —
   zählt als Abbrechen. Ein Terminal, das ewig wartet, wäre weit schlimmer als
   eine Nachricht, die man neu tippen muss.
 
-`--local` beschränkt es auf ein Repository, `gitcito editor uninstall` macht es
+`--local` beschränkt es auf ein Repository, `geminio editor uninstall` macht es
 rückgängig.
 
 ## Was sie nicht tut

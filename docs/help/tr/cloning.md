@@ -60,7 +60,7 @@ klonlamanın kendisi bildirir.
   (`--no-single-branch`); altındaki ipucunun değişmesinin nedeni budur.
 - **Yerel bir klasörü klonlarken** git normalde `--depth`'i tamamen yok sayar,
   çünkü nesne deposunu indirmek yerine sabit bağla (hardlink) paylaşır. Yerel bir
-  deponun sığ bir kopyasını istediğinizde Gitcito `file://` URL'si üzerinden
+  deponun sığ bir kopyasını istediğinizde Geminio `file://` URL'si üzerinden
   klonlar, böylece istediğiniz derinlik gerçekten elinize geçer.
 
 ## İlerleme

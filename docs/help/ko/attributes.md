@@ -48,13 +48,13 @@ keywords: 속성 파일속성 줄바꿈 바이너리 차이드라이버 gitattri
 안의 주석은 손대지 않고 살아남아요. 규칙 옆에 적힌 "왜"가 보통 규칙 자체보다
 값어치가 크기 때문이에요.
 
-저장할 때마다 평범한 Gitcito 동작이 일어나요. 토스트가 뜨고, **되돌리기**가
+저장할 때마다 평범한 Geminio 동작이 일어나요. 토스트가 뜨고, **되돌리기**가
 파일을 원래 상태 그대로 복원해요.
 
 **저장소에는 속성 파일이 여러 개 있을 수 있어요.** 루트에 하나, 어느
 하위 디렉터리에나 하나씩, 그리고 절대 커밋되지 않고 여러분 컴퓨터에서만
 적용되는 비공개 `.git/info/attributes` — 프로젝트가 아니라 여러분에 관한 규칙을
-두기에 알맞은 자리예요. Gitcito는 그것들을 모두 나열하고 어느 것이 어느
+두기에 알맞은 자리예요. Geminio는 그것들을 모두 나열하고 어느 것이 어느
 것인지 알려 줘요.
 
 ## 어떤 경로에 무엇이 적용되나요?
@@ -78,19 +78,19 @@ keywords: 속성 파일속성 줄바꿈 바이너리 차이드라이버 gitattri
 1. git 설정의 `diff.<name>.textconv` — 변환 명령.
 2. `.gitattributes`의 `*.docx diff=<name>` — 어떤 파일에 적용할지.
 
-여기 있는 버튼들이 둘을 한 번에 해 줘요. Word, Excel, JSON, `.strings`은 Gitcito가
+여기 있는 버튼들이 둘을 한 번에 해 줘요. Word, Excel, JSON, `.strings`은 Geminio가
 **변환기를 직접 동봉해요** — 미리보기가 쓰는 것과 같은 문서 파싱을 앱 안의
-작은 `gitcito-textconv` 명령으로 내놓은 것이라, 이 넷은 아무것도 설치하지
-않아도 동작해요. 나머지는 여전히 PATH에 진짜 도구가 필요해요. Gitcito는 이를
+작은 `geminio-textconv` 명령으로 내놓은 것이라, 이 넷은 아무것도 설치하지
+않아도 동작해요. 나머지는 여전히 PATH에 진짜 도구가 필요해요. Geminio는 이를
 확인해서, 첫 번째 차이 비교에서 실패할 드라이버를 적는 대신 없는 것을 흐리게
 표시해요.
 
 | 드라이버 | 필요한 것 | 얻는 것 |
 |--------|-------|-----------|
-| `word` | 없음 — Gitcito에 동봉 | `.docx`의 문장 단위 차이 |
-| `excel` | 없음 — Gitcito에 동봉 | `.xlsx`/`.xls`의 행 단위 차이 (시트별 CSV) |
-| `json` | 없음 — Gitcito에 동봉 | 키 순서가 정렬된, 안정적인 JSON 차이 |
-| `strings` | 없음 — Gitcito에 포함 | git이 바이너리라고 부르는 UTF-16 `.strings`의 줄 단위 diff |
+| `word` | 없음 — Geminio에 동봉 | `.docx`의 문장 단위 차이 |
+| `excel` | 없음 — Geminio에 동봉 | `.xlsx`/`.xls`의 행 단위 차이 (시트별 CSV) |
+| `json` | 없음 — Geminio에 동봉 | 키 순서가 정렬된, 안정적인 JSON 차이 |
+| `strings` | 없음 — Geminio에 포함 | git이 바이너리라고 부르는 UTF-16 `.strings`의 줄 단위 diff |
 | `pdf` | `pdftotext` (poppler) | `.pdf`의 텍스트 차이 |
 | `exif` | `exiftool` | 픽셀이 불투명할 때, 이미지에 대해 무엇이 바뀌었는지 |
 
@@ -113,7 +113,7 @@ String Catalog(`.xcstrings`, Xcode 15 이상)는 JSON이라 `json` 드라이버�
 쓴 것처럼 보이지 않습니다.
 
 동봉된 변환기의 한계를 솔직히 말하면: `.doc`(옛 이진 Word 형식)은 이해하지
-못하고 `.docx`만 돼요. PDF는 다루지 않아요 — Gitcito는 PDF를 브라우저의
+못하고 `.docx`만 돼요. PDF는 다루지 않아요 — Geminio는 PDF를 브라우저의
 뷰어로 미리 보여 주기 때문에 재사용할 텍스트 추출기가 없어요. 그리고 문서의
 차이를 볼 때마다 변환기의 짧은 시작 비용을 치러요.
 `git config diff.<name>.cachetextconv true`를 설정하면 git이 출력을 blob마다
@@ -121,8 +121,8 @@ String Catalog(`.xcstrings`, Xcode 15 이상)는 JSON이라 `json` 드라이버�
 
 변환기 쪽은 저장소가 아니라 **여러분의** 설정에 살아요. git은 클론이 건네주는
 명령을 실행하지 않으니까요. 지켜 둘 만한 보안 특성이에요. 동봉된 드라이버들도
-*여러분의* Gitcito 설치 경로를 가리키기 때문에, 클론한 동료는 `diff=word`
-규칙은 받지만, 자기 변환기(Gitcito든 다른 것이든)를 연결하기 전까지는 예전의
+*여러분의* Geminio 설치 경로를 가리키기 때문에, 클론한 동료는 `diff=word`
+규칙은 받지만, 자기 변환기(Geminio든 다른 것이든)를 연결하기 전까지는 예전의
 읽을 수 없는 차이를 보게 돼요. README에 그 사실을 적어 두세요.
 
 ## clean/smudge 필터 — 먼저 드라이런부터
@@ -134,7 +134,7 @@ String Catalog(`.xcstrings`, Xcode 15 이상)는 JSON이라 `json` 드라이버�
 
 동시에 `.gitattributes`가 가리킬 수 있는 것 중 가장 위험한 것이기도 해요.
 필터는 **일치하는 모든 파일의 모든 체크아웃마다** 실행되고, 잘못된 필터는
-작업 트리를 조용히 망가뜨려요. 그래서 Gitcito는 여기서 그냥 텍스트 상자가
+작업 트리를 조용히 망가뜨려요. 그래서 Geminio는 여기서 그냥 텍스트 상자가
 되기를 거부해요. 필터 설정은 저장소 안에서 실제로 일치하는 파일들을 상대로 한
 **드라이런**을 거쳐요:
 
@@ -170,8 +170,8 @@ String Catalog(`.xcstrings`, Xcode 15 이상)는 JSON이라 `json` 드라이버�
   어떻게 다루는지가 바뀔 뿐이에요.
 - **규칙은 그 파일이 보이는 곳에서만 효력이 있어요.** `design/.gitattributes`의
   규칙은 `src/`에 대해서는 아무 말도 하지 않아요.
-- Gitcito는 파일을 통째로 쓰므로 손으로 서식을 맞춘 파일은 그 서식 그대로
-  돌아와요. 다만 Gitcito가 다시 쓴 규칙은 git의 표준 형태인
+- Geminio는 파일을 통째로 쓰므로 손으로 서식을 맞춘 파일은 그 서식 그대로
+  돌아와요. 다만 Geminio가 다시 쓴 규칙은 git의 표준 형태인
   `pattern attr attr` 간격으로 재정렬돼요.
 
 함께 보기: [LFS와 스파스 체크아웃](lfs-sparse.md) ·

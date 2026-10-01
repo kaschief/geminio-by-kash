@@ -8,6 +8,21 @@ keywords: pull request PR merge request GitHub GitLab Bitbucket Azure DevOps rev
 
 # Hosting & pull requests
 
+## Connecting GitHub
+
+Open **Settings → Integrations → GitHub**. Geminio reuses your existing GitHub
+CLI login, then falls back to your Git credential helper. A token entered in
+the active profile takes priority. **Connect GitHub** retries the lookup after
+you sign in; the connected card shows the account name, photo and organizations.
+If the CLI is signed out, run `gh auth login --hostname github.com` and retry.
+
+The CLI keeps its token in its own credential store. Geminio reads it into main-process
+memory without copying it to profile settings or changing your global Git config.
+This connection supplies GitHub API features such as repositories, PRs and issues;
+Git fetch/push continue using your Git credential helper or SSH configuration.
+The connected photo also appears on commit authors whose email matches the account.
+Connecting does not change Git author settings or rewrite existing commits.
+
 ## Creating
 
 Create a pull (or merge) request without leaving the app: branch dropdowns,
@@ -86,7 +101,7 @@ requested or CI finishes.
 ## Tokens
 
 Per-profile tokens for multiple accounts or orgs, stored with your OS keychain.
-Gitcito can also borrow whatever your **git credential helper** already holds,
+Geminio can also borrow whatever your **git credential helper** already holds,
 so an org you have already authenticated for often needs no setup at all. See
 [Security & secrets](security.md).
 

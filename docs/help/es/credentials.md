@@ -8,12 +8,12 @@ keywords: credential helper ayudante credenciales contraseña password https vue
 
 # Ayudante de credenciales
 
-Gitcito maneja tres tipos distintos de secreto, y es razonable que la gente
+Geminio maneja tres tipos distintos de secreto, y es razonable que la gente
 asuma que son uno solo:
 
 | | Lo guarda |
 |---|---|
-| Tokens de API del hosting — PRs, issues, checks de CI | Gitcito, en tu [llavero del sistema](security.md) |
+| Tokens de API del hosting — PRs, issues, checks de CI | Geminio, en tu [llavero del sistema](security.md) |
 | Transporte `git@…` | Tu [clave SSH](ssh-keys.md), a través del agente ssh del sistema |
 | **Transporte `https://`** | **El ayudante de credenciales del propio git** |
 
@@ -54,7 +54,7 @@ ganan al ajuste llano para las URLs que encajan, y suelen ser la respuesta a
 | `cache` | Memoria, durante 15 minutos. Nada en disco |
 | `store` | **Un archivo plano en tu carpeta personal. Sin cifrar** |
 
-Gitcito ofrece lo que de verdad está instalado en esta máquina, marca el que
+Geminio ofrece lo que de verdad está instalado en esta máquina, marca el que
 encaja con tu sistema operativo y desactiva el resto.
 
 **El ámbito importa.** *Para todos los repositorios* escribe en tu configuración
@@ -81,22 +81,22 @@ cada push falla con un 401 que no nombra nada. **Olvidar** le pide al ayudante
 configurado que borre su entrada para ese host — `git credential reject`, que es
 la vía documentada del propio git.
 
-Por el camino no se lee nada: Gitcito nunca llama a `git credential fill`, el
+Por el camino no se lee nada: Geminio nunca llama a `git credential fill`, el
 comando que imprimiría una contraseña viva por la salida estándar.
 
 El siguiente push te pregunta una vez, y el ayudante guarda la nueva respuesta.
 
 ## Límites que conviene conocer
 
-- **Este es el almacén de git, no el de Gitcito.** Cambiarlo cambia también lo
+- **Este es el almacén de git, no el de Geminio.** Cambiarlo cambia también lo
   que hace tu terminal — que es justo la gracia, y conviene saberlo antes de
   tocarlo.
 - **Los ayudantes de nivel de sistema se muestran, pero no se editan.** Viven en
   una configuración que solo un administrador puede escribir.
-- **Gitcito no puede listar lo que guarda un ayudante.** Ninguna API de
+- **Geminio no puede listar lo que guarda un ayudante.** Ninguna API de
   credenciales expone eso sin entregar los secretos, así que el diálogo informa
   de la configuración y borra cuando se lo pides, y nada más.
-- **Un token que le diste a Gitcito es otra cosa.** Revocar uno no toca el otro;
+- **Un token que le diste a Geminio es otra cosa.** Revocar uno no toca el otro;
   mira [seguridad](security.md) para la parte del llavero.
 
 Ver también: [Seguridad](security.md) · [Claves SSH](ssh-keys.md) ·

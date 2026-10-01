@@ -195,7 +195,7 @@ export function RepoVaultTab({ repoPath }: { repoPath: string }): React.JSX.Elem
           )}
 
           {draft && (
-            <div className="vault-draft">
+            <div className="vault-draft" data-unsaved-changes={true}>
               <input className="modal-input" placeholder="KEY" value={draft.key} autoFocus onChange={(e) => setDraft({ ...draft, key: e.target.value })} />
               <input className="modal-input" placeholder="value" value={draft.value} onChange={(e) => setDraft({ ...draft, value: e.target.value })} />
               <input className="modal-input" placeholder={t('vault.notePlaceholder')} value={draft.note} onChange={(e) => setDraft({ ...draft, note: e.target.value })} onKeyDown={(e) => e.key === 'Enter' && void saveDraft()} />

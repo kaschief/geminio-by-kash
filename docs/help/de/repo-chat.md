@@ -107,7 +107,7 @@ ihn, oder rechtsklicke auf eine Blase: **Kopieren** nimmt die Auswahl,
 Markdown-Quelltext kopiert — und wenn der Klick auf einem Link landete, nimmt
 **Link kopieren** dessen Adresse.
 
-Links öffnen sich in deinem Standardbrowser, nie in Gitcito — Markdown-Links
+Links öffnen sich in deinem Standardbrowser, nie in Geminio — Markdown-Links
 in Antworten genauso wie einfache `https://`-Adressen in deinen eigenen
 Nachrichten.
 
@@ -140,7 +140,7 @@ Der Repository-Chat kann exakte Bearbeitungen, das Erstellen oder vollständige
 Ersetzen sowie das Löschen von Dateien vorschlagen, danach Git-Aktionen:
 Ignore-Muster, Stagen, Unstagen, Commit, Stash, Verwerfen, Branch, Wechseln,
 Tag und — weil ihm die Branch-Liste und die jüngsten Commits gezeigt werden —
-Merge, Rebase, Revert und Cherry-Pick. Gitcito berechnet den aufklappbaren Diff
+Merge, Rebase, Revert und Cherry-Pick. Geminio berechnet den aufklappbaren Diff
 lokal. Vorhandene Dateien müssen aus gelesenen Belegen stammen; unsichere,
 geheime, ignorierte, generierte, binäre, veraltete, zu große und über Symlinks
 erreichte Ziele werden abgelehnt. Reset, das Umschreiben von Historie, das
@@ -153,12 +153,12 @@ des bereits Gelaufenen, und das Konfliktbanner übernimmt genau wie bei derselbe
 Operation aus der Werkzeugleiste.
 
 Der gesamte Dateistapel wird vor dem ersten Schreiben erneut geprüft und bei
-einem Fehler zurückgerollt. Vor einem Commit prüft Gitcito außerdem, ob etwas
+einem Fehler zurückgerollt. Vor einem Commit prüft Geminio außerdem, ob etwas
 vorgemerkt ist. Die Karte zeigt abgeschlossene, fehlgeschlagene und übersprungene
 Schritte sowie Teilergebnisse. Danach fasst ein separater Modellaufruf ohne
 Aktionen das tatsächliche Ergebnis zusammen.
 
-**Er kann auch `.gitcito.json` schreiben.** Dem Chat wird die Form der
+**Er kann auch `.geminio.json` schreiben.** Dem Chat wird die Form der
 [eigenen Konfigurationsdatei des Repositorys](repo-config.md) mitgegeben, also
 wird aus *füge Ticket-Links für JIRA-1234 hinzu* oder *schütze die
 Release-Branches* eine Dateiaktion gegen das echte Schema statt plausibel
@@ -203,7 +203,7 @@ beantwortet, bevor der Plan startet — nicht aus ihm heraus.
 ### Einen Plan rückgängig machen
 
 Ein Plan wird als Ganzes freigegeben, also wird er als Ganzes zurückgenommen.
-Vor der ersten Aktion, die etwas ändern kann, merkt sich Gitcito, wo der Branch
+Vor der ersten Aktion, die etwas ändern kann, merkt sich Geminio, wo der Branch
 stand, und macht einen Schnappschuss des Arbeitsbaums; die fertige Karte bietet
 dann **Plan rückgängig** an. Sie setzt den Branch auf diesen Commit zurück und
 stellt den Baum wieder her — was der Plan erzeugt hat, ist damit weg, also fragt
@@ -248,7 +248,7 @@ Entwurf bleibt bearbeitbar; nichts wird gesendet, bis du Senden drückst.
   bestätigt immer. Mit **Git-Aktionen im Chat vorschlagen** aus schlägt er
   nicht einmal vor.
 - **Unterhaltungen liegen nur im Speicher.** Jedes Repository hat seinen eigenen
-  Verlauf; beim Beenden von Gitcito sind sie weg.
+  Verlauf; beim Beenden von Geminio sind sie weg.
 
 ## Öffnen
 

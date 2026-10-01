@@ -10,7 +10,7 @@ keywords: bezpieczne udostępnianie eksport import paczka zaszyfrowana przestrze
 
 Postawienie nowej maszyny — albo wdrożenie nowej osoby w zespole — zwykle
 oznacza wpisywanie wszystkiego od nowa. Bezpieczne udostępnianie pakuje to
-zamiast tego w jeden zaszyfrowany plik `.gitcito`: funkcje zespołowe Gitcito
+zamiast tego w jeden zaszyfrowany plik `.geminio`: funkcje zespołowe Geminio
 **nie mają backendu**, więc plik *jest* transportem. Wyślij go tak, jak i tak
 wysyłasz pliki; hasło podróżuje osobno.
 
@@ -39,7 +39,7 @@ adresie zdalnego, potem po katalogu — więc import nie klonuje świata od nowa
 
 Sekcja **struktury przestrzeni roboczej** odtwarza przestrzeń z repozytoriów,
 które już masz; te, których nie masz, są wypisane wraz z ich zdalnym adresem,
-żebyś mógł je najpierw sklonować i zaimportować ponownie — Gitcito nigdy nie
+żebyś mógł je najpierw sklonować i zaimportować ponownie — Geminio nigdy nie
 klonuje tu za ciebie. Sekcja **notatek do commitów** pokazuje zawczasu, co by
 wylądowało — nowe, identyczne, rozbieżne albo przypięte do commitów, których
 nie masz — a rozbieżne notatki są zastępowane tylko wtedy, gdy zaznaczysz

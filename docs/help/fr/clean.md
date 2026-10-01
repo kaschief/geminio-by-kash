@@ -17,7 +17,7 @@ d'entrée de reflog, pas de remisage, pas d'annulation, et aucune incantation
 `git` qui le ramène.
 
 C'est pour cela que c'est l'opération que l'on lance dans un terminal et que l'on
-regrette. La version de Gitcito montre la liste entière avant que quoi que ce
+regrette. La version de Geminio montre la liste entière avant que quoi que ce
 soit ne se produise.
 
 `⌘K` → **Supprimer les fichiers non suivis**.
@@ -46,7 +46,7 @@ listing que personne ne lit. Sa taille est la somme de ce qu'il contient.
 
 Un dossier marqué **dépôt à part entière** possède son propre `.git` : un clone
 que vous avez déposé à l'intérieur de celui-ci, ou un essai jamais raccroché. Git
-refuse de les supprimer (il exige `-ff`, une option que Gitcito ne propose pas) —
+refuse de les supprimer (il exige `-ff`, une option que Geminio ne propose pas) —
 la corbeille, elle, les accepte.
 
 ## Corbeille ou suppression

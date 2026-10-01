@@ -151,8 +151,8 @@ async function exportBundle(
   const safeName = (project || 'project').replace(/[^\w.-]+/g, '-')
   const { canceled, filePath } = await dialog.showSaveDialog({
     title: 'Export secure bundle',
-    defaultPath: `${safeName}.gitcito`,
-    filters: [{ name: 'Gitcito bundle', extensions: ['gitcito'] }]
+    defaultPath: `${safeName}.geminio`,
+    filters: [{ name: 'Geminio bundle', extensions: ['geminio', 'gitcito'] }]
   })
   if (canceled || !filePath) return { canceled: true }
   try {
@@ -169,7 +169,7 @@ async function pickBundle(): Promise<
   const { canceled, filePaths } = await dialog.showOpenDialog({
     title: 'Import secure bundle',
     filters: [
-      { name: 'Gitcito bundle', extensions: ['gitcito'] },
+      { name: 'Geminio bundle', extensions: ['geminio', 'gitcito'] },
       { name: 'All files', extensions: ['*'] }
     ],
     properties: ['openFile']
@@ -311,8 +311,8 @@ export async function exportSectionsV2(
   const safeName = (project || 'workspace').replace(/[^\w.-]+/g, '-')
   const { canceled, filePath } = await dialog.showSaveDialog({
     title: 'Export secure bundle',
-    defaultPath: `${safeName}.gitcito`,
-    filters: [{ name: 'Gitcito bundle', extensions: ['gitcito'] }]
+    defaultPath: `${safeName}.geminio`,
+    filters: [{ name: 'Geminio bundle', extensions: ['geminio', 'gitcito'] }]
   })
   if (canceled || !filePath) return { canceled: true }
   try {

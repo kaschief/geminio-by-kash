@@ -38,7 +38,7 @@ export interface GraphLayout {
 }
 
 /**
- * Assigns a lane to every commit (gitcito-style rails) and computes edges.
+ * Assigns a lane to every commit (geminio-style rails) and computes edges.
  * Commits must be in topological/date order (newest first), as produced by
  * `git log --all --date-order`.
  *

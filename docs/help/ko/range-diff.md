@@ -12,7 +12,7 @@ keywords: range-diff 강제 푸시 force push 리베이스 rebase 재작성 rewr
 diff는 아무 쓸모가 없어요. 리베이스 이후의 모든 커밋은 새 커밋이라서, 전부 새것처럼
 보이거든요.
 
-`git range-diff`는 두 버전을 커밋 단위로 짝지어 주고, Gitcito는 예전 위치를
+`git range-diff`는 두 버전을 커밋 단위로 짝지어 주고, Geminio는 예전 위치를
 **reflog**에서 곧바로 읽어 와요 — 그래서 이 기능이 작동하려고 미리 기록해 둬야
 했던 것은 아무것도 없어요.
 

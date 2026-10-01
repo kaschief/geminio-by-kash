@@ -1,5 +1,5 @@
 /**
- * `gitcito commit-check` — the same conventions the composer nudges about,
+ * `geminio commit-check` — the same conventions the composer nudges about,
  * evaluated on a whole commit-message file so a `commit-msg` hook or a CI job
  * can fail on them.
  *
@@ -10,7 +10,7 @@
  * the headless CLI, which must never pull in the renderer's i18n graph.
  *
  * What raises the level from `warn` to `error` is always something the
- * repository itself asked for in `.gitcito.json` — an unknown scope is an error
+ * repository itself asked for in `.geminio.json` — an unknown scope is an error
  * only because a scope list exists. Style alone never fails a build.
  */
 
@@ -56,7 +56,7 @@ export function stripCommitComments(raw: string): string {
 export const TICKET_RE = /\b[A-Z][A-Z0-9]+-\d+\b/
 
 export interface CommitCheckOptions {
-  /** The repository's own rules, when it ships a `.gitcito.json`. */
+  /** The repository's own rules, when it ships a `.geminio.json`. */
   config?: RepoConfig | null
   /** Current branch, used to look for the ticket key it carries. */
   branch?: string

@@ -28,7 +28,7 @@ Bir commit seçin. Mesajın altında bir **Not** bölümü vardır: *Not ekle*, 
 
 ![Push edilmiş bir commit'in mesajının altına not yazıp kaydetmek](../../screenshots/clip-commit-note.webp)
 
-Not kaydetmek sıradan bir Gitcito eylemidir — bildirim çıkarır ve **Geri al**
+Not kaydetmek sıradan bir Geminio eylemidir — bildirim çıkarır ve **Geri al**
 önceki metni yerine koyar; sildiğiniz bir notu geri getirmek de buna dahildir.
 
 Metni temizleyip kaydetmek notu kaldırır; boş not diye bir şey yoktur.
@@ -36,7 +36,7 @@ Metni temizleyip kaydetmek notu kaldırır; boş not diye bir şey yoktur.
 ## Not bulmak
 
 Notlar normal bir log'da görünmezdir; insanların onları hiç keşfetmemesinin
-başlıca sebebi de budur. Gitcito, not taşıyan bir commit'i grafiğin mesaj
+başlıca sebebi de budur. Geminio, not taşıyan bir commit'i grafiğin mesaj
 sütununda küçük bir not simgesiyle işaretler; böylece açıklamanın orada olduğunu
 bilmeden de bulunabilir.
 
@@ -57,11 +57,11 @@ git push <remote> refs/notes/commits
 git fetch <remote> +refs/notes/commits:refs/notes/commits
 ```
 
-Yalnızca commit notlarının ref'i taşınır — Gitcito'nun kendi makineye özgü
+Yalnızca commit notlarının ref'i taşınır — Geminio'nun kendi makineye özgü
 ref'leri ([yerel CI](local-ci.md) kararları gibi) bilerek yayımlanmaz.
 
 Bazı sunucuların kendi taraflarında da notların etkinleştirilmesi ya da izin
-verilmesi gerekir; oradaki bir ret, sunucunun politikasıdır, Gitcito'nun sınırı
+verilmesi gerekir; oradaki bir ret, sunucunun politikasıdır, Geminio'nun sınırı
 değil.
 
 Ortak bir uzak depo yok mu, ya da yazma erişiminiz mi yok?
@@ -71,7 +71,7 @@ doğrudan içe aktardığı şifreli bir dosyaya koyabilir — neyin ineceğinin
 
 ## Sınırlar
 
-- **Tek bir notes ref'i.** Gitcito varsayılan `refs/notes/commits` ref'ini okur
+- **Tek bir notes ref'i.** Geminio varsayılan `refs/notes/commits` ref'ini okur
   ve yazar. Özel ad alanları (`git notes --ref=review`) burada sunulmaz — onları
   kullanan bir depo o notları burada göremez.
 - **Ayrışan notlar birleştirilmez.** İki kişi aynı commit'e açıklama ekleyip

@@ -2,13 +2,13 @@
 title: Seguridad y secretos
 category: Seguridad
 order: 70
-summary: Enmascarado, guardas, el llavero — y lo que Gitcito se niega a hacer.
+summary: Enmascarado, guardas, el llavero — y lo que Geminio se niega a hacer.
 keywords: seguridad security secretos secrets enmascarar masking llavero keychain safeStorage tokens rama protegida protected branch archivo grande large file guarda privacidad
 ---
 
 # Seguridad y secretos
 
-Gitcito **no tiene backend**. Las únicas llamadas de red van a tu hosting de Git
+Geminio **no tiene backend**. Las únicas llamadas de red van a tu hosting de Git
 y, si lo activas, a tu proveedor de IA.
 
 ![Ajustes de seguridad](../../screenshots/settings-security.webp)
@@ -45,7 +45,7 @@ de tu sistema operativo (`safeStorage` de Electron), nunca con una clave metida
 en el archivo de ajustes.
 
 **Nada toca el llavero hasta que tú lo dices.** Antes de que pueda aparecer el
-diálogo de permisos del propio sistema, Gitcito te explica qué se va a guardar,
+diálogo de permisos del propio sistema, Geminio te explica qué se va a guardar,
 qué no puede hacer (una app solo puede releer la entrada que ella misma creó —
 tus otras contraseñas quedan fuera de su alcance), y que decir que no está bien:
 los tokens viven entonces en memoria solo durante la sesión, la caja fuerte se

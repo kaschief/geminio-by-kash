@@ -12,7 +12,7 @@ keywords: ssh chave key keys agente agent ssh-add ssh-keygen ed25519 publickey p
 
 ## Por que isto existe ao lado dos tokens
 
-O Gitcito autentica duas coisas diferentes, e as pessoas razoavelmente supõem que
+O Geminio autentica duas coisas diferentes, e as pessoas razoavelmente supõem que
 são uma só:
 
 | | Autenticado por |
@@ -54,7 +54,7 @@ geralmente é isto.
 
 **Testar conexão** existe porque a resposta do próprio ssh é enganosa: o GitHub te
 autentica com sucesso e *depois* sai com um código de falha, já que ele não oferece
-um shell. O Gitcito lê a mensagem em vez do código de saída, e mostra a saída crua
+um shell. O Geminio lê a mensagem em vez do código de saída, e mostra a saída crua
 embaixo para você conferir a leitura dele.
 
 ## Os limites, ditos com todas as letras
@@ -66,16 +66,16 @@ embaixo para você conferir a leitura dele.
 - **Gerar nunca sobrescreve.** Um nome já presente em `~/.ssh` é recusado.
   Sobrescrever uma chave privada revoga silenciosamente o seu acesso a tudo que
   confia nela, e nenhum diálogo de confirmação torna isso recuperável.
-- **Passphrases não são guardadas pelo Gitcito.** Você digita uma ao gerar ou ao
+- **Passphrases não são guardadas pelo Geminio.** Você digita uma ao gerar ou ao
   adicionar ao agente; ela é passada ao `ssh-keygen`/`ssh-add` e descartada.
   Persisti-la entre reboots é trabalho do keychain do sistema, via `ssh-add`.
 - **Nenhuma edição de `~/.ssh/config`**, nenhum alias de host, nenhuma seleção de
-  chave por repo. Isso mora na sua configuração de ssh, e o Gitcito não mexe nesse
+  chave por repo. Isso mora na sua configuração de ssh, e o Geminio não mexe nesse
   arquivo.
 
 ## O que nunca sai da sua máquina
 
-**O Gitcito nunca lê, exibe ou transmite uma chave privada.** A seção lista as
+**O Geminio nunca lê, exibe ou transmite uma chave privada.** A seção lista as
 metades públicas e as impressões digitais. A única coisa que chega a ser enviada
 para algum lugar é a chave pública em que você aperta **Enviar** explicitamente — e
 ela vai para o GitHub, sob o seu próprio token, depois de uma confirmação que

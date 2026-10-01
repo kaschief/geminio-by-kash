@@ -27,10 +27,10 @@ un hotfix en `main` y olvidarse de `develop`, o etiquetar la rama equivocada.
 | `release/*` | Una versión en estabilización, sacada de develop. |
 | `hotfix/*` | Un arreglo urgente, sacado de **main** — producción no puede esperar a develop. |
 
-Gitcito lee y escribe las mismas claves de config `gitflow.*` que usa la CLI de
+Geminio lee y escribe las mismas claves de config `gitflow.*` que usa la CLI de
 `git flow` (`gitflow.branch.master`, `gitflow.prefix.feature`, …). Un
 repositorio en el que alguien ya ejecutó `git flow init` se reconoce al
-instante, y un repositorio configurado aquí funciona después con la CLI. Gitcito
+instante, y un repositorio configurado aquí funciona después con la CLI. Geminio
 ejecuta comandos de git normales de principio a fin — no hace falta tener la CLI
 instalada.
 
@@ -55,7 +55,7 @@ El nombre es lo que escribes tú; el prefijo sale de la estructura.
 **Terminar** es la parte que merece automatizarse, porque son varios pasos que
 tienen que ocurrir todos:
 
-| Tipo | Qué hace Gitcito |
+| Tipo | Qué hace Geminio |
 |------|-------------------|
 | Feature | Fusiona en develop con `--no-ff`, borra la rama, te deja en develop |
 | Release | Fusiona en main, la etiqueta, fusiona en develop, borra la rama, te deja en develop |
@@ -77,7 +77,7 @@ por defecto.
   alrededor de trabajo sin commitear es como la gente lo pierde.
 - **Una fusión con conflictos revierte todo el proceso.** Si la fusión en main
   sale bien pero la de develop entra en conflicto, te quedarías con un release a
-  medio terminar. Gitcito devuelve cada rama a donde estaba y reporta el
+  medio terminar. Geminio devuelve cada rama a donde estaba y reporta el
   conflicto. Fusiona esa rama a mano, resuélvela en el [resolutor de
   conflictos](conflicts.md), y el flujo es tuyo para terminarlo a mano.
 - **Nunca hace push.** Terminar es local. Publica main, develop y la etiqueta

@@ -17,7 +17,7 @@ birleştir…** kullanın; bkz. [birleştirme seçenekleri](merge-options.md).
 ## Bir ref'i diğerinin üzerine sürükleme
 
 Uygulamadaki en hızlı hareket: bir dalı kaldırıp bir başkasının üzerine
-bırakın. Gitcito o bırakmanın ne anlama gelebileceğini gösteren küçük bir menü
+bırakın. Geminio o bırakmanın ne anlama gelebileceğini gösteren küçük bir menü
 açar ve siz seçene kadar hiçbir şey yapmaz.
 
 ![Bir dalı diğerinin üzerine sürüklemek, bırakmanın ne anlama gelebileceğini gösteren menüyü açar](../../screenshots/clip-branch-drop.webp)

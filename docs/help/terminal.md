@@ -46,12 +46,12 @@ The shell starts as a **login shell**, the same as Terminal.app or iTerm, so
 version managers and `brew shellenv` usually install themselves there — a tool
 like `fvm`, `nvm` or `pyenv` that works in your terminal works here too.
 
-Gitcito also asks your login shell for its real `PATH` at startup and merges it
+Geminio also asks your login shell for its real `PATH` at startup and merges it
 into everything it spawns, because a GUI app launched from the Dock inherits
 almost nothing. If a command is still not found, check that it is on `PATH` for
 a login shell and not only for an interactive one.
 
-Anything you run here is invisible to Gitcito's own locking, so a long
+Anything you run here is invisible to Geminio's own locking, so a long
 `git rebase` typed by hand and a click in the UI can still collide — the app
 refreshes from disk when the terminal changes something.
 

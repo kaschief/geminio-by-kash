@@ -564,7 +564,7 @@ function serverReadyTap(config: LaunchConfig, folder: string): ((chunk: string) 
  * `flutter run` prints "The Flutter DevTools debugger and profiler ... is
  * available at: http://127.0.0.1:9100?uri=..." once the VM service is up. That
  * URL is a whole Flutter-web app — network view, timeline, widget inspector,
- * memory — so Gitcito does not need to speak to the Dart VM Service itself; it
+ * memory — so Geminio does not need to speak to the Dart VM Service itself; it
  * needs to know the address.
  *
  * The URL changes when the app restarts, so this keeps reporting rather than
@@ -851,7 +851,7 @@ export function registerLaunchHandlers(): void {
       // rather than running a half-substituted command line.
       if (hasUnresolvableVars(config.program, config.cwd, typeof config.command === 'string' ? config.command : undefined, ...(config.args ?? []), ...(config.runtimeArgs ?? []))) {
         return {
-          error: `"${config.name}" uses a VS Code variable Gitcito can't resolve outside the editor (e.g. \${input:…}, \${command:…} or \${file}). Run it from VS Code instead.`
+          error: `"${config.name}" uses a VS Code variable Geminio can't resolve outside the editor (e.g. \${input:…}, \${command:…} or \${file}). Run it from VS Code instead.`
         }
       }
 
@@ -860,7 +860,7 @@ export function registerLaunchHandlers(): void {
 
       if (parts.length === 0) {
         return {
-          error: `"${config.name}" isn't directly runnable from Gitcito (type "${config.type ?? '?'}"). It likely needs a debugger we can't launch.`
+          error: `"${config.name}" isn't directly runnable from Geminio (type "${config.type ?? '?'}"). It likely needs a debugger we can't launch.`
         }
       }
 

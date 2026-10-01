@@ -27,10 +27,10 @@ in `main` mergen en `develop` vergeten, of de verkeerde branch taggen.
 | `release/*` | Een versie die gestabiliseerd wordt, afgetakt van develop. |
 | `hotfix/*` | Een dringende fix, afgetakt van **main** — productie kan niet op develop wachten. |
 
-Gitcito leest en schrijft dezelfde `gitflow.*`-configsleutels die de `git flow`
+Geminio leest en schrijft dezelfde `gitflow.*`-configsleutels die de `git flow`
 CLI gebruikt (`gitflow.branch.master`, `gitflow.prefix.feature`, …). Een
 repository waar iemand al `git flow init` op draaide wordt meteen herkend, en een
-repository die hier is opgezet werkt daarna met de CLI. Gitcito draait overal
+repository die hier is opgezet werkt daarna met de CLI. Geminio draait overal
 gewone git-commando's — de CLI hoeft niet geïnstalleerd te zijn.
 
 **Opzetten** schrijft die sleutels en maakt, als de integratiebranch nog niet
@@ -55,7 +55,7 @@ De naam is wat jij typt; de prefix komt uit de indeling.
 **Voltooien** is het deel dat automatisering verdient, want het zijn meerdere
 stappen die allemaal moeten gebeuren:
 
-| Soort | Wat Gitcito doet |
+| Soort | Wat Geminio doet |
 |-------|------------------|
 | Feature | Merget in develop met `--no-ff`, verwijdert de branch, laat je op develop achter |
 | Release | Merget in main, tagt het, merget in develop, verwijdert de branch, laat je op develop achter |
@@ -76,7 +76,7 @@ slaan, en schrijf een tagboodschap als je meer wilt dan de standaard.
   niet-gecommit werk doen is hoe mensen het kwijtraken.
 - **Een conflicterende merge draait het geheel terug.** Slaagt de merge in main
   maar conflicteert de merge in develop, dan zou je anders met een half
-  afgeronde release blijven zitten. Gitcito zet elke branch terug waar hij was en
+  afgeronde release blijven zitten. Geminio zet elke branch terug waar hij was en
   meldt het conflict. Merge die branch met de hand, los hem op in de
   [conflictoplosser](conflicts.md), en de rest van de flow is aan jou.
 - **Het pusht nooit.** Voltooien is lokaal. Push main, develop en de nieuwe tag

@@ -112,7 +112,7 @@ export type ModalSpec =
     }
   | { kind: 'clone'; onClone: (repo: { path: string; name: string }) => void }
   | { kind: 'create-branch'; path: string; currentBranch?: string; description?: string }
-  | { kind: 'settings'; page?: 'profile' | 'layout' | 'integrations' | 'ai' | 'themes' | 'general' | 'security' | 'shortcuts' | 'data'; themeTab?: 'theme' | 'graph' }
+  | { kind: 'settings'; page?: 'profile' | 'layout' | 'integrations' | 'ai' | 'themes' | 'general' | 'security' | 'shortcuts' | 'data' | 'repository'; themeTab?: 'theme' | 'graph'; repoPath?: string; repoTab?: 'general' | 'config' | 'info' | 'vault' | 'analytics' | 'insights' | 'history' | 'logs' }
   | { kind: 'launcher'; groupId?: string }
   | { kind: 'create-repo'; onCreate: (repo: { path: string; name: string }) => void }
   | { kind: 'ai-config-wizard'; repoPath: string; repoName: string }
@@ -170,7 +170,7 @@ export type ModalSpec =
   | { kind: 'stash-partial'; repoPath: string }
   | { kind: 'create-tag'; repoPath: string; hash?: string; at?: string }
   | { kind: 'cheatsheet' }
-  // `gitcito --wait <file>` — a `git commit`/`git rebase -i` is blocked on this
+  // `geminio --wait <file>` — a `git commit`/`git rebase -i` is blocked on this
   // dialog, so closing it by any route must answer git (see CliEditModal).
   | { kind: 'cli-edit'; file: string; sentinel: string; content: string }
   | { kind: 'ai-accounts-notice' }
@@ -241,6 +241,7 @@ export interface PanelLayout {
   terminalListWidth: number
   terminalListCollapsed: boolean
   composerUnstagedRatio: number
+  composerMessageHeight: number | null
   /** Conflict editor: share of the width taken by the left (ours) side. */
   conflictSideRatio: number
   /** Conflict editor: share of the height taken by the two side panes. */
@@ -261,6 +262,7 @@ const DEFAULT_LAYOUT: PanelLayout = {
   terminalListWidth: 220,
   terminalListCollapsed: false,
   composerUnstagedRatio: 0.5,
+  composerMessageHeight: null,
   conflictSideRatio: 0.5,
   conflictFilesRatio: 0.55,
   composerConflictedCollapsed: false,
@@ -427,7 +429,9 @@ export const useUIStore = create<UIState>((set, get) => ({
 
   openContextMenu: (x, y, items) => set({ contextMenu: { x, y, items } }),
   closeContextMenu: () => set({ contextMenu: null }),
-  openModal: (modal) => set({ modal }),
+  openModal: (modal) => set({ modal: modal.kind === 'repo-settings'
+    ? { kind: 'settings', page: 'repository', repoPath: modal.repoPath, repoTab: modal.tab }
+    : modal, contextMenu: null }),
   closeModal: () => set({ modal: null }),
   setCommandPalette: (commandPaletteOpen) => set({ commandPaletteOpen }),
   setMissionOpen: (missionOpen) => set({ missionOpen }),

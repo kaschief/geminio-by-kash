@@ -13,7 +13,7 @@ normaler Diff ist jetzt wertlos: Nach einem Rebase ist jeder Commit ein neuer
 Commit, also sieht alles neu aus.
 
 `git range-diff` stellt die beiden Versionen Commit für Commit gegenüber, und
-Gitcito liest die alten Positionen direkt aus dem **Reflog** — es musste also
+Geminio liest die alten Positionen direkt aus dem **Reflog** — es musste also
 vorher nichts aufgezeichnet werden, damit das funktioniert.
 
 ![Umgeschriebene, neue und entfallene Commits nach einem Force-Push](../../screenshots/range-diff.webp)

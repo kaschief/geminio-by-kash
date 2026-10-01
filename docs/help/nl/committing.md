@@ -43,12 +43,12 @@ het houdt je niet tegen bij het committen.
 
 ## Amend
 
-Amend herschrijft de laatste commit met wat er gestaged staat. Gitcito laat je
+Amend herschrijft de laatste commit met wat er gestaged staat. Geminio laat je
 eerst de bestaande boodschap zien, zodat je bewerkt in plaats van overtypt.
 
 **Commit aanpassen…** op een grafiekrij doet hetzelfde voor HEAD: het laadt de
 volledige boodschap, zet de opsteller in de amend-stand en geeft hem focus. Een
-HEAD die al gepusht is kan nog steeds worden aangepast, maar Gitcito waarschuwt
+HEAD die al gepusht is kan nog steeds worden aangepast, maar Geminio waarschuwt
 dat het bijwerken van de remote een force push zal kosten.
 
 **Commit ongedaan maken…** is de tegenhanger voor een niet-gepushte HEAD: een

@@ -8,7 +8,7 @@ keywords: giriş ilk adımlar açma klonlama sekmeler grafik commit intro open c
 
 # Başlarken
 
-Gitcito bir klasörü açar ve size geçmişini gösterir. Siz istemedikçe deponuza
+Geminio bir klasörü açar ve size geçmişini gösterir. Siz istemedikçe deponuza
 hiçbir şey yazılmaz.
 
 ![Henüz hiç commit'i olmayan, yeni açılmış bir depo](../../screenshots/empty-repo.webp)
@@ -20,9 +20,9 @@ hiçbir şey yazılmaz.
 - Bir URL'den veya doğrudan barındırıcınızdan **klonlayın** — devasa bir depoyu
   hızlıca klonlamayı sağlayan seçenekler için [klonlama](cloning.md) sayfasına
   bakın.
-- Terminalden `gitcito .` komutu, çalışan uygulamada geçerli klasörü açar —
+- Terminalden `geminio .` komutu, çalışan uygulamada geçerli klasörü açar —
   bkz. [komut satırı](cli.md).
-- Henüz Git deposu olmayan bir klasör de açılır; Gitcito onu başlatmayı
+- Henüz Git deposu olmayan bir klasör de açılır; Geminio onu başlatmayı
   önerir.
 
 ## Üç panel
@@ -56,5 +56,5 @@ kullanıcıların bulabildiği hiçbir şey yok.
    [tek tek satırları](staging.md).
 3. Bir mesaj yazıp **Commit**'e basın.
 
-Gitcito'daki diğer her şey isteğe bağlıdır.
+Geminio'daki diğer her şey isteğe bağlıdır.
 

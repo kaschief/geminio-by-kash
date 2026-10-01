@@ -17,7 +17,7 @@ una y otra vez; mira [opciones de merge](merge-options.md).
 ## Arrastra una ref sobre otra
 
 El gesto más rápido de la aplicación: coge una rama y suéltala sobre otra.
-Gitcito abre un menú pequeño con lo que ese gesto podría significar, y no hace
+Geminio abre un menú pequeño con lo que ese gesto podría significar, y no hace
 nada hasta que elijas.
 
 ![Arrastrar una rama sobre otra abre el menú de lo que puede significar el gesto](../../screenshots/clip-branch-drop.webp)

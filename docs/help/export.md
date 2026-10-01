@@ -56,7 +56,7 @@ then merge, rebase or check out `bundle/main` on your own terms, exactly as you
 would a branch from any other remote.
 
 To start a *new* repository from a bundle instead, clone from the file in a
-terminal: `git clone work.bundle myrepo`. Gitcito imports into an open
+terminal: `git clone work.bundle myrepo`. Geminio imports into an open
 repository; it does not clone from a file.
 
 ## Archives
@@ -91,7 +91,7 @@ rather than in someone's release script.
 
 - **A bundle is a full copy** unless you use a range. Bundling a 2 GB repository
   writes a 2 GB file, and it takes as long as a clone.
-- **Empty bundles are refused** by git, not by Gitcito: a range with nothing
+- **Empty bundles are refused** by git, not by Geminio: a range with nothing
   between its ends produces an error rather than a useless file.
 - **Import does not merge.** Refs arrive under `bundle/…` and stay there until
   you do something with them.

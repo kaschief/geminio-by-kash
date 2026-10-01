@@ -5,7 +5,7 @@ import { useSettingsStore } from '../stores/settings'
 import { useUIStore } from '../stores/ui'
 import { useT } from '../i18n'
 import { confirmRemoveRecentRepo, repositoryMenuItems } from '../lib/repositoryMenuItems'
-import gitcitoLaunch from '../assets/gitcito-launch.png'
+import geminioLaunch from '../assets/geminio-launch.png'
 
 export interface LauncherItem {
   name: string
@@ -245,9 +245,9 @@ export function Welcome(): React.JSX.Element {
         transition={{ type: 'spring', stiffness: 260, damping: 24 }}
       >
         <div className="welcome-logo">
-          <img className="welcome-art" src={gitcitoLaunch} alt="" draggable={false} />
+          <img className="welcome-art" src={geminioLaunch} alt="" draggable={false} />
         </div>
-        <h1>Gitcito</h1>
+        <h1>Geminio</h1>
         <p>{t('welcome.tagline')}</p>
         <LauncherPanel
           onOpen={() => void openRepo()}

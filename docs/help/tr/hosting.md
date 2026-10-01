@@ -90,7 +90,7 @@ istendiğinde ya da CI bittiğinde isteğe bağlı masaüstü bildirimleri düş
 ## Token'lar
 
 Birden çok hesap veya kuruluş için profil başına token'lar, işletim sisteminizin
-anahtar zincirinde saklanır. Gitcito ayrıca **git credential helper**'ınızın
+anahtar zincirinde saklanır. Geminio ayrıca **git credential helper**'ınızın
 zaten tuttuğu bilgileri ödünç alabilir; böylece hâlihazırda kimlik
 doğruladığınız bir kuruluş çoğu zaman hiçbir kuruluma ihtiyaç duymaz.
 [Güvenlik ve sırlar](security.md) sayfasına bakın.

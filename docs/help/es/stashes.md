@@ -8,7 +8,7 @@ keywords: stash stashes parcial keep-index apply pop drop aplicar descartar untr
 
 # Stashes
 
-En Gitcito hacer stash no es todo o nada.
+En Geminio hacer stash no es todo o nada.
 
 | Acción | Qué hace |
 |---|---|
@@ -29,7 +29,7 @@ botón *Aplicar n archivos*) restaura solo la selección.
 ## Cuando un stash no aplica
 
 Si aplicar un stash fuese a machacar archivos sin seguimiento, git se planta.
-Gitcito te ofrece sobrescribirlos y volver a intentarlo, en vez de dejarte a ti
+Geminio te ofrece sobrescribirlos y volver a intentarlo, en vez de dejarte a ti
 adivinar el conjuro.
 
 Si el árbol se ha movido demasiado, **stash → rama** recrea la rama desde la que

@@ -2,13 +2,13 @@
 title: שורת הפקודה
 category: כלי מרחב העבודה
 order: 93
-summary: ‏`gitcito .` פותח מאגר — ו-`gitcito doctor` עונה בלי לפתוח דבר.
+summary: ‏`geminio .` פותח מאגר — ו-`geminio doctor` עונה בלי לפתוח דבר.
 keywords: cli שורת הפקודה טרמינל shim path התקנה פתיחה תיקייה מופע יחיד doctor status repos commit-check config editor completions wait core.editor blame show search פעלים קוד יציאה ci hook
 ---
 
 # שורת הפקודה
 
-מהטרמינל נשאלות שתי סוגי שאלות, ו-`gitcito` עונה על שתיהן.
+מהטרמינל נשאלות שתי סוגי שאלות, ו-`geminio` עונה על שתיהן.
 
 הראשונה היא *"תראה לי את זה"* — אתה בתוך עותק מקומי, יש משהו שצריך להסתכל עליו,
 והאפליקציה היא המקום הנכון להסתכל בו. קריאות כאלה פותחות חלון, קרוב ככל האפשר
@@ -19,14 +19,14 @@ keywords: cli שורת הפקודה טרמינל shim path התקנה פתיחה
 לפלט הסטנדרטי ומתפנות מהדרך.
 
 ```sh
-gitcito .                        # פתח את התיקייה הזו
-gitcito blame src/api.ts -l 84   # …על ה-blame של אותה שורה
-gitcito doctor                   # בלי חלון: בודק את המאגר, יוצא עם 1 בכישלון
+geminio .                        # פתח את התיקייה הזו
+geminio blame src/api.ts -l 84   # …על ה-blame של אותה שורה
+geminio doctor                   # בלי חלון: בודק את המאגר, יוצא עם 1 בכישלון
 ```
 
 ## התקנה
 
-לוח הפקודות (<kbd>⌘K</kbd>) ← **התקן את הפקודה 'gitcito' ב-PATH**. ב-macOS נוצר
+לוח הפקודות (<kbd>⌘K</kbd>) ← **התקן את הפקודה 'geminio' ב-PATH**. ב-macOS נוצר
 קישור סימבולי לשים קטן ב-`/usr/local/bin` או ב-`/opt/homebrew/bin`, והרשאות מנהל
 נדרשות רק אם אף אחד מהם אינו פתוח לכתיבה עבורך. בלינוקס הוא נכנס ל-`~/.local/bin`
 שאינו דורש הרשאות כלל. אותה פקודה מסירה אותו. Windows עדיין אינו נתמך.
@@ -34,28 +34,28 @@ gitcito doctor                   # בלי חלון: בודק את המאגר, י
 לאחר מכן, אם תרצה:
 
 ```sh
-gitcito completions zsh >> ~/.zshrc     # או bash, או fish
+geminio completions zsh >> ~/.zshrc     # או bash, או fish
 ```
 
 ## מה אפשר לפתוח
 
 | פקודה | פותחת |
 |-------|-------|
-| `gitcito [נתיב]` | את המאגר (ברירת מחדל: התיקייה הנוכחית) |
-| `gitcito open <שם>` | מאגר לפי **שם הלשונית** — `gitcito open api` |
-| `gitcito diff` | את השינויים שטרם נשמרו |
-| `gitcito graph` | את גרף הקומיטים |
-| `gitcito show <ref>` | קומיט בודד — `HEAD~2`, תג, האש קצר |
-| `gitcito blame <קובץ>` | blame של קובץ; עם `-l 84` היישר לשורה |
-| `gitcito search <שאילתה>` | חיפוש בקוד, כשהשאילתה כבר מוקלדת |
-| `gitcito stack`, `stash`, `reflog`, `conflicts`, `todos`, `chat`, `settings` | את אותה חלונית |
-| `gitcito ci`, `clean`, `bisect`, `absorb`, `snapshots`, `insights`, `terminal` | …וכן הלאה |
+| `geminio [נתיב]` | את המאגר (ברירת מחדל: התיקייה הנוכחית) |
+| `geminio open <שם>` | מאגר לפי **שם הלשונית** — `geminio open api` |
+| `geminio diff` | את השינויים שטרם נשמרו |
+| `geminio graph` | את גרף הקומיטים |
+| `geminio show <ref>` | קומיט בודד — `HEAD~2`, תג, האש קצר |
+| `geminio blame <קובץ>` | blame של קובץ; עם `-l 84` היישר לשורה |
+| `geminio search <שאילתה>` | חיפוש בקוד, כשהשאילתה כבר מוקלדת |
+| `geminio stack`, `stash`, `reflog`, `conflicts`, `todos`, `chat`, `settings` | את אותה חלונית |
+| `geminio ci`, `clean`, `bisect`, `absorb`, `snapshots`, `insights`, `terminal` | …וכן הלאה |
 
-הפקודה `gitcito help verbs` מדפיסה את הרשימה המלאה. שלוש אפשרויות חלות על כולן:
+הפקודה `geminio help verbs` מדפיסה את הרשימה המלאה. שלוש אפשרויות חלות על כולן:
 ‏`-n <שם>` קובע את שם הלשונית המוצג, `-g <קבוצה>` משבץ אותה בלשונית קבוצה (שנוצרת
 לפי הצורך), ו-`-l <n>` בוחר שורה.
 
-Gitcito הוא **מופע יחיד**: הרצת `gitcito` כשהאפליקציה פתוחה מעבירה את הבקשה לאותו
+Geminio הוא **מופע יחיד**: הרצת `geminio` כשהאפליקציה פתוחה מעבירה את הבקשה לאותו
 חלון במקום להפעיל עותק שני. נתיב שכבר פתוח — כלשונית או בתוך קבוצה — **מקבל
 מיקוד**, לא כפילות. תיקייה שאינה מאגר עדיין נפתחת גם היא, ומציעה את מסלול "אתחל
 כאן מאגר".
@@ -64,13 +64,13 @@ Gitcito הוא **מופע יחיד**: הרצת `gitcito` כשהאפליקציה 
 
 אלה מדפיסות ומסתיימות. שום חלון לא נפתח, והאפליקציה אפילו לא צריכה לרוץ.
 
-### `gitcito status`
+### `geminio status`
 
 ענף, מעקב, לפני/אחרי, עץ העבודה, מטמונים — ואם המאגר מספק כזו — [רשימת הבדיקה
-שלפני דחיפה מתוך `.gitcito.json`](repo-config.md). יוצא עם 1 כשיש התנגשויות בעץ
-העבודה, כך ש-`gitcito status || echo חסום` עובד.
+שלפני דחיפה מתוך `.geminio.json`](repo-config.md). יוצא עם 1 כשיש התנגשויות בעץ
+העבודה, כך ש-`geminio status || echo חסום` עובד.
 
-### `gitcito doctor [--fix]`
+### `geminio doctor [--fix]`
 
 מריץ את אותן בדיקות שמריצה חלונית [תצורת המאגר](repo-config.md): גרסת Node,
 תת-מודולים, LFS, ‏`core.hooksPath`, קבצים נדרשים. **יוצא עם 1 אם בדיקה נכשלת**,
@@ -78,7 +78,7 @@ Gitcito הוא **מופע יחיד**: הרצת `gitcito` כשהאפליקציה 
 אצלו רואה אותם:
 
 ```yaml
-- run: gitcito doctor          # ב-CI, לפני כל דבר יקר
+- run: geminio doctor          # ב-CI, לפני כל דבר יקר
 ```
 
 הדגל `--fix` מיישם את התיקונים שהרופא יודע לבצע (אתחול תת-מודולים, `lfs pull`,
@@ -88,54 +88,54 @@ Gitcito הוא **מופע יחיד**: הרצת `gitcito` כשהאפליקציה 
 אזהרות אינן מכשילות את הריצה. אזהרה פירושה שהרופא לא הצליח לקבוע משהו, לא שמשהו
 שגוי; הכשלת בנייה עליהן הייתה הופכת את הקובץ ליקר מדי לאימוץ.
 
-### `gitcito commit-check [קובץ]`
+### `geminio commit-check [קובץ]`
 
 בודק הודעת קומיט. בלי ארגומנט הוא קורא את `.git/COMMIT_EDITMSG`; ‏`-m "…"` בודק
-מחרוזת. הוא יודע מה המאגר הצהיר: scope לא מוכר הוא **שגיאה** כאשר `.gitcito.json`
+מחרוזת. הוא יודע מה המאגר הצהיר: scope לא מוכר הוא **שגיאה** כאשר `.geminio.json`
 מפרט scopes, ורק עצה סגנונית כשלא. חבר אותו להוק:
 
 ```sh
 # .husky/commit-msg
-gitcito commit-check "$1"
+geminio commit-check "$1"
 ```
 
-### `gitcito config init | show | check`
+### `geminio config init | show | check`
 
-הפקודה `init` קוראת את המאגר ומציעה `.gitcito.json` מתוך מה שכבר קיים — `.nvmrc`,
+הפקודה `init` קוראת את המאגר ומציעה `.geminio.json` מתוך מה שכבר קיים — `.nvmrc`,
 ‏`.gitmodules`, ‏`.env.example` בלי `.env`, וה-scopes שההיסטוריה משתמשת בהם.
 ‏`--dry-run` מדפיס במקום לכתוב. ‏`show` מדפיס את הקובץ הנוכחי, ו-`check` מאמת אותו
 ומפרט כל שדה שהיה נזרק.
 
-### `gitcito repos [מסנן]`
+### `geminio repos [מסנן]`
 
-כל מאגר ש-Gitcito מכיר — קודם הלשוניות הפתוחות, אחר כך האחרונים — עם הקבוצה שלו.
+כל מאגר ש-Geminio מכיר — קודם הלשוניות הפתוחות, אחר כך האחרונים — עם הקבוצה שלו.
 ‏`--paths` מדפיס נתיבים חשופים, אחד בכל שורה, לצורך סקריפטים:
 
 ```sh
-cd "$(gitcito repos --paths api | head -1)"
+cd "$(geminio repos --paths api | head -1)"
 ```
 
-## Gitcito כעורך של git
+## Geminio כעורך של git
 
 ```sh
-gitcito editor install
+geminio editor install
 ```
 
-מגדיר את `core.editor` ו-`sequence.editor` ל-`gitcito --wait`. מכאן ואילך
+מגדיר את `core.editor` ו-`sequence.editor` ל-`geminio --wait`. מכאן ואילך
 ‏`git commit` (בלי `-m`), ‏`git commit --amend`, ‏`git tag -a` ו-`git rebase -i`
-פותחים את הקובץ שלהם ב-Gitcito במקום ב-vim, עם מונה תווים ואותן הערות על הודעת
+פותחים את הקובץ שלהם ב-Geminio במקום ב-vim, עם מונה תווים ואותן הערות על הודעת
 הקומיט שמציג המחבר.
 
-![העורך ש-Gitcito פותח כאשר git מבקש אחד](../../screenshots/cli-edit.webp)
+![העורך ש-Geminio פותח כאשר git מבקש אחד](../../screenshots/cli-edit.webp)
 
 מה שחשוב הוא המילה **ממתין**: git תקוע על תיבת הדו-שיח הזו. לכן
 
 - **שמירה והמשך** כותבת את הקובץ בחזרה ו-git ממשיך.
 - **ביטול** כותב קובץ ריק, ו-git קורא זאת כ*נטישה*.
-- סגירת החלון בכל דרך אחרת — Escape, הרקע, יציאה מ-Gitcito — נחשבת ביטול. טרמינל
+- סגירת החלון בכל דרך אחרת — Escape, הרקע, יציאה מ-Geminio — נחשבת ביטול. טרמינל
   שממתין לנצח היה תוצאה גרועה בהרבה מהודעה שצריך להקליד מחדש.
 
-הוסף `--local` כדי להגביל למאגר אחד, ובטל עם `gitcito editor uninstall`.
+הוסף `--local` כדי להגביל למאגר אחד, ובטל עם `geminio editor uninstall`.
 
 ## מה הוא לא יעשה
 

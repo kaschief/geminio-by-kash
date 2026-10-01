@@ -82,7 +82,7 @@ Onay kutusu, depoyu **`git maintenance`** ile kaydeder; bu da işletim
 sisteminizin çalıştırdığı bir zamanlamayla (launchd, systemd veya Görev
 Zamanlayıcı) paketleme ve ön getirme yapar.
 
-Buradaki hiçbir şey Gitcito'ya özgü değildir: aynı zamanlama terminalinize de
+Buradaki hiçbir şey Geminio'ya özgü değildir: aynı zamanlama terminalinize de
 hizmet eder ve `git maintenance unregister` onu her yerden geri alır. Kutunun
 işaretini kaldırmak tam olarak bunu yapar, kayıtlı başka depolar için
 zamanlamayı yerinde bırakır.
@@ -101,7 +101,7 @@ zamanlamayı yerinde bırakır.
   erişilebilir demektir ve gc onu sonsuza dek saklar — bu,
   [bir dosyayı geçmişten kaldırma](history-purge.md) konusudur; farklı ve çok
   daha yıkıcı bir işlem.
-- **Gitcito arkanızdan asla gc çalıştırmaz.** Git'in kendi `gc --auto`'su, her
+- **Geminio arkanızdan asla gc çalıştırmaz.** Git'in kendi `gc --auto`'su, her
   zaman olduğu gibi, çalıştırabilir; biri başarısız olursa `.git/gc.log` içine
   bir not bırakır ve bu panel onu gün yüzüne çıkarır.
 

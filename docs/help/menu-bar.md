@@ -2,7 +2,7 @@
 title: The menu bar
 category: Start here
 order: 5
-summary: What lives in Gitcito's macOS menus, and why Windows and Linux do not have one.
+summary: What lives in Geminio's macOS menus, and why Windows and Linux do not have one.
 keywords: menu bar menubar application menu file edit view window help repository macos native menus about quit
 ---
 
@@ -21,7 +21,7 @@ and Linux users do not have.
 
 | Menu | Holds |
 |---|---|
-| **Gitcito** | About, update check, [Settings](repo-settings.md), the standard hide and quit items |
+| **Geminio** | About, update check, [Settings](repo-settings.md), the standard hide and quit items |
 | **File** | New tab, open or [clone](cloning.md) a repository, open recent, close and reopen tabs |
 | **Edit** | Cut, copy, paste, undo — the text editing your keyboard already does — plus [code search](search.md) |
 | **View** | Command palette, the sidebar and panel toggles, the [terminal](terminal.md), [mission control](mission-control.md), the [vault](vault.md), zoom |
@@ -39,15 +39,15 @@ The keys next to each item are the ones you have actually bound. Rebind
 <kbd>⌘K</kbd> in Settings and the View menu says so.
 
 That works because the menu *displays* those combos without claiming them:
-Gitcito's own keyboard handling stays in charge, which is what lets a shortcut
+Geminio's own keyboard handling stays in charge, which is what lets a shortcut
 behave differently depending on where the caret is. The one thing this cannot
-show is a shortcut Gitcito does not own — <kbd>⌘F</kbd> belongs to whichever
+show is a shortcut Geminio does not own — <kbd>⌘F</kbd> belongs to whichever
 file or diff you are reading, so no menu item claims it.
 
 ## The limits
 
 - **macOS only.** On Windows and Linux the window is frameless — the title bar
-  is drawn by Gitcito, and there is nowhere for a menu bar to live. Those
+  is drawn by Geminio, and there is nowhere for a menu bar to live. Those
   platforms get the same commands through the [command palette](search.md) and
   the [keyboard shortcuts](keyboard.md).
 - **Reload and Developer Tools appear in development builds only.** Reloading

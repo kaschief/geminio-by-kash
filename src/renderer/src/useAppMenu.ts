@@ -19,7 +19,7 @@ import { menuApi } from './infrastructure/api'
 import { runAppCommand } from './appCommands'
 
 // i18n-ignore product name
-const APP_NAME = 'Gitcito'
+const APP_NAME = 'Geminio'
 
 export function useAppMenu(): void {
   const t = useT()

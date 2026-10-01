@@ -2,13 +2,13 @@
 title: Sicurezza e segreti
 category: Sicurezza
 order: 70
-summary: Mascheramento, protezioni, il portachiavi — e cosa Gitcito si rifiuta di fare.
+summary: Mascheramento, protezioni, il portachiavi — e cosa Geminio si rifiuta di fare.
 keywords: sicurezza segreti mascheramento portachiavi keychain safeStorage token branch protetto file grande protezione privacy
 ---
 
 # Sicurezza e segreti
 
-Gitcito **non ha backend**. Le uniche chiamate di rete vanno al tuo host Git e,
+Geminio **non ha backend**. Le uniche chiamate di rete vanno al tuo host Git e,
 se lo attivi, al tuo provider AI.
 
 ![Le impostazioni di sicurezza](../../screenshots/settings-security.webp)
@@ -46,7 +46,7 @@ del tuo sistema operativo (`safeStorage` di Electron), mai con una chiave dentro
 il file delle impostazioni.
 
 **Niente tocca il portachiavi finché non lo dici tu.** Prima ancora che possa
-comparire la finestra di autorizzazione del sistema, Gitcito spiega cosa sta per
+comparire la finestra di autorizzazione del sistema, Geminio spiega cosa sta per
 essere conservato, cosa non può fare (un'applicazione rilegge solo ed
 esclusivamente la voce che ha creato lei — le tue altre password sono
 irraggiungibili) e che dire di no va benissimo: in quel caso i token vivono in

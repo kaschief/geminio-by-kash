@@ -1,5 +1,5 @@
 /**
- * Which repositories `gitcito repos` and `gitcito open <name>` can see.
+ * Which repositories `geminio repos` and `geminio open <name>` can see.
  *
  * The headless CLI cannot ask the app — it may not even be running — so it
  * reads the settings file the app writes. That makes this a *reader of someone
@@ -55,7 +55,7 @@ export function matchesRepo(repo: KnownRepo, needle: string): boolean {
   return repo.name.toLowerCase().includes(n) || repo.path.toLowerCase().includes(n)
 }
 
-/** What `gitcito open <name>` resolves to: an exact name wins, otherwise the
+/** What `geminio open <name>` resolves to: an exact name wins, otherwise the
  *  first substring match, so the result does not depend on how much of the name
  *  was typed. Null when nothing matches. */
 export function resolveRepo(repos: KnownRepo[], needle: string): KnownRepo | null {

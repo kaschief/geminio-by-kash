@@ -119,14 +119,14 @@ describe('stacked branches (stacked-branches playground)', () => {
 })
 
 describe('remote branch worktree checkout', () => {
-  const root = mkdtempSync(join(tmpdir(), 'gitcito-remote-worktree-'))
+  const root = mkdtempSync(join(tmpdir(), 'geminio-remote-worktree-'))
   const repo = join(root, 'repo')
   const worktree = join(root, 'worktree')
 
   beforeAll(() => {
     execFileSync('git', ['init', '-q', '-b', 'main', repo])
-    execFileSync('git', ['-C', repo, 'config', 'user.name', 'Gitcito Test'])
-    execFileSync('git', ['-C', repo, 'config', 'user.email', 'gitcito@example.com'])
+    execFileSync('git', ['-C', repo, 'config', 'user.name', 'Geminio Test'])
+    execFileSync('git', ['-C', repo, 'config', 'user.email', 'geminio@example.com'])
     writeFileSync(join(repo, 'state.txt'), 'main\n')
     execFileSync('git', ['-C', repo, 'add', 'state.txt'])
     execFileSync('git', ['-C', repo, 'commit', '-qm', 'main'])
@@ -380,7 +380,7 @@ describe('stacked-PR autopilot plumbing (stacked-branches playground)', () => {
 
   it('pushes a non-current stack level to a remote without checking it out', async () => {
     const R = cloneFixture('stacked-branches') // checked out on feature/ui
-    const bare = join(mkdtempSync(join(tmpdir(), 'gitcito-stack-origin-')), 'origin.git')
+    const bare = join(mkdtempSync(join(tmpdir(), 'geminio-stack-origin-')), 'origin.git')
     execFileSync('git', ['init', '-q', '--bare', bare])
     execFileSync('git', ['-C', R, 'remote', 'add', 'origin', bare])
     try {
@@ -582,7 +582,7 @@ describe('deleteRemoteBranch (stale tracking ref)', () => {
   // straight from the bare repo — simulating e.g. Dependabot removing its branch
   // on GitHub after merging. The local remote-tracking ref survives until a
   // pruning fetch, so the branch still shows up in the UI. Deleting it from
-  // gitcito must NOT fail with "remote ref does not exist"; it should just prune
+  // geminio must NOT fail with "remote ref does not exist"; it should just prune
   // the stale tracking ref so the branch disappears.
   const git = (cwd: string, ...args: string[]): string =>
     execFileSync('git', ['-C', cwd, ...args], { stdio: ['ignore', 'pipe', 'ignore'] })
@@ -590,11 +590,11 @@ describe('deleteRemoteBranch (stale tracking ref)', () => {
       .trim()
 
   it('prunes the stale tracking ref instead of erroring when the remote ref is gone', async () => {
-    const remote = mkdtempSync(join(tmpdir(), 'gitcito-remote-'))
-    const work = mkdtempSync(join(tmpdir(), 'gitcito-work-'))
+    const remote = mkdtempSync(join(tmpdir(), 'geminio-remote-'))
+    const work = mkdtempSync(join(tmpdir(), 'geminio-work-'))
     try {
       execFileSync('git', ['init', '--bare', remote], { stdio: 'ignore' })
-      execFileSync('git', ['init', work], { stdio: 'ignore' })
+      execFileSync('git', ['init', '-b', 'main', work], { stdio: 'ignore' })
       git(work, 'config', 'user.email', 'test@example.com')
       git(work, 'config', 'user.name', 'Test')
       git(work, 'remote', 'add', 'origin', remote)
@@ -614,7 +614,7 @@ describe('deleteRemoteBranch (stale tracking ref)', () => {
         stdio: 'ignore'
       })
 
-      // Deleting from gitcito must succeed and drop the stale tracking ref.
+      // Deleting from geminio must succeed and drop the stale tracking ref.
       await expect(gitService.deleteRemoteBranch(work, 'origin', 'gone-branch')).resolves.toBeUndefined()
 
       const after = await gitService.branches(work)
@@ -957,7 +957,7 @@ describe('absorb (absorb playground)', () => {
     // Publish everything: now there is nothing left that may be rewritten.
     // Push to a throwaway bare repo — the fixture's own origin is shared with
     // the playground, and writing to it would corrupt the next test run.
-    const bare = mkdtempSync(join(tmpdir(), 'gitcito-absorb-origin-'))
+    const bare = mkdtempSync(join(tmpdir(), 'geminio-absorb-origin-'))
     execFileSync('git', ['init', '-q', '--bare', bare])
     execFileSync('git', ['-C', R, 'remote', 'set-url', 'origin', bare])
     execFileSync('git', ['-C', R, 'push', '-q', 'origin', 'HEAD:main'])
@@ -1187,7 +1187,7 @@ describe('discoverLaunch — compounds & serverReadyAction (launch-configs playg
     const groups = await discoverLaunch(repoPath('launch-configs'))
     const root = groups.find((g) => g.isRoot)!
     const who = root.inputs.find((i) => i.id === 'who')
-    expect(who).toMatchObject({ type: 'promptString', default: 'gitcito' })
+    expect(who).toMatchObject({ type: 'promptString', default: 'geminio' })
     const greeting = root.inputs.find((i) => i.id === 'greeting')
     expect(greeting).toMatchObject({ type: 'pickString', default: 'hola' })
     expect(greeting!.options).toEqual(['hola', 'hello', 'bonjour', 'ciao'])

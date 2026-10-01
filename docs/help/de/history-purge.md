@@ -60,7 +60,7 @@ ein fehlendes Verzeichnispräfix, keine Abwesenheit.
 
 ## Was das Umschreiben tatsächlich tut
 
-Gitcito kopiert jeden Branch und jeden Tag nach
+Geminio kopiert jeden Branch und jeden Tag nach
 `refs/gitcito/pre-purge/<timestamp>/…` und führt dann aus:
 
 ```sh
@@ -114,9 +114,9 @@ nicht findet.
 - **Es schreibt nach Pfad um, nicht nach Inhalt.** Ein Secret zu entfernen, das
   in eine Quelldatei hineinkopiert wurde statt in einer eigenen Datei zu liegen,
   braucht einen Content-Filter — das ist das Revier von
-  `git filter-repo --replace-text`, und Gitcito kapselt es nicht.
+  `git filter-repo --replace-text`, und Geminio kapselt es nicht.
 - **`filter-branch` ist langsam bei sehr großen Historien.** Es ist das, was
-  überall mit git mitgeliefert wird, und deshalb das, was Gitcito verwendet. Bei
+  überall mit git mitgeliefert wird, und deshalb das, was Geminio verwendet. Bei
   einem Repository mit Zehntausenden Commits ist `git filter-repo` im
   [Terminal](terminal.md) das schnellere Werkzeug.
 - **Die Clones anderer Leute sind nicht dein Repository.** Sie behalten die alte

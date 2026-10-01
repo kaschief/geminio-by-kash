@@ -26,7 +26,7 @@ Pointez-le vers un dépôt et il écrit un court wiki expliquant la base de code
 
 ## Les pages rédigées
 
-Gitcito planifie une poignée de pages à partir des fichiers que le dépôt suit —
+Geminio planifie une poignée de pages à partir des fichiers que le dépôt suit —
 la documentation et les manifestes d'abord, puis ce qui bouge le plus — et écrit
 chaque page à partir des fichiers qu'elle couvre.
 

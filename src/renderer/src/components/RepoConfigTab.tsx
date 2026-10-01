@@ -137,7 +137,7 @@ function DoctorRow({ check, repoPath }: { check: DoctorCheck; repoPath: string }
 }
 
 /**
- * The repository's own `.gitcito.json`, edited as a form.
+ * The repository's own `.geminio.json`, edited as a form.
  *
  * Editing it here rather than in a text editor is the point: the file is a
  * schema most people will meet once, and a form is what makes its fields
@@ -212,7 +212,7 @@ export function RepoConfigTab({ repoPath }: { repoPath: string }): React.JSX.Ele
   const preview = ticketSegments(sample, links.filter((l) => l.match && l.url))
 
   return (
-    <div className="rc">
+    <div className="rc" data-unsaved-changes={dirty || saving}>
       <span className="settings-hint">{interp(t('repoConfig.intro'), { file: REPO_CONFIG_FILE })}</span>
 
       {stored && !stored.exists && (

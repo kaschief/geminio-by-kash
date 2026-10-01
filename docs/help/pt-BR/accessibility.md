@@ -8,7 +8,7 @@ keywords: acessibilidade accessibility a11y leitor de tela VoiceOver NVDA navega
 
 # Acessibilidade
 
-O Gitcito quer ser operável sem mouse e legível para um leitor de tela. Esta
+O Geminio quer ser operável sem mouse e legível para um leitor de tela. Esta
 página diz o que isso significa em concreto — e onde estão os limites.
 
 ## Teclado

@@ -8,7 +8,7 @@ keywords: motyw motywy ciemny jasny wygląd kolory rozmiar czcionki paleta grafu
 
 # Motywy i wygląd
 
-Wbudowane motywy — Gitcito, Nord, Dracula, Solarized, GitHub,
+Wbudowane motywy — Geminio, Nord, Dracula, Solarized, GitHub,
 Monokai, Midnight, Contrast i Daltonic — każdy w wariancie jasnym i ciemnym.
 
 ![Przełączenie z jasnego na ciemny](../../screenshots/clip-themes.webp)

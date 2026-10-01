@@ -28,6 +28,7 @@ import { registerSecureShareHandlers } from './secureShare'
 import { registerInfoHandlers } from './info'
 import { registerUpdaterHandlers, checkForUpdatesOnLaunch } from './updater'
 import { fixPath } from './fix-path'
+import { migrateBrandData } from './branding'
 import { registerCliHandlers, trackWait, releaseAllWaits } from './cli'
 import { registerEditorHandlers } from './editor'
 import { registerMenuHandlers } from './menu'
@@ -54,7 +55,7 @@ function sendOpenPath(win: BrowserWindow, payload: CliOpenPayload): void {
   else deliver()
 }
 
-/** `gitcito --wait <file>` — git is blocked on a shell process polling a
+/** `geminio --wait <file>` — git is blocked on a shell process polling a
  *  sentinel, so the file's contents go to the renderer and the sentinel is
  *  recorded here. Reading fails? Release immediately: a hung `git commit` is a
  *  far worse outcome than an editor that refused to open. */
@@ -69,16 +70,24 @@ async function deliverEdit(win: BrowserWindow, file: string, sentinel: string): 
 }
 
 // Dev builds get their own userData dir. The single-instance lock below lives
-// in userData, and dev's app name ("gitcito", from package.json) resolves to
-// the same dir as the packaged app ("Gitcito") on case-insensitive filesystems
+// in userData, and dev's app name ("geminio", from package.json) resolves to
+// the same dir as the packaged app ("Geminio") on case-insensitive filesystems
 // — so `electron-vite dev` would silently quit whenever the installed app is
 // running. A separate dir gives dev its own lock and keeps dev runs from
 // mutating real settings/vault data.
 // An explicit --user-data-dir (screenshot harness, scripted runs) must win:
 // Electron has already applied it, and redirecting to the dev dir here would
 // replace the caller's seeded throwaway settings with a copy of prod data.
+if (!app.commandLine.hasSwitch('user-data-dir')) {
+  const appData = app.getPath('appData')
+  const target = join(appData, app.isPackaged ? 'Geminio' : 'geminio-dev')
+  migrateBrandData(target, app.isPackaged
+    ? [join(appData, 'Gitcito')]
+    : [join(appData, 'gitcito-dev'), join(appData, 'Geminio'), join(appData, 'Gitcito')])
+  app.setPath('userData', target)
+}
 if (!app.isPackaged && !app.commandLine.hasSwitch('user-data-dir')) {
-  const devDir = join(app.getPath('appData'), 'gitcito-dev')
+  const devDir = join(app.getPath('appData'), 'geminio-dev')
   app.setPath('userData', devDir)
   // First dev run: seed from the installed app's data so dev mirrors the real
   // setup (workspaces, settings, repo info). Only when dev has no settings yet
@@ -86,7 +95,7 @@ if (!app.isPackaged && !app.commandLine.hasSwitch('user-data-dir')) {
   // which is often the thing under test. Re-seed by deleting the dev dir.
   // The vault copy is best-effort: if dev's keychain entry differs from prod's,
   // vault load() just falls back to an empty vault.
-  const prodDir = join(app.getPath('appData'), 'Gitcito')
+  const prodDir = join(app.getPath('appData'), 'Geminio')
   if (!existsSync(join(devDir, 'gitcito-settings.json')) && existsSync(prodDir)) {
     mkdirSync(devDir, { recursive: true })
     for (const f of readdirSync(prodDir)) {
@@ -95,7 +104,7 @@ if (!app.isPackaged && !app.commandLine.hasSwitch('user-data-dir')) {
   }
 }
 
-// Only one Gitcito instance should run — `gitcito <dir>` from a second
+// Only one Geminio instance should run — `geminio <dir>` from a second
 // terminal should hand its path to the existing window rather than spawn a
 // new app instance.
 const gotSingleInstanceLock = app.requestSingleInstanceLock()
@@ -177,7 +186,7 @@ function createWindow(): void {
 }
 
 app.whenReady().then(() => {
-  app.setName(app.isPackaged ? 'Gitcito' : 'Gitcito Dev')
+  app.setName(app.isPackaged ? 'Geminio' : 'Geminio Dev')
 
   // The embedded DevTools panel stays on loopback: a link inside it opens in
   // the real browser, and a redirect off the machine is refused outright.
@@ -281,7 +290,7 @@ app.whenReady().then(() => {
   ipcMain.handle('app:releases', async (): Promise<AppRelease[]> => {
     try {
       const res = await fetch('https://api.github.com/repos/MyAppDesk/gitcito/releases?per_page=20', {
-        headers: { Accept: 'application/vnd.github+json', 'User-Agent': 'gitcito' }
+        headers: { Accept: 'application/vnd.github+json', 'User-Agent': 'geminio' }
       })
       if (!res.ok) return []
       const json = (await res.json()) as Array<{
@@ -439,7 +448,7 @@ app.whenReady().then(() => {
   createWindow()
   checkForUpdatesOnLaunch()
 
-  // Cold launch via `gitcito <dir>` (open -a Gitcito --args --open <path> ...).
+  // Cold launch via `geminio <dir>` (open -a Geminio --args --open <path> ...).
   // process.argv here is the *main* process's own argv — not visible to the
   // preload/renderer processes, which only see whatever we forward explicitly.
   const openPayload = parseCliOpenArgs(process.argv)

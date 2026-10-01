@@ -21,7 +21,7 @@ As tarefas são essa lista, presa ao repositório em que você está.
 ## Onde elas ficam
 
 Em lugar nenhum do seu repositório. Uma tarefa é guardada com as configurações
-do próprio Gitcito, indexada pelo caminho do repositório — e disso vêm três
+do próprio Geminio, indexada pelo caminho do repositório — e disso vêm três
 consequências que vale conhecer:
 
 - **Nada é commitado.** Nenhum arquivo aparece no `git status`, então uma tarefa

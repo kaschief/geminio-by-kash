@@ -11,7 +11,7 @@ keywords: radar conflitti conflict merge anteprima scontro rischio branch merge-
 Scoprire che un branch va in conflitto facendone il merge è un modo costoso di
 porre una domanda. Il radar ti risponde prima.
 
-Gitcito fonde ogni branch in una base a tua scelta **dentro il database degli
+Geminio fonde ogni branch in una base a tua scelta **dentro il database degli
 oggetti** (`git merge-tree --write-tree`). Nessun checkout, nessuna modifica
 all'indice, nessuna modifica all'albero di lavoro, niente da ripulire dopo. Il
 tuo lavoro non committato può restare esattamente dov'è mentre la scansione gira.

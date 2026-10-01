@@ -19,7 +19,7 @@ een eigen losgekoppelde HEAD om in het gareel te houden.
 
 `⌘K` → **Subtrees**.
 
-![Een opgenomen map, in de geschiedenis gevonden, met de bron die Gitcito ervoor onthoudt](../../screenshots/subtree.webp)
+![Een opgenomen map, in de geschiedenis gevonden, met de bron die Geminio ervoor onthoudt](../../screenshots/subtree.webp)
 
 ## De adder onder het gras die niemand noemt
 
@@ -28,12 +28,12 @@ een eigen losgekoppelde HEAD om in het gareel te houden.
 `git-subtree-dir:`-trailer op de commit die de import deed.
 
 Een repository kan dus een subtree bevatten en je geen enkele manier geven om uit
-te vinden waar hij vandaan kwam. Gitcito doet wat het kan:
+te vinden waar hij vandaan kwam. Geminio doet wat het kan:
 
 - De lijst wordt uit de geschiedenis ontdekt, door die trailers te lezen. Elke
   subtree die door wie dan ook, met welk gereedschap dan ook, is toegevoegd komt
   bovendrijven.
-- De **bronrepository en ref** worden door Gitcito onthouden, in de git-config van
+- De **bronrepository en ref** worden door Geminio onthouden, in de git-config van
   deze repository. Een subtree die uit de geschiedenis ontdekt is begint met die
   velden leeg — vul ze één keer in en vanaf dan werken pullen en pushen.
 
@@ -70,14 +70,14 @@ op een subtree te zijn.
 
 - **Pushen is traag.** Het berekent de geschiedenis van de map elke keer opnieuw
   vanaf nul. Bij een grote repository is dat seconden tot minuten, niet meteen,
-  en Gitcito kan er alleen op wachten.
+  en Geminio kan er alleen op wachten.
 - **Een pull is een merge**, dus hij kan conflicteren als elke merge — je belandt
   in [de oplosser](conflicts.md).
 - **`git subtree` is een contrib-script**, geen ingebouwd git-commando. Een
-  uitgeklede git-installatie kan het missen; Gitcito zegt dat ronduit in plaats
+  uitgeklede git-installatie kan het missen; Geminio zegt dat ronduit in plaats
   van "'subtree' is not a git command" door te geven.
 - **Gesquashte geschiedenis kan later niet ontsquasht worden.** De commits zijn
   nooit geïmporteerd.
-- Gitcito zet een submodule niet om in een subtree, en ook niet andersom.
+- Geminio zet een submodule niet om in een subtree, en ook niet andersom.
 
 Zie ook: [Mergen & rebasen](merging.md) · [Plumbing met een UI](lfs-sparse.md)

@@ -23,7 +23,7 @@ glisser.
 | **drop** | Jeter le commit |
 
 Faites glisser les lignes pour réordonner. L'éditeur ne s'ouvre jamais dans un
-terminal — Gitcito écrit la todo pour vous.
+terminal — Geminio écrit la todo pour vous.
 
 ## Autosquash, en un clic
 

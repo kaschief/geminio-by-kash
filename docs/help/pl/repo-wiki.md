@@ -26,7 +26,7 @@ Wskaż mu repozytorium, a napisze krótkie wiki wyjaśniające bazę kodu.
 
 ## Pisane strony
 
-Gitcito planuje kilka stron na podstawie plików, które repozytorium śledzi —
+Geminio planuje kilka stron na podstawie plików, które repozytorium śledzi —
 najpierw dokumentacja i manifesty, potem to, co najbardziej się kręci — i pisze
 każdą stronę z plików, które ona obejmuje.
 

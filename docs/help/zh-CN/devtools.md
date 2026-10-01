@@ -2,17 +2,17 @@
 title: Flutter DevTools
 category: 工作区工具
 order: 93
-summary: 网络视图、时间线、Inspector 和内存分析器，就在 Gitcito 的一个标签页里。
+summary: 网络视图、时间线、Inspector 和内存分析器，就在 Geminio 的一个标签页里。
 keywords: devtools flutter dart 网络 network 时间线 inspector 内存 分析器 webview 内嵌 面板 vm service
 ---
 
 # Flutter DevTools
 
 DevTools 里已经有网络视图、时间线、widget inspector 和内存分析器，而且它本身就是一个
-由你自己机器提供的 Flutter web 应用。所以 Gitcito 一样都不重写，也不自己去跟 Dart VM
+由你自己机器提供的 Flutter web 应用。所以 Geminio 一样都不重写，也不自己去跟 Dart VM
 Service 对话：它只是发现地址并把它嵌进来。
 
-![在 Gitcito 标签页里打开的 DevTools](../../screenshots/devtools.webp)
+![在 Geminio 标签页里打开的 DevTools](../../screenshots/devtools.webp)
 
 VM service 一起来，`flutter run` 就会打印这一行：
 
@@ -58,13 +58,13 @@ http://127.0.0.1:9100?uri=http://127.0.0.1:53412/uJ8k=/
 - **只允许 loopback。** `127.0.0.1`、`localhost`、`::1`。用别的地址挂载会被拒绝，
   跳转到别的地址同样会被拒绝。
 - **没有 preload，没有 node integration，开启上下文隔离。** 这个页面没有任何通往
-  Gitcito 的桥。
+  Geminio 的桥。
 - **链接在你真正的浏览器里打开**，用普通窗口，而不是在面板里。
 
 ## 限制
 
 - **它就是 DevTools，不是我们的东西。** 那个版本能做什么，面板就能做什么；它做不到
-  的，我们也做不到。没有什么 Gitcito 风味的网络视图。
+  的，我们也做不到。没有什么 Geminio 风味的网络视图。
 - **只有 Flutter 会这样公布自己。** 普通的 Dart 程序会打印 VM service 的 URL，但不会
   打印 DevTools 地址，所以按钮不会出现。
 - **面板空白说明应用已经停了。** DevTools 是*正在运行的应用*提供的；应用退出，地址

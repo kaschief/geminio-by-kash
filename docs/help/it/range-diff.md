@@ -12,7 +12,7 @@ Avevi rivisto un branch. Qualcuno gli ha fatto il rebase e un force push. Adesso
 un diff normale non vale niente: dopo un rebase ogni commit è un commit nuovo,
 quindi sembra tutto nuovo.
 
-`git range-diff` accoppia le due versioni commit per commit, e Gitcito legge le
+`git range-diff` accoppia le due versioni commit per commit, e Geminio legge le
 vecchie posizioni direttamente dal **reflog** — quindi non serviva registrare
 niente in anticipo perché tutto questo funzionasse.
 

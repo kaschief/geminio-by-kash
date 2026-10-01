@@ -73,7 +73,7 @@ Clicar numa linha abre o arquivo naquela linha.
 ## O que ele não faz
 
 - **Ele lê, nunca escreve.** Não existe "marcar como feito": fechar um TODO é
-  apagar a linha e commitar isso. Para uma lista que o Gitcito guarda para você,
+  apagar a linha e commitar isso. Para uma lista que o Geminio guarda para você,
   veja [todos](todos.md), que é outra coisa: notas privadas que vivem no app, não
   no código.
 - **Arquivos ignorados são pulados**, junto com `node_modules`, digam o que

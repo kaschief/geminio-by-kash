@@ -31,8 +31,8 @@ export function LanguagePicker({
     const onDown = (e: MouseEvent): void => {
       if (!rootRef.current?.contains(e.target as Node)) setOpen(false)
     }
-    document.addEventListener('mousedown', onDown)
-    return () => document.removeEventListener('mousedown', onDown)
+    document.addEventListener('pointerdown', onDown, true)
+    return () => document.removeEventListener('pointerdown', onDown, true)
   }, [open])
 
   // Open on the active language rather than the top of a 16-row list.

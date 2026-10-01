@@ -28,14 +28,14 @@ Editor und Entfernen. **Repository öffnen…** ganz unten öffnet den Launcher.
 
 | Aktion | Wirkung |
 |---|---|
-| **Alias erstellen…** / **Alias ändern…** | Nur ein Anzeigename. Gitcito benennt den Ordner auf der Platte nie um und verschiebt ihn nie. Derselbe Alias folgt dem Repository über Tabs, Gruppen und Workspaces hinweg. |
+| **Alias erstellen…** / **Alias ändern…** | Nur ein Anzeigename. Geminio benennt den Ordner auf der Platte nie um und verschiebt ihn nie. Derselbe Alias folgt dem Repository über Tabs, Gruppen und Workspaces hinweg. |
 | **Alias entfernen** | Erscheint, wenn ein Alias existiert. Stellt den Ordnernamen wieder her. |
 | **Worktrees anzeigen** | Fokussiert dieses Repository und öffnet den Worktree-Abschnitt der Seitenleiste. |
 | **Neuer Worktree…** | Derselbe Dialog zum Anlegen eines Worktrees wie von einem Branch aus. Deaktiviert, solange der Pfad fehlt oder ein Merge/Rebase/Cherry-Pick/Revert läuft. |
 | **Repository-Namen kopieren** | Kopiert den kanonischen Ordnernamen, nicht den Alias. |
 | **Repository-Pfad kopieren** | Kopiert den absoluten Pfad. |
 | **Auf GitHub anzeigen** | Origin, wenn es github.com ist, sonst das erste parsebare GitHub-Remote. Deaktiviert, wenn sich keines ableiten lässt. |
-| **Im Terminal öffnen** | Öffnet Gitcitos Terminal mit diesem Repository als Arbeitsverzeichnis. |
+| **Im Terminal öffnen** | Öffnet Geminios Terminal mit diesem Repository als Arbeitsverzeichnis. |
 | **Im Finder / Explorer anzeigen** | Hebt den Repository-Ordner im Dateimanager der Plattform hervor. |
 | **Im externen Editor öffnen** | Der in den Einstellungen konfigurierte Editor. Sichtbar, aber deaktiviert, bis einer gesetzt ist. |
 | **Entfernen…** | Schließt den Tab oder wirft den Chip aus der Gruppe. Nutzt dieselbe Warnung vor nicht committeter Arbeit wie der **×**-Button. Es löscht nie Dateien von der Platte. |

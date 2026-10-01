@@ -1,12 +1,12 @@
 ---
-title: Regras do repositório (.gitcito.json)
+title: Regras do repositório (.geminio.json)
 category: Ferramentas de workspace
 order: 98
 summary: As regras da casa que viajam com o repositório — branches protegidos, escopos de commit, o que um clone precisa e uma lista antes do push.
-keywords: gitcito.json configuração do repositório regras doctor requisitos branches protegidos escopos scopes trailers ticket links do rastreador checklist onboarding hooksPath node submódulos lfs env example
+keywords: geminio.json configuração do repositório regras doctor requisitos branches protegidos escopos scopes trailers ticket links do rastreador checklist onboarding hooksPath node submódulos lfs env example
 ---
 
-# Regras do repositório (`.gitcito.json`)
+# Regras do repositório (`.geminio.json`)
 
 Todo projeto carrega regras que ninguém deduz lendo o código. *Nunca faça push
 direto para `release/*`.* *Os escopos de commit são `api`, `web` e `infra`, e
@@ -15,7 +15,7 @@ mais nenhum.* *Você precisa de Node 20, dos submódulos inicializados e de um
 moram num README que ninguém relê, numa falha de CI ou na cabeça de quem está
 aqui há mais tempo.
 
-`.gitcito.json` é onde o repositório as escreve para que a ferramenta possa agir
+`.geminio.json` é onde o repositório as escreve para que a ferramenta possa agir
 sobre elas. Ele fica na raiz do repositório, é versionado como qualquer outro
 arquivo e por isso viaja com o clone: quem abre o projeto recebe as mesmas
 regras, e quem chegou agora as recebe no primeiro dia, não no primeiro push
@@ -40,7 +40,7 @@ Se o repositório não tem nenhum, **Ler o repositório** propõe um a partir do
 já existe: um `.nvmrc` ou `engines.node`, um `.gitmodules`, `filter=lfs` no
 `.gitattributes`, um `.env.example` sem `.env` ao lado, os branches que você já
 protege localmente e os escopos que os últimos 500 assuntos de commit vêm
-usando. Nada é escrito até você salvar. No terminal, `gitcito config init` faz o
+usando. Nada é escrito até você salvar. No terminal, `geminio config init` faz o
 mesmo (veja [a linha de comando](cli.md)).
 
 ## O que o arquivo pode dizer
@@ -77,7 +77,7 @@ mesmo (veja [a linha de comando](cli.md)).
 | `version` | Precisa ser `1`. Um arquivo de um esquema mais novo é ignorado por inteiro, em vez de adivinhado. |
 | `protect` | Nomes de branch, com `*` casando qualquer texto. São **somados** aos branches que você protege localmente — veja [branches protegidos](repo-settings.md). |
 | `links.tickets` | Uma expressão regular e um modelo de URL. `$0` é a correspondência inteira, `$1`…`$9` seus grupos. Correspondências em assuntos e corpos de commit viram links. |
-| `commit.scopes` | Os escopos que o compositor oferece, em vez de um campo livre. Declará-los também transforma um escopo desconhecido de conselho de estilo em erro no `gitcito commit-check`. |
+| `commit.scopes` | Os escopos que o compositor oferece, em vez de um campo livre. Declará-los também transforma um escopo desconhecido de conselho de estilo em erro no `geminio commit-check`. |
 | `commit.ticketFromBranch` | Preenche a chave do ticket a partir do nome do branch (`feature/ABC-123-coisa` → `ABC-123`) — mas só num compositor vazio, nunca por cima do que você está digitando. |
 | `commit.trailers` | Linhas anexadas ao corpo do commit. `{ticket}` e `{branch}` são preenchidos; uma linha cujo marcador não tem o que preencher é descartada em vez de escrita pela metade. |
 | `requires.*` | O que um clone funcional precisa. Cada entrada vira uma linha do doctor, abaixo. |
@@ -85,7 +85,7 @@ mesmo (veja [a linha de comando](cli.md)).
 
 ## O doctor
 
-`requires` é a parte que responde a *"clonei e não roda"*. O Gitcito verifica ao
+`requires` é a parte que responde a *"clonei e não roda"*. O Geminio verifica ao
 abrir o repositório e mostra um chip de estetoscópio na barra de status quando
 algo está fora do lugar. Clicar no chip abre a aba Config nas linhas do doctor;
 **Verificar de novo** roda tudo outra vez.
@@ -101,7 +101,7 @@ algo está fora do lugar. Clicar no chip abre a aba Config nas linhas do doctor;
 Dois limites deliberados. Um **aviso** nunca significa "quebrado" — significa que
 o doctor não conseguiu determinar algo (uma especificação de Node ilegível passa
 em vez de inventar uma falha sobre a qual você não pode agir), e avisos não
-reprovam o `gitcito doctor` na CI. E um reparo nunca é algo que o arquivo
+reprovam o `geminio doctor` na CI. E um reparo nunca é algo que o arquivo
 forneceu: o conjunto acima é o conjunto inteiro, fechado em tempo de compilação.
 A configuração entrega um valor — um caminho para copiar, um valor para
 `core.hooksPath` — e nunca um comando.
@@ -117,7 +117,7 @@ lista em vez de um campo livre — a diferença entre `feat(renderer)` e
 de uma mensagem, e `links.tickets` devolve as chaves como links onde quer que um
 commit seja exibido.
 
-As mesmas regras valem fora da janela: `gitcito commit-check` lê este arquivo,
+As mesmas regras valem fora da janela: `geminio commit-check` lê este arquivo,
 então um hook `commit-msg` e a CI cobram exatamente o que o compositor sugere.
 Veja [a linha de comando](cli.md) e [commits](committing.md).
 
@@ -125,7 +125,7 @@ Veja [a linha de comando](cli.md) e [commits](committing.md).
 
 `checklist.push` aparece como uma confirmação antes do primeiro push da sessão,
 uma linha por item. É o lugar para o que é de fato um julgamento humano — *alguém
-avisou o suporte?* — porque o Gitcito **nunca verifica isso por você**. São
+avisou o suporte?* — porque o Geminio **nunca verifica isso por você**. São
 lembretes, não travas: leia e faça push, ou cancele. Mostrado uma vez por
 repositório por sessão, porque um diálogo em todo push é um diálogo que ninguém
 lê.
@@ -151,7 +151,7 @@ commit:
   num painel.
 
 Um campo ruim é descartado, não fatal. O resto do arquivo continua valendo, e o
-que foi descartado aparece em **Ignorado pelo Gitcito** na aba Config, com o
+que foi descartado aparece em **Ignorado pelo Geminio** na aba Config, com o
 motivo. A única exceção é JSON inválido ou uma `version` desconhecida, onde não
 há o que salvar.
 
@@ -162,7 +162,7 @@ há o que salvar.
 - **Sem regras por branch ou por pessoa.** Um arquivo, um conjunto de regras.
 - **Não substitui a CI.** A lista é texto; o doctor verifica o ambiente, não o
   seu trabalho.
-- **Não consegue enfraquecer nada.** Toda proteção do Gitcito continua sendo sua.
+- **Não consegue enfraquecer nada.** Toda proteção do Geminio continua sendo sua.
 
 **Veja também:** [Configurações por repositório](repo-settings.md) ·
 [A linha de comando](cli.md) · [Commits](committing.md) ·

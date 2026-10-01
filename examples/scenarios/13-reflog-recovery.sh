@@ -1,7 +1,7 @@
 # shellcheck shell=bash disable=SC2154
 # 13. reflog-recovery — dangling commits left behind by a deleted branch, an amend, and a
 # hard reset. None are reachable from any ref, but all are recoverable via reflog / fsck.
-# RECOVERY.md (committed early) explains how to get each one back inside Gitcito.
+# RECOVERY.md (committed early) explains how to get each one back inside Geminio.
 R="$ROOT/reflog-recovery"
 new_repo "$R"
 
@@ -9,7 +9,7 @@ cat > "$R/RECOVERY.md" <<'EOF'
 # Lost & Found
 
 Three commits were "lost" here — none are on any branch or tag, but git keeps
-them until garbage collection. Recover them in Gitcito (or the CLI):
+them until garbage collection. Recover them in Geminio (or the CLI):
 
 1. **Deleted branch `experiment`** — two commits ("spike: parser", "spike: tokenizer").
    `git reflog`  → find the tip → `git branch experiment <sha>`

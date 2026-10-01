@@ -22,7 +22,7 @@ Dit is de knop "ik heb net de verkeerde branch gereset".
 
 ## WIP-momentopnamen
 
-Niet-gecommit werk is het enige dat de reflog niet kan redden, dus maakt Gitcito
+Niet-gecommit werk is het enige dat de reflog niet kan redden, dus maakt Geminio
 er momentopnamen van: de **hele werkboom — gewijzigde, gestagede en niet-getrackte
 bestanden** — gecommit via een wegwerp-index en vastgezet onder
 `refs/gitcito/wip`. Je echte index en je stashlijst blijven allebei onaangeroerd.
@@ -58,7 +58,7 @@ blijven bewaard.
 ## Begeleide bisect
 
 Markeer commits als goed en slecht, kijk hoe het bereik smaller wordt, en land op
-de eerste slechte commit. Gitcito houdt bij hoeveel stappen er nog over zijn,
+de eerste slechte commit. Geminio houdt bij hoeveel stappen er nog over zijn,
 zodat je weet of je twee vragen van het antwoord af zit of tien.
 
 ![Begeleide bisect](../../screenshots/bisect.webp)
@@ -76,7 +76,7 @@ commando en leest de exitcode:
 | iets anders | Slecht |
 
 Een testsuite spreekt die taal al, en daarom is `npm test` meestal het hele
-antwoord. Gitcito biedt de eigen scripts van dit project aan om met één klik in
+antwoord. Geminio biedt de eigen scripts van dit project aan om met één klik in
 te vullen, streamt de uitvoer terwijl het draait, en landt op de eerste slechte
 commit zonder dat jij ook maar één vraag beantwoordt.
 
@@ -108,14 +108,14 @@ Unable to create '…/refs/remotes/origin/x.lock': File exists.
 
 De repository is niet beschadigd. Er ligt simpelweg een bestand in de weg.
 
-Gitcito probeert het eerst een paar keer opnieuw, want een lock in handen van een
+Geminio probeert het eerst een paar keer opnieuw, want een lock in handen van een
 *lopende* git komt meestal binnen milliseconden vrij. Zo niet, dan opent de fout
 een dialoog in plaats van een muur tekst: elke lock die nog op schijf staat, hoe
 oud elk ervan is, en één knop die ze verwijdert en de mislukte actie opnieuw
 uitvoert.
 
 **Leeftijd is het hele argument.** Een lock jonger dan 30 seconden hoort
-vermoedelijk bij een git die nog werkt, en Gitcito weigert die te verwijderen —
+vermoedelijk bij een git die nog werkt, en Geminio weigert die te verwijderen —
 het biedt aan te wachten en het opnieuw te proberen. Oudere worden aangeboden om
 te verwijderen, oudste eerst, en de dialoog zegt onomwonden wat je eerst moet
 nagaan: dat er nu geen editor, terminal of andere Git-client in deze repository

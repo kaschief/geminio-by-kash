@@ -1,7 +1,7 @@
 # shellcheck shell=bash disable=SC2154
 # 29. stacked-branches — exercise the branch-stack feature (Layers icon / ⌘K).
 #
-# Builds a 2-level stack on top of main and records the stack metadata gitcito
+# Builds a 2-level stack on top of main and records the stack metadata geminio
 # stores in git config (branch.<name>.gitcitoparent / .gitcitobase):
 #
 #     feature/ui   (leaf, current)   ── parent: feature/api

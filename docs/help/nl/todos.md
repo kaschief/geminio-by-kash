@@ -20,7 +20,7 @@ Taken zijn die lijst, vastgemaakt aan de repository waar je in staat.
 
 ## Waar ze staan
 
-Nergens in je repository. Een taak wordt bewaard bij de instellingen van Gitcito
+Nergens in je repository. Een taak wordt bewaard bij de instellingen van Geminio
 zelf, met het pad van de repository als sleutel. Dat heeft drie gevolgen die het
 weten waard zijn:
 

@@ -1,12 +1,12 @@
 ---
-title: Repository rules (.gitcito.json)
+title: Repository rules (.geminio.json)
 category: Workspace tools
 order: 98
 summary: The house rules a repository ships with — protected branches, commit scopes, what a clone needs, and a push checklist.
-keywords: gitcito.json repo config repository config house rules doctor requirements protected branches scopes trailers ticket tracker links checklist onboarding hooksPath node submodules lfs env example
+keywords: geminio.json repo config repository config house rules doctor requirements protected branches scopes trailers ticket tracker links checklist onboarding hooksPath node submodules lfs env example
 ---
 
-# Repository rules (`.gitcito.json`)
+# Repository rules (`.geminio.json`)
 
 Every project carries rules nobody can deduce from the code. *Never push
 straight to `release/*`.* *Commit scopes are `api`, `web`, `infra` and nothing
@@ -14,7 +14,7 @@ else.* *You need Node 20, the submodules checked out, and a `.env` copied from
 `.env.example` before anything runs.* Those live in a README nobody rereads, in
 a CI failure, or in whoever has been here longest.
 
-`.gitcito.json` is where a repository writes them down so the tool can act on
+`.geminio.json` is where a repository writes them down so the tool can act on
 them. It sits at the repository root, is committed like any other file, and so
 travels with the clone: everyone who opens the project gets the same rules, and
 a newcomer gets them on day one instead of on their first rejected push.
@@ -38,7 +38,7 @@ If the repository has none, **Read the repository** proposes one from what is
 already there — a `.nvmrc` or `engines.node`, a `.gitmodules`, `filter=lfs` in
 `.gitattributes`, an `.env.example` with no `.env` next to it, the branches you
 already protect locally, and the commit scopes the last 500 subjects have been
-using. Nothing is written until you save. From a terminal, `gitcito config init`
+using. Nothing is written until you save. From a terminal, `geminio config init`
 does the same thing (see [the command line](cli.md)).
 
 ## What the file can say
@@ -75,7 +75,7 @@ does the same thing (see [the command line](cli.md)).
 | `version` | Must be `1`. A file from a newer schema is ignored whole, rather than guessed at. |
 | `protect` | Branch names, `*` matching any run of characters. **Added** to the branches you protect locally — see [protected branches](repo-settings.md). |
 | `links.tickets` | A regular expression and a URL template. `$0` is the whole match, `$1`…`$9` its groups. Matches in commit subjects and bodies become links. |
-| `commit.scopes` | The scopes the composer offers, instead of a free-text field. Declaring them also turns an unknown scope from style advice into an error in `gitcito commit-check`. |
+| `commit.scopes` | The scopes the composer offers, instead of a free-text field. Declaring them also turns an unknown scope from style advice into an error in `geminio commit-check`. |
 | `commit.ticketFromBranch` | Fills the ticket key in from the branch name (`feature/ABC-123-thing` → `ABC-123`) — but only into an empty composer, never over something you are typing. |
 | `commit.trailers` | Lines appended to the commit body. `{ticket}` and `{branch}` are filled in; a line whose placeholder has nothing to fill it is dropped rather than written half-empty. |
 | `requires.*` | What a working clone needs. Each entry becomes a doctor row, below. |
@@ -83,7 +83,7 @@ does the same thing (see [the command line](cli.md)).
 
 ## The doctor
 
-`requires` is the part that answers *"I cloned it and it does not run."* Gitcito
+`requires` is the part that answers *"I cloned it and it does not run."* Geminio
 checks it when you open the repository and shows a stethoscope chip in the
 status bar when something is off. Clicking the chip opens the Config tab at the
 doctor rows; **Check again** re-runs them.
@@ -99,7 +99,7 @@ doctor rows; **Check again** re-runs them.
 Two deliberate limits. A **warning** never means "broken" — it means the doctor
 could not determine something (an unparseable Node spec passes rather than
 inventing a failure you cannot act on), and warnings do not fail
-`gitcito doctor` in CI. And a repair is never something the file supplied: the
+`geminio doctor` in CI. And a repair is never something the file supplied: the
 set above is the whole set, closed at compile time. The config hands it a value
 — a path to copy, a value for `core.hooksPath` — and never a command.
 
@@ -114,7 +114,7 @@ rather than a free-text field — the difference between `feat(renderer)` and
 message that are mechanical, and `links.tickets` turns the keys back into links
 wherever a commit is displayed.
 
-The same rules apply outside the window: `gitcito commit-check` reads this file,
+The same rules apply outside the window: `geminio commit-check` reads this file,
 so a `commit-msg` hook and CI enforce exactly what the composer suggests. See
 [the command line](cli.md) and [committing](committing.md).
 
@@ -122,7 +122,7 @@ so a `commit-msg` hook and CI enforce exactly what the composer suggests. See
 
 `checklist.push` is shown as a confirmation before the first push of a session,
 one line per item. It is the place for the thing that is genuinely a judgement
-call — *has anyone told support about this?* — because Gitcito **never checks
+call — *has anyone told support about this?* — because Geminio **never checks
 these for you**. They are reminders, not gates: read them and push, or cancel.
 Shown once per repository per session, because a dialog on every push is a
 dialog nobody reads.
@@ -148,7 +148,7 @@ message:
   chips into a panel.
 
 A bad field is dropped, not fatal. The rest of the file still applies, and what
-was dropped is listed under **Ignored by Gitcito** in the Config tab with the
+was dropped is listed under **Ignored by Geminio** in the Config tab with the
 reason. The one exception is invalid JSON or an unknown `version`, where there
 is nothing to salvage.
 
@@ -159,7 +159,7 @@ is nothing to salvage.
 - **No per-branch or per-user rules.** One file, one set of rules.
 - **It does not replace CI.** The checklist is text; the doctor checks the
   environment, not your work.
-- **It cannot weaken anything.** Every guard Gitcito has is still yours to set.
+- **It cannot weaken anything.** Every guard Geminio has is still yours to set.
 
 **See also:** [Per-repository settings](repo-settings.md) ·
 [The command line](cli.md) · [Committing](committing.md) ·

@@ -8,12 +8,12 @@ keywords: credential helper hasło https pyta znowu osxkeychain wincred manager 
 
 # Credential helper
 
-Gitcito trzyma trzy różne rodzaje sekretów, a ludzie całkiem rozsądnie zakładają,
+Geminio trzyma trzy różne rodzaje sekretów, a ludzie całkiem rozsądnie zakładają,
 że to jedno:
 
 | | Trzymane przez |
 |---|---|
-| Tokeny API hostingu — PR-y, zgłoszenia, sprawdzenia CI | Gitcito, w twoim [pęku kluczy systemu](security.md) |
+| Tokeny API hostingu — PR-y, zgłoszenia, sprawdzenia CI | Geminio, w twoim [pęku kluczy systemu](security.md) |
 | Transport `git@…` | Twój [klucz SSH](ssh-keys.md), przez systemowego agenta ssh |
 | **Transport `https://`** | **Własny credential helper gita** |
 
@@ -54,7 +54,7 @@ zwykłe ustawienie dla adresów, do których pasują, i są zwykle odpowiedzią 
 | `cache` | Pamięć, na 15 minut. Nic na dysku |
 | `store` | **Zwykły plik w twoim katalogu domowym. Bez szyfrowania** |
 
-Gitcito oferuje to, co faktycznie jest na tej maszynie zainstalowane, zaznacza
+Geminio oferuje to, co faktycznie jest na tej maszynie zainstalowane, zaznacza
 ten pasujący do twojego systemu i wyszarza resztę.
 
 **Zasięg ma znaczenie.** *Dla każdego repozytorium* zapisuje do twojej globalnej
@@ -81,7 +81,7 @@ a każdy push wysypuje się z 401, które nic nie nazywa. **Zapomnij** prosi
 skonfigurowany helper o wymazanie swojego wpisu dla tego hosta —
 `git credential reject`, czyli udokumentowana droga samego gita.
 
-Nic po drodze nie jest odczytywane: Gitcito nigdy nie wywołuje
+Nic po drodze nie jest odczytywane: Geminio nigdy nie wywołuje
 `git credential fill`, polecenia, które wypisałoby żywe hasło na standardowe
 wyjście.
 
@@ -89,14 +89,14 @@ Następny push zapyta cię raz, a helper zapamięta nową odpowiedź.
 
 ## Ograniczenia warte wiedzy
 
-- **To magazyn gita, nie Gitcito.** Zmiana tutaj zmienia też to, co robi twój
+- **To magazyn gita, nie Geminio.** Zmiana tutaj zmienia też to, co robi twój
   terminal — i o to chodzi, ale warto o tym wiedzieć, zanim się coś zmieni.
 - **Helpery z poziomu systemu są pokazywane, ale nieedytowalne.** Mieszkają
   w konfiguracji, do której zapisać może tylko administrator.
-- **Gitcito nie potrafi wypisać tego, co helper trzyma.** Żadne API poświadczeń
+- **Geminio nie potrafi wypisać tego, co helper trzyma.** Żadne API poświadczeń
   nie wystawia tego bez oddania samych sekretów, więc to okno raportuje
   konfigurację, wymazuje na żądanie i nic poza tym.
-- **Token, który dałeś Gitcito, jest osobny.** Unieważnienie jednego nie rusza
+- **Token, który dałeś Geminio, jest osobny.** Unieważnienie jednego nie rusza
   drugiego; stronę pęku kluczy opisuje [bezpieczeństwo](security.md).
 
 Zobacz też: [Bezpieczeństwo](security.md) · [Klucze SSH](ssh-keys.md) ·

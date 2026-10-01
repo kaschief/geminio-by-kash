@@ -2,7 +2,7 @@
 title: Flutter DevTools
 category: ワークスペースツール
 order: 93
-summary: ネットワークビュー、タイムライン、インスペクター、メモリプロファイラーを Gitcito のタブで。
+summary: ネットワークビュー、タイムライン、インスペクター、メモリプロファイラーを Geminio のタブで。
 keywords: devtools flutter dart ネットワーク network タイムライン インスペクター メモリ プロファイラー webview 埋め込み パネル vm service
 ---
 
@@ -10,10 +10,10 @@ keywords: devtools flutter dart ネットワーク network タイムライン �
 
 DevTools にはネットワークビュー、タイムライン、ウィジェットインスペクター、メモリ
 プロファイラーがすでにあり、しかもそれは自分のマシンで配信される Flutter web アプリ
-です。だから Gitcito はどれも作り直しませんし、Dart VM Service と自分で話すこともあり
+です。だから Geminio はどれも作り直しませんし、Dart VM Service と自分で話すこともあり
 ません。アドレスに気づいて、埋め込むだけです。
 
-![Gitcito のタブで開いた DevTools](../../screenshots/devtools.webp)
+![Geminio のタブで開いた DevTools](../../screenshots/devtools.webp)
 
 VM サービスが立ち上がると、`flutter run` がこの行を出します:
 
@@ -63,7 +63,7 @@ http://127.0.0.1:9100?uri=http://127.0.0.1:53412/uJ8k=/
 
 - **ループバックのみ。** `127.0.0.1`、`localhost`、`::1`。ほかのアドレスでの接続は
   拒否され、そこへのリダイレクトも拒否されます。
-- **preload なし、node integration なし、コンテキスト分離あり。** ページから Gitcito
+- **preload なし、node integration なし、コンテキスト分離あり。** ページから Geminio
   への橋はありません。
 - **リンクは本物のブラウザーで開きます。** 通常のウィンドウであって、パネルの中では
   ありません。
@@ -71,7 +71,7 @@ http://127.0.0.1:9100?uri=http://127.0.0.1:53412/uJ8k=/
 ## 限界
 
 - **これは DevTools であって、私たちのものではありません。** そのバージョンにできる
-  ことはパネルにもでき、できないことは私たちにもできません。Gitcito 味のネットワーク
+  ことはパネルにもでき、できないことは私たちにもできません。Geminio 味のネットワーク
   ビューはありません。
 - **こう名乗るのは Flutter だけです。** ふつうの Dart プログラムは VM サービスの URL
   は出しますが DevTools のアドレスは出さないので、ボタンも出ません。

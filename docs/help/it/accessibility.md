@@ -8,7 +8,7 @@ keywords: accessibilità accessibility a11y screen reader VoiceOver NVDA navigaz
 
 # Accessibilità
 
-Gitcito punta a essere usabile senza mouse e leggibile da uno screen reader.
+Geminio punta a essere usabile senza mouse e leggibile da uno screen reader.
 Questa pagina dice cosa significa in concreto — e dove stanno i confini.
 
 ## Tastiera

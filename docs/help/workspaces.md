@@ -8,6 +8,10 @@ keywords: workspace tabs groups folders multiple repos organise switch layout
 
 # Workspaces, tabs & groups
 
+Graph columns and the sidebar's section order, visibility and expansion are
+app-wide preferences. Arranging them in one repository updates all repositories.
+Branch pins and branch-folder expansion remain specific to each repository.
+
 Three levels, from loosest to tightest.
 
 ## Tabs
@@ -25,6 +29,16 @@ If a close warning appears, <kbd>Escape</kbd> always cancels. <kbd>Enter</kbd>
 confirms only when the tab is clean — when there are uncommitted changes or
 conflicts the warning deliberately makes you reach for the button, so a stray
 keypress after <kbd>⌘W</kbd> cannot close work you were still holding.
+
+## Fetch and pull
+
+The repository toolbar has one **Pull** button with a dropdown. Choose its
+default action: **Fetch All**, **Pull (fast-forward if possible)**,
+**Pull (fast-forward only)** or **Pull (rebase)**. Choosing an option saves the
+preference; click the main button to run it. It reads **Fetch** when Fetch All
+is selected. Fetch updates remote history without changing your files.
+
+![The combined Pull and Fetch dropdown](../screenshots/pull-fetch-menu.webp)
 
 ## Groups
 
@@ -70,7 +84,7 @@ opens as a tab of its own instead — opening something always opens something.
 A workspace is a **whole saved tab strip**. Switching swaps every tab at once:
 `Work` and `Personal` stop stepping on each other.
 
-The workspace name sits top-left, next to the Gitcito mark. Click it to switch,
+The workspace name sits top-left, next to the Geminio mark. Click it to switch,
 create, rename, reorder or delete. Next to it is the gauge that opens
 [Mission control](mission-control.md) for the workspace you are in.
 

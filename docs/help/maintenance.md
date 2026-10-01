@@ -79,7 +79,7 @@ The checkbox registers the repository with **`git maintenance`**, which packs
 and prefetches on a schedule your operating system runs (launchd, systemd or
 Task Scheduler).
 
-Nothing here is Gitcito-specific: the same schedule serves your terminal, and
+Nothing here is Geminio-specific: the same schedule serves your terminal, and
 `git maintenance unregister` undoes it from anywhere. Unticking the box does
 exactly that, and leaves the schedule in place for whatever other repositories
 are registered.
@@ -98,7 +98,7 @@ are registered.
   reachable, and gc will keep it forever — that is
   [removing a file from history](history-purge.md), a different and much more
   disruptive operation.
-- **Gitcito never runs gc behind your back.** Git's own `gc --auto` still may,
+- **Geminio never runs gc behind your back.** Git's own `gc --auto` still may,
   as it always has; if one fails it leaves a note in `.git/gc.log`, which this
   panel surfaces.
 

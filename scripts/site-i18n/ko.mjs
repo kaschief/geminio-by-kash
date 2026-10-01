@@ -12,7 +12,7 @@ export const ko = {
   'foot.reportIssue': '문제 신고',
   'foot.sponsor': '후원',
 
-  'meta.title': 'Gitcito — git 전체를 보여 주는 UI',
+  'meta.title': 'Geminio — git 전체를 보여 주는 UI',
   'meta.description':
     '온전히 vibe-coding으로 만든 Git 클라이언트. 무료예요. 그래프, 줄 단위 스테이징, 리베이스, 워크트리, 서브모듈, LFS — 그리고 git이 할 줄은 몰랐던 몇 가지까지.',
 
@@ -22,11 +22,11 @@ export const ko = {
   'hero.download': '내 플랫폼용 다운로드',
   'hero.source': '소스 보기',
   'hero.terms': '무료 · MIT · v{version}',
-  'hero.graphAlt': 'Gitcito 커밋 그래프',
+  'hero.graphAlt': 'Geminio 커밋 그래프',
 
   'features.title': 'git이 할 줄은 몰랐던 몇 가지',
   'features.sub':
-    '이 가운데 어느 것도 Gitcito를 쓸 이유는 아니에요 — 이유는 위의 목록이에요. 이것들이 있는 건 git이 이미 답을 알고 있기 때문이고, Gitcito는 그저 물어볼 뿐이에요.',
+    '이 가운데 어느 것도 Geminio를 쓸 이유는 아니에요 — 이유는 위의 목록이에요. 이것들이 있는 건 git이 이미 답을 알고 있기 때문이고, Geminio는 그저 물어볼 뿐이에요.',
 
   'ordinary.title': '무엇이 들어 있나요',
   'ordinary.sub':
@@ -48,7 +48,7 @@ export const ko = {
   'download.title': '다운로드',
   'download.sub': '최신 릴리스는 <strong>v{version}</strong> 이에요. 모든 빌드는 CI에서 게시돼요.',
   'download.cli':
-    '또는 터미널에서 <code>gitcito .</code> 로 저장소를 열 수 있어요 — <a href="{cli}">명령줄</a> 을 보세요.',
+    '또는 터미널에서 <code>geminio .</code> 로 저장소를 열 수 있어요 — <a href="{cli}">명령줄</a> 을 보세요.',
   'download.macNote': 'Apple silicon &amp; Intel · 서명 및 공증 완료',
   'download.winNote': '설치 프로그램 (x64)',
   'download.linuxNote': 'AppImage · deb',
@@ -57,12 +57,12 @@ export const ko = {
   'handbook.title': '앱에 들어 있는 {pages}쪽짜리 안내서',
   'handbook.sub': '모든 기능을 설명해요 — 앱에서 오프라인으로도, 그리고 바로 여기서도.',
 
-  'sponsor.title': 'Gitcito 후원하기',
+  'sponsor.title': 'Geminio 후원하기',
   'sponsor.body':
     '무료, MIT, 백엔드 없음, 텔레메트리 없음, 더 팔 것도 없음 — 그러니 살 것이 없어요. 후원은 서명된 macOS 빌드에 필요한 Apple Developer 인증서와 안내서, 그리고 번역에 쓰여요. 버그 신고도 그만큼 값져요.',
   'sponsor.cta': 'GitHub에서 후원하기',
 
-  'doc.titleSuffix': 'Gitcito 안내서',
+  'doc.titleSuffix': 'Geminio 안내서',
   'doc.filter': '페이지 필터…',
   'doc.filterLabel': '페이지 필터',
   'doc.edit': 'GitHub에서 이 페이지 편집하기',
@@ -115,5 +115,5 @@ export const ko = {
     '백엔드가 없어요. 토큰과 금고 항목은 OS 키체인으로 암호화되고 — 무엇을 위한 것인지 듣고 여러분이 그러겠다고 하기 전까지는 그 키체인에 아무것도 손대지 않아요.',
   'feature.cli.title': '진짜 CLI를 갖춘 Git GUI',
   'feature.cli.body':
-    '`gitcito .`는 저장소를 열고, `gitcito blame src/api.ts -l 84`는 해당 줄에서 엽니다. `gitcito doctor`는 창을 전혀 열지 않고 저장소의 요구 사항을 검사한 뒤 CI가 읽을 수 있는 종료 코드를 반환합니다.'
+    '`geminio .`는 저장소를 열고, `geminio blame src/api.ts -l 84`는 해당 줄에서 엽니다. `geminio doctor`는 창을 전혀 열지 않고 저장소의 요구 사항을 검사한 뒤 CI가 읽을 수 있는 종료 코드를 반환합니다.'
 }

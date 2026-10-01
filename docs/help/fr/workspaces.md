@@ -77,7 +77,7 @@ Un espace de travail est une **barre d'onglets entière, sauvegardée**. En chan
 dessus.
 
 Le nom de l'espace de travail se trouve en haut à gauche, à côté de la marque
-Gitcito. Cliquez dessus pour changer, créer, renommer, réordonner ou supprimer.
+Geminio. Cliquez dessus pour changer, créer, renommer, réordonner ou supprimer.
 Juste à côté se trouve la jauge qui ouvre le [centre de
 contrôle](mission-control.md) de l'espace de travail où vous êtes.
 

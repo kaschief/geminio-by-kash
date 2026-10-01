@@ -43,14 +43,14 @@ hält dich nicht vom Committen ab.
 
 ## Amend
 
-Amend schreibt den letzten Commit mit dem um, was gerade gestaged ist. Gitcito
+Amend schreibt den letzten Commit mit dem um, was gerade gestaged ist. Geminio
 zeigt dir zuerst die vorhandene Nachricht, damit du sie bearbeitest, statt sie
 neu zu tippen.
 
 **Commit ändern…** auf einer Zeile des Graphen tut dasselbe für HEAD: Es lädt
 die vollständige Nachricht, schaltet den Editor in den Amend-Modus und
 fokussiert ihn. Ein bereits gepushter HEAD lässt sich weiterhin ändern, aber
-Gitcito warnt, dass das Aktualisieren des Remotes einen Force-Push braucht.
+Geminio warnt, dass das Aktualisieren des Remotes einen Force-Push braucht.
 
 **Commit rückgängig…** ist das Geschwister für einen ungepushten HEAD: Mixed
 Reset auf den Eltern-Commit, die Änderungen im Arbeitsbaum bleiben erhalten,

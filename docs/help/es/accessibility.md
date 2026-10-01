@@ -8,7 +8,7 @@ keywords: accesibilidad accessibility a11y lector de pantalla VoiceOver NVDA nav
 
 # Accesibilidad
 
-Gitcito aspira a poder manejarse sin ratón y a ser legible para un lector de
+Geminio aspira a poder manejarse sin ratón y a ser legible para un lector de
 pantalla. Esta página cuenta qué significa eso en concreto — y dónde están los
 límites.
 

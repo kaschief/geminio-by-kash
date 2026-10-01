@@ -27,7 +27,7 @@ uitlegt.
 
 ## De geschreven pagina's
 
-Gitcito plant een handvol pagina's op basis van de bestanden die de repository
+Geminio plant een handvol pagina's op basis van de bestanden die de repository
 trackt — documentatie en manifesten eerst, daarna wat het meest verandert — en
 schrijft elke pagina uit de bestanden die ze beslaat.
 

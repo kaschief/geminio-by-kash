@@ -10,7 +10,7 @@ keywords: modifier commit edit réécrire historique rewrite history amend pass�
 
 La faute de frappe est dans un commit d'il y a trois semaines. Le remède
 habituel est un rebase interactif : s'arrêter au commit, modifier, continuer,
-prier. Le remède de Gitcito : clic droit sur le commit, **Modifier ce
+prier. Le remède de Geminio : clic droit sur le commit, **Modifier ce
 commit**, changer le texte, terminé. Le bouton stylo dans le panneau des
 détails du commit ouvre le même éditeur.
 

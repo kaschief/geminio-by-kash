@@ -26,16 +26,16 @@ snap() {
 
 # State A → manual snapshot (2 hours ago)
 printf 'Work in progress: section one.\n' >> "$R/draft.md"
-snap "gitcito-wip manual" "-m" 7200
+snap "geminio-wip manual" "-m" 7200
 
 # State B → auto snapshot (20 minutes ago), more changes
 printf 'Work in progress: section two.\n' >> "$R/draft.md"
 echo "scratch notes" > "$R/notes.md" && git -C "$R" add notes.md
-snap "gitcito-wip (auto)" "-a" 1200
+snap "geminio-wip (auto)" "-a" 1200
 
 # State C → guard snapshot (5 minutes ago), as taken before a destructive op
 printf 'Work in progress: section three.\n' >> "$R/draft.md"
-snap "gitcito-wip (guard)" "-g" 300
+snap "geminio-wip (guard)" "-g" 300
 
 # Leave the working tree dirty — a tracked edit AND an untracked file — for
 # "Snapshot now" / "Restore" (untracked capture is the new mechanism's point).

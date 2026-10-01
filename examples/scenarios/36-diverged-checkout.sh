@@ -1,7 +1,7 @@
 # shellcheck shell=bash disable=SC2154
 # 36. diverged-checkout — local `feature` and origin/feature have each gained a
 # different commit on top of the same base. Double-clicking origin/feature
-# ("checkout as local branch") can't fast-forward, so Gitcito surfaces the
+# ("checkout as local branch") can't fast-forward, so Geminio surfaces the
 # rebase / merge / reset divergence dialog instead of a raw git error.
 ORIGIN_BARE="$ROOT/diverged-checkout-origin.git"
 

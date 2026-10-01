@@ -18,7 +18,7 @@ fusion](merge-options.md).
 ## Glisser une référence sur une autre
 
 Le geste le plus rapide de l'application : attrapez une branche et déposez-la sur
-une autre. Gitcito ouvre un petit menu de ce que ce dépôt pourrait signifier, et
+une autre. Geminio ouvre un petit menu de ce que ce dépôt pourrait signifier, et
 ne fait rien tant que vous n'avez pas choisi.
 
 ![Glisser une branche sur une autre ouvre le menu de ce que le dépôt pourrait signifier](../../screenshots/clip-branch-drop.webp)

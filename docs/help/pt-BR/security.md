@@ -2,13 +2,13 @@
 title: Segurança e segredos
 category: Segurança
 order: 70
-summary: Mascaramento, proteções, o keychain — e o que o Gitcito se recusa a fazer.
+summary: Mascaramento, proteções, o keychain — e o que o Geminio se recusa a fazer.
 keywords: segurança security segredos secrets mascaramento masking keychain safeStorage tokens branch protegida arquivo grande proteção guard privacidade
 ---
 
 # Segurança e segredos
 
-O Gitcito **não tem backend**. As únicas chamadas de rede são para o seu host Git e,
+O Geminio **não tem backend**. As únicas chamadas de rede são para o seu host Git e,
 se você ligar, para o seu provedor de IA.
 
 ![Configurações de segurança](../../screenshots/settings-security.webp)
@@ -45,7 +45,7 @@ sistema (o `safeStorage` do Electron), nunca com uma chave no arquivo de
 configurações.
 
 **Nada toca no keychain até você mandar.** Antes que o diálogo de permissão do
-próprio sistema possa aparecer, o Gitcito explica o que está sendo guardado, o que
+próprio sistema possa aparecer, o Geminio explica o que está sendo guardado, o que
 ele não consegue fazer (um app só consegue ler de volta a entrada que ele mesmo
 criou — as suas outras senhas são inalcançáveis), e que dizer não está tudo bem: os
 tokens então vivem na memória apenas pela sessão, o cofre fica fechado, e você pode

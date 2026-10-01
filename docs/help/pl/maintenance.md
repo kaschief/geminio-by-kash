@@ -81,7 +81,7 @@ Ten checkbox rejestruje repozytorium w **`git maintenance`**, które pakuje
 i prefetchuje według harmonogramu uruchamianego przez twój system operacyjny
 (launchd, systemd albo Harmonogram zadań).
 
-Nic tutaj nie jest specyficzne dla Gitcito: ten sam harmonogram służy twojemu
+Nic tutaj nie jest specyficzne dla Geminio: ten sam harmonogram służy twojemu
 terminalowi, a `git maintenance unregister` odkręca to z dowolnego miejsca.
 Odznaczenie checkboxa robi dokładnie to i zostawia harmonogram na miejscu dla
 wszystkich innych zarejestrowanych repozytoriów.
@@ -100,7 +100,7 @@ wszystkich innych zarejestrowanych repozytoriów.
   w commicie, jest osiągalny i gc będzie go trzymać w nieskończoność — to jest
   [usuwanie pliku z historii](history-purge.md), operacja inna i o wiele
   bardziej wywrotowa.
-- **Gitcito nigdy nie uruchamia gc za twoimi plecami.** Własne `gc --auto` gita
+- **Geminio nigdy nie uruchamia gc za twoimi plecami.** Własne `gc --auto` gita
   wciąż może, tak jak zawsze; jeśli któreś zawiedzie, zostawia notatkę
   w `.git/gc.log`, którą ten panel wyciąga na wierzch.
 

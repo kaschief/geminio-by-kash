@@ -47,7 +47,7 @@ het kennen waard zijn:
 - Ze zijn **lokaal tot ze gepusht worden**: `git push origin "refs/replace/*"`
   deelt ze, en wie kloont zonder ze ziet de onaangeroerde geschiedenis.
 - **Ongedaan maken werkt** — de ref laten vallen herstelt de echte afstamming
-  meteen, en Gitcito legt de graft vast als een terugdraaibare actie, net als al
+  meteen, en Geminio legt de graft vast als een terugdraaibare actie, net als al
   het andere.
 - `core.useReplaceRefs=false` laat git ze allemaal tegelijk negeren. De
   schakelaar hier schrijft precies dat, en het venster zegt het wanneer hij uit
@@ -80,7 +80,7 @@ aanwezig in elke bestaande kloon.
 - **Een vervanging kan een commit verbergen voor tools, niet voor git.**
   `git cat-file` en de [objectverkenner](objects.md) openen het origineel nog
   gewoon op sha.
-- **Gitcito biedt `git replace --edit` niet aan** (de inhoud van een object met
+- **Geminio biedt `git replace --edit` niet aan** (de inhoud van een object met
   de hand herschrijven). Dat is werk voor een teksteditor op een ruw object, en
   een voetkanon met een UI eromheen.
 

@@ -10,7 +10,7 @@ keywords: editar commit edit reescrever rewrite história history amend passado 
 
 O erro de digitação está num commit de três semanas atrás. A solução de sempre é
 um rebase interativo: parar no commit, editar, continuar, rezar. A solução do
-Gitcito: clique com o botão direito no commit, **Editar este commit**, mude o
+Geminio: clique com o botão direito no commit, **Editar este commit**, mude o
 texto, pronto. O botão de caneta no painel de detalhes do commit abre o mesmo
 editor.
 

@@ -8,6 +8,12 @@ keywords: commit message composer conventional gitmoji ticket amend template co-
 
 # Committing
 
+Drag the divider above the commit message up or down to resize the whole
+message section. The description fills the available room, and Geminio
+remembers the height while keeping space for the file lists.
+
+![Commit message section expanded by dragging its divider](../screenshots/composer-resize.webp)
+
 ## Message styles
 
 Pick one in Settings; the composer adapts to it.
@@ -41,12 +47,12 @@ Hints, never a gate — it will not stop you committing.
 
 ## Amend
 
-Amend rewrites the last commit with whatever is staged. Gitcito shows you the
+Amend rewrites the last commit with whatever is staged. Geminio shows you the
 existing message first so you are editing, not retyping.
 
 **Amend Commit…** on a graph row does the same thing for HEAD: it loads the
 full message, switches the composer into amend mode, and focuses it. A HEAD
-that was already pushed can still be amended, but Gitcito warns that updating
+that was already pushed can still be amended, but Geminio warns that updating
 the remote will take a force push.
 
 **Undo Commit…** is the sibling for an unpushed HEAD: mixed reset to the

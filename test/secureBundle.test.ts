@@ -135,7 +135,7 @@ describe('v2 multi-section bundles', () => {
 })
 
 describe('v1 back-compat', () => {
-  // A hand-built v1 envelope (the shape gitcito ≤2.x wrote): version 1, `files`.
+  // A hand-built v1 envelope (the shape geminio ≤2.x wrote): version 1, `files`.
   it('reads a legacy single-repo bundle as one repo section', () => {
     const v1 = packBundle('legacy', [{ path: '.env', content: Buffer.from('X=1\n') }], 'pw pw pw pw')
     const raw = JSON.parse(v1)

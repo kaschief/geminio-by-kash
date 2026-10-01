@@ -10,7 +10,7 @@ keywords: avatar avatars gravatar blobatar auteur foto afbeelding identicon gezi
 
 Een commitlijst is een muur van namen, en namen lees je langzaam. Een plaatje
 ernaast maakt van "wie heeft dit geschreven" iets wat je met één blik antwoordt.
-Gitcito geeft elke auteur die het toont er een: in de auteurskolom van de graaf, in
+Geminio geeft elke auteur die het toont er een: in de auteurskolom van de graaf, in
 de commitdetails naast de auteur en elke co-auteur, in de co-auteurkiezer terwijl je
 schrijft, in de profielwisselaar en naast elk profiel in Instellingen.
 
@@ -39,7 +39,7 @@ verkeerd ingestelde `user.email` op. Herstel het met
 
 ## Het gezicht in de titelbalk
 
-De avatar naast je profielnaam is de enige avatar in Gitcito die staat voor **jou, in
+De avatar naast je profielnaam is de enige avatar in Geminio die staat voor **jou, in
 deze repository, nu** — dus de enige die reageert op de staat van de repository. Hij
 trekt een gezicht als er iets is, en blijft de rest van de tijd neutraal.
 

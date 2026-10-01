@@ -1,3 +1,4 @@
+import type { ConnectedAccount } from '../../../shared/types'
 // Avatar helpers: Gravatar lookup (SHA-256 email hash) + a deterministic
 // generated fallback so we never fall back to a bare letter.
 
@@ -58,4 +59,10 @@ export async function gravatarUrl(email: string, size: number): Promise<string> 
   if (cached) return cached
   const hash = await sha256Hex(norm)
   return capped(urlCache, key, `https://gravatar.com/avatar/${hash}?s=${size}&d=404`)
+}
+
+/** Match provider-confirmed emails only; a shared display name is not identity. */
+export function accountAvatar(account: ConnectedAccount | null | undefined, email: string | undefined): string | null {
+  const normalized = email?.trim().toLowerCase()
+  return normalized && account?.emails?.includes(normalized) ? account.avatarUrl ?? null : null
 }

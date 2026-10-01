@@ -8,7 +8,7 @@ keywords: dostępność accessibility a11y czytnik ekranu VoiceOver NVDA nawigac
 
 # Dostępność
 
-Gitcito ma dać się obsłużyć bez myszy i być czytelny dla czytnika ekranu. Ta
+Geminio ma dać się obsłużyć bez myszy i być czytelny dla czytnika ekranu. Ta
 strona mówi, co to znaczy konkretnie — i gdzie są granice.
 
 ## Klawiatura

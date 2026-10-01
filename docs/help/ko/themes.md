@@ -8,7 +8,7 @@ keywords: 테마 어두운 밝은 겉모습 색상 글꼴 크기 그래프 팔�
 
 # 테마와 겉모습
 
-기본 제공 테마 — Gitcito, Nord, Dracula, Solarized, GitHub, Monokai,
+기본 제공 테마 — Geminio, Nord, Dracula, Solarized, GitHub, Monokai,
 Midnight, Contrast, Daltonic — 각각 밝은 변형과 어두운 변형이 있어요.
 
 ![밝은 모드에서 어두운 모드로 전환하기](../../screenshots/clip-themes.webp)

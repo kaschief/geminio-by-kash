@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Measures the git commands Gitcito runs on every refresh, against any repo.
+# Measures the git commands Geminio runs on every refresh, against any repo.
 #
 #   bash examples/repo-stats.sh                     # the monster repo
 #   bash examples/repo-stats.sh ~/code/some-monorepo
@@ -11,7 +11,7 @@
 #
 # Every timing is a wall-clock measurement of a real subprocess, so the numbers
 # include process spawn cost. That is deliberate: spawn cost is a real part of
-# what a refresh costs, and it is the part Gitcito can actually remove.
+# what a refresh costs, and it is the part Geminio can actually remove.
 
 set -euo pipefail
 
@@ -65,7 +65,7 @@ for key in core.fsmonitor core.untrackedCache core.preloadIndex feature.manyFile
 done
 
 echo
-echo "Timings — the commands a Gitcito refresh actually spawns"
+echo "Timings — the commands a Geminio refresh actually spawns"
 # A full refresh runs status TWICE: once for the file list and once for the
 # tree badges, the second with --ignored -uall, which is the more expensive of
 # the two. Both are timed here because both are paid.
@@ -88,7 +88,7 @@ timed "rev-parse --absolute-git-dir (mergeState, cached after 1st)" git -C "$R" 
 timed "stash list" git -C "$R" stash list
 
 echo
-echo "If the status lines are the outliers, it is not Gitcito — it is git walking"
+echo "If the status lines are the outliers, it is not Geminio — it is git walking"
 echo "every tracked file. Try these, then re-run this script:"
 echo "  git -C $R config core.fsmonitor true"
 echo "  git -C $R config core.untrackedCache true"

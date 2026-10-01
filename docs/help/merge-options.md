@@ -33,7 +33,7 @@ manual — and to be run from a terminal next time, without this dialog.
 
 **`-X ours` is not `-s ours`.** The switch here decides only the hunks that
 actually clash; every other change from the other branch merges normally. The
-strategy called `ours` — which Gitcito does not offer — takes your tree wholesale
+strategy called `ours` — which Geminio does not offer — takes your tree wholesale
 and throws the other side away, producing a merge commit that claims to contain
 work it does not. That distinction is the single most misunderstood thing about
 git merges.

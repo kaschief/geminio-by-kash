@@ -62,7 +62,7 @@ siguen copiando la ruta de la carpeta.
 
 ## Antes de hacer commit
 
-Gitcito comprueba unas cuantas cosas y pregunta una vez, nunca en silencio:
+Geminio comprueba unas cuantas cosas y pregunta una vez, nunca en silencio:
 
 - un archivo que parece un **secreto** (`.env`, `*.pem`, `id_rsa`…),
 - un blob **muy grande** (el umbral está en Ajustes → Seguridad),

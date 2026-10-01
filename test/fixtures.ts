@@ -14,7 +14,7 @@ import { repoPath } from './helpers'
 const created: string[] = []
 
 export function cloneFixture(name: string): string {
-  const dir = mkdtempSync(join(tmpdir(), `gitcito-${name}-`))
+  const dir = mkdtempSync(join(tmpdir(), `geminio-${name}-`))
   cpSync(repoPath(name), dir, { recursive: true })
   // The developer's global git config must not decide what these tests see.
   // `rerere.enabled` in particular changes what a conflicting merge leaves

@@ -24,14 +24,12 @@ import {
   FileDiff,
   GitCommit,
   FolderTree,
-  ChevronRight,
   GitBranch,
   Layers,
   StickyNote,
   FileText,
   Camera,
   KeyRound,
-  Settings,
   ArrowLeftRight,
   PanelLeft,
   PanelRight,
@@ -118,6 +116,7 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
   const confirmForcePush = useSettingsStore((s) => s.settings.confirmForcePush)
   const sidebarSide = useSettingsStore((s) => s.settings.sidebarSide)
   const language = useSettingsStore((s) => s.settings.language ?? 'en')
+  const pullAction = useSettingsStore((s) => s.settings.toolbarPullAction ?? 'default')
   const path = repo.path
   const current = repo.branches.locals.find((b) => b.isCurrent)
 
@@ -144,9 +143,16 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
   }
 
   const pullItems = (): MenuItem[] => [
-    { label: t('pull.default'), onClick: () => void repoActions.pull(path, 'default') },
-    { label: t('pull.ffOnly'), onClick: () => void repoActions.pull(path, 'ff-only') },
-    { label: t('pull.rebase'), onClick: () => void repoActions.pull(path, 'rebase') }
+    { label: t('pull.chooseDefault'), disabled: true },
+    ...([
+      ['fetch', t('pull.fetchAll')],
+      ['default', t('repos.pullModeDefault')],
+      ['ff-only', t('repos.pullModeFfOnly')],
+      ['rebase', t('repos.pullModeRebase')]
+    ] as const).map(([action, label]) => ({
+      label: `${pullAction === action ? '✓ ' : '   '}${label}`,
+      onClick: () => useSettingsStore.getState().update((s) => ({ ...s, toolbarPullAction: action }))
+    }))
   ]
 
   const pushItems = (): MenuItem[] => [
@@ -366,24 +372,15 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
     },
     { id: 'sep-1', sep: true },
     {
-      id: 'fetch',
-      label: t('toolbar.fetch'),
-      title: t('toolbar.fetchTitle'),
-      icon: busyOp === 'fetch' ? <Loader2 size={17} className="spin" /> : <Download size={17} />,
-      menuIcon: <Download size={15} />,
-      disabled: inflight,
-      run: () => void repoActions.fetchAll(path),
-      age: true
-    },
-    {
       id: 'pull',
-      label: t('toolbar.pull'),
-      title: t('toolbar.pull'),
-      icon: busyOp === 'pull' ? <Loader2 size={17} className="spin" /> : <ArrowDownToLine size={17} />,
+      label: t(pullAction === 'fetch' ? 'toolbar.fetch' : 'toolbar.pull'),
+      title: t(pullAction === 'fetch' ? 'toolbar.fetchTitle' : 'toolbar.pull'),
+      icon: busyOp === 'pull' || busyOp === 'fetch' ? <Loader2 size={17} className="spin" /> : pullAction === 'fetch' ? <Download size={17} /> : <ArrowDownToLine size={17} />,
       menuIcon: <ArrowDownToLine size={15} />,
       disabled: inflight,
-      run: () => void repoActions.pull(path, 'default'),
+      run: () => void (pullAction === 'fetch' ? repoActions.fetchAll(path) : repoActions.pull(path, pullAction)),
       menu: pullItems,
+      age: true,
       badge: current?.behind
     },
     {
@@ -431,15 +428,6 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
       icon: <Wrench size={16} />,
       menuIcon: <Wrench size={15} />,
       menu: toolsItems
-    },
-    { id: 'sep-2', sep: true },
-    {
-      id: 'settings',
-      label: t('toolbar.settings'),
-      title: t('toolbar.settingsTitle'),
-      icon: <Settings size={16} />,
-      menuIcon: <Settings size={15} />,
-      run: () => openModal({ kind: 'repo-settings', repoPath: path })
     }
   ]
 
@@ -615,7 +603,6 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
       <div className="toolbar-left">
         {sidebarSide === 'left' && sidebarToggle}
         <RepoStatusPicker repo={repo} />
-        <ChevronRight size={14} className="repo-pill-arrow" />
         <BranchStatusPicker repo={repo} />
       </div>
 

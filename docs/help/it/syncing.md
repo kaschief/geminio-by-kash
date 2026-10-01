@@ -23,7 +23,7 @@ tracking, non ne ha. Il fetch riesce comunque, scorre un lungo elenco di ref
 for the current branch"*. Non è stato fatto pull di niente e niente si è rotto:
 la seconda metà semplicemente non aveva un bersaglio.
 
-Gitcito legge quell'errore e offre la riparazione come pulsante, scegliendo quale
+Geminio legge quell'errore e offre la riparazione come pulsante, scegliendo quale
 in base al fatto che il remoto porti già il branch:
 
 | | |
@@ -87,7 +87,7 @@ due remote è il doppio dell'esposizione, non metà della prudenza.
 ## Branch su cui non sei
 
 `git pull` muove solo HEAD, ed è per questo che quasi tutti i client ti fanno
-fare il checkout di un branch prima di poterlo aggiornare. Gitcito no: clic
+fare il checkout di un branch prima di poterlo aggiornare. Geminio no: clic
 destro su un branch locale — nella sidebar o sul badge nel [grafo](graph.md) — e
 trovi **Pulla \<branch\>** e **Pusha \<branch\>**, che agiscono su *quel* branch.
 

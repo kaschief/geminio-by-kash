@@ -8,7 +8,7 @@ keywords: accessibility a11y screen reader VoiceOver NVDA keyboard navigation fo
 
 # Accessibility
 
-Gitcito aims to be operable without a mouse and legible to a screen reader.
+Geminio aims to be operable without a mouse and legible to a screen reader.
 This page says what that means concretely — and where the edges are.
 
 ## Keyboard

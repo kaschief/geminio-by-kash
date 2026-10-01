@@ -28,14 +28,14 @@ onderaan opent de launcher.
 
 | Actie | Effect |
 |---|---|
-| **Alias maken…** / **Alias wijzigen…** | Alleen een weergavenaam. Gitcito hernoemt of verplaatst de map op schijf nooit. Dezelfde alias volgt de repository over tabbladen, groepen en workspaces heen. |
+| **Alias maken…** / **Alias wijzigen…** | Alleen een weergavenaam. Geminio hernoemt of verplaatst de map op schijf nooit. Dezelfde alias volgt de repository over tabbladen, groepen en workspaces heen. |
 | **Alias verwijderen** | Wordt getoond wanneer er een alias bestaat. Herstelt de mapnaam. |
 | **Worktrees tonen** | Brengt deze repository in beeld en opent de worktreesectie van de zijbalk. |
 | **Nieuwe worktree…** | Dezelfde worktree-aanmaakprompt als vanaf een branch. Uitgeschakeld zolang het pad ontbreekt of er een merge/rebase/cherry-pick/revert bezig is. |
 | **Reponaam kopiëren** | Kopieert de eigenlijke mapnaam, niet de alias. |
 | **Repopad kopiëren** | Kopieert het absolute pad. |
 | **Bekijken op GitHub** | Origin als dat github.com is, anders de eerste ontleedbare GitHub-remote. Uitgeschakeld wanneer er geen af te leiden valt. |
-| **Openen in terminal** | Opent de terminal van Gitcito met deze repository als werkmap. |
+| **Openen in terminal** | Opent de terminal van Geminio met deze repository als werkmap. |
 | **Tonen in Finder / Verkenner** | Licht de repositorymap op in het bestandsbeheer van het platform. |
 | **Openen in externe editor** | De editor die in de instellingen is ingesteld. Zichtbaar maar uitgeschakeld tot er een is gekozen. |
 | **Verwijderen…** | Sluit het tabblad of haalt de chip uit de groep. Gebruikt dezelfde waarschuwing voor niet-gecommit werk als de **×**-knop. Het verwijdert nooit bestanden van schijf. |

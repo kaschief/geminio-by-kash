@@ -11,7 +11,7 @@ keywords: konflikt radar conflict merge vorschau risiko branches merge-tree
 Herauszufinden, dass ein Branch Konflikte hat, indem man ihn mergt, ist eine
 teure Art, eine Frage zu stellen. Das Radar beantwortet sie vorher.
 
-Gitcito mergt jeden Branch **innerhalb der Objektdatenbank** in eine Basis
+Geminio mergt jeden Branch **innerhalb der Objektdatenbank** in eine Basis
 deiner Wahl (`git merge-tree --write-tree`). Kein Checkout, keine Änderung am
 Index, keine Änderung am Arbeitsverzeichnis, nichts, was danach aufzuräumen
 wäre. Deine nicht committeten Arbeiten können genau da bleiben, wo sie sind,

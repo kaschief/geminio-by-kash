@@ -27,7 +27,7 @@ Zaznacz commit. Pod wiadomością jest sekcja **Notatka**: *Dodaj notatkę*, pis
 
 ![Pisanie notatki pod wiadomością wypchniętego commita i zapisywanie jej](../../screenshots/clip-commit-note.webp)
 
-Zapisanie notatki to zwykła akcja Gitcito — pokazuje toast, a **Cofnij**
+Zapisanie notatki to zwykła akcja Geminio — pokazuje toast, a **Cofnij**
 przywraca poprzedni tekst, łącznie z odtworzeniem notatki, którą usunąłeś.
 
 Wyczyszczenie tekstu i zapisanie usuwa notatkę; coś takiego jak pusta notatka
@@ -36,7 +36,7 @@ nie istnieje.
 ## Znajdowanie notatki
 
 Notatki są niewidoczne w zwykłym logu, co jest głównym powodem, dla którego
-nikt ich nigdy nie odkrywa. Gitcito oznacza commit, który jakąś niesie, małą
+nikt ich nigdy nie odkrywa. Geminio oznacza commit, który jakąś niesie, małą
 ikoną notatki w kolumnie wiadomości w grafie — adnotacja jest więc do
 znalezienia bez wiedzy, że tam w ogóle jest.
 
@@ -59,11 +59,11 @@ git fetch <remote> +refs/notes/commits:refs/notes/commits
 ```
 
 Podróżuje wyłącznie referencja notatek do commitów — własne, lokalne dla
-maszyny referencje Gitcito (jak werdykty [lokalnego CI](local-ci.md)) celowo
+maszyny referencje Geminio (jak werdykty [lokalnego CI](local-ci.md)) celowo
 nie są publikowane.
 
 Niektóre hostingi wymagają jeszcze włączenia albo dopuszczenia notatek po swojej
-stronie; odmowa stamtąd to polityka hostingu, a nie ograniczenie Gitcito.
+stronie; odmowa stamtąd to polityka hostingu, a nie ograniczenie Geminio.
 
 Brak wspólnego zdalnego repozytorium albo prawa zapisu?
 [Bezpieczne udostępnianie](secure-share.md) potrafi spakować notatki
@@ -73,7 +73,7 @@ dla rozbieżnych notatek.
 
 ## Ograniczenia
 
-- **Jedna referencja notatek.** Gitcito czyta i zapisuje domyślne
+- **Jedna referencja notatek.** Geminio czyta i zapisuje domyślne
   `refs/notes/commits`. Własne przestrzenie nazw (`git notes --ref=review`) nie
   są wystawione — repozytorium, które ich używa, nie zobaczy tutaj tamtych
   notatek.

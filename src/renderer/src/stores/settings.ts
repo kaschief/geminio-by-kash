@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { migrateSharedLayout, updateSharedLayout } from '../../../shared/sharedLayout'
 import { migrateAIConfig, needsAccountsNotice, resolveAI } from '../../../shared/aiAccounts'
 import {
   defaultProfile,
@@ -64,14 +65,16 @@ export const GROUP_COLORS = [
 
 // Map pre-dynamic-theme ids onto the new merged light/dark theme ids.
 const LEGACY_APP_THEME_IDS: Record<string, string> = {
-  'gitcito-light': 'gitcito',
+  gitcito: 'geminio',
+  'gitcito-light': 'geminio',
   'gitcito-contrast': 'contrast',
   'solarized-dark': 'solarized',
   'github-light': 'github'
 }
 const LEGACY_CODE_THEME_IDS: Record<string, string> = {
-  'gitcito-dark': 'gitcito',
-  'gitcito-light-code': 'gitcito',
+  gitcito: 'geminio',
+  'gitcito-dark': 'geminio',
+  'gitcito-light-code': 'geminio',
   'dracula-code': 'dracula',
   'github-code': 'github',
   'monokai-code': 'monokai',
@@ -227,7 +230,7 @@ interface SettingsState {
   setTodosManualOrder(path: string, on: boolean): void
 
   openRepoTab(repo: RepoRef): void
-  /** Open (or focus) a repo requested by the `gitcito` CLI shim. Unlike
+  /** Open (or focus) a repo requested by the `geminio` CLI shim. Unlike
    *  openRepoTab, this can target/create a named group and inserts brand-new
    *  standalone tabs at the front (leftmost) since a CLI-opened repo is the
    *  thing the user just asked for. */
@@ -411,15 +414,15 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
       settings.workspaces[0].id === 'default' &&
       !settings.workspaces[0].tabs?.length
     if (!settings.workspaces?.length || (pristineDefaultWs && settings.tabs?.length)) {
-      settings.workspaces = [{ id: 'default', name: 'Gitcito', tabs: settings.tabs, activeTabId: settings.activeTabId }]
+      settings.workspaces = [{ id: 'default', name: 'Geminio', tabs: settings.tabs, activeTabId: settings.activeTabId }]
     } else if (
       settings.workspaces.length === 1 &&
       settings.workspaces[0].id === 'default' &&
-      settings.workspaces[0].name === 'Default'
+      ['Default', 'Gitcito'].includes(settings.workspaces[0].name)
     ) {
       // Legacy auto-created workspace was named "Default". The logo now doubles
       // as the workspace switcher, so rebrand the lone default to the app name.
-      settings.workspaces[0].name = 'Gitcito'
+      settings.workspaces[0].name = 'Geminio'
     }
     settings.activeWorkspaceId =
       settings.activeWorkspaceId && settings.workspaces.some((w) => w.id === settings.activeWorkspaceId)
@@ -439,7 +442,9 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
       )
     settings.workspaces = settings.workspaces.map((w) => ({ ...w, tabs: normalizeTabs(w.tabs ?? []) }))
     settings.tabs = normalizeTabs(settings.tabs)
-    set({ settings: migrateRepoAliases(settings), loaded: true })
+    const migrated = migrateRepoAliases(migrateSharedLayout(settings))
+    set({ settings: migrated, loaded: true })
+    if (settings.sharedLayoutVersion !== 1) persist(migrated)
   },
 
   update: (mut) => {
@@ -495,10 +500,7 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
     }),
 
   updateRepoLayout: (path, mut) =>
-    get().update((s) => ({
-      ...s,
-      repoLayouts: { ...(s.repoLayouts ?? {}), [path]: mut(s.repoLayouts?.[path] ?? {}) }
-    })),
+    get().update((s) => updateSharedLayout(s, path, mut)),
 
   bookmarksFor: (path) => sortBookmarks(get().settings.repoBookmarks?.[canonicalRepoPath(path)] ?? []),
 

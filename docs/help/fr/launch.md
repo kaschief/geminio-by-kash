@@ -2,13 +2,13 @@
 title: Exécuter et déboguer (launch.json)
 category: Outils de l'espace de travail
 order: 91
-summary: Lancer vos configurations VS Code sans quitter Gitcito.
+summary: Lancer vos configurations VS Code sans quitter Geminio.
 keywords: launch.json exécuter run déboguer debug vscode configurations configs tâches tasks preLaunchTask input arrière-plan background compound compounds stopAll serverReadyAction sessions parallèles hot reload hot restart device simulator emulator run target flutter metro expo vite nodemon vitest jest mocha ava wrangler dotnet watch adb simctl avd xcodebuild capacitor
 ---
 
 # Exécuter et déboguer
 
-Gitcito lit votre `.vscode/launch.json` — celui de la racine et tous ceux qui
+Geminio lit votre `.vscode/launch.json` — celui de la racine et tous ceux qui
 sont imbriqués, groupés par des séparateurs — et exécute la configuration que
 vous choisissez dans le terminal intégré.
 
@@ -34,7 +34,7 @@ vous choisissez dans le terminal intégré.
 - **`serverReadyAction`** est pris en charge : quand la sortie de la session
   correspond au motif configuré, l’URL annoncée s’ouvre dans votre navigateur
   (`openExternally` ; `debugWithChrome` / `debugWithEdge` ouvrent aussi le
-  navigateur — Gitcito ne peut pas y attacher de débogueur).
+  navigateur — Geminio ne peut pas y attacher de débogueur).
 
 ![Un compound exécutant deux sessions parallèles](../../screenshots/launch-compound.webp)
 
@@ -52,7 +52,7 @@ Si la barre recouvre quelque chose dont vous avez besoin, déplacez-la par sa
 poignée — la position est mémorisée, et un double-clic sur la poignée la
 recentre.
 
-Ce que Gitcito ne fait délibérément **pas** : il exécute vos programmes dans de
+Ce que Geminio ne fait délibérément **pas** : il exécute vos programmes dans de
 vrais terminaux, mais ce n’est pas un débogueur — pas de points d’arrêt, pas
 d’inspection de variables, pas de Debug Adapter Protocol. Les configurations
 attach fonctionnent quand elles portent un `preLaunchTask` (la tâche est le
@@ -68,7 +68,7 @@ la suite sur **a**. Redémarrer la configuration de lancement pour obtenir la
 même chose, c'est la voie lente : cela tue le processus, rejoue chaque
 `preLaunchTask` et jette l'état de l'application.
 
-Gitcito lit donc la commande qu'une configuration lance réellement — en suivant
+Geminio lit donc la commande qu'une configuration lance réellement — en suivant
 un `npm run dev` jusqu'aux scripts de votre `package.json` — et place les touches
 de ce runtime dans la barre de débogage. Appuyer sur l'une d'elles écrit la
 touche sur l'entrée standard de la session, exactement comme si vous l'aviez
@@ -95,7 +95,7 @@ parce qu'il a l'air d'avoir marché.
 
 **Les limites.** La détection est textuelle : elle cherche le nom du programme
 dans la ligne de commande, donc une configuration qui démarre votre serveur via
-un script d'enrobage que Gitcito ne peut pas lire n'obtient rien. Rien n'accuse
+un script d'enrobage que Geminio ne peut pas lire n'obtient rien. Rien n'accuse
 réception non plus : le bouton clignote, et la sortie du processus est la vraie
 réponse. Une session en pause ou terminée n'accepte aucune entrée, les boutons
 sont alors grisés.
@@ -107,7 +107,7 @@ sont alors grisés.
   "name": "API (watch)",
   "type": "node-terminal",
   "command": "./scripts/dev.sh",
-  "gitcito": { "hotActions": [{ "label": "Reload", "send": "r", "icon": "reload" }] }
+  "geminio": { "hotActions": [{ "label": "Reload", "send": "r", "icon": "reload" }] }
 }
 ```
 
@@ -122,7 +122,7 @@ Un tableau `hotActions` vide désactive les boutons pour cette configuration.
 
 À une configuration qui construit une application mobile, il faut dire où
 l’exécuter. Ce choix n’appartient pas qu’à Flutter — React Native, Expo,
-Capacitor et xcodebuild prennent aussi une cible, chacun à sa façon. Gitcito la
+Capacitor et xcodebuild prennent aussi une cible, chacun à sa façon. Geminio la
 demande donc une seule fois, à côté de l’onglet **LAUNCH**, et écrit la réponse
 dans la forme que lit le runtime de cette configuration. Le sélecteur
 n’apparaît que si une configuration du dépôt peut réellement prendre un
@@ -159,11 +159,11 @@ Toute configuration lancée reçoit en plus `GITCITO_DEVICE_ID`,
 `GITCITO_DEVICE_NAME` et `GITCITO_DEVICE_PLATFORM` dans son environnement, ainsi
 que `ANDROID_SERIAL` quand la cible est un vrai appareil Android. C’est ce qui
 permet à un script d’enrobage, à une tâche Gradle ou à un simple `adb` de viser
-le même téléphone sans que Gitcito réécrive quoi que ce soit.
+le même téléphone sans que Geminio réécrive quoi que ce soit.
 
 **Démarrer un appareil froid.** Tout ce qui est sous *Non démarré* démarre quand
 vous le choisissez : `flutter emulators --launch`, `xcrun simctl boot` (plus la
-fenêtre du Simulator) ou `emulator -avd` détaché — quitter Gitcito n’emporte
+fenêtre du Simulator) ou `emulator -avd` détaché — quitter Geminio n’emporte
 donc pas votre émulateur Android.
 
 **Les limites.** Une configuration qui nomme déjà un appareil — un `-d`
@@ -181,7 +181,7 @@ Le choix est mémorisé par dépôt, et oublié quand l’appareil cesse d’exi
 
 ## Valeurs depuis JSON et YAML
 
-Un champ peut afficher la version actuelle ou préremplir une valeur depuis un fichier du projet. Gitcito lit le fichier au lancement, avant les champs. Aucune extension VS Code n’est nécessaire.
+Un champ peut afficher la version actuelle ou préremplir une valeur depuis un fichier du projet. Geminio lit le fichier au lancement, avant les champs. Aucune extension VS Code n’est nécessaire.
 
 Ajoutez fileValues à un champ promptString ou pickString. Chaque valeur définit un chemin relatif au dossier de la configuration de lancement et une propriété séparée par des points. Utilisez ${fileValue:name} dans description ou default. Un default vide garde le champ facultatif.
 
@@ -198,4 +198,4 @@ Ajoutez fileValues à un champ promptString ou pickString. Chaque valeur défini
 }
 ```
 
-Seuls les fichiers JSON, YAML et YML de ce dossier, de 1 Mio maximum, sont acceptés. Les valeurs doivent être des chaînes, nombres ou booléens. Un fichier absent, des données incorrectes, une propriété manquante ou un chemin externe interrompent le lancement avec une erreur. Aucune commande ni expression JavaScript n’est exécutée. Chaque nouveau lancement relit les fichiers ; Restart réutilise les réponses. VS Code ne résout pas nativement ces champs Gitcito.
+Seuls les fichiers JSON, YAML et YML de ce dossier, de 1 Mio maximum, sont acceptés. Les valeurs doivent être des chaînes, nombres ou booléens. Un fichier absent, des données incorrectes, une propriété manquante ou un chemin externe interrompent le lancement avec une erreur. Aucune commande ni expression JavaScript n’est exécutée. Chaque nouveau lancement relit les fichiers ; Restart réutilise les réponses. VS Code ne résout pas nativement ces champs Geminio.

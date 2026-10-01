@@ -1,10 +1,10 @@
-# Handoff — gitcito-by-kash
+# Handoff — geminio-by-kash
 
 State of this fork for whoever picks it up next (another agent, or a later
 session). Read this first, then `CLAUDE.md` (the project's working agreement,
 still authoritative except where noted below).
 
-Last updated: 2026-10-01.
+Last updated: 2026-10-01 (completed continuation work; prepared for the requested local commit).
 
 ---
 
@@ -18,14 +18,17 @@ updates.
 
 | | |
 |---|---|
-| Local folder | `~/Code/gitcito-by-kash` |
-| `origin` | `https://github.com/kaschief/gitcito-by-kash` (public) — push here |
+| Local folder | `~/Code/geminio-by-kash` |
+| `origin` | `https://github.com/kaschief/geminio-by-kash` (public) — push here |
 | `upstream` | `https://github.com/MyAppDesk/gitcito` — fetch only; push is set to `DISABLED` |
-| Branch | `main`. No feature branches or PRs: commit straight to `main` and push |
+| Branch | `codex/geminio` (renamed at the owner's request); tracks `origin/main` |
 
 ## 2. Working rules (the owner's, on top of `CLAUDE.md`)
 
-- **Commit only when asked.** When asked: run the gate (§4), commit to `main`
+- **One checkout only:** work in `~/Code/geminio-by-kash`. Do not create development
+  worktrees, clones, isolated checkouts or containers unless the owner reverses this rule.
+
+- **Commit only when asked.** When asked: run the gate (§4), commit on the current branch
   with Conventional Commits (commitlint enforces it; body lines ≤ 100 chars),
   push to `origin`. Never push to `upstream`.
 - **English only.** The fork is not translated any more. Add new strings to
@@ -70,21 +73,21 @@ npm run build                     # gate step; regenerates licenses.generated.js
 - **The build rewrites `src/renderer/src/licenses.generated.json`.** Restore it
   after building (`git checkout -- src/renderer/src/licenses.generated.json`)
   unless dependencies really changed.
-- **Installed app** (`/Applications/Gitcito.app`, unsigned, arm64):
+- **Installed app** (`/Applications/Geminio.app`, unsigned, arm64):
   ```bash
   npm run build && git checkout -- src/renderer/src/licenses.generated.json
   CSC_IDENTITY_AUTO_DISCOVERY=false npx electron-builder --mac dir --arm64 \
     --publish never -c.mac.identity=null
-  ditto dist/mac-arm64/Gitcito.app /Applications/Gitcito.app
+  ditto dist/mac-arm64/Geminio.app /Applications/Geminio.app
   ```
   Replace the copy in `/Applications` only after confirming with the owner.
   The installed app keeps its settings separately from the dev app
-  (`~/Library/Application Support/gitcito` vs `gitcito-dev`).
+  (`~/Library/Application Support/geminio` vs `geminio-dev`).
 - **Updates:** the app checks upstream for releases and shows a notice, but
   never downloads or installs (`SELF_INSTALL = false` in `src/main/updater.ts`)
   — installing upstream's build would wipe the fork's changes. Taking an update
   = `git fetch upstream`, show the owner what changed, merge `upstream/main`
-  into `main`, rebuild.
+  into the current branch, rebuild.
 
 ### Dev-mode gotchas
 
@@ -104,13 +107,19 @@ npm run build                     # gate step; regenerates licenses.generated.js
 npm run typecheck && npm run lint:i18n && npm run lint:docs && npm test && npm run build
 ```
 
-Expected today: everything passes except **two tests that already failed
-before any fork changes** (not investigated):
+The full gate passes: 1,635 tests passed, 2 intentionally skipped; typecheck,
+i18n lint, docs lint and production build passed. Targeted checks also passed
+after the final editor-menu refinement. The two previously failing tests are fixed:
 
-- `test/newFeatures.test.ts` › deleteRemoteBranch (stale tracking ref)
-- `test/gitOps.test.ts` › automated bisect (git bisect run) — `status.finished` is false
+- `deleteRemoteBranch`: its test now explicitly initializes `main`, so it does
+  not depend on the machine's Git default branch name.
+- Automated bisect: completion accepts both old `first bad commit` output and
+  the newer `first 'bad' commit` wording.
 
-Anything else red is a regression.
+Visual checks use the real built app and fixture repositories. The screenshot
+harness now waits for startup maximization before setting an explicit viewport,
+and uses `cwebp` for stills when available (this machine's ffmpeg lacks libwebp).
+The Sidecar shots assert offscreen-author fitting and find-bar behavior.
 
 ---
 
@@ -150,8 +159,9 @@ detail. Summary:
 **Graph** (`GraphView.tsx`, `lib/graphColumnFit.ts`, `lib/commitDate.ts`)
 - Header scrolls sideways in step with the rows.
 - Column widths capped (`COL_MAX`) and clamped on load; double-click any
-  divider fits **all** columns to widest visible entry or heading (≤ 35% of the
-  graph each).
+  divider fits **all** columns to the widest loaded entry or heading (≤ 35% of
+  the graph each, subject to column minimums). Virtualized rows are included;
+  the branch connector is excluded from content measurements.
 - In a narrow graph, branch then graph columns shrink before the message.
 - Date format setting (relative / date & time / ISO); in relative mode the
   hovered row shows the exact date in place.
@@ -182,32 +192,94 @@ detail. Summary:
   **Files & Diffs** · Profile · Workspaces · Integrations · AI · Security ·
   Shortcuts · Data. Analyzer, date format and path depth use option cards.
 
-## 6. Open items and known gaps
+## 6. Continuation completed
 
-Not done, roughly by value:
+- English action labels swept for Title Case, preserving prose, technical tokens,
+  placeholders and status messages. Composer multi-file discard copy now uses
+  the existing dictionary count key.
+- File/folder menus show one editor action when the preferred application is
+  that same editor. Different apps and custom commands remain distinct.
+- Column fitting includes loaded rows beyond the virtual viewport. Extremely
+  long values can still truncate at the documented width cap; unloaded history
+  requires loading more commits before fitting again.
+- Verified graph/details at 1366×1024 and diff/staging at 1100×760. Find opens
+  without shifting code and sits below the opening hunk actions. Escape closes
+  Find without closing the file. Floating overlays can still cover code.
+- Refreshed graph light/dark, graph path filter, graph appearance settings,
+  split diff and line-staging screenshots; added Sidecar graph/diff and
+  Files & Diffs settings captures. Other upstream feature shots are retained.
+- Translated handbook pages are deliberately retained for upstream compatibility;
+  English remains the maintained source for this fork.
+- Both previously failing tests fixed (see §4).
 
-1. **Title Case sweep.** About 70 English action labels converted; ~250 more
-   elsewhere are still sentence case. Rule: buttons and menu items Title Case;
-   tooltips, empty states, dialog messages stay sentence case.
-2. **File context menu** has both "Open in Visual Studio Code" and "Open with
-   Visual Studio Code" — check what each does and merge or rename.
-3. **Never checked visually at Sidecar size.** Narrow-width fixes were made
-   from code reading. The screenshot tool (`npm run screenshots`, Playwright
-   against the built app) could capture them at 1366×1024 — ask first.
-4. **Translated handbook pages** (`docs/help/<locale>/`) lag the English
-   pages. Fine under the English-only rule; delete or leave, owner's call.
-5. **Screenshots** in `docs/screenshots/` predate the fork's UI changes.
-6. **Column fit measures visible rows only** (the list is virtualized). Long
-   entries further down may still be cut; a second double-click after
-   scrolling picks them up.
-7. **The two pre-existing failing tests** (§4) are uninvestigated.
-8. `label` in the composer's file context menu is a hardcoded English
-   `"N files"` string (fine in English-only, but not dictionary-backed).
+### GitHub connection (also requested during this session)
+
+- Hosting API credentials prefer the profile's explicit token, then the existing
+  GitHub CLI login, then Git's credential helper. Applies to HTTPS and SSH GitHub
+  remotes. CLI tokens remain in main-process memory; no global Git configuration
+  or stored profile token is changed. Git transport still uses Git/SSH auth.
+- Settings → Integrations → GitHub shows the connected account and a Connect
+  GitHub retry action when disconnected. No new OAuth app/client ID is required
+  for an existing CLI login; sign-in itself remains `gh auth login` or a helper/PAT.
+- The active account photo is used in the title bar and for authors matching its
+  public/verified emails or GitHub no-reply addresses. Other authors retain
+  Gravatar/generated fallbacks. Matching never guesses from display names.
+- Live verification resolved `kaschief`, loaded the profile photo and showed it
+  on all six recent commits. Author identity and history were not changed.
+- Account lookups are shared, isolated by profile/token and refreshed every five
+  minutes. Screenshot fixtures do not load the machine's account identity.
+- The owner subsequently requested a complete rename to Geminio. The installed
+  bundle is now `/Applications/Geminio.app`; the former bundle is backed up at
+  `/tmp/Geminio-app-backup-1790882685/Gitcito.app`. The dev app is also running.
+
+### Geminio rename and interaction changes (completed 2026-10-01)
+
+- Primary checkout moved to `/Users/kaschief/Code/geminio-by-kash`; no extra
+  checkout or worktree. Local branch is `codex/geminio`, tracking `origin/main`.
+  GitHub repository was renamed to `kaschief/geminio-by-kash`; upstream remains
+  `MyAppDesk/gitcito`. The owner requested a local commit after installation; no push was requested.
+- Product, CLI, assets, package identifiers, documentation and translations now
+  use Geminio. Legacy internal storage keys, encrypted bundle markers, Git
+  refs and attribution deliberately remain compatible. `.geminio.json` is
+  primary; `.gitcito.json` is still readable. Prior app data is copied once into
+  the new app-data directory without overwriting the original.
+- The commit-message section has a draggable top divider and a remembered
+  height. Description grows with it, with room reserved for staging lists.
+- Right-click any graph header for the existing columns menu. Graph order,
+  widths and visibility, plus sidebar section order, visibility and expansion,
+  are global. First load adopts the active repo's old layout. Branch pins and
+  branch-folder expansion stay per-repository.
+- Repository/branch selectors are now compact single-line pills with proper
+  truncation and fixed space for icons and chevrons; no stacked headings or
+  breadcrumb arrow.
+- One Pull/Fetch split button: selecting its dropdown option saves a default,
+  and clicking the main button executes it. No separate Fetch toolbar button.
+- One Settings window; Repository is a section inside it. Old repo-settings
+  commands redirect there. The duplicate toolbar gear was removed.
+- Title-bar account photo/name is a passive indicator; profile dropdown removed.
+  Profile management stays inside Settings, where connected account photos work.
+- Outside dismissal uses pointer capture for menus so stopped bubbling cannot
+  leave them open. Escape dismisses a context menu before its parent dialog.
+  Unsaved repository config/info/vault drafts prevent backdrop dismissal.
+- Automated native-app checks passed for resizing/shrinking/persistence, column
+  toggles, Pull/Fetch selection, outside clicks and unsaved config protection.
+  Live GitHub check confirmed kaschief's photo in the title bar and Settings,
+  plus six recent commits. Relevant screenshots refreshed.
+- Gate: 1,635 tests passed, 2 intentionally skipped; typecheck, i18n/docs lint and
+  production build passed. Playground fixtures regenerated after moving paths.
+- README now introduces Geminio as Kash's personal Git client, documents the
+  evolved workflow and current macOS focus, and credits Gitcito in Origins.
+  CONTRIBUTING, getting-started and ROADMAP distinguish this project from its
+  upstream and document the English-first and single-checkout workflow.
+- Installed bundle: `/Applications/Geminio.app`; dev log: `/tmp/geminio-dev.log`.
+  Saved JSON path references were updated with backups at
+  `/tmp/geminio-rename-backup-1790882601`.
 
 ## 7. Where things live (new modules)
 
 | Path | What |
 |---|---|
+| `src/renderer/src/stores/githubAccount.ts` | Shared session GitHub identity and refresh hook |
 | `src/renderer/src/components/FastTooltip.tsx` | The app's single tooltip; adopts `title` attributes |
 | `src/renderer/src/components/useAiReady.ts` | Shared, cached "is AI usable" check (IPC `ai:ready`) |
 | `src/renderer/src/components/NumberField.tsx` | Bounded number input that lets people type |

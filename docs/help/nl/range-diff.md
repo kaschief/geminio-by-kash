@@ -12,7 +12,7 @@ Je reviewde een branch. Iemand rebasede hem en force-pushte. Een gewone diff is
 nu waardeloos: elke commit na een rebase is een nieuwe commit, dus alles ziet er
 nieuw uit.
 
-`git range-diff` koppelt de twee versies commit voor commit, en Gitcito leest de
+`git range-diff` koppelt de twee versies commit voor commit, en Geminio leest de
 oude posities rechtstreeks uit de **reflog** — er hoefde dus vooraf niets
 vastgelegd te worden om dit te laten werken.
 

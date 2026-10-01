@@ -86,7 +86,7 @@ Das Häkchen meldet das Repository bei **`git maintenance`** an, das nach einem
 Zeitplan packt und vorablädt, den dein Betriebssystem ausführt (launchd,
 systemd oder Aufgabenplanung).
 
-Nichts davon ist Gitcito-spezifisch: Derselbe Zeitplan bedient auch dein
+Nichts davon ist Geminio-spezifisch: Derselbe Zeitplan bedient auch dein
 Terminal, und `git maintenance unregister` macht es von überall rückgängig. Das
 Häkchen zu entfernen tut genau das — und lässt den Zeitplan für alle anderen
 angemeldeten Repositorys bestehen.
@@ -106,7 +106,7 @@ angemeldeten Repositorys bestehen.
   Commit, ist er erreichbar, und gc wird ihn für immer behalten — das ist
   [eine Datei aus der Historie entfernen](history-purge.md), eine andere und
   weit einschneidendere Operation.
-- **Gitcito führt niemals hinter deinem Rücken gc aus.** Gits eigenes
+- **Geminio führt niemals hinter deinem Rücken gc aus.** Gits eigenes
   `gc --auto` kann das weiterhin, wie eh und je; schlägt eines fehl,
   hinterlässt es eine Notiz in `.git/gc.log`, die dieses Panel dir zeigt.
 

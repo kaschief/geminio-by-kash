@@ -19,7 +19,7 @@ propre HEAD détaché à tenir droit.
 
 `⌘K` → **Sous-arbres**.
 
-![Un répertoire embarqué retrouvé dans l'historique, avec la source que Gitcito lui associe](../../screenshots/subtree.webp)
+![Un répertoire embarqué retrouvé dans l'historique, avec la source que Geminio lui associe](../../screenshots/subtree.webp)
 
 ## Le piège dont personne ne parle
 
@@ -28,11 +28,11 @@ propre HEAD détaché à tenir droit.
 seulement une ligne `git-subtree-dir:` sur le commit qui a fait l'import.
 
 Un dépôt peut donc contenir un sous-arbre sans vous donner le moindre moyen de
-savoir d'où il vient. Gitcito fait ce qu'il peut :
+savoir d'où il vient. Geminio fait ce qu'il peut :
 
 - La liste est découverte depuis l'historique, en lisant ces lignes. N'importe
   quel sous-arbre ajouté par n'importe qui, avec n'importe quel outil, apparaît.
-- Le **dépôt source et la référence** sont mémorisés par Gitcito, dans la
+- Le **dépôt source et la référence** sont mémorisés par Geminio, dans la
   configuration git de ce dépôt. Un sous-arbre découvert depuis l'historique
   démarre avec ces champs vides — remplissez-les une fois et pull et push
   fonctionnent à partir de là.
@@ -70,14 +70,14 @@ un sous-arbre cesse d'être un sous-arbre.
 
 - **Le push est lent.** Il recalcule l'historique du répertoire à partir de zéro
   à chaque fois. Sur un gros dépôt, cela va de quelques secondes à quelques
-  minutes, pas de l'instantané, et Gitcito ne peut que l'attendre.
+  minutes, pas de l'instantané, et Geminio ne peut que l'attendre.
 - **Un pull est une fusion**, il peut donc entrer en conflit comme n'importe
   quelle fusion — vous atterrissez dans [le résolveur](conflicts.md).
 - **`git subtree` est un script contrib**, pas une commande intégrée de git. Une
-  installation de git allégée peut ne pas l'avoir ; Gitcito le dit clairement
+  installation de git allégée peut ne pas l'avoir ; Geminio le dit clairement
   plutôt que de vous répercuter « 'subtree' is not a git command ».
 - **Un historique squashé ne peut pas être dé-squashé** plus tard. Les commits
   n'ont jamais été importés.
-- Gitcito ne convertit pas un sous-module en sous-arbre, ni l'inverse.
+- Geminio ne convertit pas un sous-module en sous-arbre, ni l'inverse.
 
 Voir aussi : [Fusion et rebase](merging.md) · [La plomberie avec une interface](lfs-sparse.md)

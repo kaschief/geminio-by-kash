@@ -8,7 +8,7 @@ const roots: string[] = []
 
 /** A tree of fake repos: a .git directory is all the scanner looks for. */
 function tree(): string {
-  const root = mkdtempSync(join(tmpdir(), 'gitcito-scan-'))
+  const root = mkdtempSync(join(tmpdir(), 'geminio-scan-'))
   roots.push(root)
   const repo = (rel: string): void => {
     mkdirSync(join(root, rel, '.git'), { recursive: true })

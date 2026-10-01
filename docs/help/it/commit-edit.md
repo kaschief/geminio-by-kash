@@ -10,7 +10,7 @@ keywords: modifica commit edit riscrivi rewrite storia history amend passato rew
 
 Il refuso sta in un commit di tre settimane fa. La soluzione classica è un rebase
 interattivo: fermarsi al commit, modificare, continuare, pregare. La soluzione di
-Gitcito è: clic destro sul commit, **Modifica questo commit**, cambia il testo,
+Geminio è: clic destro sul commit, **Modifica questo commit**, cambia il testo,
 fatto. Il pulsante a forma di penna nel pannello dei dettagli del commit apre
 lo stesso editor.
 

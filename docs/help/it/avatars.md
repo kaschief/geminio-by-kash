@@ -10,7 +10,7 @@ keywords: avatar gravatar blobatar autore foto immagine identicon faccia offline
 
 Un elenco di commit è un muro di nomi, e i nomi si leggono lentamente.
 Un’immagine accanto a ciascuno trasforma «chi ha scritto questo» in qualcosa a cui
-rispondi con un’occhiata. Gitcito ne mette una su ogni autore che mostra: nella
+rispondi con un’occhiata. Geminio ne mette una su ogni autore che mostra: nella
 colonna autore del grafo, nei dettagli del commit accanto all’autore e a ogni
 coautore, nel selettore di coautori mentre scrivi, nel commutatore di profili e
 accanto a ogni profilo nelle Impostazioni.
@@ -39,7 +39,7 @@ due indirizzi sono davvero la stessa persona.
 
 ## La faccia nella barra del titolo
 
-L’avatar accanto al nome del tuo profilo è l’unico avatar in Gitcito che
+L’avatar accanto al nome del tuo profilo è l’unico avatar in Geminio che
 rappresenta **te, in questo repository, adesso** — quindi è l’unico che reagisce
 allo stato del repository. Fa una faccia quando c’è qualcosa, e resta neutra il
 resto del tempo.

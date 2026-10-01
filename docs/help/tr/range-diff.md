@@ -12,7 +12,7 @@ Bir dalı gözden geçirdiniz. Biri onu rebase edip force-push yaptı. Normal bi
 diff artık işe yaramaz: bir rebase'den sonraki her commit yeni bir commit'tir,
 dolayısıyla her şey yeniymiş gibi görünür.
 
-`git range-diff` iki sürümü commit commit eşleştirir; Gitcito da eski konumları
+`git range-diff` iki sürümü commit commit eşleştirir; Geminio da eski konumları
 doğrudan **reflog**'dan okur — yani bunun çalışması için önceden hiçbir şeyin
 kaydedilmiş olması gerekmez.
 

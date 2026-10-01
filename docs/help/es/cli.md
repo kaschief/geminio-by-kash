@@ -2,13 +2,13 @@
 title: La línea de comandos
 category: Herramientas del espacio de trabajo
 order: 93
-summary: `gitcito .` abre un repositorio — y `gitcito doctor` responde sin abrir nada.
+summary: `geminio .` abre un repositorio — y `geminio doctor` responde sin abrir nada.
 keywords: cli linea de comandos command line terminal shim path instalar abrir carpeta instancia unica single instance doctor status repos commit-check config editor completions wait core.editor blame show search verbos codigo de salida ci hook
 ---
 
 # La línea de comandos
 
-Desde una terminal se hacen dos tipos de pregunta, y `gitcito` responde a las dos.
+Desde una terminal se hacen dos tipos de pregunta, y `geminio` responde a las dos.
 
 La primera es *«enséñame esto»* — estás en un clon, algo necesita mirarse y la
 app es el sitio adecuado para mirarlo. Esas invocaciones abren una ventana, lo
@@ -19,14 +19,14 @@ tubería, queriendo una respuesta y un código de salida en vez de una ventana.
 Esas nunca lanzan la app: escriben en stdout y se apartan.
 
 ```sh
-gitcito .                        # abre esta carpeta
-gitcito blame src/api.ts -l 84   # …en el blame de esa línea
-gitcito doctor                   # sin ventana: revisa el repo, sale con 1 si falla
+geminio .                        # abre esta carpeta
+geminio blame src/api.ts -l 84   # …en el blame de esa línea
+geminio doctor                   # sin ventana: revisa el repo, sale con 1 si falla
 ```
 
 ## Instalarlo
 
-Paleta de comandos (<kbd>⌘K</kbd>) → **Instalar el comando 'gitcito' en el
+Paleta de comandos (<kbd>⌘K</kbd>) → **Instalar el comando 'geminio' en el
 PATH**. En macOS crea un enlace simbólico a un pequeño shim en `/usr/local/bin`
 o `/opt/homebrew/bin`, y solo pide permisos de administrador si ninguno de los
 dos es escribible por ti. En Linux va a `~/.local/bin`, que no necesita permiso
@@ -36,28 +36,28 @@ está soportado.
 Después, si quieres:
 
 ```sh
-gitcito completions zsh >> ~/.zshrc     # o bash, o fish
+geminio completions zsh >> ~/.zshrc     # o bash, o fish
 ```
 
 ## Abrir cosas
 
 | Comando | Abre |
 |---------|------|
-| `gitcito [ruta]` | El repositorio (por defecto, la carpeta actual) |
-| `gitcito open <nombre>` | Un repositorio por el **nombre de su pestaña** — `gitcito open api` |
-| `gitcito diff` | Los cambios sin confirmar |
-| `gitcito graph` | El grafo de commits |
-| `gitcito show <ref>` | Un commit — `HEAD~2`, una etiqueta, un hash corto |
-| `gitcito blame <archivo>` | El blame de un archivo; añade `-l 84` para caer en una línea |
-| `gitcito search <consulta>` | La búsqueda de código, con la consulta ya escrita |
-| `gitcito stack`, `stash`, `reflog`, `conflicts`, `todos`, `chat`, `settings` | Ese panel |
-| `gitcito ci`, `clean`, `bisect`, `absorb`, `snapshots`, `insights`, `terminal` | …y así |
+| `geminio [ruta]` | El repositorio (por defecto, la carpeta actual) |
+| `geminio open <nombre>` | Un repositorio por el **nombre de su pestaña** — `geminio open api` |
+| `geminio diff` | Los cambios sin confirmar |
+| `geminio graph` | El grafo de commits |
+| `geminio show <ref>` | Un commit — `HEAD~2`, una etiqueta, un hash corto |
+| `geminio blame <archivo>` | El blame de un archivo; añade `-l 84` para caer en una línea |
+| `geminio search <consulta>` | La búsqueda de código, con la consulta ya escrita |
+| `geminio stack`, `stash`, `reflog`, `conflicts`, `todos`, `chat`, `settings` | Ese panel |
+| `geminio ci`, `clean`, `bisect`, `absorb`, `snapshots`, `insights`, `terminal` | …y así |
 
-`gitcito help verbs` imprime la lista completa. Tres opciones valen para todos:
+`geminio help verbs` imprime la lista completa. Tres opciones valen para todos:
 `-n <nombre>` fija el nombre visible de la pestaña, `-g <grupo>` lo mete en una
 pestaña de grupo (creándola si hace falta) y `-l <n>` elige una línea.
 
-Gitcito es de **instancia única**: ejecutar `gitcito` con la app abierta entrega
+Geminio es de **instancia única**: ejecutar `geminio` con la app abierta entrega
 la petición a esa ventana en lugar de lanzar una segunda copia. Una ruta que ya
 está abierta — como pestaña o dentro de un grupo — recibe **el foco**, no un
 duplicado. Una carpeta que no es un repositorio se abre igualmente, ofreciendo
@@ -68,14 +68,14 @@ el flujo de «inicializar repositorio aquí».
 Estos imprimen y terminan. No abren ventana, y la app ni siquiera necesita estar
 en marcha.
 
-### `gitcito status`
+### `geminio status`
 
 Rama, seguimiento, adelanto/retraso, árbol de trabajo, stashes y — si el
 repositorio la trae — la [lista de comprobación de push de
-`.gitcito.json`](repo-config.md). Sale con 1 cuando el árbol de trabajo tiene
-conflictos, así que `gitcito status || echo bloqueado` funciona.
+`.geminio.json`](repo-config.md). Sale con 1 cuando el árbol de trabajo tiene
+conflictos, así que `geminio status || echo bloqueado` funciona.
 
-### `gitcito doctor [--fix]`
+### `geminio doctor [--fix]`
 
 Ejecuta las mismas comprobaciones que el panel de [configuración del
 repositorio](repo-config.md): la versión de Node, los submódulos, LFS,
@@ -84,7 +84,7 @@ el sentido de todo esto — las reglas que un repositorio declara valen poco si
 solo las ve quien tiene la interfaz abierta:
 
 ```yaml
-- run: gitcito doctor          # en CI, antes de nada caro
+- run: geminio doctor          # en CI, antes de nada caro
 ```
 
 `--fix` aplica las reparaciones que el doctor sabe hacer (inicializar
@@ -96,48 +96,48 @@ Los avisos no hacen fallar la ejecución. Un aviso significa que el doctor no
 pudo determinar algo, no que algo esté mal, y hacer fallar compilaciones por eso
 haría el archivo demasiado caro de adoptar.
 
-### `gitcito commit-check [archivo]`
+### `geminio commit-check [archivo]`
 
 Revisa un mensaje de commit. Sin argumento lee `.git/COMMIT_EDITMSG`; `-m "…"`
 revisa una cadena. Sabe lo que declaró el repositorio: un scope desconocido es
-un **error** cuando `.gitcito.json` lista scopes, y solo un consejo de estilo
+un **error** cuando `.geminio.json` lista scopes, y solo un consejo de estilo
 cuando no. Engánchalo a un hook:
 
 ```sh
 # .husky/commit-msg
-gitcito commit-check "$1"
+geminio commit-check "$1"
 ```
 
-### `gitcito config init | show | check`
+### `geminio config init | show | check`
 
-`init` lee el repositorio y propone un `.gitcito.json` a partir de lo que ya
+`init` lee el repositorio y propone un `.geminio.json` a partir de lo que ya
 hay: `.nvmrc`, `.gitmodules`, un `.env.example` sin `.env`, los scopes de commit
 que el historial viene usando. `--dry-run` imprime en vez de escribir. `show`
 imprime el archivo actual; `check` lo valida y lista cualquier campo que se
 descartaría.
 
-### `gitcito repos [filtro]`
+### `geminio repos [filtro]`
 
-Todos los repositorios que Gitcito conoce — primero las pestañas abiertas,
+Todos los repositorios que Geminio conoce — primero las pestañas abiertas,
 luego los recientes — con su grupo. `--paths` imprime rutas desnudas, una por
 línea, para scripts:
 
 ```sh
-cd "$(gitcito repos --paths api | head -1)"
+cd "$(geminio repos --paths api | head -1)"
 ```
 
-## Gitcito como editor de git
+## Geminio como editor de git
 
 ```sh
-gitcito editor install
+geminio editor install
 ```
 
-fija `core.editor` y `sequence.editor` a `gitcito --wait`. A partir de ahí
+fija `core.editor` y `sequence.editor` a `geminio --wait`. A partir de ahí
 `git commit` (sin `-m`), `git commit --amend`, `git tag -a` y `git rebase -i`
-abren su archivo en Gitcito en lugar de vim, con un contador de caracteres y las
+abren su archivo en Geminio en lugar de vim, con un contador de caracteres y las
 mismas pistas de mensaje que muestra el compositor.
 
-![El editor que abre Gitcito cuando git pide uno](../../screenshots/cli-edit.webp)
+![El editor que abre Geminio cuando git pide uno](../../screenshots/cli-edit.webp)
 
 Lo importante es la palabra **esperando**: git está bloqueado en ese diálogo. Así
 que
@@ -145,11 +145,11 @@ que
 - **Guardar y continuar** reescribe el archivo y git sigue adelante.
 - **Cancelar** escribe un archivo vacío, que git lee como *abortar*.
 - Cerrar el diálogo de cualquier otra forma — Escape, el fondo, salir de
-  Gitcito — cuenta como Cancelar. Una terminal esperando para siempre sería
+  Geminio — cuenta como Cancelar. Una terminal esperando para siempre sería
   mucho peor que un commit que hay que reescribir.
 
 Añade `--local` para limitarlo a un repositorio, y deshazlo con
-`gitcito editor uninstall`.
+`geminio editor uninstall`.
 
 ## Lo que no hará
 

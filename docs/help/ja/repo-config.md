@@ -1,12 +1,12 @@
 ---
-title: リポジトリのルール（.gitcito.json）
+title: リポジトリのルール（.geminio.json）
 category: ワークスペースツール
 order: 98
 summary: クローンと一緒に運ばれるプロジェクトのルール — 保護ブランチ、コミットスコープ、クローンに必要なもの、プッシュ前のチェックリスト。
-keywords: gitcito.json repo config doctor requirements protected branches scopes trailers ticket tracker links checklist onboarding hooksPath node submodules lfs env example リポジトリ設定 ルール 保護ブランチ スコープ チケット チェックリスト
+keywords: geminio.json repo config doctor requirements protected branches scopes trailers ticket tracker links checklist onboarding hooksPath node submodules lfs env example リポジトリ設定 ルール 保護ブランチ スコープ チケット チェックリスト
 ---
 
-# リポジトリのルール（`.gitcito.json`）
+# リポジトリのルール（`.geminio.json`）
 
 どのプロジェクトにも、コードからは読み取れないルールがあります。*`release/*`
 には直接プッシュしない。* *コミットのスコープは `api`、`web`、`infra` だけ。*
@@ -14,7 +14,7 @@ keywords: gitcito.json repo config doctor requirements protected branches scopes
 コピーした `.env` が要る。* そうしたルールは、誰も読み返さない README か、CI の
 失敗か、いちばん長くここにいる人の頭の中に住んでいます。
 
-`.gitcito.json` は、リポジトリがそれらを書き留めて、ツールが実際に扱えるように
+`.geminio.json` は、リポジトリがそれらを書き留めて、ツールが実際に扱えるように
 する場所です。リポジトリのルートに置かれ、他のファイルと同じようにコミットされ、
 だからクローンと一緒に運ばれます。プロジェクトを開いた全員が同じルールを受け取り、
 新しく入った人は最初のプッシュを弾かれた日ではなく初日に受け取ります。
@@ -37,7 +37,7 @@ keywords: gitcito.json repo config doctor requirements protected branches scopes
 または `engines.node`、`.gitmodules`、`.gitattributes` の `filter=lfs`、隣に
 `.env` の無い `.env.example`、すでにローカルで保護しているブランチ、そして直近
 500 件のコミット件名が使ってきたスコープです。保存するまで何も書き込まれません。
-ターミナルからは `gitcito config init` が同じことをします（[コマンドライン](cli.md)
+ターミナルからは `geminio config init` が同じことをします（[コマンドライン](cli.md)
 を参照）。
 
 ## ファイルに書けること
@@ -74,7 +74,7 @@ keywords: gitcito.json repo config doctor requirements protected branches scopes
 | `version` | `1` である必要があります。新しいスキーマのファイルは推測せず、まるごと無視します。 |
 | `protect` | ブランチ名。`*` は任意の文字列に一致します。ローカルで保護しているブランチに**加算**されます — [保護ブランチ](repo-settings.md)を参照。 |
 | `links.tickets` | 正規表現と URL テンプレート。`$0` は一致全体、`$1`…`$9` はグループ。コミットの件名と本文の一致がリンクになります。 |
-| `commit.scopes` | コンポーザーが自由入力の代わりに提示するスコープ。宣言すると、`gitcito commit-check` で未知のスコープがスタイル上の助言ではなくエラーになります。 |
+| `commit.scopes` | コンポーザーが自由入力の代わりに提示するスコープ。宣言すると、`geminio commit-check` で未知のスコープがスタイル上の助言ではなくエラーになります。 |
 | `commit.ticketFromBranch` | ブランチ名からチケットキーを補完します（`feature/ABC-123-thing` → `ABC-123`）。ただし空のコンポーザーにだけで、入力中の件名を上書きすることはありません。 |
 | `commit.trailers` | コミット本文に追加される行。`{ticket}` と `{branch}` が埋められ、埋めるものが無いプレースホルダを含む行は中途半端に書かれるのではなく落とされます。 |
 | `requires.*` | 動くクローンに必要なもの。各項目が下の doctor の行になります。 |
@@ -82,7 +82,7 @@ keywords: gitcito.json repo config doctor requirements protected branches scopes
 
 ## doctor
 
-`requires` は *「クローンしたのに動かない」* に答える部分です。Gitcito はリポジトリ
+`requires` は *「クローンしたのに動かない」* に答える部分です。Geminio はリポジトリ
 を開いたときにこれを確認し、何かが合っていなければステータスバーに聴診器のチップを
 出します。チップをクリックすると Config タブが doctor の行で開き、**再チェック**
 でもう一度実行します。
@@ -97,7 +97,7 @@ keywords: gitcito.json repo config doctor requirements protected branches scopes
 
 意図的な制限が二つあります。**警告**は決して「壊れている」という意味ではなく、
 doctor が判断できなかったという意味です（解釈できない Node の指定は、対処しようの
-ない失敗をでっち上げるより通します）。そして警告は CI の `gitcito doctor` を失敗
+ない失敗をでっち上げるより通します）。そして警告は CI の `geminio doctor` を失敗
 させません。また修復は決してファイルが与えたものではありません。上の一覧が全てで、
 コンパイル時に閉じています。設定が渡せるのは値だけ — コピー元のパス、
 `core.hooksPath` の値 — であって、コマンドではありません。
@@ -112,14 +112,14 @@ doctor が判断できなかったという意味です（解釈できない Nod
 `ticketFromBranch` と `trailers` はメッセージの機械的な部分を埋め、
 `links.tickets` はコミットが表示されるあらゆる場所でキーをリンクに戻します。
 
-同じルールはウィンドウの外でも効きます。`gitcito commit-check` はこのファイルを
+同じルールはウィンドウの外でも効きます。`geminio commit-check` はこのファイルを
 読むので、`commit-msg` フックと CI はコンポーザーが提案するものとまったく同じ
 ものを強制します。[コマンドライン](cli.md)と[コミット](committing.md)を参照。
 
 ## プッシュ前チェックリスト
 
 `checklist.push` は、そのセッション最初のプッシュの前に確認ダイアログとして、
-1 項目 1 行で表示されます。Gitcito が **代わりに確認することは決してない** ので、
+1 項目 1 行で表示されます。Geminio が **代わりに確認することは決してない** ので、
 ここに置くべきは本当に人の判断が要ること — *サポートには誰か伝えた？* — です。
 これはゲートではなくリマインダーで、読んでプッシュするか、キャンセルするかです。
 リポジトリごと・セッションごとに一度だけ表示されます。毎回出るダイアログは、誰も
@@ -144,7 +144,7 @@ doctor が判断できなかったという意味です（解釈できない Nod
   たりはできません。
 
 不正なフィールドは落とされるだけで致命傷にはなりません。ファイルの残りはそのまま
-適用され、落とされたものは Config タブの **Gitcito が無視した項目** に理由付きで
+適用され、落とされたものは Config タブの **Geminio が無視した項目** に理由付きで
 並びます。唯一の例外は不正な JSON と未知の `version` で、その場合は救えるものが
 ありません。
 
@@ -155,7 +155,7 @@ doctor が判断できなかったという意味です（解釈できない Nod
 - **ブランチ別・人別のルールは無し。** 一つのファイル、一組のルール。
 - **CI の代わりにはなりません。** チェックリストはテキストで、doctor が見るのは
   環境であって、あなたの成果物ではありません。
-- **何も弱められません。** Gitcito のガードはすべてあなたのものです。
+- **何も弱められません。** Geminio のガードはすべてあなたのものです。
 
 **関連:** [リポジトリごとの設定](repo-settings.md) · [コマンドライン](cli.md) ·
 [コミット](committing.md) · [フックと .gitignore](hooks.md)

@@ -59,7 +59,7 @@ function dirtyCount(pulse: RepoPulse): number {
 }
 
 /**
- * The Repositories page — every repository Gitcito knows about, whether or not
+ * The Repositories page — every repository Geminio knows about, whether or not
  * it is open, grouped into sections you can collapse.
  *
  * Rows are deliberately cheap: name, owner and branch come from the registry,

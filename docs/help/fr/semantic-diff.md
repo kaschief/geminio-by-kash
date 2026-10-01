@@ -12,7 +12,7 @@ Un simple renommage apparaît dans un diff de lignes comme un fichier entier
 supprimé et un fichier entier ajouté. C'est techniquement vrai et totalement
 inutile.
 
-Au-dessus de chaque diff de fichier, Gitcito affiche une bande **Ce qui a
+Au-dessus de chaque diff de fichier, Geminio affiche une bande **Ce qui a
 changé** : les deux versions du fichier sont analysées avec **tree-sitter** — de
 vrais arbres syntaxiques, pas des expressions régulières — et leurs déclarations
 sont mises en correspondance.

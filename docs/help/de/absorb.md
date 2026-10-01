@@ -20,7 +20,7 @@ Absorb erledigt das Ehrliche für dich.
 
 1. Stage die Korrekturen.
 2. Werkzeuge → **Gestagte Änderungen einarbeiten…** (oder <kbd>⌘K</kbd>).
-3. Gitcito blamet die Zeilen, die jeder gestagte Hunk berührt, findet heraus,
+3. Geminio blamet die Zeilen, die jeder gestagte Hunk berührt, findet heraus,
    welcher **deiner ungepushten Commits** sie eingeführt hat, und zeigt dir den
    Plan, bevor irgendetwas passiert.
 

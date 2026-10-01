@@ -5,9 +5,9 @@
 
 ## Summary
 
-Gitcito repository chat currently answers questions and can propose a bounded set of Git actions,
+Geminio repository chat currently answers questions and can propose a bounded set of Git actions,
 but it cannot edit repository files. When asked to change the license, the tested provider returned
-an action-shaped JSON array inside Markdown. Gitcito rendered that payload as prose, made no file
+an action-shaped JSON array inside Markdown. Geminio rendered that payload as prose, made no file
 change, and later Git operations had nothing to stage or commit.
 
 This design adds a hybrid file-tool protocol:
@@ -16,11 +16,11 @@ This design adds a hybrid file-tool protocol:
 - Codex-style locally generated diffs for review.
 - Explicit create, replace, and delete operations.
 - Main-process validation, optimistic concurrency checks, and rollback.
-- Existing Gitcito approval modes, with file changes auto-running only in `auto-all`.
+- Existing Geminio approval modes, with file changes auto-running only in `auto-all`.
 - A bounded result loop that reports actual execution back to the model without allowing recursive
   action batches.
 
-The model proposes intent. Gitcito remains the authority that validates paths, materializes changes,
+The model proposes intent. Geminio remains the authority that validates paths, materializes changes,
 computes diffs, asks for approval, writes files, runs Git, and reports outcomes.
 
 ## Goals
@@ -122,7 +122,7 @@ type RepoChatFileAction =
 type RepoChatAction = AskAction | PreparedRepoChatFileAction
 ```
 
-The model emits an unprepared main-process version of these actions. After validation, Gitcito adds
+The model emits an unprepared main-process version of these actions. After validation, Geminio adds
 execution-owned fields that the model cannot choose:
 
 ```ts
@@ -219,7 +219,7 @@ An object is action-shaped only when it contains a recognized action `type` and 
 with that type. Ordinary JSON examples that do not represent executable actions remain valid prose.
 
 If action-shaped content is found outside `actions`, `chatCompleteJson` uses its existing one-time
-correction retry with a specific error. If the corrected reply repeats the problem, Gitcito throws an
+correction retry with a specific error. If the corrected reply repeats the problem, Geminio throws an
 `InvalidAIResponse`; it does not render the payload as a successful answer.
 
 ## File preparation and security
@@ -255,7 +255,7 @@ Under that lock, the executor:
 6. Restores original files and removes created files if any step fails.
 
 Temporary names are random, cannot be model-selected, and are cleaned in success and rollback paths.
-If rollback itself fails, the result names affected paths and uses `rollback_failed`; Gitcito never
+If rollback itself fails, the result names affected paths and uses `rollback_failed`; Geminio never
 claims the batch was reverted successfully.
 
 The file batch is atomic from the action executor's perspective. Later Git actions are deliberately
@@ -319,7 +319,7 @@ but user-facing primary text is always translated.
 The proposal reply is the planning response. Once the user approves it, or `auto-all` starts it, the
 renderer records the execution result on the proposal card.
 
-For executed proposals, Gitcito makes one finalization request containing:
+For executed proposals, Geminio makes one finalization request containing:
 
 - The original user request.
 - The proposed action descriptions.
@@ -419,7 +419,7 @@ npm run build
 git diff --check
 ```
 
-Gitcito is not launched during implementation validation, per the repository working agreement. A
+Geminio is not launched during implementation validation, per the repository working agreement. A
 headless provider compatibility probe may use the supplied endpoint and credential through ephemeral
 environment variables; neither value is committed or logged.
 
@@ -434,6 +434,6 @@ The implementation is accepted when all of the following hold:
 3. `auto-all` performs those non-destructive actions without a click.
 4. Destructive Git actions still require explicit confirmation.
 5. Stale, unsafe, secret, binary, ignored, generated, and symlinked targets are refused before writes.
-6. The card displays a Gitcito-computed diff and truthful per-action outcomes.
+6. The card displays a Geminio-computed diff and truthful per-action outcomes.
 7. Empty commits are blocked before hooks run; real hook failures are reported as partial failures.
 8. All translated UI, documentation, tests, typechecks, lints, and builds pass.

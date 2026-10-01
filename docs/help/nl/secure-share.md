@@ -10,7 +10,7 @@ keywords: veilig delen secure share export import bundle versleuteld encrypted w
 
 Een nieuwe machine — of een nieuwe teamgenoot — inrichten betekent meestal
 alles opnieuw intypen. Veilig delen pakt het in plaats daarvan in één
-versleuteld `.gitcito`-bestand: de teamfuncties van Gitcito hebben **geen
+versleuteld `.geminio`-bestand: de teamfuncties van Geminio hebben **geen
 backend**, dus het bestand *is* het transport. Verstuur het zoals je toch al
 bestanden verstuurt; het wachtwoord reist apart.
 
@@ -39,7 +39,7 @@ remote-URL, daarna op map — zodat importeren niet de hele wereld opnieuw kloon
 
 Een sectie **workspacestructuur** bouwt de workspace opnieuw op met de
 repository's die je al hebt; die je nog niet hebt worden met hun remote
-opgesomd, zodat je ze eerst kunt klonen en opnieuw importeren — Gitcito kloont
+opgesomd, zodat je ze eerst kunt klonen en opnieuw importeren — Geminio kloont
 hier nooit uit eigen beweging. Een sectie **commitnotities** toont vooraf wat er
 zou landen — nieuw, identiek, afwijkend, of hangend aan commits die je niet
 hebt — en afwijkende notities worden alleen vervangen wanneer je

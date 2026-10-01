@@ -12,7 +12,7 @@ keywords: ssh klucz klucze agent odcisk hasło do klucza wgraj ssh-add ssh-keyge
 
 ## Dlaczego to siedzi obok tokenów
 
-Gitcito uwierzytelnia dwie różne rzeczy, a ludzie całkiem rozsądnie zakładają,
+Geminio uwierzytelnia dwie różne rzeczy, a ludzie całkiem rozsądnie zakładają,
 że to jedna:
 
 | | Uwierzytelniane przez |
@@ -54,7 +54,7 @@ systemowi powiedziano inaczej. „Wczoraj działało" to zwykle właśnie to.
 
 **Przetestuj połączenie** istnieje, bo własna odpowiedź ssh wprowadza w błąd:
 GitHub uwierzytelnia cię pomyślnie, a *potem* wychodzi z kodem błędu, bo nie
-oferuje powłoki. Gitcito czyta komunikat zamiast kodu wyjścia i pokazuje pod
+oferuje powłoki. Geminio czyta komunikat zamiast kodu wyjścia i pokazuje pod
 spodem surowe wyjście, żebyś mógł sprawdzić tę interpretację.
 
 ## Ograniczenia, powiedziane wprost
@@ -66,17 +66,17 @@ spodem surowe wyjście, żebyś mógł sprawdzić tę interpretację.
 - **Generowanie nigdy nie nadpisuje.** Nazwa już obecna w `~/.ssh` zostaje
   odrzucona. Nadpisanie klucza prywatnego po cichu odbiera ci dostęp do
   wszystkiego, co mu ufa, a żadne okno potwierdzenia tego nie odkręci.
-- **Gitcito nie przechowuje haseł do kluczy.** Wpisujesz je przy generowaniu
+- **Geminio nie przechowuje haseł do kluczy.** Wpisujesz je przy generowaniu
   albo przy dodawaniu do agenta; są przekazywane do `ssh-keygen`/`ssh-add`
   i porzucane. Utrzymanie ich między restartami to robota pęku kluczy systemu,
   przez `ssh-add`.
 - **Brak edycji `~/.ssh/config`**, brak aliasów hostów, brak wyboru klucza per
-  repozytorium. To mieszka w twojej konfiguracji ssh, a Gitcito nie rusza tego
+  repozytorium. To mieszka w twojej konfiguracji ssh, a Geminio nie rusza tego
   pliku.
 
 ## Co nigdy nie opuszcza twojej maszyny
 
-**Gitcito nigdy nie czyta, nie wyświetla i nie przesyła klucza prywatnego.** Ta
+**Geminio nigdy nie czyta, nie wyświetla i nie przesyła klucza prywatnego.** Ta
 sekcja wypisuje publiczne połówki i odciski. Jedyne, co kiedykolwiek gdziekolwiek
 wychodzi, to klucz publiczny, na którym jawnie naciśniesz **Wgraj** — i idzie on
 na GitHuba, pod twoim własnym tokenem, po potwierdzeniu, które nazywa odcisk.

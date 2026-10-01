@@ -28,14 +28,14 @@ tıklayın. En alttaki **Depo aç…** başlatıcıyı açar.
 
 | Eylem | Etkisi |
 |---|---|
-| **Takma ad oluştur…** / **Takma adı değiştir…** | Yalnızca bir görünen ad. Gitcito diskteki klasörü asla yeniden adlandırmaz ya da taşımaz. Aynı takma ad depoyu sekmeler, gruplar ve çalışma alanları boyunca izler. |
+| **Takma ad oluştur…** / **Takma adı değiştir…** | Yalnızca bir görünen ad. Geminio diskteki klasörü asla yeniden adlandırmaz ya da taşımaz. Aynı takma ad depoyu sekmeler, gruplar ve çalışma alanları boyunca izler. |
 | **Takma adı kaldır** | Bir takma ad varken gösterilir. Klasör adını geri getirir. |
 | **Worktree’leri göster** | Bu depoya odaklanır ve kenar çubuğunun worktree bölümünü açar. |
 | **Yeni worktree…** | Bir daldan kullanılan worktree oluşturma isteminin aynısı. Yol eksikken ya da bir merge/rebase/cherry-pick/revert sürerken devre dışıdır. |
 | **Depo adını kopyala** | Takma adı değil, asıl klasör adını kopyalar. |
 | **Depo yolunu kopyala** | Mutlak yolu kopyalar. |
 | **GitHub’da görüntüle** | github.com ise origin, değilse ayrıştırılabilen ilk GitHub uzak deposu. Hiçbiri türetilemediğinde devre dışıdır. |
-| **Terminalde aç** | Gitcito'nun terminalini, çalışma dizini bu depo olacak şekilde açar. |
+| **Terminalde aç** | Geminio'nun terminalini, çalışma dizini bu depo olacak şekilde açar. |
 | **Finder’da göster / Dosya Gezgini’nde göster** | Depo klasörünü platformun dosya yöneticisinde vurgular. |
 | **Harici düzenleyicide aç** | Ayarlar'da yapılandırılan düzenleyici. Biri ayarlanana kadar görünür ama devre dışıdır. |
 | **Kaldır…** | Sekmeyi kapatır ya da çipi gruptan çıkarır. **×** düğmesiyle aynı commit'lenmemiş çalışma uyarısını kullanır. Diskten asla dosya silmez. |

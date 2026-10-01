@@ -8,7 +8,7 @@ import { launchHaystack } from './launchActions'
  * Flutter's: React Native, Expo, Capacitor and xcodebuild all take a target, and
  * each spells it differently. This module works out which family a config
  * belongs to, which platforms it could possibly run on, and how to write the
- * chosen device into the command Gitcito is about to spawn.
+ * chosen device into the command Geminio is about to spawn.
  *
  * Everything a config launches also gets the choice as environment variables,
  * which is the only lever available when the config runs a wrapper script we

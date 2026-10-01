@@ -34,7 +34,7 @@ gedraaid te worden, zonder dit venster.
 
 **`-X ours` is niet `-s ours`.** De schakelaar hier beslist alleen over de hunks
 die werkelijk botsen; elke andere wijziging van de andere branch merget gewoon.
-De strategie die `ours` heet — en die Gitcito niet aanbiedt — neemt jouw boom in
+De strategie die `ours` heet — en die Geminio niet aanbiedt — neemt jouw boom in
 zijn geheel en gooit de andere kant weg, waarmee je een merge-commit krijgt die
 beweert werk te bevatten dat er niet in zit. Dat onderscheid is het meest
 misbegrepen aan git-merges.

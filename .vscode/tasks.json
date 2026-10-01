@@ -8,7 +8,7 @@
       // "keep dev state" launch config to skip this and test persistence.
       "label": "Seed dev env from prod",
       "type": "shell",
-      "command": "mkdir -p \"$HOME/Library/Application Support/gitcito-dev\" && rm -f \"$HOME/Library/Application Support/gitcito-dev/\"gitcito-* && cp \"$HOME/Library/Application Support/Gitcito/\"gitcito-* \"$HOME/Library/Application Support/gitcito-dev/\" 2>/dev/null; exit 0",
+      "command": "mkdir -p \"$HOME/Library/Application Support/geminio-dev\" && rm -f \"$HOME/Library/Application Support/geminio-dev/\"gitcito-* && cp \"$HOME/Library/Application Support/Geminio/\"gitcito-* \"$HOME/Library/Application Support/geminio-dev/\" 2>/dev/null; exit 0",
       "presentation": {
         "reveal": "silent",
         "panel": "shared",

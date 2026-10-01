@@ -12,12 +12,12 @@ Bir Git istemcisi kodu okuduğunuz yerdir; düzelttiğiniz yer nadiren orasıdı
 Bir diff'te sorunu fark etmekle imlecin düzenleyicinizde o satırda olması
 arasındaki mesafe bir dosya araması ve bir kaydırmadır — her seferinde.
 
-Gitcito'yu bir kez düzenleyicinize yönlendirin, o mesafe kapansın: dosya ya da
+Geminio'yu bir kez düzenleyicinize yönlendirin, o mesafe kapansın: dosya ya da
 blame görünümünde bir satıra sağ tıklayın, düzenleyici tam o satırda açılsın.
 
 ## Birini seçmek
 
-**Ayarlar → Genel → Harici düzenleyici.** Açılır liste, Gitcito'nun bu makinede
+**Ayarlar → Genel → Harici düzenleyici.** Açılır liste, Geminio'nun bu makinede
 bulabildiği düzenleyicileri gösterir — önce her düzenleyicinin komutunu, sonra
 macOS'ta `/Applications` ve `~/Applications` içindeki uygulama paketini arar.
 Tarama, Ayarlar'ı her açtığınızda yeniden çalışır; yani beş dakika önce
@@ -40,7 +40,7 @@ Kutudan çıktığı gibi tanınanlar:
 **Bir satıra atlamak için düzenleyicinin komutu gerekir, simgesi değil.** macOS
 `.app` paketi `open` üzerinden başlatılır; `open` ise bir yol dışında hiçbir şey
 kabul etmez — yani yalnızca paket olarak bulunan bir düzenleyici dosyayı en
-baştan açar ve Gitcito da bunu, aksini varmış gibi göstermek yerine açılır
+baştan açar ve Geminio da bunu, aksini varmış gibi göstermek yerine açılır
 listenin altında söyler.
 
 Çözüm düzenleyici tarafındadır: VS Code'un *Shell Command: Install 'code' command
@@ -62,7 +62,7 @@ düzenleyiciyi yeniden seçin, satıra atlama çalışacaktır.
 Satır eylemleri yalnızca satır numarasının hâlâ bir anlamı olduğu yerlerde
 görünür: eski bir commit'te gösterilen bir dosyanın ya da daha eski bir sürüme
 geri sarılmış bir blame'in satırları diskte olanla artık örtüşmez; bu yüzden
-Gitcito sizi yanlış yere göndermektense orada hiç atlama sunmaz.
+Geminio sizi yanlış yere göndermektense orada hiç atlama sunmaz.
 
 ## Xcode projeleri ve diğer paketler
 
@@ -87,11 +87,11 @@ mal olurdu.
 
 **Paketi editörünüz değil, sistem açar.** Bir metin editörüne verilen
 `.xcodeproj`, property list dolu bir klasör olarak açılır — tıklayan hiç kimsenin
-istediği bu değildi. Bu yüzden Gitcito onu işletim sisteminin ilişkilendirdiği
+istediği bu değildi. Bu yüzden Geminio onu işletim sisteminin ilişkilendirdiği
 şeye teslim eder; Xcode kurulu bir Mac'te bu Xcode'dur. Editör seçiminize
 dokunulmaz; sıradan her dosyada hâlâ o geçerlidir.
 
-**Bu bir adlandırma geleneğidir, dosya sistemi bayrağı değil.** Gitcito uzantıya
+**Bu bir adlandırma geleneğidir, dosya sistemi bayrağı değil.** Geminio uzantıya
 bakar; tesadüfen `notes.app` adını verdiğiniz bir dizin de katlanır ve bunların
 sıradan klasör olduğu Linux veya Windows'ta tıklamak bir IDE yerine dosya
 yöneticisini açar.
@@ -117,7 +117,7 @@ tutucu: `{path}`, `{line}`, `{col}`, `{repo}`.
 Değeri olmayan bir yer tutucu, kendi bayrağını da yanında götürür: satır
 verilmeden çalıştırılan `--line {line} {path}` sadece yola dönüşür, dosya adını
 argüman diye yutacak boşta bir `--line` asla kalmaz. İçinde `{line}` bulunmayan
-bir şablon ise yalnızca şu anlama gelir: Gitcito o düzenleyici için satır
+bir şablon ise yalnızca şu anlama gelir: Geminio o düzenleyici için satır
 hassasiyetli eylemler sunmayacaktır.
 
 ## Bu ne değildir
@@ -129,5 +129,5 @@ arasında daha özel olanıdır; bu yüzden ikisi de ayarlıysa dosya ağacında
 sonu simgesinde düzenleyici kazanır, ama ikisi de sağ tık menüsünde listelenmeye
 devam eder.
 
-Gitcito düzenleyicinizi kendiliğinden asla başlatmaz ve Gitcito'yu kapatmak onu
+Geminio düzenleyicinizi kendiliğinden asla başlatmaz ve Geminio'yu kapatmak onu
 da kapatmaz: düzenleyici, kendi başına bir süreç olarak ayrık başlatılır.

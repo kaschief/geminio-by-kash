@@ -9,7 +9,7 @@ keywords: commit düzenleme geçmişi yeniden yazma eski commit mesaj düzeltme 
 # Herhangi bir commit'i düzenleyin
 
 Yazım hatası üç hafta önceki bir commit'te. Alışıldık çözüm etkileşimli bir
-rebase'tir: commit'te dur, düzenle, devam et, dua et. Gitcito'nun çözümü ise
+rebase'tir: commit'te dur, düzenle, devam et, dua et. Geminio'nun çözümü ise
 şu: commit'e sağ tıklayın, **Bu commit'i düzenle**, metni değiştirin, bitti.
 Commit ayrıntıları panelindeki kalem düğmesi de aynı düzenleyiciyi açar.
 

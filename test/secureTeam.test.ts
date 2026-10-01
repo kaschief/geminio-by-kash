@@ -18,7 +18,7 @@ const gitC = (repo: string, ...args: string[]): string =>
 
 /** A tiny repo with two commits, and a clone of it (shared history). */
 function makeRepoPair(): { src: string; dst: string; shas: string[] } {
-  const base = mkdtempSync(join(tmpdir(), 'gitcito-team-'))
+  const base = mkdtempSync(join(tmpdir(), 'geminio-team-'))
   tmp.push(base)
   const src = join(base, 'src')
   execFileSync('git', ['init', '-q', src])
@@ -86,7 +86,7 @@ describe('notes as a file: read, preview, apply', () => {
     gitC(dst, 'notes', 'add', '-m', 'shared', shas[0])
     const notes = await readRepoNotes(src)
     const section: BundleSection = { kind: 'notes', folder: 'src', ref: 'refs/notes/commits', notes }
-    const bundleFile = join(mkdtempSync(join(tmpdir(), 'gitcito-team-b-')), 'x.gitcito')
+    const bundleFile = join(mkdtempSync(join(tmpdir(), 'geminio-team-b-')), 'x.gitcito')
     tmp.push(join(bundleFile, '..'))
     writeFileSync(bundleFile, packSections('src', [section], PW))
 
@@ -104,7 +104,7 @@ describe('notes as a file: read, preview, apply', () => {
     gitC(dst, 'notes', 'add', '-m', 'mine, different', shas[0])
     const notes = await readRepoNotes(src)
     notes.push({ sha: 'f'.repeat(40), body: 'no such commit' })
-    const dir = mkdtempSync(join(tmpdir(), 'gitcito-team-c-'))
+    const dir = mkdtempSync(join(tmpdir(), 'geminio-team-c-'))
     tmp.push(dir)
     const bundleFile = join(dir, 'x.gitcito')
     writeFileSync(bundleFile, packSections('src', [{ kind: 'notes', folder: 'src', ref: 'refs/notes/commits', notes }], PW))

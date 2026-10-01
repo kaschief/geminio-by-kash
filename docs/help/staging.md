@@ -47,6 +47,8 @@ even when there is room, set **Folders shown in paths** in Settings →
 Files & Diffs: all of them, the last three, two or one, or none at all. A
 shortened path starts with `…/`, and hovering it shows the whole path.
 
+![Files and diff display settings](../screenshots/settings-files.webp)
+
 ## Three levels of precision
 
 | Level | How |
@@ -71,7 +73,7 @@ are looking at:
 | A stash | **Apply Hunk** | Brings just that part of the stash into your working tree. The stash is kept |
 
 Every one of them can be undone. Discard asks first, because the lines it throws
-away exist nowhere else; before it (and before revert and apply) Gitcito also
+away exist nowhere else; before it (and before revert and apply) Geminio also
 takes a [WIP snapshot](recovery.md).
 
 The limits:
@@ -81,7 +83,7 @@ The limits:
   staging a hunk does not also stage a re-indent you could not see.
 - **When the file has moved on.** Revert and apply cut their patch from history,
   and the file may have changed since, through a later commit or edits you have
-  not committed. Gitcito then merges the hunk in three ways, the way git merges
+  not committed. Geminio then merges the hunk in three ways, the way git merges
   a whole commit. Changes that do not overlap combine cleanly. Lines you have
   edited yourself get conflict markers (`<<<<<<< working copy` … `>>>>>>> hunk`)
   and a notice says so. The result is an unstaged change, never staged, so you
@@ -123,7 +125,7 @@ the folder path.
 
 ## Before you commit
 
-Gitcito checks a few things and asks once, never silently:
+Geminio checks a few things and asks once, never silently:
 
 - a file that looks like a **secret** (`.env`, `*.pem`, `id_rsa`…),
 - a **very large** blob (threshold in Settings → Security),

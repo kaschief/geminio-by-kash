@@ -2,13 +2,13 @@
 title: 실행과 디버그 (launch.json)
 category: 작업 공간 도구
 order: 91
-summary: Gitcito를 떠나지 않고 VS Code 실행 구성을 그대로 실행해요.
+summary: Geminio를 떠나지 않고 VS Code 실행 구성을 그대로 실행해요.
 keywords: 실행 디버그 구성 작업 터미널 launch.json run debug vscode configs tasks preLaunchTask input background compound compounds stopAll serverReadyAction 병렬 세션 hot reload hot restart device simulator emulator run target flutter metro expo vite nodemon vitest jest mocha ava wrangler dotnet watch adb simctl avd xcodebuild capacitor
 ---
 
 # 실행과 디버그
 
-Gitcito는 여러분의 `.vscode/launch.json`을 읽어서 — 루트에 있는 것과 중첩된 것
+Geminio는 여러분의 `.vscode/launch.json`을 읽어서 — 루트에 있는 것과 중첩된 것
 모두를, 구분선으로 묶어서 — 고른 구성을 내장 터미널에서 실행해요.
 
 ![실행 구성 선택기와 떠 있는 도구 모음](../../screenshots/launch-configs.webp)
@@ -29,7 +29,7 @@ Gitcito는 여러분의 `.vscode/launch.json`을 읽어서 — 루트에 있는 
   이 창은 성공하면 스스로 닫히고, 실패하면 열려 있습니다.
 - **`serverReadyAction`**을 지원합니다: 세션 출력이 설정한 패턴과 일치하면
   알려진 URL을 브라우저에서 엽니다 (`openExternally`; `debugWithChrome` /
-  `debugWithEdge`도 브라우저만 엽니다 — Gitcito는 디버거를 붙일 수 없습니다).
+  `debugWithEdge`도 브라우저만 엽니다 — Geminio는 디버거를 붙일 수 없습니다).
 
 ![두 개의 병렬 세션을 실행하는 컴파운드](../../screenshots/launch-compound.webp)
 
@@ -44,7 +44,7 @@ Gitcito는 여러분의 `.vscode/launch.json`을 읽어서 — 루트에 있는 
 컴파운드 멤버는 *컴파운드 › 멤버*로 표시되며, 재시작은 그 멤버만 재시작합니다.
 툴바가 필요한 것을 가리면 그립을 잡아 옆으로 드래그하세요 — 위치는 기억되며, 그립을 더블 클릭하면 다시 가운데로 돌아옵니다.
 
-Gitcito가 의도적으로 **하지 않는** 것: 프로그램을 실제 터미널에서 실행하지만
+Geminio가 의도적으로 **하지 않는** 것: 프로그램을 실제 터미널에서 실행하지만
 디버거는 아닙니다 — 중단점도, 변수 검사도, Debug Adapter Protocol도 없습니다.
 attach 전용 구성은 `preLaunchTask`를 가질 때 동작합니다(작업이 곧 일입니다).
 순수한 attach는 실행할 것이 없습니다.
@@ -58,7 +58,7 @@ Metro는 **r**, nodemon은 **rs ⏎**, Vitest는 **a**로 스위트를 다시 �
 같은 결과를 얻으려고 실행 구성을 다시 시작하는 것은 느린 길입니다 — 프로세스를
 죽이고, 모든 `preLaunchTask`를 다시 돌리고, 앱의 상태를 버립니다.
 
-그래서 Gitcito는 구성이 실제로 실행하는 명령을 읽고 — `npm run dev`는
+그래서 Geminio는 구성이 실제로 실행하는 명령을 읽고 — `npm run dev`는
 `package.json`의 스크립트까지 따라갑니다 — 그 런타임의 키를 디버그 툴바에
 올립니다. 누르면 그 키가 세션의 표준 입력에 쓰입니다. 터미널에 직접 입력한 것과
 똑같습니다.
@@ -82,7 +82,7 @@ Metro는 **r**, nodemon은 **rs ⏎**, Vitest는 **a**로 스위트를 다시 �
 읽지 않는 키를 보내는 버튼은 버튼이 없는 것보다 나쁩니다. 작동한 것처럼 보이기
 때문입니다.
 
-**한계.** 감지는 텍스트 기반입니다. 명령줄의 프로그램 이름을 맞추므로, Gitcito가
+**한계.** 감지는 텍스트 기반입니다. 명령줄의 프로그램 이름을 맞추므로, Geminio가
 읽을 수 없는 래퍼 스크립트로 개발 서버를 띄우는 구성은 아무것도 얻지 못합니다.
 키 입력에 대한 확인도 없습니다 — 버튼이 잠깐 반짝일 뿐, 진짜 답은 프로세스 자신의
 출력입니다. 일시 중지되었거나 종료된 세션은 입력을 받지 않으므로 버튼이
@@ -95,7 +95,7 @@ Metro는 **r**, nodemon은 **rs ⏎**, Vitest는 **a**로 스위트를 다시 �
   "name": "API (watch)",
   "type": "node-terminal",
   "command": "./scripts/dev.sh",
-  "gitcito": { "hotActions": [{ "label": "Reload", "send": "r", "icon": "reload" }] }
+  "geminio": { "hotActions": [{ "label": "Reload", "send": "r", "icon": "reload" }] }
 }
 ```
 
@@ -110,7 +110,7 @@ Metro는 **r**, nodemon은 **rs ⏎**, Vitest는 **a**로 스위트를 다시 �
 
 모바일 앱을 빌드하는 구성에는 어디서 실행할지 알려 줘야 합니다. 이 선택은
 Flutter만의 것이 아닙니다 — React Native, Expo, Capacitor, xcodebuild 모두
-대상을 받고, 저마다 표기가 다릅니다. 그래서 Gitcito는 **LAUNCH** 탭 옆에서 한
+대상을 받고, 저마다 표기가 다릅니다. 그래서 Geminio는 **LAUNCH** 탭 옆에서 한
 번만 묻고, 그 구성의 런타임이 읽는 형태로 답을 써 넣습니다. 선택기는 저장소의
 어떤 구성이 실제로 기기를 받을 수 있을 때만 나타납니다.
 
@@ -143,11 +143,11 @@ Flutter만의 것이 아닙니다 — React Native, Expo, Capacitor, xcodebuild 
 실행되는 모든 구성은 환경에 `GITCITO_DEVICE_ID`, `GITCITO_DEVICE_NAME`,
 `GITCITO_DEVICE_PLATFORM`을 받고, 대상이 실제 Android 기기라면 `ANDROID_SERIAL`도
 받습니다. 래퍼 스크립트나 Gradle 태스크, 맨 `adb`가 같은 기기를 맞히는 이유가
-바로 이것입니다 — Gitcito가 명령을 다시 쓰지 않고도요.
+바로 이것입니다 — Geminio가 명령을 다시 쓰지 않고도요.
 
 **꺼진 기기 켜기.** *실행 중 아님* 아래의 항목은 고르면 부팅됩니다:
 `flutter emulators --launch`, `xcrun simctl boot`(그리고 Simulator 창), 또는
-분리 실행되는 `emulator -avd` — 그래서 Gitcito를 종료해도 Android 에뮬레이터가
+분리 실행되는 `emulator -avd` — 그래서 Geminio를 종료해도 Android 에뮬레이터가
 같이 죽지 않습니다.
 
 **한계.** 이미 기기를 명시한 구성 — 명시적 `-d`, `--simulator`, Dart-Code의
@@ -163,7 +163,7 @@ iPhone을 권하는 일은 없습니다. 그리고 목록은 스냅숏입니다.
 
 ## JSON 및 YAML의 입력값
 
-프로젝트 파일에서 현재 버전을 표시하거나 초기값을 채울 수 있습니다. Gitcito는 실행할 때 입력 필드를 표시하기 전에 파일을 읽습니다. VS Code 확장은 필요하지 않습니다.
+프로젝트 파일에서 현재 버전을 표시하거나 초기값을 채울 수 있습니다. Geminio는 실행할 때 입력 필드를 표시하기 전에 파일을 읽습니다. VS Code 확장은 필요하지 않습니다.
 
 promptString 또는 pickString에 fileValues를 추가하세요. 각 값에는 실행 설정 폴더 기준의 상대 경로와 점으로 구분된 속성 경로를 지정합니다. description 또는 default에서 ${fileValue:name}을 사용하세요. default가 비어 있으면 입력은 선택 사항입니다.
 
@@ -180,4 +180,4 @@ promptString 또는 pickString에 fileValues를 추가하세요. 각 값에는 �
 }
 ```
 
-폴더 안의 1 MiB 이하 JSON, YAML, YML 파일과 문자열, 숫자, 불리언을 지원합니다. 파일이나 속성이 없거나 데이터가 잘못되었거나 경로가 폴더 밖이면 오류와 함께 실행을 중단합니다. 명령이나 JavaScript 표현식은 실행하지 않습니다. 새 실행마다 파일을 다시 읽으며 Restart는 이전 답변을 재사용합니다. VS Code는 이 Gitcito 전용 필드를 기본 지원하지 않습니다.
+폴더 안의 1 MiB 이하 JSON, YAML, YML 파일과 문자열, 숫자, 불리언을 지원합니다. 파일이나 속성이 없거나 데이터가 잘못되었거나 경로가 폴더 밖이면 오류와 함께 실행을 중단합니다. 명령이나 JavaScript 표현식은 실행하지 않습니다. 새 실행마다 파일을 다시 읽으며 Restart는 이전 답변을 재사용합니다. VS Code는 이 Geminio 전용 필드를 기본 지원하지 않습니다.

@@ -16,7 +16,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
 // Real-shaped output from each analyzer. These formats are the contract between
-// Gitcito and six tools it does not control, so they are pinned here.
+// Geminio and six tools it does not control, so they are pinned here.
 
 describe('problems: analyzer parsers', () => {
   const repo = '/repo'
@@ -105,7 +105,7 @@ describe('problems: paths from a symlinked repo root', () => {
     // Node's process.cwd() resolves symlinks, so a tool started in a symlinked
     // checkout reports paths under the physical directory. Relative to the
     // opened path that is a ../../.. chain — useless as a group header.
-    const base = mkdtempSync(join(tmpdir(), 'gitcito-symlink-'))
+    const base = mkdtempSync(join(tmpdir(), 'geminio-symlink-'))
     const real = join(base, 'real')
     const link = join(base, 'link')
     try {
@@ -150,7 +150,7 @@ describe('problems: ignored files', () => {
   it('drops what git ignores and keeps what it tracks', async () => {
     // A tool pointed at the project root lints generated output too; hundreds of
     // complaints about machine-written code bury the ones about yours.
-    const dir = mkdtempSync(join(tmpdir(), 'gitcito-ignored-'))
+    const dir = mkdtempSync(join(tmpdir(), 'geminio-ignored-'))
     try {
       execFileSync('git', ['init', '-q'], { cwd: dir })
       mkdirSync(join(dir, 'src'), { recursive: true })
@@ -170,7 +170,7 @@ describe('problems: ignored files', () => {
   it('keeps everything when git cannot answer', async () => {
     // Outside a repository there is no opinion to honour — showing less than
     // the analyzers found would be the worse failure.
-    const dir = mkdtempSync(join(tmpdir(), 'gitcito-nogit-'))
+    const dir = mkdtempSync(join(tmpdir(), 'geminio-nogit-'))
     try {
       const kept = await dropIgnored(dir, [p('src/app.ts'), p('dist/bundle.js')])
       expect(kept).toHaveLength(2)
@@ -184,7 +184,7 @@ describe('problems: analyzer detection', () => {
   it('finds projects that are not at the repository root', () => {
     // A Flutter app under mobile/ and a web package under apps/web is a normal
     // repository shape, and neither has a marker at the top level.
-    const dir = mkdtempSync(join(tmpdir(), 'gitcito-nested-'))
+    const dir = mkdtempSync(join(tmpdir(), 'geminio-nested-'))
     try {
       mkdirSync(join(dir, 'mobile'), { recursive: true })
       mkdirSync(join(dir, 'apps', 'web'), { recursive: true })
@@ -201,7 +201,7 @@ describe('problems: analyzer detection', () => {
   it('does not run the same analyzer again inside a project it already covers', () => {
     // A root tsconfig.json is how a TypeScript project says it covers what is
     // beneath it; compiling twice yields the same diagnostics twice.
-    const dir = mkdtempSync(join(tmpdir(), 'gitcito-nested-'))
+    const dir = mkdtempSync(join(tmpdir(), 'geminio-nested-'))
     try {
       mkdirSync(join(dir, 'packages', 'ui'), { recursive: true })
       writeFileSync(join(dir, 'tsconfig.json'), '{}')
@@ -213,7 +213,7 @@ describe('problems: analyzer detection', () => {
   })
 
   it('asks for exactly the tools the repo carries config for', () => {
-    const dir = mkdtempSync(join(tmpdir(), 'gitcito-analyze-'))
+    const dir = mkdtempSync(join(tmpdir(), 'geminio-analyze-'))
     try {
       expect(detectAnalyzers(dir)).toEqual([])
       writeFileSync(join(dir, 'pubspec.yaml'), 'name: app\n')

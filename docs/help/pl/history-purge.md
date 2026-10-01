@@ -59,7 +59,7 @@ katalogu, a nie brak pliku.
 
 ## Co przepisanie faktycznie robi
 
-Gitcito kopiuje każdą gałąź i tag do
+Geminio kopiuje każdą gałąź i tag do
 `refs/gitcito/pre-purge/<timestamp>/…`, a potem uruchamia:
 
 ```sh
@@ -110,10 +110,10 @@ znalazła.
   niezacommitowanej pracy to sposób, w jaki się ją gubi.
 - **Przepisuje po ścieżce, nie po treści.** Usunięcie sekretu, który został
   wklejony do pliku źródłowego, zamiast mieszkać we własnym pliku, wymaga filtra
-  treści — to terytorium `git filter-repo --replace-text`, którego Gitcito nie
+  treści — to terytorium `git filter-repo --replace-text`, którego Geminio nie
   opakowuje.
 - **`filter-branch` jest wolny na bardzo dużych historiach.** Jest tym, co
-  wszędzie przychodzi razem z gitem, i dlatego właśnie jest tym, czego Gitcito
+  wszędzie przychodzi razem z gitem, i dlatego właśnie jest tym, czego Geminio
   używa. Na repozytorium z dziesiątkami tysięcy commitów szybszym narzędziem
   jest `git filter-repo` w [terminalu](terminal.md).
 - **Klony innych ludzi to nie twoje repozytorium.** Zachowają starą historię,

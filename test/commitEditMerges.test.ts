@@ -25,7 +25,7 @@ const g = (repo: string, ...args: string[]): string =>
  * C: touches an unrelated file on top.
  */
 function makeMergeRepo(): { repo: string; A: string; B: string; side: string; M: string } {
-  const repo = mkdtempSync(join(tmpdir(), 'gitcito-editmerge-'))
+  const repo = mkdtempSync(join(tmpdir(), 'geminio-editmerge-'))
   tmp.push(repo)
   execFileSync('git', ['init', '-q', '-b', 'main', repo])
   g(repo, 'config', 'user.email', 't@t')

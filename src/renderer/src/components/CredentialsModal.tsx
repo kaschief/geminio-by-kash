@@ -9,7 +9,7 @@ import { useT, interp } from '../i18n'
 /**
  * Git's own credential store — the third one, and the one nobody configures.
  *
- * Gitcito keeps tokens in the OS keychain and can hold your SSH keys, but
+ * Geminio keeps tokens in the OS keychain and can hold your SSH keys, but
  * `git push` over https asks *git*, and git asks whatever `credential.helper`
  * names. When that is unset you are typing a password every time; when it is
  * `store` your password is sitting in a plain file. Both are invisible until

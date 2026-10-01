@@ -12,7 +12,7 @@ keywords: ssh schlüssel key keys agent ssh-add ssh-keygen ed25519 publickey per
 
 ## Warum das hier neben den Tokens steht
 
-Gitcito authentifiziert zwei verschiedene Dinge, und man hält sie
+Geminio authentifiziert zwei verschiedene Dinge, und man hält sie
 verständlicherweise für dasselbe:
 
 | | Authentifiziert durch |
@@ -56,7 +56,7 @@ noch" ist meistens genau das.
 
 **Verbindung testen** gibt es, weil ssh selbst irreführend antwortet: GitHub
 authentifiziert dich erfolgreich und beendet sich *danach* mit einem Fehlercode,
-weil es keine Shell anbietet. Gitcito liest die Meldung statt des Exit-Codes und
+weil es keine Shell anbietet. Geminio liest die Meldung statt des Exit-Codes und
 zeigt die Rohausgabe darunter, damit du seine Deutung überprüfen kannst.
 
 ## Die Grenzen, unverblümt
@@ -69,18 +69,18 @@ zeigt die Rohausgabe darunter, damit du seine Deutung überprüfen kannst.
   abgelehnt. Einen privaten Schlüssel stillschweigend zu überschreiben nimmt dir
   den Zugang zu allem, was ihm vertraut, und kein Bestätigungsdialog macht das
   wieder gut.
-- **Passphrasen speichert Gitcito nicht.** Du tippst eine ein, wenn du einen
+- **Passphrasen speichert Geminio nicht.** Du tippst eine ein, wenn du einen
   Schlüssel erzeugst oder ihn dem Agent hinzufügst; sie wird an
   `ssh-keygen`/`ssh-add` gereicht und fallen gelassen. Sie über Neustarts hinweg
   aufzubewahren ist die Aufgabe des Schlüsselbunds des Betriebssystems, über
   `ssh-add`.
 - **Kein Bearbeiten von `~/.ssh/config`**, keine Host-Aliase, keine Schlüsselwahl
-  pro Repo. Das gehört in deine ssh-Konfiguration, und Gitcito lässt diese Datei
+  pro Repo. Das gehört in deine ssh-Konfiguration, und Geminio lässt diese Datei
   in Ruhe.
 
 ## Was deine Maschine nie verlässt
 
-**Gitcito liest, zeigt und sendet niemals einen privaten Schlüssel.** Der
+**Geminio liest, zeigt und sendet niemals einen privaten Schlüssel.** Der
 Abschnitt listet öffentliche Hälften und Fingerabdrücke. Das Einzige, was
 überhaupt je irgendwohin geschickt wird, ist der öffentliche Schlüssel, bei dem
 du ausdrücklich auf **Hochladen** drückst — und der geht zu GitHub, unter deinem

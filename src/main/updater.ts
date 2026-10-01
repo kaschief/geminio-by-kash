@@ -59,7 +59,7 @@ function notesToText(notes: unknown): string | null {
 async function checkViaGitHub(): Promise<void> {
   try {
     const res = await fetch(`https://api.github.com/repos/${REPO}/releases/latest`, {
-      headers: { Accept: 'application/vnd.github+json', 'User-Agent': 'gitcito' }
+      headers: { Accept: 'application/vnd.github+json', 'User-Agent': 'geminio' }
     })
     if (!res.ok) {
       setState({ status: 'not-available' })

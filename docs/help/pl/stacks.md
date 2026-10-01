@@ -14,7 +14,7 @@ jednego ogromnego.
 
 ![Stos gałęzi](../../screenshots/branch-stack.webp)
 
-Gitcito rysuje go jako **trasę**: na górze gałąź startowa, a pod nią po jednym
+Geminio rysuje go jako **trasę**: na górze gałąź startowa, a pod nią po jednym
 przystanku na poziom. PR każdego przystanku celuje w przystanek powyżej, a pierwszy
 ląduje na gałęzi startowej. Przystanek pokazuje własne commity, czy potrzebuje
 restacku, a po wysłaniu numer PR.
@@ -54,13 +54,13 @@ Wszystko, co zmienia kolejność — zamiana, przesunięcie, inny start — **od
 łańcuch: własne commity każdego przystanku są rebase'owane na nową bazę. Może więc
 dawać **konflikty**, dokładnie jak restack. Dwa przystanki dotykające tych samych wierszy nie zamienią
 się bez człowieka, a wtedy **nic się nie dzieje**: cała zmiana jest wycofywana —
-czubki, powiązania rodzica i rozgrzebany rebase — a Gitcito nazywa dwa
+czubki, powiązania rodzica i rozgrzebany rebase — a Geminio nazywa dwa
 przystanki, które się gryzą. Trącona lista rozwijana nie powinna zostawiać cię w
 środku rebase'a.
 
 **Restack** to druga połowa umowy: to rebase, o który poprosiłeś z nazwy, więc
 zatrzymuje się na konflikcie i daje widok konfliktów — a to zarazem sposób na
-przestawienie, którego Gitcito odmówiło: rozwiąż tam, potem przesuń przystanek.
+przestawienie, którego Geminio odmówiło: rozwiąż tam, potem przesuń przystanek.
 
 Cofnięcie odtwarza poprzednią trasę. Nie wskrzesza starych commitów, bo nowe to ta
 sama praca z innymi rodzicami.
@@ -110,7 +110,7 @@ przekierowywany. Merguj od dołu do góry, naciskaj Wyślij, powtarzaj.
 
 Połączone bazy rozumie każdy host, a na GitLabie, Bitbuckecie i Azure DevOps to
 wszystko, co jest. GitHub ma więcej: od czasu preview stacked pull requests stos
-jest obiektem na serwerze. Gdy pull requesty już istnieją, Gitcito rejestruje je
+jest obiektem na serwerze. Gdy pull requesty już istnieją, Geminio rejestruje je
 jako stos — od dołu do góry — a ty dostajesz mapę stosu w UI, kaskadowy rebase po
 stronie serwera i merge górnego PR-a, który ląduje wszystkie poziomy poniżej.
 

@@ -59,7 +59,7 @@ checkout di `bundle/main` alle tue condizioni, esattamente come faresti con un
 branch di qualunque altro remote.
 
 Per far nascere invece un *nuovo* repository da un bundle, clona dal file in un
-terminale: `git clone work.bundle myrepo`. Gitcito importa dentro un repository
+terminale: `git clone work.bundle myrepo`. Geminio importa dentro un repository
 già aperto; non clona da un file.
 
 ## Archivi
@@ -96,7 +96,7 @@ regola che vive nel repository invece che nello script di rilascio di qualcuno.
 - **Un bundle è una copia completa** a meno che tu non usi un intervallo. Fare il
   bundle di un repository da 2 GB scrive un file da 2 GB, e ci mette quanto un
   clone.
-- **I bundle vuoti sono rifiutati** da git, non da Gitcito: un intervallo senza
+- **I bundle vuoti sono rifiutati** da git, non da Geminio: un intervallo senza
   nulla fra i suoi estremi produce un errore invece che un file inutile.
 - **L'importazione non fa merge.** I ref arrivano sotto `bundle/…` e restano lì
   finché non ci fai qualcosa.

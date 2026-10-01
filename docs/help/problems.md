@@ -11,7 +11,7 @@ keywords: problems analyzer analyzers diagnostics errors warnings lint tsc types
 Every project already ships a tool that will tell you what is wrong with it —
 `tsc`, `dart analyze`, ESLint, Clippy, `go vet`, Ruff. What none of them will
 tell you is whether **your** diff is what introduced the forty warnings it just
-printed. Gitcito knows which files are dirty, so the same list answers that
+printed. Geminio knows which files are dirty, so the same list answers that
 question with one toggle.
 
 ![The Problems dock and the status-bar counter](../screenshots/problems.webp)
@@ -23,7 +23,7 @@ opens the file there. Before the first sweep it shows dashes rather than zeroes:
 
 ## What it runs
 
-| The repo carries | Gitcito runs |
+| The repo carries | Geminio runs |
 |------------------|--------------|
 | `pubspec.yaml` | `dart analyze --format=machine` |
 | `tsconfig.json` | `tsc --noEmit` |
@@ -48,7 +48,7 @@ output is parsed into one shape, deduplicated and sorted — two analyzers
 reporting the same line produce one row.
 
 **Nothing runs by itself.** `tsc --noEmit` on a large repository is tens of
-seconds, and these commands are the repository's own toolchain, not Gitcito's.
+seconds, and these commands are the repository's own toolchain, not Geminio's.
 They start when you open the dock or press refresh, and never on their own. That
 is also why the list is a snapshot: edit a file and it is stale until you run it
 again.
@@ -60,7 +60,7 @@ analyzer half of the dock, its status-bar counter and its command entirely.
 **Generated output is dropped.** A tool pointed at the project root lints
 whatever it finds, and what it finds includes `.next/build/chunks`, a bundled
 `dist`, a vendored copy — hundreds of complaints about machine-written code that
-bury the handful about yours. Gitcito asks git which files are ignored and drops
+bury the handful about yours. Geminio asks git which files are ignored and drops
 those, and never drops a *tracked* file: committing generated output is a
 choice, and `git check-ignore` respects it. `node_modules` goes regardless.
 

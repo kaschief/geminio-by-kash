@@ -20,7 +20,7 @@ Absorb, dürüst olanı sizin yerinize yapar.
 
 1. Düzeltmeleri hazırlayın.
 2. Araçlar → **Hazırlanmış değişiklikleri absorb et…** (ya da <kbd>⌘K</kbd>).
-3. Gitcito, hazırlanmış her hunk'ın dokunduğu satırlara blame uygular,
+3. Geminio, hazırlanmış her hunk'ın dokunduğu satırlara blame uygular,
    bunları **push edilmemiş commit'lerinizden** hangisinin getirdiğini bulur ve
    herhangi bir şey yapmadan önce planı size gösterir.
 

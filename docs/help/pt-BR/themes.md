@@ -8,7 +8,7 @@ keywords: tema temas theme themes escuro dark claro light aparência cores taman
 
 # Temas e aparência
 
-Temas nativos — Gitcito, Nord, Dracula, Solarized, GitHub, Monokai, Midnight,
+Temas nativos — Geminio, Nord, Dracula, Solarized, GitHub, Monokai, Midnight,
 Contrast e Daltonic — cada um com uma variante clara e uma escura.
 
 ![Trocando do claro para o escuro](../../screenshots/clip-themes.webp)

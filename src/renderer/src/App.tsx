@@ -1,3 +1,4 @@
+import { useGitHubConnection } from './stores/githubAccount'
 import { useAiReady } from './components/useAiReady'
 import { WorkingChangesBanner } from './components/WorkingChangesBanner'
 import { workingChangeCount } from './lib/workingChanges'
@@ -56,7 +57,7 @@ import { MilestoneDetailPage } from './components/MilestoneDetailPage'
 import { ResizeHandle } from './components/ResizeHandle'
 import { ZoomControl } from './components/ZoomControl'
 import { RepoChatPanel } from './components/RepoChatPanel'
-import gitcitoLaunch from './assets/gitcito-launch.png'
+import geminioLaunch from './assets/geminio-launch.png'
 import { matchShortcut, effectiveBindings, tabActionFromEvent, tabIndexFromEvent } from './lib/shortcuts'
 import { terminalShortcutFromEvent } from './lib/terminalShortcuts'
 import { repoChatAvailable, rightPanelDetailsState } from './lib/repoChatUI'
@@ -68,7 +69,7 @@ import { runAppCommand } from './appCommands'
 import { useAppMenu } from './useAppMenu'
 
 /**
- * Carry out what a `gitcito <verb>` invocation asked for, once its repository
+ * Carry out what a `geminio <verb>` invocation asked for, once its repository
  * has a tab.
  *
  * Everything here is a normal store call — the CLI gets no privileged path
@@ -201,7 +202,7 @@ function GroupView({ tab }: { tab: GroupTab }): React.JSX.Element {
         transition={{ type: 'spring', stiffness: 260, damping: 24 }}
       >
         <div className="welcome-logo">
-          <img className="welcome-art" src={gitcitoLaunch} alt="" draggable={false} />
+          <img className="welcome-art" src={geminioLaunch} alt="" draggable={false} />
         </div>
         <h1>{tab.name}</h1>
         <p>{t('group.manageHint')}</p>
@@ -515,6 +516,7 @@ export default function App(): React.JSX.Element {
   const settings = useSettingsStore((s) => s.settings)
   // Chat is only a surface while its provider is configured to answer.
   const activeProfile = useSettingsStore((s) => s.activeProfile())
+  useGitHubConnection(activeProfile, settingsLoaded)
   const chatReady = useAiReady('chat')
   const ensure = useRepoStore((s) => s.ensure)
   const terminalOpenByRepo = useUIStore((s) => s.terminalOpenByRepo)
@@ -556,8 +558,8 @@ export default function App(): React.JSX.Element {
     useUpdatesStore.getState().init()
   }, [])
 
-  // `gitcito <dir> [-n name] [-g group]` (installed CLI shim) asks this window
-  // to open a folder — on cold launch or when a second `gitcito` invocation
+  // `geminio <dir> [-n name] [-g group]` (installed CLI shim) asks this window
+  // to open a folder — on cold launch or when a second `geminio` invocation
   // hands off to this already-running instance (both routed through the same
   // main-process IPC event, see src/main/index.ts). The event can arrive
   // before settings finish loading from disk (load() resolves asynchronously
@@ -593,7 +595,7 @@ export default function App(): React.JSX.Element {
     }
   }, [])
 
-  // `gitcito --wait <file>` — git is blocked on a shell process until the app
+  // `geminio --wait <file>` — git is blocked on a shell process until the app
   // answers, so the request always ends in a modal that must call finishEdit.
   useEffect(() => {
     return cliApi.onEdit(({ file, sentinel, content }) => {
@@ -1297,7 +1299,7 @@ export default function App(): React.JSX.Element {
                     className="status-issue-btn status-report-btn"
                     aria-label={t('app.reportIssue')}
                     title={t('app.reportIssueTitle')}
-                    onClick={() => void window.api.openExternal('https://github.com/MyAppDesk/gitcito/issues/new')}
+                    onClick={() => void window.api.openExternal('https://github.com/kaschief/geminio-by-kash/issues/new')}
                   >
                     <Bug size={12} />
                     <span>{t('app.reportIssue')}</span>

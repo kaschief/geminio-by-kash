@@ -16,7 +16,7 @@ O conteúdo nunca esteve num commit, então não há entrada no reflog, nem stas
 undo, nem encantamento de `git` que traga aquilo de volta.
 
 É por isso que essa é a operação que as pessoas rodam no terminal e depois se
-arrependem. A versão do Gitcito mostra a lista inteira antes de qualquer coisa
+arrependem. A versão do Geminio mostra a lista inteira antes de qualquer coisa
 acontecer.
 
 `⌘K` → **Remover arquivos não rastreados**.
@@ -45,7 +45,7 @@ O tamanho dele é a soma do que ele contém.
 
 Uma pasta marcada como **repositório próprio** tem o seu próprio `.git`: um clone
 que você largou dentro deste, ou um experimento que você nunca conectou. O git se
-recusa a removê-las (ele quer `-ff`, uma flag que o Gitcito não oferece) — a
+recusa a removê-las (ele quer `-ff`, uma flag que o Geminio não oferece) — a
 Lixeira dá conta delas.
 
 ## Lixeira ou apagar

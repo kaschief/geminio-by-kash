@@ -23,7 +23,7 @@ Questo è il pulsante "ho appena resettato il branch sbagliato".
 ## Snapshot del lavoro in corso
 
 Il lavoro non committato è l'unica cosa che il reflog non può salvare, quindi
-Gitcito ne fa uno snapshot: l'**intero albero di lavoro — file modificati, in
+Geminio ne fa uno snapshot: l'**intero albero di lavoro — file modificati, in
 stage e non tracciati** — committato tramite un indice usa e getta e fissato
 sotto `refs/gitcito/wip`. Né il tuo indice reale né il tuo elenco degli stash
 vengono toccati.
@@ -58,7 +58,7 @@ catturati. Gli snapshot sono ref nascosti locali: mai pushati, al sicuro da
 ## Bisect guidato
 
 Segna i commit come buoni e cattivi, guarda l'intervallo restringersi, atterra
-sul primo commit cattivo. Gitcito tiene il conto di quanti passi mancano, così
+sul primo commit cattivo. Geminio tiene il conto di quanti passi mancano, così
 sai se sei a due domande dalla risposta o a dieci.
 
 ![Il bisect guidato](../../screenshots/bisect.webp)
@@ -76,7 +76,7 @@ comando e legge il suo codice di uscita:
 | qualsiasi altro | Cattivo |
 
 Una suite di test parla già quella lingua, ed è per questo che `npm test` è di
-solito tutta la risposta. Gitcito propone gli script di questo progetto come
+solito tutta la risposta. Geminio propone gli script di questo progetto come
 riempimenti in un clic, mostra l'output in tempo reale mentre gira e atterra sul
 primo commit cattivo senza che tu risponda a una sola domanda.
 
@@ -108,13 +108,13 @@ Unable to create '…/refs/remotes/origin/x.lock': File exists.
 
 Il repository non è danneggiato. C'è semplicemente un file di mezzo.
 
-Gitcito prima riprova qualche volta, perché un lock tenuto da un git *in corso*
+Geminio prima riprova qualche volta, perché un lock tenuto da un git *in corso*
 di solito si libera in millisecondi. Quando non succede, l'errore apre una
 finestra invece di un muro di testo: tutti i lock ancora su disco, quanto è
 vecchio ciascuno, e un pulsante che li rimuove e riesegue l'azione fallita.
 
 **L'età è tutto l'argomento.** Un lock più giovane di 30 secondi si presume di un
-git ancora al lavoro, e Gitcito si rifiuta di cancellarlo: offre invece di
+git ancora al lavoro, e Geminio si rifiuta di cancellarlo: offre invece di
 aspettare e riprovare. Quelli più vecchi vengono proposti per la rimozione, dal
 più vecchio in giù, e la finestra dice chiaramente cosa controllare prima di
 accettare: che nessun editor, terminale o altro client Git stia lavorando adesso

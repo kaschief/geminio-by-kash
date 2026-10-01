@@ -13,7 +13,7 @@ A stack is a chain of branches where each one builds on the one below:
 
 ![A branch stack](../screenshots/branch-stack.webp)
 
-Gitcito draws it as a **route**: a start branch at the top, then one stop per
+Geminio draws it as a **route**: a start branch at the top, then one stop per
 level. Each stop's PR targets the stop above it, and the first stop lands on the
 start branch. A stop shows its own commit count, whether it needs a restack, and
 its PR number once submitted.
@@ -52,12 +52,12 @@ Anything that changes the order — a swap, a move, a different start — **repl
 the chain: each stop's own commits are rebased onto its new base. So it can
 **conflict** — two stops that touch the same lines cannot swap without a human.
 When that happens **nothing happens**: the whole edit is rolled back, tips,
-parent links and the half-finished rebase alike, and Gitcito names the two stops
+parent links and the half-finished rebase alike, and Geminio names the two stops
 that clash. A dropdown you nudged should not strand you mid-rebase.
 
 **Restack** is the other half of that bargain. It is a rebase you asked for by
 name, so it does stop at the conflict and hand you the conflict view — which is
-also the way to make a reorder that Gitcito refused: resolve there, then move the
+also the way to make a reorder that Geminio refused: resolve there, then move the
 stop.
 
 Undo replays the previous route. It does not resurrect the old commits, because
@@ -111,7 +111,7 @@ repeat.
 Chained bases are what every host understands, and on GitLab, Bitbucket and
 Azure DevOps they are all there is. GitHub has more: since its stacked pull
 requests preview, a stack is an object on the server. Once the pull requests
-exist, Gitcito registers them as one — bottom to top — and you get the stack map
+exist, Geminio registers them as one — bottom to top — and you get the stack map
 in the PR UI, a cascading rebase run server-side, and a merge on the top PR that
 lands every unmerged level below it.
 

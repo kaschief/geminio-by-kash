@@ -42,12 +42,12 @@ demasiado anchas. Son pistas, nunca una barrera — no te impedirá hacer el com
 
 ## Amend
 
-Amend reescribe el último commit con lo que tengas preparado. Gitcito te enseña
+Amend reescribe el último commit con lo que tengas preparado. Geminio te enseña
 antes el mensaje existente, para que estés editando y no reescribiendo.
 
 **Enmendar commit…** en una fila del grafo hace lo mismo para HEAD: carga el
 mensaje completo, pone el compositor en modo amend y le da el foco. Un HEAD ya
-enviado también se puede enmendar, pero Gitcito avisa de que actualizar el
+enviado también se puede enmendar, pero Geminio avisa de que actualizar el
 remoto exigirá un force push.
 
 **Deshacer commit…** es su hermano para un HEAD sin enviar: reset mixed al

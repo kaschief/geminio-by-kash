@@ -121,14 +121,14 @@ export function chatAnswerSchema(
 }
 
 /**
- * The shape of `.gitcito.json`, for the surface that can write one.
+ * The shape of `.geminio.json`, for the surface that can write one.
  *
- * Repository config is the one file in a repository whose schema Gitcito owns,
+ * Repository config is the one file in a repository whose schema Geminio owns,
  * and "set this up for me" is a reasonable thing to ask an assistant that can
  * already write files. Without the shape it invents plausible keys the loader
  * then rejects, so the shape is supplied rather than guessed.
  */
-const REPO_CONFIG_RULE = `- \`.gitcito.json\` is this app's own per-repository config, and you may create or edit it with a file action. Its shape (every field optional except "version", which is 1):
+const REPO_CONFIG_RULE = `- \`.geminio.json\` is this app's own per-repository config, and you may create or edit it with a file action. Its shape (every field optional except "version", which is 1):
   {"version":1,"protect":["main","release/*"],"links":{"tickets":[{"match":"([A-Z]+-\\\\d+)","url":"https://tracker/browse/$1","label":"Jira"}]},"commit":{"scopes":["ui","api"],"ticketFromBranch":true,"trailers":["Refs: {ticket}"]},"requires":{"node":">=20","submodules":true,"lfs":false,"hooksPath":".husky","files":[{"path":".env","from":".env.example","why":"local secrets"}]},"checklist":{"push":["Run the tests"]}}
 - Use only those keys — an unknown key is rejected by the loader, not ignored. "match" is a JavaScript regular expression source. Read the existing file first when one is present, and edit it rather than replacing it.`
 

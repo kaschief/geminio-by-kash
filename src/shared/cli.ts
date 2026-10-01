@@ -1,9 +1,9 @@
-/** The `gitcito` command line: what an invocation can ask the app to do, and
+/** The `geminio` command line: what an invocation can ask the app to do, and
  *  how that request survives the trip through Chromium's argv parser.
  *
  *  Two halves live behind the one binary. Everything in this file is the
  *  *launcher* half — a request that needs the window, forwarded to the running
- *  instance over IPC. The *headless* half (`gitcito doctor`, `status`, …) never
+ *  instance over IPC. The *headless* half (`geminio doctor`, `status`, …) never
  *  reaches Electron at all; it runs as plain Node out of `main/cliEntry.ts`. */
 
 /** A surface the CLI can ask the window to open once the repository is on
@@ -52,7 +52,7 @@ export function isCliView(value: string): value is CliView {
   return (CLI_VIEWS as readonly string[]).includes(value)
 }
 
-/** Payload carried by a `gitcito <dir> [-n name] [-g group] [verb …]` CLI
+/** Payload carried by a `geminio <dir> [-n name] [-g group] [verb …]` CLI
  *  invocation. Parsed by the main process from `process.argv` on cold launch
  *  and from the `second-instance` event's argv on subsequent invocations (see
  *  src/main/index.ts), then forwarded to the renderer over IPC. */
@@ -69,15 +69,15 @@ export interface CliOpenPayload {
   /** 1-based line to scroll to, for the file-backed views. */
   line?: number
   /** Absolute path of a file the app was asked to edit on git's behalf
-   *  (`core.editor = gitcito --wait`). */
+   *  (`core.editor = geminio --wait`). */
   edit?: string
   /** Sentinel file the waiting shell process polls. Main deletes it when the
    *  edit finishes, which is what unblocks git. */
   wait?: string
 }
 
-/** Extracts the `--flag=value` switches the bundled shim (resources/cli/gitcito)
- *  passes through `open -a Gitcito --args`.
+/** Extracts the `--flag=value` switches the bundled shim (resources/cli/geminio)
+ *  passes through `open -a Geminio --args`.
  *
  *  Flags MUST use the `--flag=value` form (single token), not `--flag value`
  *  (two tokens). Electron/Chromium's command-line parser reorders argv

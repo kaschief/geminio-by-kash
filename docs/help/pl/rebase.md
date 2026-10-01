@@ -22,7 +22,7 @@ Lista todo z `git rebase -i` jako lista, którą da się przeciągać.
 | **drop** | Wyrzuć commit |
 
 Przeciągaj wiersze, żeby zmienić kolejność. Edytor nigdy nie otwiera się
-w terminalu — Gitcito pisze listę todo za ciebie.
+w terminalu — Geminio pisze listę todo za ciebie.
 
 ## Autosquash jednym kliknięciem
 

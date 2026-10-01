@@ -28,7 +28,7 @@ yoktur ve ikinci bir uzak depo eklenmez. Tek bir fetch ve kod diskinizdedir.
 | Bitbucket Cloud, Bitbucket Server | `refs/pull-requests/<n>/from` |
 | Azure DevOps | `refs/pull/<n>/merge` |
 
-Gitcito dördünü de tek bir `ls-remote` içinde yoklar; böylece tanımadığı ya da
+Geminio dördünü de tek bir `ls-remote` içinde yoklar; böylece tanımadığı ya da
 kendi sunucunuzda duran bir forge, bu geleneklerden birine uyduğu sürece çalışır.
 
 ## Nasıl açılır
@@ -45,7 +45,7 @@ değil.
 
 **Pull request** — numara ya da yapıştırılmış bir tarayıcı adresi. `7`, `#7` ve
 `https://github.com/owner/repo/pull/7` hepsi çalışır; GitLab, Bitbucket ve Azure
-DevOps adres biçimleri de öyle. **Bul**'a basın; Gitcito, daha hiçbir şey
+DevOps adres biçimleri de öyle. **Bul**'a basın; Geminio, daha hiçbir şey
 fetch edilmeden, çözdüğü ref'i ve işaret ettiği commit'i bildirir.
 
 **Uzak dal** — bulunacak bir PR ref'i olmadığında kullanılacak ikinci sekme:
@@ -64,7 +64,7 @@ Hiçbiri commit yazmaz. Bu bilinçlidir — çekip gidemediğiniz bir önizleme,
 
 Aynı pull request'i ikinci kez önizlemek aynı dalı yeniden kullanır ve onu yeni
 head'e taşır — siz test ederken yazar bir düzeltme push ettiğinde işe yarar. O
-dal zaten varsa Gitcito bunu söyler ve sıfırlamadan önce sorar, çünkü yalnızca
+dal zaten varsa Geminio bunu söyler ve sıfırlamadan önce sorar, çünkü yalnızca
 orada yaşayan herhangi bir commit kaybolurdu.
 
 ## Yapmayacakları

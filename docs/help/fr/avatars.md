@@ -10,7 +10,7 @@ keywords: avatar avatars gravatar blobatar auteur photo image identicon visage h
 
 Une liste de commits est un mur de noms, et les noms se lisent lentement. Une
 image à côté de chacun transforme « qui a écrit ça » en une question à laquelle on
-répond d’un coup d’œil. Gitcito en met une sur chaque auteur qu’il affiche : dans
+répond d’un coup d’œil. Geminio en met une sur chaque auteur qu’il affiche : dans
 la colonne auteur du graphe, dans les détails du commit à côté de l’auteur et de
 chaque co-auteur, dans le sélecteur de co-auteurs pendant la rédaction, dans le
 sélecteur de profils, et à côté de chaque profil dans les Réglages.
@@ -41,7 +41,7 @@ personne.
 
 ## Le visage de la barre de titre
 
-L’avatar à côté du nom de votre profil est le seul avatar de Gitcito qui représente
+L’avatar à côté du nom de votre profil est le seul avatar de Geminio qui représente
 **vous, dans ce dépôt, maintenant** — c’est donc le seul qui réagit à l’état du
 dépôt. Il fait une tête quand il se passe quelque chose, et reste neutre le reste
 du temps.

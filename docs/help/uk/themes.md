@@ -8,7 +8,7 @@ keywords: тема theme теми themes темна dark світла light ви
 
 # Теми та вигляд
 
-Вбудовані теми — Gitcito, Nord, Dracula, Solarized, GitHub, Monokai,
+Вбудовані теми — Geminio, Nord, Dracula, Solarized, GitHub, Monokai,
 Midnight, Contrast і Daltonic — кожна зі світлим і темним варіантом.
 
 ![Перемикання зі світлої теми на темну](../../screenshots/clip-themes.webp)

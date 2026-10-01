@@ -14,9 +14,9 @@ keywords: 钩子 hooks pre-commit commit-msg pre-push husky core.hooksPath gitig
 
 ![钩子管理器](../../screenshots/hooks.webp)
 
-Gitcito 会检测自定义的 **`core.hooksPath`**（husky 之流）以及 **pre-commit 框架**的配置，并在钩子不住在 `.git/hooks` 时告诉你——否则你会去编辑一个 git 根本不会运行的文件。
+Geminio 会检测自定义的 **`core.hooksPath`**（husky 之流）以及 **pre-commit 框架**的配置，并在钩子不住在 `.git/hooks` 时告诉你——否则你会去编辑一个 git 根本不会运行的文件。
 
-> 钩子对 Gitcito 的提交生效，和对 `git commit` 完全一样。失败的钩子会挡住这次提交，它的输出会随错误一起回来。
+> 钩子对 Geminio 的提交生效，和对 `git commit` 完全一样。失败的钩子会挡住这次提交，它的输出会随错误一起回来。
 
 ## 聪明的 .gitignore
 

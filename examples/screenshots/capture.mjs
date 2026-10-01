@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Screenshot + motion-clip capture harness for Gitcito.
+// Screenshot + motion-clip capture harness for Geminio.
 //
 //   node examples/screenshots/capture.mjs            # all stills (WebP)
 //   node examples/screenshots/capture.mjs graph      # only shots matching "graph"
@@ -29,9 +29,9 @@ const OUT_DIR = join(ROOT, 'docs', 'screenshots')
 const MAIN = join(ROOT, 'out', 'main', 'index.js')
 
 // Repos are loaded through neutral symlinks so screenshots show a clean,
-// username-free path (e.g. /tmp/gitcito-demo/octopus-merge) instead of the
+// username-free path (e.g. /tmp/geminio-demo/octopus-merge) instead of the
 // real checkout location.
-const DEMO_ROOT = join('/tmp', 'gitcito-demo')
+const DEMO_ROOT = join('/tmp', 'geminio-demo')
 
 // Fixed content size for crisp, consistent shots regardless of the host OS chrome.
 const WIDTH = 1440
@@ -60,6 +60,10 @@ function sh(cmd, cmdArgs, opts = {}) {
   })
 }
 
+function hasCwebp() {
+  return spawnSync('cwebp', ['-version'], { stdio: 'ignore' }).status === 0
+}
+
 function hasFfmpeg() {
   return spawnSync('ffmpeg', ['-version'], { stdio: 'ignore' }).status === 0
 }
@@ -67,8 +71,8 @@ function hasFfmpeg() {
 async function ensurePrereqs() {
   // Stills are transcoded to WebP, so ffmpeg is required for every run now —
   // not just the ones rendering clips.
-  if (!hasFfmpeg()) {
-    console.error('✖ ffmpeg not found — required to encode shots as WebP (brew install ffmpeg)')
+  if (!hasCwebp() && !hasFfmpeg()) {
+    console.error('✖ cwebp or ffmpeg required to encode shots as WebP')
     process.exit(1)
   }
   // Always rebuild so screenshots/GIFs reflect the latest source, not a stale
@@ -162,15 +166,15 @@ function seedSettings(shot, theme) {
     tabs: [tab],
     activeTabId: 'shot-tab',
     recentRepos: (shot.recents ?? []).map(ref),
-    appThemeId: shot.appTheme ?? 'gitcito',
-    codeThemeId: shot.appTheme ?? 'gitcito',
+    appThemeId: shot.appTheme ?? 'geminio',
+    codeThemeId: shot.appTheme ?? 'geminio',
     themeMode: theme,
     onboardingCompleted: true
   }
 }
 
 async function launch(shot, theme) {
-  const userDataDir = await mkdtemp(join(tmpdir(), 'gitcito-shot-'))
+  const userDataDir = await mkdtemp(join(tmpdir(), 'geminio-shot-'))
   await mkdir(userDataDir, { recursive: true })
   const repoPaths = repoPathsFor(shot)
 
@@ -184,7 +188,7 @@ async function launch(shot, theme) {
   // dir, so it asks every single time).
   //
   // 'declined' is the default on purpose: refusing keeps tokens in memory and
-  // the app fully working, while granting makes macOS raise its own "Gitcito
+  // the app fully working, while granting makes macOS raise its own "Geminio
   // Safe Storage" dialog — an OS window Playwright cannot dismiss, which would
   // stall the run. Only shots that actually need a readable vault opt in.
   await writeFile(
@@ -204,14 +208,7 @@ async function launch(shot, theme) {
   })
   const page = await app.firstWindow()
 
-  // Deterministic content size + wait for the bridge and the active repo to load.
-  await app.evaluate(
-    ({ BrowserWindow }, { w, h }) => {
-      const win = BrowserWindow.getAllWindows()[0]
-      win.setContentSize(w, h)
-    },
-    { w: WIDTH, h: HEIGHT }
-  )
+  // Wait for startup before sizing; ready-to-show maximizes the native window.
   await page.waitForFunction(() => window.__shot?.ready === true, { timeout: 20000 })
   const activePath = shot.groupLanding ? null : repoPaths[shot.repos[0]]
   if (activePath) {
@@ -234,6 +231,15 @@ async function launch(shot, theme) {
       '*{caret-color:transparent!important;animation-play-state:paused!important;transition:none!important;transition-duration:0s!important}'
   })
   await page.evaluate(() => document.fonts.ready)
+  const size = { width: shot.width ?? WIDTH, height: shot.height ?? HEIGHT }
+  await app.evaluate(({ BrowserWindow }, size) => {
+    const win = BrowserWindow.getAllWindows()[0]
+    win.unmaximize()
+    win.setContentSize(size.width, size.height)
+  }, size)
+  // Emulation also allows a Sidecar viewport taller than the host display.
+  await page.setViewportSize(size)
+  await page.waitForFunction(({ width, height }) => innerWidth === width && innerHeight === height, size)
 
   return { app, page, userDataDir }
 }
@@ -326,7 +332,9 @@ async function capturePngTheme(shot, theme) {
     const raw = await page.screenshot({ animations: 'disabled', clip: await clipFor(page, shot) })
     const tmpPng = join(userDataDir, 'shot.png')
     await writeFile(tmpPng, raw)
-    await sh('ffmpeg', ['-y', '-loglevel', 'error', '-i', tmpPng, '-c:v', 'libwebp', '-q:v', '90', file])
+    // Some ffmpeg packages omit libwebp; the standalone encoder handles stills.
+    if (hasCwebp()) await sh('cwebp', ['-quiet', '-q', '90', tmpPng, '-o', file])
+    else await sh('ffmpeg', ['-y', '-loglevel', 'error', '-i', tmpPng, '-c:v', 'libwebp', '-q:v', '90', file])
     logLine(`  ✓ ${file.replace(ROOT + '/', '')}`)
   } finally {
     // A crashed app makes close()/rm() throw too — never let cleanup mask the
@@ -354,7 +362,7 @@ async function captureGif(shot) {
 async function captureGifOnce(shot) {
   const theme = (shot.themes ?? ['dark'])[0]
   const { app, page, userDataDir } = await launch(shot, theme)
-  const framesDir = await mkdtemp(join(tmpdir(), 'gitcito-frames-'))
+  const framesDir = await mkdtemp(join(tmpdir(), 'geminio-frames-'))
   const fps = 12
   try {
     await settle(page, 600)

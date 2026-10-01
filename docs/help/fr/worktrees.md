@@ -21,7 +21,7 @@ exactement comme vous l'avez laissée, sans rien remiser.
   travail** pour en monter un dans un dossier voisin et l'ouvrir comme onglet.
 - Une branche ne vit que dans un seul arbre de travail à la fois : extraire une
   branche qu'un autre arbre détient ne peut pas marcher — git refuse par
-  *already used by worktree at …*. Gitcito vous y emmène plutôt : le menu de la
+  *already used by worktree at …*. Geminio vous y emmène plutôt : le menu de la
   branche indique *Aller à `x` dans son arbre de travail*, et un double-clic sur
   la ligne ouvre l'onglet de cet arbre au lieu d'échouer.
 

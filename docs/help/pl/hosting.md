@@ -88,7 +88,7 @@ skończy.
 ## Tokeny
 
 Tokeny per profil dla wielu kont albo organizacji, przechowywane w pęku kluczy
-twojego systemu. Gitcito potrafi też pożyczyć to, co już trzyma twój
+twojego systemu. Geminio potrafi też pożyczyć to, co już trzyma twój
 **credential helper gita**, więc organizacja, do której już się
 uwierzytelniłeś, często nie wymaga w ogóle żadnej konfiguracji. Zobacz
 [Bezpieczeństwo i sekrety](security.md).

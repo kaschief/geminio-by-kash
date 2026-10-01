@@ -2,7 +2,7 @@
 title: Repositories
 category: Sync & many repos
 order: 52
-summary: Every repository Gitcito knows about, open or not, in one searchable list.
+summary: Every repository Geminio knows about, open or not, in one searchable list.
 keywords: repositories registry all repos favourites starred recent scan folder browse find open manage repository management colour color section tint highlight workspaces from folders tree generate bulk import
 ---
 
@@ -11,7 +11,7 @@ keywords: repositories registry all repos favourites starred recent scan folder 
 [Mission control](mission-control.md) answers "which of my open repositories
 needs me?" It only knows about the active workspace's tabs. Repositories
 answers a different question: **where is that repo, and is it even open
-anywhere?** It covers everything Gitcito has ever seen — every workspace, every
+anywhere?** It covers everything Geminio has ever seen — every workspace, every
 tab, plus whatever it finds by scanning folders you point it at.
 
 ![The Repositories page: coloured sections for open, favourite, recent and
@@ -64,7 +64,7 @@ Three things worth knowing:
   colours on every launch, and adding a workspace never recolours the sections
   above it. Only the colours you change are stored.
 - The colour is **page-local**. Tinting a workspace's section here says nothing
-  about that workspace anywhere else in Gitcito — its tab colour is a separate
+  about that workspace anywhere else in Geminio — its tab colour is a separate
   setting.
 - The colour is **mixed down** to a low percentage of the surface rather than
   applied at full strength, so a saturated pick stays a readable background in
@@ -76,9 +76,9 @@ tint.
 
 ## What makes a repository known
 
-A row exists here once Gitcito has **opened it** at some point, or found it
+A row exists here once Geminio has **opened it** at some point, or found it
 under a **scan folder**. Nothing is indexed just because it exists on disk
-somewhere you never told Gitcito about.
+somewhere you never told Geminio about.
 
 Opening this page also indexes whatever you currently have **open in a tab**,
 which is how repositories restored at startup get a row without your having to
@@ -109,7 +109,7 @@ reads as a table rather than a stack.
 The trailing actions are shown at rest rather than revealed on hover: **open in
 a tab**, and a **⋮** that opens the same [repository context
 menu](repo-menu.md) as a right-click. That menu is the one used everywhere else
-in Gitcito, extended with two entries specific to this page:
+in Geminio, extended with two entries specific to this page:
 
 | Action | What it does |
 |---|---|
@@ -155,7 +155,7 @@ Safe to repeat. A second scan **adds and never removes**:
 
 - New repositories are appended to the matching workspace.
 - Repositories you moved, renamed or removed by hand stay as you left them.
-- A workspace you **renamed** is still recognised — Gitcito remembers the folder
+- A workspace you **renamed** is still recognised — Geminio remembers the folder
   it came from, so it merges instead of creating a duplicate.
 - A repository deleted from disk keeps its tab, showing as missing.
 
@@ -211,7 +211,7 @@ which kind of pull you want.
 ## The action bar
 
 **Open folder…**, **Clone…**, and **Add scan folder…** — three ways to bring a
-repository into Gitcito's registry, from the same page you use to find one
+repository into Geminio's registry, from the same page you use to find one
 that is already there.
 
 ## WIP summary

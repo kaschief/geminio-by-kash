@@ -2,7 +2,7 @@
 title: Die Menüleiste
 category: Erste Schritte
 order: 5
-summary: Was in Gitcitos macOS-Menüs steckt, und warum Windows und Linux keine Menüleiste haben.
+summary: Was in Geminios macOS-Menüs steckt, und warum Windows und Linux keine Menüleiste haben.
 keywords: menüleiste menubar menü anwendung datei bearbeiten ansicht fenster hilfe repository macos nativ über beenden
 ---
 
@@ -22,7 +22,7 @@ Funktion, die Windows- und Linux-Nutzende nicht haben.
 
 | Menü | Enthält |
 |---|---|
-| **Gitcito** | Über, Update-Prüfung, [Einstellungen](repo-settings.md), die üblichen Einträge zum Ausblenden und Beenden |
+| **Geminio** | Über, Update-Prüfung, [Einstellungen](repo-settings.md), die üblichen Einträge zum Ausblenden und Beenden |
 | **Datei** | Neuer Tab, Repository öffnen oder [klonen](cloning.md), zuletzt geöffnet, Tabs schließen und wieder öffnen |
 | **Bearbeiten** | Ausschneiden, Kopieren, Einfügen, Widerrufen — die Textbearbeitung, die die Tastatur ohnehin kann — plus [Codesuche](search.md) |
 | **Ansicht** | Befehlspalette, die Schalter für Seitenleiste und Panel, das [Terminal](terminal.md), [Mission Control](mission-control.md), den [Tresor](vault.md), Zoom |
@@ -41,16 +41,16 @@ Die Tasten neben jedem Eintrag sind die, die tatsächlich belegt sind. Belegen
 Sie <kbd>⌘K</kbd> in den Einstellungen neu, sagt das Ansicht-Menü es.
 
 Das klappt, weil das Menü diese Kombinationen *anzeigt*, ohne sie zu
-beanspruchen: Gitcitos eigene Tastaturbehandlung bleibt zuständig, und genau das
+beanspruchen: Geminios eigene Tastaturbehandlung bleibt zuständig, und genau das
 erlaubt einem Shortcut, sich je nach Position der Eingabemarke anders zu
 verhalten. Das Einzige, was so nicht darstellbar ist, ist ein Shortcut, der
-Gitcito nicht gehört — <kbd>⌘F</kbd> gehört der Datei oder dem Diff, das gerade
+Geminio nicht gehört — <kbd>⌘F</kbd> gehört der Datei oder dem Diff, das gerade
 gelesen wird, also beansprucht ihn kein Menüeintrag.
 
 ## Die Grenzen
 
 - **Nur macOS.** Unter Windows und Linux ist das Fenster rahmenlos — die
-  Titelleiste zeichnet Gitcito selbst, und eine Menüleiste hätte keinen Platz.
+  Titelleiste zeichnet Geminio selbst, und eine Menüleiste hätte keinen Platz.
   Dort führen die [Befehlspalette](search.md) und die
   [Tastaturkürzel](keyboard.md) zu denselben Befehlen.
 - **Neu laden und die Entwicklerwerkzeuge erscheinen nur in

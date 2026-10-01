@@ -21,7 +21,7 @@ De todo-lijst van `git rebase -i`, als een lijst die je kunt slepen.
 | **edit** | Stop hier zodat je kunt amenden |
 | **drop** | Gooi de commit weg |
 
-Sleep rijen om te herordenen. De editor opent nooit in een terminal — Gitcito
+Sleep rijen om te herordenen. De editor opent nooit in een terminal — Geminio
 schrijft de todo voor je.
 
 ## Autosquash, één klik

@@ -105,7 +105,7 @@ derecho en una burbuja: **Copiar** toma la selección, **Copiar mensaje** el
 mensaje completo — una respuesta se copia como su fuente Markdown — y, si el
 clic cayó sobre un enlace, **Copiar enlace** toma su dirección.
 
-Los enlaces se abren en tu navegador predeterminado, nunca dentro de Gitcito —
+Los enlaces se abren en tu navegador predeterminado, nunca dentro de Geminio —
 tanto los enlaces Markdown de las respuestas como las direcciones `https://`
 escritas en tus propios mensajes.
 
@@ -138,7 +138,7 @@ El chat del repositorio puede proponer ediciones exactas, crear o reemplazar
 archivos completos y eliminarlos, y después acciones Git: patrones de ignorado,
 preparar, quitar de preparado, commit, stash, descartar, rama, cambiar de rama,
 etiqueta y —porque se le muestran la lista de ramas y los commits recientes—
-merge, rebase, revert y cherry-pick. Gitcito calcula localmente el diff
+merge, rebase, revert y cherry-pick. Geminio calcula localmente el diff
 desplegable. Los archivos existentes deben proceder de la evidencia leída; se
 rechazan destinos inseguros, secretos, ignorados, generados, binarios, obsoletos,
 demasiado grandes o enlazados mediante symlink. Reset, reescribir el historial,
@@ -150,12 +150,12 @@ ya ejecutado, y el aviso de conflicto toma el relevo igual que si la operación
 se hubiera lanzado desde la barra.
 
 Todo el lote se vuelve a comprobar antes de la primera escritura y se revierte
-si falla un paso. Antes de un commit, Gitcito comprueba que haya cambios
+si falla un paso. Antes de un commit, Geminio comprueba que haya cambios
 preparados. La tarjeta marca cada acción completada, fallida u omitida y conserva
 los resultados parciales. Después, una llamada separada sin acciones resume el
 resultado real.
 
-**También puede escribir `.gitcito.json`.** Al chat se le da la forma del
+**También puede escribir `.geminio.json`.** Al chat se le da la forma del
 [archivo de configuración del repositorio](repo-config.md), así que *añade
 enlaces de tickets para JIRA-1234* o *protege las ramas de release* se convierte
 en una acción de archivo escrita contra el esquema real, no en claves plausibles
@@ -199,7 +199,7 @@ el plan empiece, no desde dentro.
 ### Deshacer un plan
 
 Un plan se aprueba como un lote, así que se deshace como un lote. Antes de la
-primera acción que pueda cambiar algo, Gitcito anota dónde estaba la rama y toma
+primera acción que pueda cambiar algo, Geminio anota dónde estaba la rama y toma
 una instantánea de la copia de trabajo; la tarjeta terminada ofrece entonces
 **Deshacer el plan**. Devuelve la rama a ese commit y restaura el árbol, lo que
 tira lo que el plan produjo, así que confirma primero y nombra el commit al que
@@ -242,7 +242,7 @@ borrador es editable — no se envía nada hasta que pulsas Enviar.
   de aprobación](#modos-de-aprobación), y un paso destructivo siempre confirma.
   Con **Proponer acciones de git en el chat** desactivado, ni siquiera propone.
 - **Las conversaciones viven solo en memoria.** Cada repositorio mantiene su hilo
-  aparte; al salir de Gitcito se descartan.
+  aparte; al salir de Geminio se descartan.
 
 ## Cómo abrirlo
 

@@ -23,7 +23,7 @@ schuift een lange lijst bijgewerkte `origin/*`-refs voorbij, en dan stopt git me
 *"There is no tracking information for the current branch"*. Er is niets gepulld
 en er is niets stuk: de tweede helft had eenvoudigweg geen doelwit.
 
-Gitcito leest die fout en biedt de reparatie als knop aan, en kiest welke aan de
+Geminio leest die fout en biedt de reparatie als knop aan, en kiest welke aan de
 hand van of de remote de branch al heeft:
 
 | | |
@@ -87,7 +87,7 @@ publiceren is twee keer zo veel blootstelling, niet half zo veel voorzichtigheid
 ## Branches waar je niet op staat
 
 `git pull` verzet alleen HEAD, en daarom laten de meeste clients je eerst een
-branch uitchecken voordat je hem kunt bijwerken. Gitcito niet: rechtsklik op een
+branch uitchecken voordat je hem kunt bijwerken. Geminio niet: rechtsklik op een
 lokale branch — in de zijbalk of op de badge in de [graaf](graph.md) — en je
 krijgt **\<branch\> pullen** en **\<branch\> pushen**, allebei op *die* branch.
 

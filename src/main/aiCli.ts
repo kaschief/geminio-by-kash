@@ -7,7 +7,7 @@ import type { ChatMessage, ModelReply } from './aiTransport'
  * Model calls served by an agent CLI the user already has installed and signed
  * in — `claude`, `gemini`, `codex`. It is the answer to "I pay for a
  * subscription, why do I also need an API key": the binary authenticates with
- * its own stored session and Gitcito never sees a credential.
+ * its own stored session and Geminio never sees a credential.
  *
  * Three rules this module does not bend:
  *

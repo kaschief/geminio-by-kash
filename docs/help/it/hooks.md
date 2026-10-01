@@ -15,12 +15,12 @@ Elenca ogni hook del repository, mostra quali sono veri e quali sono ancora
 
 ![Il gestore degli hook](../../screenshots/hooks.webp)
 
-Gitcito rileva un `core.hooksPath` personalizzato (husky e simili) e la
+Geminio rileva un `core.hooksPath` personalizzato (husky e simili) e la
 configurazione di un **framework pre-commit**, e ti dice quando gli hook vivono
 da qualche altra parte rispetto a `.git/hooks` — altrimenti modificheresti un
 file che git non esegue mai.
 
-> Per i commit fatti da Gitcito gli hook girano esattamente come per
+> Per i commit fatti da Geminio gli hook girano esattamente come per
 > `git commit`. Un hook che fallisce blocca il commit, e il suo output torna
 > dentro l'errore.
 

@@ -9,7 +9,7 @@ keywords: sign signing gpg ssh x509 verified signature badge trust
 # Signed commits
 
 Turn signing on per repository (**Settings → repo gear**): GPG, SSH or X.509,
-with the key you choose. Gitcito writes `commit.gpgsign`, `gpg.format` and
+with the key you choose. Geminio writes `commit.gpgsign`, `gpg.format` and
 `user.signingkey` for that repository — the same config any other tool reads.
 
 | | |

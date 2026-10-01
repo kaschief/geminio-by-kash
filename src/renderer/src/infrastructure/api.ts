@@ -893,7 +893,7 @@ export const sshApi = {
 export const editorApi = {
   /** Editors installed on this machine, CLI installs first (only those can jump
    *  to a line). Re-probed on demand — an editor installed after launch shows up
-   *  without restarting Gitcito. */
+   *  without restarting Geminio. */
   detect: () => window.api.editor.detect(),
   /** Opens `target` in the configured editor. Resolves to '' on success, or to
    *  the failure message. */
@@ -1005,10 +1005,10 @@ export const keychainApi = {
   set: (granted: boolean) => window.api.keychain.set(granted)
 }
 
-// Installs/checks the `gitcito` shell command, the equivalent of VS Code's
+// Installs/checks the `geminio` shell command, the equivalent of VS Code's
 // "Shell Command: Install 'code' in PATH", plus the two channels the CLI uses
 // once it is installed: a request to open something, and a file git is waiting
-// on (`gitcito --wait`).
+// on (`geminio --wait`).
 export const cliApi = {
   isInstalled: () => window.api.cli.isInstalled(),
   install: () => window.api.cli.install(),
@@ -1033,3 +1033,6 @@ export const launchApi = {
   resolveInputs: (dir: string, inputs: LaunchInput[]): Promise<LaunchInputResolution> =>
     window.api.launch.resolveInputs(dir, inputs)
 }
+
+/** Screenshot sessions must not borrow the machine's hosting identity. */
+export const isShotMode = (): boolean => window.api.shotMode

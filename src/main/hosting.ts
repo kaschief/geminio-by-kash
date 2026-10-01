@@ -241,9 +241,9 @@ export function githubCredentialMessage(status: GitHubCliAuthStatus, host = 'git
     return `No GitHub credential for ${host}. GitHub CLI (gh) is installed but not authenticated. Run \`gh auth login\`, or add a personal access token in Settings → Integrations.`
   }
   if (status === 'unknown') {
-    return `No GitHub credential for ${host}, and checking the GitHub CLI (gh) timed out — it may be offline. Sign in with git (any credential helper), run \`gh auth login\` then \`gh auth setup-git\`, or add a personal access token in Settings → Integrations.`
+    return `No GitHub credential for ${host}, and checking the GitHub CLI (gh) timed out — it may be offline. Sign in with git (any credential helper), run \`gh auth login\`, or add a personal access token in Settings → Integrations.`
   }
-  return `No GitHub credential for ${host}. GitHub CLI (gh) is authenticated, but Git is not configured to provide that credential to Gitcito. Run \`gh auth setup-git\`, then retry, or add a personal access token in Settings → Integrations.`
+  return `No GitHub credential for ${host}. GitHub CLI (gh) is authenticated, but its token could not be read. Unlock its credential store and retry Connect GitHub, or add a personal access token in Settings → Integrations.`
 }
 
 /** A clear "no credential at all" message naming the setup step that failed. */
@@ -1673,7 +1673,7 @@ function azureAuthError(status: number, org?: string): string {
 }
 
 /** Resolve the authenticated user behind a stored token, for display in Settings → Integrations. */
-async function fetchConnectedAccount(
+export async function fetchConnectedAccount(
   provider: RepoHost,
   token: string,
   org?: string,
@@ -1685,7 +1685,7 @@ async function fetchConnectedAccount(
   if (!auth) throw await noCredential(provider, providerBaseUrl(provider, org))
 
   if (provider === 'github') {
-    const user = await ghJson<{ login: string; name: string | null; avatar_url: string; html_url: string }>(
+    const user = await ghJson<{ id: number; login: string; name: string | null; email: string | null; avatar_url: string; html_url: string }>(
       'https://api.github.com/user',
       auth.token
     )
@@ -1693,8 +1693,19 @@ async function fetchConnectedAccount(
       'https://api.github.com/user/orgs?per_page=100',
       auth.token
     ).catch(() => [])
+    // Private email access is optional; public identity and no-reply addresses
+    // still work with the CLI's standard repo/read:org scopes.
+    const emails = await ghJson<Array<{ email: string; verified: boolean }>>(
+      'https://api.github.com/user/emails', auth.token
+    ).catch(() => [])
     return {
       login: user.login,
+      emails: [...new Set([
+        ...(user.email ? [user.email] : []),
+        ...emails.filter((e) => e.verified).map((e) => e.email),
+        `${user.id}+${user.login}@users.noreply.github.com`,
+        `${user.login}@users.noreply.github.com`
+      ].map((email) => email.trim().toLowerCase()))],
       name: user.name ?? undefined,
       avatarUrl: user.avatar_url,
       profileUrl: user.html_url,

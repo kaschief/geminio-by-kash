@@ -46,7 +46,7 @@ que vale conhecer:
 - Elas são **locais até serem enviadas**: `git push origin "refs/replace/*"` as
   compartilha, e quem clonar sem elas vê o histórico intocado.
 - **O Desfazer funciona** — apagar a ref restaura a ancestralidade real na hora, e
-  o Gitcito registra o graft como uma ação desfazível como qualquer outra.
+  o Geminio registra o graft como uma ação desfazível como qualquer outra.
 - `core.useReplaceRefs=false` faz o git ignorar todas de uma vez. O interruptor aqui
   escreve exatamente isso, e o diálogo avisa quando está desligado, porque um
   repositório que ignora silenciosamente as próprias substituições é um lugar
@@ -78,7 +78,7 @@ existente.
 - **Uma substituição pode esconder um commit das ferramentas, não do git.** O
   `git cat-file` e o [explorador de objetos](objects.md) continuam abrindo o
   original pelo sha.
-- **O Gitcito não oferece `git replace --edit`** (reescrever o conteúdo de um objeto
+- **O Geminio não oferece `git replace --edit`** (reescrever o conteúdo de um objeto
   na mão). Isso é trabalho de um editor de texto sobre um objeto cru, e uma arma
   apontada para o próprio pé com uma interface em volta.
 

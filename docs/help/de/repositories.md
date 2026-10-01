@@ -2,7 +2,7 @@
 title: Repositories
 category: Sync & viele Repos
 order: 52
-summary: Jedes Repository, das Gitcito kennt, offen oder nicht, in einer durchsuchbaren Liste.
+summary: Jedes Repository, das Geminio kennt, offen oder nicht, in einer durchsuchbaren Liste.
 keywords: repositories registry alle repos favoriten markiert zuletzt scan ordner durchsuchen finden öffnen verwalten repository-verwaltung farbe abschnitt tint hervorheben workspaces aus ordnern baum erzeugen massenimport favourites starred recent scan folder workspaces
 ---
 
@@ -11,7 +11,7 @@ keywords: repositories registry alle repos favoriten markiert zuletzt scan ordne
 Die [Missionskontrolle](mission-control.md) beantwortet "welches meiner offenen
 Repositories braucht mich?". Sie kennt nur die Tabs des aktiven Workspace.
 Repositories beantwortet eine andere Frage: **wo ist dieses Repo, und ist es
-überhaupt irgendwo offen?** Sie umfasst alles, was Gitcito je gesehen hat.
+überhaupt irgendwo offen?** Sie umfasst alles, was Geminio je gesehen hat.
 Jeden Workspace, jeden Tab, sowie das, was es findet, wenn es Ordner scannt, auf
 die du es zeigst.
 
@@ -69,7 +69,7 @@ Drei Dinge, die sich zu wissen lohnen:
   Abschnitte darüber nie um. Gespeichert werden nur die Farben, die du
   änderst.
 - Die Farbe ist **seitenlokal**. Einen Workspace-Abschnitt hier einzufärben
-  sagt nichts über diesen Workspace irgendwo sonst in Gitcito. Seine Tabfarbe
+  sagt nichts über diesen Workspace irgendwo sonst in Geminio. Seine Tabfarbe
   ist eine eigene Einstellung.
 - Die Farbe wird **heruntergemischt** auf einen kleinen Anteil der Fläche,
   statt in voller Stärke zu liegen, damit eine satte Wahl in hellen und
@@ -81,9 +81,9 @@ können also denselben Ton teilen.
 
 ## Was ein Repository bekannt macht
 
-Eine Zeile gibt es hier, sobald Gitcito es irgendwann **geöffnet** hat, oder
+Eine Zeile gibt es hier, sobald Geminio es irgendwann **geöffnet** hat, oder
 es unter einem **Scan-Ordner** gefunden hat. Nichts wird indexiert, nur weil
-es irgendwo auf der Platte liegt, von dem du Gitcito nie erzählt hast.
+es irgendwo auf der Platte liegt, von dem du Geminio nie erzählt hast.
 
 Diese Seite zu öffnen indexiert außerdem, was du gerade **in einem Tab offen**
 hast. So bekommen Repositories, die beim Start wiederhergestellt werden, eine
@@ -114,7 +114,7 @@ steht und die Liste als Tabelle lesbar ist, nicht als Stapel.
 Die Aktionen am Ende stehen in Ruhe da, sie werden nicht erst beim Hover
 sichtbar: **in einem Tab öffnen**, und ein **⋮**, das dasselbe
 [Repository-Kontextmenü](repo-menu.md) öffnet wie ein Rechtsklick. Das ist das
-Menü, das überall sonst in Gitcito gilt, hier um zwei Einträge erweitert, die
+Menü, das überall sonst in Geminio gilt, hier um zwei Einträge erweitert, die
 nur diese Seite hat:
 
 | Aktion | Was sie tut |
@@ -163,7 +163,7 @@ Gefahrlos wiederholbar. Ein zweiter Scan **fügt hinzu und entfernt nie**:
 - Neue Repositories werden an den passenden Workspace angehängt.
 - Repositories, die du von Hand verschoben, umbenannt oder entfernt hast,
   bleiben, wie du sie gelassen hast.
-- Ein Workspace, den du **umbenannt** hast, wird trotzdem erkannt. Gitcito
+- Ein Workspace, den du **umbenannt** hast, wird trotzdem erkannt. Geminio
   merkt sich den Ordner, aus dem er kam, und führt zusammen statt ein Duplikat
   anzulegen.
 - Ein von der Platte gelöschtes Repository behält seinen Tab und steht als
@@ -224,7 +224,7 @@ dich schon fragt, welche Art Pull du willst.
 ## Die Aktionsleiste
 
 **Ordner öffnen…**, **Klonen…** und **Scan-Ordner hinzufügen…**. Drei Wege,
-ein Repository in Gitcitos Registry zu bringen, von derselben Seite aus, auf
+ein Repository in Geminios Registry zu bringen, von derselben Seite aus, auf
 der du eines suchst, das schon da ist.
 
 ## WIP-Übersicht

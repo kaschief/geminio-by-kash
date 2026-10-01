@@ -58,7 +58,7 @@ faz merge, rebase ou checkout de `bundle/main` nos seus próprios termos, exatam
 como faria com uma branch de qualquer outro remote.
 
 Para começar um repositório *novo* a partir de um bundle, clone do arquivo num
-terminal: `git clone work.bundle myrepo`. O Gitcito importa para dentro de um
+terminal: `git clone work.bundle myrepo`. O Geminio importa para dentro de um
 repositório aberto; ele não clona a partir de um arquivo.
 
 ## Arquivos compactados
@@ -93,7 +93,7 @@ regra morando no repositório em vez de no script de release de alguém.
 
 - **Um bundle é uma cópia completa**, a menos que você use um intervalo. Empacotar
   um repositório de 2 GB escreve um arquivo de 2 GB, e demora o mesmo que um clone.
-- **Bundles vazios são recusados** pelo git, não pelo Gitcito: um intervalo sem nada
+- **Bundles vazios são recusados** pelo git, não pelo Geminio: um intervalo sem nada
   entre as pontas produz um erro em vez de um arquivo inútil.
 - **A importação não faz merge.** As refs chegam em `bundle/…` e ficam ali até você
   fazer alguma coisa com elas.

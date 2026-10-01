@@ -28,7 +28,7 @@ nota*, escribe, **Guardar nota**. Varias líneas valen.
 
 ![Escribir una nota bajo el mensaje de un commit publicado y guardarla](../../screenshots/clip-commit-note.webp)
 
-Guardar una nota es una acción normal de Gitcito — lanza un aviso, y **Deshacer**
+Guardar una nota es una acción normal de Geminio — lanza un aviso, y **Deshacer**
 devuelve el texto anterior, incluida la restauración de una nota que hayas
 quitado.
 
@@ -38,7 +38,7 @@ vacía.
 ## Encontrar una
 
 Las notas son invisibles en un log normal, que es la razón principal por la que
-nadie las descubre nunca. Gitcito marca los commits que llevan una con un iconito
+nadie las descubre nunca. Geminio marca los commits que llevan una con un iconito
 de nota en la columna de mensaje del grafo, de forma que la anotación se puede
 encontrar sin saber que está ahí.
 
@@ -60,11 +60,11 @@ git fetch <remote> +refs/notes/commits:refs/notes/commits
 ```
 
 Solo viaja la ref de las notas de commit — las refs locales de máquina propias
-de Gitcito (como los veredictos de la [CI local](local-ci.md)) deliberadamente
+de Geminio (como los veredictos de la [CI local](local-ci.md)) deliberadamente
 no se publican.
 
 Algunos hosts además necesitan que las notas estén habilitadas o permitidas de su
-lado; un rechazo ahí es política del host, no un límite de Gitcito.
+lado; un rechazo ahí es política del host, no un límite de Geminio.
 
 ¿Sin remoto compartido, o sin acceso de escritura?
 [Compartir seguro](secure-share.md) puede empaquetar las notas de un repositorio
@@ -74,7 +74,7 @@ notas divergentes.
 
 ## Límites
 
-- **Una sola ref de notas.** Gitcito lee y escribe la de por defecto,
+- **Una sola ref de notas.** Geminio lee y escribe la de por defecto,
   `refs/notes/commits`. Los espacios de nombres personalizados
   (`git notes --ref=review`) no están expuestos — un repositorio que los use no
   verá aquí esas notas.

@@ -14,7 +14,7 @@ descomunal.
 
 ![Una pila de ramas](../../screenshots/branch-stack.webp)
 
-Gitcito lo dibuja como una **ruta**: una rama de inicio arriba y luego una parada
+Geminio lo dibuja como una **ruta**: una rama de inicio arriba y luego una parada
 por nivel. El PR de cada parada apunta a la parada de encima, y la primera aterriza
 en la rama de inicio. Cada parada muestra sus propios commits, si necesita restack
 y, una vez enviada, su número de PR.
@@ -54,13 +54,13 @@ Todo lo que cambie el orden —un intercambio, un movimiento, otro inicio—
 **reproduce** la cadena: los commits propios de cada parada se rebasan sobre su
 nueva base. Por eso puede dar **conflictos**, igual que un restack. Dos paradas que tocan las mismas líneas no pueden
 intercambiarse sin una persona, y cuando eso pasa **no pasa nada**: la edición
-entera se revierte —puntas, enlaces de padre y el rebase a medias— y Gitcito
+entera se revierte —puntas, enlaces de padre y el rebase a medias— y Geminio
 nombra las dos paradas que chocan. Un desplegable que rozaste no debería dejarte
 a mitad de un rebase.
 
 **Restack** es la otra mitad del trato: es un rebase que pediste por su nombre,
 así que sí se detiene en el conflicto y te da la vista de conflictos — que es
-además la forma de conseguir el reordenamiento que Gitcito rechazó: resuelve ahí
+además la forma de conseguir el reordenamiento que Geminio rechazó: resuelve ahí
 y luego mueve la parada.
 
 Deshacer reproduce la ruta anterior. No resucita los commits antiguos, porque los
@@ -113,7 +113,7 @@ arriba, pulsa Enviar, repite.
 Las bases encadenadas son lo que entiende cualquier host, y en GitLab, Bitbucket
 y Azure DevOps son todo lo que hay. GitHub tiene más: desde su preview de
 stacked pull requests, una pila es un objeto del servidor. Una vez creados los
-PR, Gitcito los registra como pila —de abajo arriba— y obtienes el mapa de la
+PR, Geminio los registra como pila —de abajo arriba— y obtienes el mapa de la
 pila en la UI del PR, un rebase en cascada del lado del servidor y un merge en
 el PR de arriba que aterriza todos los niveles de debajo.
 

@@ -63,9 +63,9 @@ describe('gitDirOf', () => {
   })
 
   it('follows a .git file to the real git directory', async () => {
-    const dir = mkdtempSync(join(tmpdir(), 'gitcito-wt-'))
+    const dir = mkdtempSync(join(tmpdir(), 'geminio-wt-'))
     tmpDirs.push(dir)
-    const real = mkdtempSync(join(tmpdir(), 'gitcito-wtgit-'))
+    const real = mkdtempSync(join(tmpdir(), 'geminio-wtgit-'))
     tmpDirs.push(real)
     writeFileSync(join(dir, '.git'), `gitdir: ${real}\n`)
     writeFileSync(join(real, 'HEAD'), 'ref: refs/heads/feature\n')
@@ -74,7 +74,7 @@ describe('gitDirOf', () => {
   })
 
   it('returns null for a detached HEAD', async () => {
-    const dir = mkdtempSync(join(tmpdir(), 'gitcito-det-'))
+    const dir = mkdtempSync(join(tmpdir(), 'geminio-det-'))
     tmpDirs.push(dir)
     mkdirSync(join(dir, '.git'))
     writeFileSync(join(dir, '.git', 'HEAD'), '9f4a1c2e8b7d6a5f4e3c2b1a0d9e8f7a6b5c4d3e\n')

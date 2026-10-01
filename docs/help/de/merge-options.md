@@ -34,7 +34,7 @@ ausgeführt zu werden, ohne diesen Dialog.
 
 **`-X ours` ist nicht `-s ours`.** Der Schalter hier entscheidet nur über die
 Hunks, die tatsächlich kollidieren; jede andere Änderung aus dem anderen Branch
-merged ganz normal. Die Strategie namens `ours` — die Gitcito nicht anbietet —
+merged ganz normal. Die Strategie namens `ours` — die Geminio nicht anbietet —
 nimmt deinen Baum im Ganzen und wirft die andere Seite weg. Sie erzeugt einen
 Merge-Commit, der behauptet, Arbeit zu enthalten, die er nicht enthält. Diese
 Unterscheidung ist das am gründlichsten missverstandene Detail an Git-Merges.

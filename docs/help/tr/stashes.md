@@ -8,7 +8,7 @@ keywords: stash stashes kısmi keep-index apply pop drop izlenmeyen untracked da
 
 # Stash'ler
 
-Gitcito'da stash'leme ya hep ya hiç değildir.
+Geminio'da stash'leme ya hep ya hiç değildir.
 
 | Eylem | Ne yapar |
 |---|---|
@@ -29,7 +29,7 @@ uygula* düğmesi) yalnızca seçimi geri getirir.
 
 ## Bir stash uygulanmadığında
 
-Bir stash'i uygulamak izlenmeyen dosyaların üzerine yazacaksa git durur. Gitcito,
+Bir stash'i uygulamak izlenmeyen dosyaların üzerine yazacaksa git durur. Geminio,
 sizi doğru büyülü sözü bulmaya bırakmak yerine bunların üzerine yazıp yeniden
 denemeyi önerir.
 

@@ -60,7 +60,7 @@ de directorio, no una ausencia.
 
 ## Qué hace la reescritura en realidad
 
-Gitcito copia todas las ramas y etiquetas a
+Geminio copia todas las ramas y etiquetas a
 `refs/gitcito/pre-purge/<timestamp>/…`, y luego ejecuta:
 
 ```sh
@@ -113,9 +113,9 @@ encuentre.
 - **Reescribe por ruta, no por contenido.** Eliminar un secreto que se pegó
   dentro de un archivo de código fuente, en lugar de vivir en un archivo propio,
   requiere un filtro de contenido — eso es terreno de
-  `git filter-repo --replace-text`, y Gitcito no lo envuelve.
+  `git filter-repo --replace-text`, y Geminio no lo envuelve.
 - **`filter-branch` es lento con historiales muy grandes.** Es lo que viene con
-  git en todas partes, y por eso es lo que usa Gitcito. En un repositorio con
+  git en todas partes, y por eso es lo que usa Geminio. En un repositorio con
   decenas de miles de commits, `git filter-repo` desde la [terminal](terminal.md)
   es la herramienta más rápida.
 - **Los clones de los demás no son tu repositorio.** Conservan el historial

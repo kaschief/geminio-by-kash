@@ -12,7 +12,7 @@ import {
  * Accounts, migration and resolution — pure, so both processes and the test
  * suite can use them.
  *
- * Gitcito used to hold exactly one provider, one endpoint and one key per
+ * Geminio used to hold exactly one provider, one endpoint and one key per
  * profile. That is now the first entry of `ai.accounts`, and the old fields are
  * kept on `AIConfig` as the *resolved* connection for a single call. Every
  * main-process feature reads those same four fields, so accounts stayed out of

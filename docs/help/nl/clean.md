@@ -17,7 +17,7 @@ reflog-regel, geen stash, geen ongedaan maken en geen `git`-bezwering die het
 terughaalt.
 
 Daarom is het de operatie die mensen in een terminal draaien en waar ze meteen
-spijt van hebben. De versie van Gitcito toont de hele lijst voordat er iets
+spijt van hebben. De versie van Geminio toont de hele lijst voordat er iets
 gebeurt.
 
 `⌘K` → **Untracked bestanden verwijderen**.
@@ -46,7 +46,7 @@ van wat erin zit.
 
 Een map met het label **eigen repository** heeft een eigen `.git`: een kloon die
 je binnen deze hebt gezet, of een uitprobeersel dat je nooit hebt aangehaakt. Git
-weigert die te verwijderen (het wil `-ff`, een vlag die Gitcito niet aanbiedt) —
+weigert die te verwijderen (het wil `-ff`, een vlag die Geminio niet aanbiedt) —
 de Prullenbak neemt ze wel.
 
 ## Prullenbak of verwijderen

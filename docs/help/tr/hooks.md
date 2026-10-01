@@ -16,12 +16,12 @@ oluşturun.
 
 ![Hook yöneticisi](../../screenshots/hooks.webp)
 
-Gitcito, özel bir **`core.hooksPath`** ayarını (husky ve benzerleri) ve bir
+Geminio, özel bir **`core.hooksPath`** ayarını (husky ve benzerleri) ve bir
 **pre-commit framework** yapılandırmasını algılar; hook'lar `.git/hooks` dışında
 bir yerde duruyorsa bunu size söyler — aksi hâlde git'in hiç çalıştırmadığı bir
 dosyayı düzenlemiş olurdunuz.
 
-> Hook'lar Gitcito'nun commit'lerinde de tıpkı `git commit` için olduğu gibi
+> Hook'lar Geminio'nun commit'lerinde de tıpkı `git commit` için olduğu gibi
 > çalışır. Başarısız olan bir hook commit'i engeller ve çıktısı hata mesajında
 > size geri döner.
 

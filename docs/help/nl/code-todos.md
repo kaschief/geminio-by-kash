@@ -72,7 +72,7 @@ Een rij aanklikken opent het bestand op die regel.
 ## Wat het niet doet
 
 - **Het leest, het schrijft nooit.** Er is geen "afvinken": een TODO sluit je
-  door de regel te verwijderen en dat te committen. Voor een lijst die Gitcito
+  door de regel te verwijderen en dat te committen. Voor een lijst die Geminio
   voor je bijhoudt, zie [todos](todos.md) — iets heel anders: privénotities die
   in de app leven, niet in de broncode.
 - **Genegeerde bestanden worden overgeslagen**, samen met `node_modules`, wat de

@@ -43,12 +43,12 @@ export function RepoStatusPicker({ repo }: { repo: RepoData }): React.JSX.Elemen
     const onKeyDown = (event: KeyboardEvent): void => {
       if (event.key === 'Escape') close()
     }
-    window.addEventListener('mousedown', onMouseDown)
+    window.addEventListener('pointerdown', onMouseDown, true)
     window.addEventListener('keydown', onKeyDown)
     window.addEventListener('resize', close)
     window.addEventListener('blur', close)
     return () => {
-      window.removeEventListener('mousedown', onMouseDown)
+      window.removeEventListener('pointerdown', onMouseDown, true)
       window.removeEventListener('keydown', onKeyDown)
       window.removeEventListener('resize', close)
       window.removeEventListener('blur', close)
@@ -103,11 +103,9 @@ export function RepoStatusPicker({ repo }: { repo: RepoData }): React.JSX.Elemen
           if (currentEntry) openRepoContextMenu(event, currentEntry)
         }}
       >
-        <span className="repo-pill-stack">
-          <span className="repo-pill-label">{t('toolbar.repository')}</span>
-          <strong>{display}</strong>
-        </span>
-        <ChevronDown size={13} />
+        <FolderGit2 size={14} className="repo-pill-icon" />
+        <span className="repo-pill-value" title={display}>{display}</span>
+        <ChevronDown size={12} className="repo-pill-chevron" />
       </button>
 
       {position &&

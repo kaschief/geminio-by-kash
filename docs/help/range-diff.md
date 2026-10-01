@@ -11,7 +11,7 @@ keywords: range-diff force push rebase rewritten review interdiff reflog forced 
 You reviewed a branch. Someone rebased it and force-pushed. A normal diff is now
 worthless: every commit after a rebase is a new commit, so everything looks new.
 
-`git range-diff` pairs the two versions commit by commit, and Gitcito reads the
+`git range-diff` pairs the two versions commit by commit, and Geminio reads the
 old positions straight out of the **reflog** — so nothing had to be recorded in
 advance for this to work.
 

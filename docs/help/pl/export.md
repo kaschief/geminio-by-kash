@@ -58,7 +58,7 @@ rebase'ujesz albo przełączasz się na `bundle/main` na własnych warunkach —
 dokładnie tak, jak zrobiłbyś z gałęzią z dowolnego innego zdalnego.
 
 Żeby zamiast tego założyć z bundle'a *nowe* repozytorium, sklonuj z pliku
-w terminalu: `git clone work.bundle myrepo`. Gitcito importuje do otwartego
+w terminalu: `git clone work.bundle myrepo`. Geminio importuje do otwartego
 repozytorium; nie klonuje z pliku.
 
 ## Archiwa
@@ -93,7 +93,7 @@ regułą mieszkającą w repozytorium, a nie w czyimś skrypcie wydania.
 
 - **Bundle to pełna kopia**, chyba że użyjesz zakresu. Spakowanie repozytorium
   na 2 GB zapisuje plik na 2 GB i trwa tyle, co klonowanie.
-- **Puste bundle'e są odrzucane** przez gita, nie przez Gitcito: zakres, między
+- **Puste bundle'e są odrzucane** przez gita, nie przez Geminio: zakres, między
   którego końcami nic nie ma, produkuje błąd, a nie bezużyteczny plik.
 - **Import nie merguje.** Referencje przychodzą pod `bundle/…` i tam zostają,
   dopóki czegoś z nimi nie zrobisz.

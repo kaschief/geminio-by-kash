@@ -10,7 +10,7 @@ keywords: edytuj commit przepisz historię popraw literówkę zmień wiadomość
 
 Literówka siedzi w commicie sprzed trzech tygodni. Zwykła naprawa to rebase
 interaktywny: zatrzymaj się na commicie, edytuj, kontynuuj, módl się. Naprawa
-w Gitcito: kliknij commit prawym przyciskiem, **Edytuj ten commit**, zmień
+w Geminio: kliknij commit prawym przyciskiem, **Edytuj ten commit**, zmień
 tekst, gotowe. Przycisk pióra w panelu szczegółów commita otwiera ten sam
 edytor.
 

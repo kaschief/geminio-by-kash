@@ -26,7 +26,7 @@ keywords: 노트 notes git notes 주석 annotate 코멘트 comment 커밋 commit
 
 ![푸시된 커밋의 메시지 아래에 노트를 쓰고 저장하는 모습](../../screenshots/clip-commit-note.webp)
 
-노트를 저장하는 것은 평범한 Gitcito 동작이에요. 토스트가 뜨고, **되돌리기**를 하면
+노트를 저장하는 것은 평범한 Geminio 동작이에요. 토스트가 뜨고, **되돌리기**를 하면
 이전 텍스트가 돌아와요. 지웠던 노트를 복원하는 것까지 포함해서요.
 
 텍스트를 비우고 저장하면 노트가 지워져요. 빈 노트라는 것은 없거든요.
@@ -34,7 +34,7 @@ keywords: 노트 notes git notes 주석 annotate 코멘트 comment 커밋 commit
 ## 노트 찾기
 
 노트는 평범한 로그에서는 보이지 않아요. 사람들이 노트를 끝내 발견하지 못하는 가장
-큰 이유죠. Gitcito는 노트를 지닌 커밋에 그래프의 메시지 열에 작은 노트 아이콘을
+큰 이유죠. Geminio는 노트를 지닌 커밋에 그래프의 메시지 열에 작은 노트 아이콘을
 달아 줘요. 그래서 거기 있다는 걸 몰라도 그 주석을 찾을 수 있어요.
 
 명령줄에서는 `git log --notes`가 각 메시지 아래에 노트를 찍어 줘요.
@@ -54,11 +54,11 @@ git push <remote> refs/notes/commits
 git fetch <remote> +refs/notes/commits:refs/notes/commits
 ```
 
-옮겨지는 것은 커밋 노트 레퍼런스뿐이에요 — Gitcito 자신의 기기 로컬
+옮겨지는 것은 커밋 노트 레퍼런스뿐이에요 — Geminio 자신의 기기 로컬
 레퍼런스([로컬 CI](local-ci.md) 판정 같은 것)는 일부러 공개하지 않아요.
 
 일부 호스트는 자기 쪽에서 노트를 켜거나 허용해야 해요. 거기서 거부당한다면 그건
-호스트의 정책이지 Gitcito의 한계가 아니에요.
+호스트의 정책이지 Geminio의 한계가 아니에요.
 
 공유 원격이 없거나 쓰기 권한이 없나요? [안전한 공유](secure-share.md)가 저장소의
 노트를 암호화된 파일로 묶어 주고, 팀 동료가 그걸 바로 가져올 수 있어요. 무엇이
@@ -66,7 +66,7 @@ git fetch <remote> +refs/notes/commits:refs/notes/commits
 
 ## 한계
 
-- **노트 레퍼런스는 하나뿐이에요.** Gitcito는 기본값인 `refs/notes/commits`만
+- **노트 레퍼런스는 하나뿐이에요.** Geminio는 기본값인 `refs/notes/commits`만
   읽고 써요. 사용자 정의 네임스페이스(`git notes --ref=review`)는 노출되지 않아요 —
   그런 걸 쓰는 저장소라면 여기서는 그 노트가 보이지 않아요.
 - **갈라진 노트를 머지하지는 않아요.** 두 사람이 같은 커밋에 주석을 달고 둘 다

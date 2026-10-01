@@ -63,7 +63,7 @@ Ordnerpfad.
 
 ## Bevor du committest
 
-Gitcito prüft ein paar Dinge und fragt einmal nach — nie stillschweigend:
+Geminio prüft ein paar Dinge und fragt einmal nach — nie stillschweigend:
 
 - eine Datei, die nach einem **Geheimnis** aussieht (`.env`, `*.pem`,
   `id_rsa`…),

@@ -61,7 +61,7 @@ steeds het mappad.
 
 ## Voor je commit
 
-Gitcito controleert een paar dingen en vraagt één keer, nooit in stilte:
+Geminio controleert een paar dingen en vraagt één keer, nooit in stilte:
 
 - een bestand dat op een **geheim** lijkt (`.env`, `*.pem`, `id_rsa`…),
 - een **erg grote** blob (drempel in Instellingen → Beveiliging),

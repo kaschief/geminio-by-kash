@@ -21,7 +21,7 @@ achterliet, zonder te stashen.
   een op te tuigen in een naburige map en hem als tabblad te openen.
 - Een branch woont maar in één worktree tegelijk, dus een branch uitchecken die
   een andere worktree al vasthoudt kan niet — git weigert met *already used by
-  worktree at …*. Gitcito brengt je er in plaats daarvan heen: het branchmenu
+  worktree at …*. Geminio brengt je er in plaats daarvan heen: het branchmenu
   zegt *Naar `x` in zijn worktree*, en dubbelklikken op de rij opent het tabblad
   van die worktree in plaats van te mislukken.
 

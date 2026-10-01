@@ -8,7 +8,7 @@ keywords: intro eerste stappen openen klonen clone tabbladen tabs grafiek graph 
 
 # Aan de slag
 
-Gitcito opent een map en toont je zijn geschiedenis. Er wordt niets naar je
+Geminio opent een map en toont je zijn geschiedenis. Er wordt niets naar je
 repository geschreven tot je erom vraagt.
 
 ![Een net geopende repository, nog zonder commits](../../screenshots/empty-repo.webp)
@@ -20,7 +20,7 @@ repository geschreven tot je erom vraagt.
 - **Kloon** er een vanaf een URL of rechtstreeks bij je host — zie
   [klonen](cloning.md) voor de opties die een enorme repository snel kloonbaar
   maken.
-- Vanuit een terminal opent `gitcito .` de huidige map in de draaiende app — zie
+- Vanuit een terminal opent `geminio .` de huidige map in de draaiende app — zie
   [de commandoregel](cli.md).
 - Een map die nog geen Git-repository is opent evengoed, en biedt aan hem te
   initialiseren.
@@ -55,5 +55,5 @@ dat alleen ingewijden kunnen vinden.
 2. Stage het — het hele bestand, een hunk, of [losse regels](staging.md).
 3. Schrijf een boodschap en druk op **Committen**.
 
-Al het andere in Gitcito is optioneel.
+Al het andere in Geminio is optioneel.
 

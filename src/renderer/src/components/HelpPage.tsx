@@ -13,7 +13,7 @@ import {
 import { useT } from '../i18n'
 import { useSettingsStore } from '../stores/settings'
 
-const ISSUES_URL = 'https://github.com/MyAppDesk/gitcito/issues/new'
+const ISSUES_URL = 'https://github.com/kaschief/geminio-by-kash/issues/new'
 
 /**
  * The handbook: every feature explained, offline, from the Markdown in

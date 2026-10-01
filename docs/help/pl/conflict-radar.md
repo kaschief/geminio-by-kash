@@ -11,7 +11,7 @@ keywords: radar konfliktów podgląd merge ryzyko gałęzie kolizja conflict rad
 Dowiadywanie się, że gałąź wchodzi w konflikt, poprzez jej zmergowanie to
 kosztowny sposób zadania pytania. Radar odpowiada na nie wcześniej.
 
-Gitcito merguje każdą gałąź do wybranej przez ciebie bazy **wewnątrz bazy
+Geminio merguje każdą gałąź do wybranej przez ciebie bazy **wewnątrz bazy
 obiektów** (`git merge-tree --write-tree`). Bez przełączania, bez zmiany indeksu,
 bez zmiany drzewa roboczego, bez sprzątania po fakcie. Twoja niezacommitowana
 praca może zostać dokładnie tam, gdzie jest, przez cały czas trwania skanu.

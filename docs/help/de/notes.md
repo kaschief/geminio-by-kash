@@ -29,7 +29,7 @@ Wähle einen Commit aus. Unter der Nachricht gibt es einen Abschnitt **Notiz**:
 
 ![Eine Notiz unter der Nachricht eines gepushten Commits schreiben und dann speichern](../../screenshots/clip-commit-note.webp)
 
-Eine Notiz zu speichern ist eine ganz gewöhnliche Gitcito-Aktion — sie meldet
+Eine Notiz zu speichern ist eine ganz gewöhnliche Geminio-Aktion — sie meldet
 sich per Toast, und **Rückgängig** stellt den vorherigen Text wieder her,
 einschließlich einer Notiz, die du entfernt hast.
 
@@ -39,7 +39,7 @@ es nicht.
 ## Eine finden
 
 Notizen sind in einem normalen Log unsichtbar, was der Hauptgrund dafür ist,
-dass die meisten sie nie entdecken. Gitcito markiert einen Commit, der eine
+dass die meisten sie nie entdecken. Geminio markiert einen Commit, der eine
 trägt, mit einem kleinen Notizsymbol in der Nachrichtenspalte des Graphen —
 so ist die Anmerkung auffindbar, ohne dass man weiß, dass sie da ist.
 
@@ -61,13 +61,13 @@ git push <remote> refs/notes/commits
 git fetch <remote> +refs/notes/commits:refs/notes/commits
 ```
 
-Nur die Commit-Notizen-Ref reist — Gitcitos eigene maschinenlokale Refs (etwa
+Nur die Commit-Notizen-Ref reist — Geminios eigene maschinenlokale Refs (etwa
 die Urteile der [lokalen CI](local-ci.md)) werden absichtlich nicht
 veröffentlicht.
 
 Manche Hoster brauchen zusätzlich, dass Notizen auf ihrer Seite aktiviert oder
 erlaubt sind; eine Ablehnung dort ist die Richtlinie des Hosters, keine Grenze
-von Gitcito.
+von Geminio.
 
 Kein gemeinsames Remote, oder kein Schreibzugriff?
 [Sicheres Teilen](secure-share.md) kann die Notizen eines Repositorys in eine
@@ -77,7 +77,7 @@ Vorschau darauf, was landen würde, und einer ausdrücklichen
 
 ## Grenzen
 
-- **Eine Notiz-Ref.** Gitcito liest und schreibt das voreingestellte
+- **Eine Notiz-Ref.** Geminio liest und schreibt das voreingestellte
   `refs/notes/commits`. Eigene Namensräume (`git notes --ref=review`) werden
   nicht angeboten — ein Repository, das sie benutzt, wird diese Notizen hier
   nicht sehen.

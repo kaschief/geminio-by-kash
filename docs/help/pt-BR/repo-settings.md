@@ -16,12 +16,12 @@ A engrenagem ao lado das ferramentas da barra abre as configurações que perten
 | Aba | O que contém |
 |---|---|
 | **Geral** | Branches protegidas (uma seleção múltipla de branches, guardada no git config), assinatura |
-| **Config** | As [regras que este repositório carrega](repo-config.md) em `.gitcito.json`, e o doctor que as verifica |
+| **Config** | As [regras que este repositório carrega](repo-config.md) em `.geminio.json`, e o doctor que as verifica |
 | **Informações** | Notas e campos livres sobre este repositório, mantidos localmente |
 | **Cofre** | As entradas do [cofre](vault.md) deste repositório |
 | **Insights** | O [painel de histórico](insights.md) |
 | **Analytics** | O que você fez neste repositório, contado localmente |
-| **Histórico** · **Logs** | O log de operações: todo comando git que o Gitcito rodou, com a saída dele |
+| **Histórico** · **Logs** | O log de operações: todo comando git que o Geminio rodou, com a saída dele |
 
 O log de operações é o honesto: quando algo se comporta de forma estranha, ele
 mostra o comando exato e o erro exato, para que um relato de bug possa carregar

@@ -10,7 +10,7 @@ keywords: güvenli paylaşım secure share dışa aktarma içe aktarma export im
 
 Yeni bir makineyi — ya da yeni bir takım arkadaşını — hazırlamak genellikle her
 şeyi baştan girmek demektir. Güvenli paylaşım bunun yerine hepsini tek bir
-şifreli `.gitcito` dosyasına koyar: Gitcito'nun takım özelliklerinin **sunucusu
+şifreli `.geminio` dosyasına koyar: Geminio'nun takım özelliklerinin **sunucusu
 yoktur**, dolayısıyla taşıma aracı dosyanın *kendisidir*. Onu dosyaları zaten
 nasıl gönderiyorsanız öyle gönderin; parola ayrı yoldan gider.
 
@@ -41,7 +41,7 @@ her şeyi baştan klonlamaz.
 
 Bir **çalışma alanı yapısı** bölümü, çalışma alanını zaten sahip olduğunuz
 depolarla yeniden kurar; sahip olmadıklarınız uzak adresleriyle listelenir,
-böylece önce onları klonlayıp yeniden içe aktarabilirsiniz — Gitcito burada
+böylece önce onları klonlayıp yeniden içe aktarabilirsiniz — Geminio burada
 sizin adınıza asla klonlama yapmaz. Bir **commit notları** bölümü neyin
 ineceğini önizler — yeni, birebir aynı, farklılaşan ya da sizde olmayan
 commit'lere bağlı — ve farklılaşan notlar yalnızca **üzerine yaz** kutusunu

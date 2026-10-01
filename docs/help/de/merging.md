@@ -17,7 +17,7 @@ wieder schiefgeht; siehe [Merge-Optionen](merge-options.md).
 ## Eine Ref auf eine andere ziehen
 
 Die schnellste Geste der App: Nimm einen Branch auf und lass ihn auf einem
-anderen fallen. Gitcito öffnet ein kleines Menü mit dem, was dieser Drop
+anderen fallen. Geminio öffnet ein kleines Menü mit dem, was dieser Drop
 bedeuten könnte, und tut nichts, bis du dich entscheidest.
 
 ![Einen Branch auf einen anderen ziehen öffnet das Menü mit dem, was der Drop bedeuten könnte](../../screenshots/clip-branch-drop.webp)

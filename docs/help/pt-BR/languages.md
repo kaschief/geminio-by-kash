@@ -8,8 +8,8 @@ keywords: idioma idiomas language languages locale locales i18n internacionaliza
 
 # Idiomas e da direita para a esquerda
 
-A interface do Gitcito é traduzida. O idioma é uma
-configuração do Gitcito, não do sistema operacional — um desenvolvedor num macOS em
+A interface do Geminio é traduzida. O idioma é uma
+configuração do Geminio, não do sistema operacional — um desenvolvedor num macOS em
 inglês que prefere ler japonês define isso aqui, e um desenvolvedor num sistema em
 hebraico que prefere o app em inglês não é passado por cima.
 
@@ -51,7 +51,7 @@ lugar apontam para o outro lado.
 
 A troca é imediata e não precisa reiniciar.
 
-![O Gitcito em árabe, com o layout espelhado](../../screenshots/rtl.webp)
+![O Geminio em árabe, com o layout espelhado](../../screenshots/rtl.webp)
 
 ### O que deliberadamente não é espelhado
 
@@ -75,7 +75,7 @@ em volta.
 Isto é honesto sobre onde para:
 
 - **Mensagens de commit, nomes de branch e conteúdo de arquivos nunca são
-  redirecionados pelo Gitcito.** Eles são mostrados como o autor os escreveu. Uma
+  redirecionados pelo Geminio.** Eles são mostrados como o autor os escreveu. Uma
   mensagem de commit em hebraico numa lista isolada como LTR renderiza como hebraico,
   mas a linha em volta não vira para acomodá-la.
 - **Superfícies de terceiros mantêm a própria direção** — o terminal é o xterm, e as

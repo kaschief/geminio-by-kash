@@ -82,7 +82,7 @@ La casella registra il repository presso **`git maintenance`**, che impacchetta 
 prescarica secondo una pianificazione gestita dal tuo sistema operativo (launchd,
 systemd o Utilità di pianificazione).
 
-Qui non c'è niente di specifico di Gitcito: la stessa pianificazione serve anche
+Qui non c'è niente di specifico di Geminio: la stessa pianificazione serve anche
 il tuo terminale, e `git maintenance unregister` la annulla da qualsiasi posto.
 Togliere la spunta fa esattamente questo, e lascia in piedi la pianificazione per
 tutti gli altri repository registrati.
@@ -102,7 +102,7 @@ tutti gli altri repository registrati.
   dentro un commit, è raggiungibile, e gc lo terrà per sempre — quello è
   [rimuovere un file dalla storia](history-purge.md), un'operazione diversa e
   molto più dirompente.
-- **Gitcito non esegue mai gc alle tue spalle.** Il `gc --auto` di git stesso può
+- **Geminio non esegue mai gc alle tue spalle.** Il `gc --auto` di git stesso può
   ancora farlo, come ha sempre fatto; se fallisce lascia una nota in
   `.git/gc.log`, che questo pannello porta in superficie.
 

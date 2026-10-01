@@ -21,7 +21,7 @@ A lista de tarefas do `git rebase -i`, como uma lista que você pode arrastar.
 | **edit** | Parar aqui para você poder fazer amend |
 | **drop** | Jogar o commit fora |
 
-Arraste as linhas para reordenar. O editor nunca abre num terminal — o Gitcito
+Arraste as linhas para reordenar. O editor nunca abre num terminal — o Geminio
 escreve o todo por você.
 
 ## Autosquash, em um clique

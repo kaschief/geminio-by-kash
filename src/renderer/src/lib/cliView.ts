@@ -1,5 +1,5 @@
 /**
- * What each `gitcito <verb>` asks the window to show.
+ * What each `geminio <verb>` asks the window to show.
  *
  * Pure on purpose: the CLI's verb vocabulary is a contract with a shell script
  * and a shell script is the one caller that cannot be typechecked, so the
@@ -54,7 +54,7 @@ export type CliAction =
 /**
  * Translate one CLI verb into the action that satisfies it.
  *
- * Returns null when the verb needs an argument it was not given — `gitcito
+ * Returns null when the verb needs an argument it was not given — `geminio
  * blame` with no file has nothing to show, and silently opening the repository
  * is a better outcome than guessing at a file.
  */

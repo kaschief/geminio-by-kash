@@ -13,7 +13,7 @@ Uno stack è una catena di branch in cui ciascuno si costruisce su quello sotto:
 
 ![Uno stack di branch](../../screenshots/branch-stack.webp)
 
-Gitcito la disegna come un **itinerario**: in alto un ramo di partenza, poi una
+Geminio la disegna come un **itinerario**: in alto un ramo di partenza, poi una
 tappa per livello. La PR di ogni tappa punta alla tappa sopra, e la prima atterra
 sul ramo di partenza. Ogni tappa mostra i propri commit, se le serve un restack e,
 una volta inviata, il numero della PR.
@@ -53,13 +53,13 @@ Tutto ciò che cambia l'ordine — uno scambio, uno spostamento, un'altra parten
 **riproduce** la catena: i commit propri di ogni tappa vengono rebasati sulla nuova
 base. Quindi può dare **conflitti**, esattamente come un restack. Due tappe che toccano le stesse righe non si scambiano
 senza una persona, e quando succede **non succede nulla**: l'intera modifica
-viene annullata — punte, collegamenti al genitore e il rebase a metà — e Gitcito
+viene annullata — punte, collegamenti al genitore e il rebase a metà — e Geminio
 nomina le due tappe che si scontrano. Un menu sfiorato non deve lasciarti in
 mezzo a un rebase.
 
 **Restack** è l'altra metà del patto: è un rebase che hai chiesto per nome,
 quindi si ferma al conflitto e ti dà la vista dei conflitti — che è anche il modo
-di ottenere il riordino che Gitcito ha rifiutato: risolvi lì, poi sposta la
+di ottenere il riordino che Geminio ha rifiutato: risolvi lì, poi sposta la
 tappa.
 
 L'annullamento riproduce l'itinerario precedente. Non resuscita i vecchi commit,
@@ -114,7 +114,7 @@ premi Invia, ripeti.
 Le basi concatenate sono ciò che capisce qualunque host, e su GitLab, Bitbucket e
 Azure DevOps sono tutto quello che c’è. GitHub offre di più: dalla preview delle
 stacked pull requests, una pila è un oggetto sul server. Create le pull request,
-Gitcito le registra come pila — dal basso verso l’alto — e ottieni la mappa della
+Geminio le registra come pila — dal basso verso l’alto — e ottieni la mappa della
 pila nella UI, un rebase a cascata lato server e un merge sulla PR in cima che fa
 atterrare ogni livello sottostante.
 

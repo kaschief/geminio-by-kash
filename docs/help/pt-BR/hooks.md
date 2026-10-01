@@ -15,12 +15,12 @@ Liste todo hook do repositório, veja quais são de verdade e quais ainda são
 
 ![O gerenciador de hooks](../../screenshots/hooks.webp)
 
-O Gitcito detecta um **`core.hooksPath`** personalizado (husky e companhia) e uma
+O Geminio detecta um **`core.hooksPath`** personalizado (husky e companhia) e uma
 configuração de **framework de pre-commit**, e te avisa quando os hooks moram em
 outro lugar que não `.git/hooks` — senão você editaria um arquivo que o git nunca
 roda.
 
-> Os hooks rodam nos commits do Gitcito exatamente como rodam no `git commit`. Um
+> Os hooks rodam nos commits do Geminio exatamente como rodam no `git commit`. Um
 > hook que falha bloqueia o commit, e a saída dele volta dentro do erro.
 
 ## .gitignore inteligente

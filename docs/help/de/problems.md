@@ -11,7 +11,7 @@ keywords: probleme analyzer diagnose fehler warnungen lint tsc typescript eslint
 Jedes Projekt bringt bereits ein Werkzeug mit, das dir sagt, was daran nicht
 stimmt — `tsc`, `dart analyze`, ESLint, Clippy, `go vet`, Ruff. Was keines davon
 sagt: ob **dein** Diff die vierzig Warnungen verursacht hat, die es gerade
-ausgegeben hat. Gitcito weiß, welche Dateien schmutzig sind — dieselbe Liste
+ausgegeben hat. Geminio weiß, welche Dateien schmutzig sind — dieselbe Liste
 beantwortet die Frage mit einem Schalter.
 
 ![Die Probleme-Leiste und der Zähler in der Statusleiste](../../screenshots/problems.webp)
@@ -23,7 +23,7 @@ Zeile öffnet die Datei genau dort. Vor dem ersten Durchlauf zeigt er Striche st
 
 ## Was ausgeführt wird
 
-| Wenn das Repository hat | führt Gitcito aus |
+| Wenn das Repository hat | führt Geminio aus |
 |-------------------------|-------------------|
 | `pubspec.yaml` | `dart analyze --format=machine` |
 | `tsconfig.json` | `tsc --noEmit` |
@@ -50,7 +50,7 @@ dieselbe Zeile, wird daraus eine Zeile.
 
 **Nichts läuft von selbst.** `tsc --noEmit` sind in einem großen Repository
 zig Sekunden, und diese Befehle sind die Toolchain des Repositories, nicht die
-von Gitcito. Sie starten, wenn du die Leiste öffnest oder aktualisierst, sonst
+von Geminio. Sie starten, wenn du die Leiste öffnest oder aktualisierst, sonst
 nie. Deshalb ist die Liste eine Momentaufnahme: Bearbeite eine Datei, und sie ist
 veraltet, bis du erneut ausführst.
 
@@ -63,7 +63,7 @@ ausblendet.
 verzeichnis zeigt, prüft alles, was es findet — und dazu gehören
 `.next/build/chunks`, ein gebündeltes `dist`, eine eingecheckte Kopie: Hunderte
 Beschwerden über maschinengeschriebenen Code, die die Handvoll über deinen
-begraben. Gitcito fragt git, welche Dateien ignoriert sind, und wirft diese weg —
+begraben. Geminio fragt git, welche Dateien ignoriert sind, und wirft diese weg —
 aber nie eine *versionierte* Datei: generierte Ausgabe einzuchecken ist eine
 Entscheidung, und `git check-ignore` respektiert sie. `node_modules` fliegt
 ohnehin.

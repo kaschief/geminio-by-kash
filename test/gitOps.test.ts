@@ -11,7 +11,7 @@ import { convertFile } from '../src/main/textconv'
 import { execFileSync } from 'node:child_process'
 
 // Mutation/integration tests: exercise the WRITE paths of gitService (the same
-// code Gitcito runs for merge / cherry-pick / rebase / conflict-resolve / stash
+// code Geminio runs for merge / cherry-pick / rebase / conflict-resolve / stash
 // / commit). Each test works on an isolated copy of a playground repo.
 afterAll(cleanupFixtures)
 
@@ -325,7 +325,7 @@ describe('rename branch', () => {
 describe('pull a branch you are not on', () => {
   /** A working clone of a bare repo, plus a second clone used to publish to it. */
   const twoClones = async (): Promise<{ mine: string; theirs: string; tmp: string }> => {
-    const tmp = mkdtempSync(join(tmpdir(), 'gitcito-pullbranch-'))
+    const tmp = mkdtempSync(join(tmpdir(), 'geminio-pullbranch-'))
     const bare = join(tmp, 'origin.git')
     await raw(tmp, ['init', '--bare', '-b', 'main', bare])
     const seed = join(tmp, 'seed')
@@ -586,7 +586,7 @@ describe('clone options (merge-conflict playground as the remote)', () => {
   // isolated copy so nothing here can touch the shared playground.
   const parents: string[] = []
   const parentDir = (): string => {
-    const dir = mkdtempSync(join(tmpdir(), 'gitcito-clone-'))
+    const dir = mkdtempSync(join(tmpdir(), 'geminio-clone-'))
     parents.push(dir)
     return dir
   }
@@ -1023,7 +1023,7 @@ describe('subtrees (subtree playground)', () => {
     expect(parser!.present).toBe(true)
     // The import commit records which upstream commit it came from.
     expect(parser!.lastSplit).toMatch(/^[0-9a-f]{7,}$/)
-    // Nothing records the url — that is the gap Gitcito fills.
+    // Nothing records the url — that is the gap Geminio fills.
     expect(parser!.url).toBe('')
   })
 
@@ -1055,7 +1055,7 @@ describe('subtrees (subtree playground)', () => {
     const R = cloneFixture('subtree')
     const lib = cloneFixture('subtree-lib.git')
     // Move the library on: a clone of the bare repo, a commit, a push back.
-    const work = mkdtempSync(join(tmpdir(), 'gitcito-lib-work-'))
+    const work = mkdtempSync(join(tmpdir(), 'geminio-lib-work-'))
     await raw(work, ['clone', lib, 'w'])
     const w = join(work, 'w')
     writeFileSync(join(w, 'parser.js'), 'exports.parse = () => 42\n')
@@ -1251,7 +1251,7 @@ describe('bundles and archives', () => {
 
   it('bundles the whole repository, and another repo can fetch from the file', async () => {
     const R = cloneFixture('tags-and-releases')
-    const out = join(mkdtempSync(join(tmpdir(), 'gitcito-bundle-')), 'all.bundle')
+    const out = join(mkdtempSync(join(tmpdir(), 'geminio-bundle-')), 'all.bundle')
     const result = await gitService.bundleCreate(R, out, { kind: 'all' })
     expect(existsSync(out)).toBe(true)
     expect(result.bytes).toBeGreaterThan(0)
@@ -1275,7 +1275,7 @@ describe('bundles and archives', () => {
 
   it('bundles a range, and says so when the other side lacks its starting point', async () => {
     const R = cloneFixture('tags-and-releases')
-    const out = join(mkdtempSync(join(tmpdir(), 'gitcito-bundle-')), 'range.bundle')
+    const out = join(mkdtempSync(join(tmpdir(), 'geminio-bundle-')), 'range.bundle')
     await gitService.bundleCreate(R, out, { kind: 'range', from: 'HEAD~2', to: 'main' })
 
     // In the repository it came from, everything it builds on is present.
@@ -1291,7 +1291,7 @@ describe('bundles and archives', () => {
 
   it('refuses to create an empty bundle rather than writing a useless file', async () => {
     const R = cloneFixture('tags-and-releases')
-    const out = join(mkdtempSync(join(tmpdir(), 'gitcito-bundle-')), 'empty.bundle')
+    const out = join(mkdtempSync(join(tmpdir(), 'geminio-bundle-')), 'empty.bundle')
     await expect(gitService.bundleCreate(R, out, { kind: 'range', from: 'main', to: 'main' })).rejects.toThrow()
   })
 
@@ -1301,7 +1301,7 @@ describe('bundles and archives', () => {
     await raw(R, ['add', '-A'])
     await raw(R, ['-c', 'user.email=t@e', '-c', 'user.name=T', 'commit', '-m', 'add export-ignore'])
 
-    const out = join(mkdtempSync(join(tmpdir(), 'gitcito-archive-')), 'src.tar')
+    const out = join(mkdtempSync(join(tmpdir(), 'geminio-archive-')), 'src.tar')
     const result = await gitService.archiveCreate(R, out, 'main', 'tar', 'demo-1.0', '')
     expect(result.bytes).toBeGreaterThan(0)
 
@@ -1315,7 +1315,7 @@ describe('bundles and archives', () => {
     const R = cloneFixture('deep-history-monorepo')
     const dirs = (await raw(R, ['ls-tree', '--name-only', '-d', 'HEAD'])).split('\n').filter(Boolean)
     const dir = dirs[0]
-    const out = join(mkdtempSync(join(tmpdir(), 'gitcito-archive-')), 'part.tar')
+    const out = join(mkdtempSync(join(tmpdir(), 'geminio-archive-')), 'part.tar')
     await gitService.archiveCreate(R, out, 'HEAD', 'tar', '', dir)
 
     const entries = await tarEntries(out)
@@ -1617,8 +1617,9 @@ describe('automated bisect (git bisect run)', () => {
     const culprit = await shaOfSubject(R, 'refactor: simplify discount calculation')
 
     // Exit 0 = good, non-zero = bad. That contract is the whole feature.
-    const status = await gitService.bisectRunScript(R, TEST_CMD)
-    expect(status.finished).toBe(true)
+    const output: string[] = []
+    const status = await gitService.bisectRunScript(R, TEST_CMD, (chunk) => output.push(chunk))
+    expect(status.finished, output.join('')).toBe(true)
     expect(status.firstBadSha).toBe(culprit)
     expect(status.firstBadSubject).toContain('simplify discount')
 
@@ -1731,7 +1732,7 @@ describe('gitattributes', () => {
     await raw(R, ['add', '-A'])
     await raw(R, ['-c', 'user.email=t@e', '-c', 'user.name=T', 'commit', '-m', 'export-ignore'])
 
-    const out = join(mkdtempSync(join(tmpdir(), 'gitcito-attr-')), 'src.tar')
+    const out = join(mkdtempSync(join(tmpdir(), 'geminio-attr-')), 'src.tar')
     await gitService.archiveCreate(R, out, 'HEAD', 'tar', '', '')
     const { execFile } = await import('node:child_process')
     const { promisify } = await import('node:util')
@@ -1761,12 +1762,12 @@ describe('gitattributes', () => {
       expect(suggestion.patterns.length).toBeGreaterThan(0)
       expect(typeof suggestion.available).toBe('boolean')
     }
-    // word/excel/json ride the converter Gitcito ships — always available.
+    // word/excel/json ride the converter Geminio ships — always available.
     for (const name of ['word', 'excel', 'json']) {
       const s = suggestions.find((x) => x.name === name)!
       expect(s.bundled).toBe(true)
       expect(s.available).toBe(true)
-      expect(s.textconv).toContain('gitcito-textconv')
+      expect(s.textconv).toContain('geminio-textconv')
     }
   })
 })

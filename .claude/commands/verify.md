@@ -1,5 +1,5 @@
 ---
-description: Run Gitcito's full gate — typecheck, i18n guard, docs guard, tests, build — and report what failed.
+description: Run Geminio's full gate — typecheck, i18n guard, docs guard, tests, build — and report what failed.
 allowed-tools: Bash(npm run *), Bash(node scripts/*), Bash(npx vitest *)
 ---
 

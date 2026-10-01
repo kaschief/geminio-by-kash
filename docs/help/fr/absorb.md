@@ -20,7 +20,7 @@ L'absorption fait le travail honnête à votre place.
 
 1. Indexez les corrections.
 2. Outils → **Absorber les changements indexés…** (ou <kbd>⌘K</kbd>).
-3. Gitcito blâme les lignes que touche chaque section indexée, trouve lequel de
+3. Geminio blâme les lignes que touche chaque section indexée, trouve lequel de
    **vos commits non poussés** les a introduites, et vous montre le plan avant
    de faire quoi que ce soit.
 

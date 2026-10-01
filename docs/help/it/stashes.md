@@ -8,7 +8,7 @@ keywords: stash parziale keep-index apply pop drop non tracciati branch
 
 # Stash
 
-Fare stash in Gitcito non è tutto o niente.
+Fare stash in Geminio non è tutto o niente.
 
 | Azione | Cosa fa |
 |---|---|
@@ -29,7 +29,7 @@ L'elenco dei file si seleziona in gruppo con gli stessi gesti dello
 ## Quando uno stash non si applica
 
 Se applicare uno stash calpesterebbe dei file non tracciati, git si ferma.
-Gitcito ti offre di sovrascriverli e riprovare, invece di lasciarti a scoprire la
+Geminio ti offre di sovrascriverli e riprovare, invece di lasciarti a scoprire la
 formula magica.
 
 Se l'albero si è spostato troppo, **stash → branch** ricrea il branch da cui lo

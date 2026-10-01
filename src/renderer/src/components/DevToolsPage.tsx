@@ -23,7 +23,7 @@ interface WebviewElement extends HTMLElement {
  *
  * DevTools is a Flutter-web app served on loopback, so the network view, the
  * timeline, the widget inspector and the memory profiler are all already
- * written — what Gitcito adds is not re-implementing them. `flutter run`
+ * written — what Geminio adds is not re-implementing them. `flutter run`
  * announces the address on its output; the launch session captures it and this
  * page loads it.
  *

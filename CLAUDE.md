@@ -1,4 +1,4 @@
-# Gitcito — working agreement
+# Geminio — working agreement
 
 A Git client built with Electron, React and TypeScript. Three processes, one
 shared type module, and a hard rule about translations.
@@ -97,7 +97,7 @@ is what makes this app safe to explore, and it is expected, not optional.
 
 ## 3. Translations — the rule that has teeth
 
-Gitcito's UI copy lives in **one dictionary file per locale** under
+Geminio's UI copy lives in **one dictionary file per locale** under
 `src/renderer/src/i18n/`:
 
 | File | Role |
@@ -255,7 +255,7 @@ One concern per PR. Commit only when asked; if you are on `main`, branch first.
 
 ## 8. Documentation — the second rule that has teeth
 
-Gitcito ships its own handbook: **`docs/help/*.md`**, rendered inside the app
+Geminio ships its own handbook: **`docs/help/*.md`**, rendered inside the app
 (Help, in the status bar) and readable straight from the repository on GitHub.
 One source, two readers.
 

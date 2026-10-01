@@ -11,7 +11,7 @@ keywords: çakışma radarı birleştirme önizleme risk dallar conflict radar m
 Bir dalın çakıştığını onu birleştirerek öğrenmek, bir soruyu sormanın pahalı bir
 yoludur. Radar soruyu önceden yanıtlar.
 
-Gitcito her dalı, seçtiğiniz bir tabana **nesne veritabanının içinde** birleştirir
+Geminio her dalı, seçtiğiniz bir tabana **nesne veritabanının içinde** birleştirir
 (`git merge-tree --write-tree`). Checkout yok, index değişikliği yok, çalışma
 dizini değişikliği yok, sonradan temizlenecek hiçbir şey yok. Tarama sürerken
 commit'lenmemiş çalışmanız tam olduğu yerde kalabilir.

@@ -266,10 +266,9 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
   const baseSidebarOrder = useSettingsStore((s) => s.settings.sidebarOrder)
   const baseSidebarHidden = useSettingsStore((s) => s.settings.sidebarHidden)
   const repoLayout = useSettingsStore((s) => s.settings.repoLayouts?.[repo.path])
-  // Sidebar section order/visibility is per-repository: a repo's own override
-  // wins, otherwise the global defaults apply.
-  const sidebarOrder = useMemo(() => repoLayout?.sidebarOrder ?? baseSidebarOrder, [repoLayout, baseSidebarOrder])
-  const sidebarHidden = useMemo(() => repoLayout?.sidebarHidden ?? baseSidebarHidden, [repoLayout, baseSidebarHidden])
+  const sidebarOrder = baseSidebarOrder
+  const sidebarHidden = baseSidebarHidden
+  const sharedExpanded = useSettingsStore((s) => s.settings.sidebarExpanded)
   const groupBranches = useSettingsStore((s) => s.settings.groupBranches)
   const updateRepoLayout = useSettingsStore((s) => s.updateRepoLayout)
   const openPageTab = useSettingsStore((s) => s.openPageTab)
@@ -694,12 +693,11 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
   const togglePinBranch = (name: string): void =>
     updateRepoLayout(path, (l) => ({ ...l, pinnedBranches: togglePin(l.pinnedBranches ?? [], name) }))
 
-  // Expand/collapse choices are per-repo and survive restarts: an explicit
-  // toggle is recorded in RepoLayout and wins over the section's default.
+  // Section expansion is shared; repository branch folders keep their own state.
   // Top-level sections default closed except Local: open panes share the
   // sidebar's height, so a fresh repo showing every section would be a stack
   // of slivers. Nested folders keep opening by default — they only cost rows.
-  const sidebarExpanded = repoLayout?.sidebarExpanded
+  const sidebarExpanded = { ...Object.fromEntries(Object.entries(repoLayout?.sidebarExpanded ?? {}).filter(([key]) => key.includes(':'))), ...sharedExpanded }
   const persistOpen = (key: string, defaultOpen = true): Pick<SectionProps, 'open' | 'onToggle'> => ({
     open: sidebarExpanded?.[key] ?? defaultOpen,
     onToggle: (o: boolean) =>

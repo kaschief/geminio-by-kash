@@ -8,7 +8,7 @@ keywords: tema temas theme themes oscuro claro dark light apariencia colores fue
 
 # Temas y apariencia
 
-Temas incluidos — Gitcito, Nord, Dracula, Solarized, GitHub, Monokai,
+Temas incluidos — Geminio, Nord, Dracula, Solarized, GitHub, Monokai,
 Midnight, Contrast y Daltonic — cada uno con su variante clara y su variante
 oscura.
 

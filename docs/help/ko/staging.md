@@ -56,7 +56,7 @@ keywords: 스테이징 staging stage unstage 되돌리기 discard 헝크 hunk �
 
 ## 커밋하기 전에
 
-Gitcito는 몇 가지를 확인하고 한 번 물어봐요. 조용히 넘어가는 법은 없어요.
+Geminio는 몇 가지를 확인하고 한 번 물어봐요. 조용히 넘어가는 법은 없어요.
 
 - **비밀**처럼 보이는 파일(`.env`, `*.pem`, `id_rsa`…),
 - **아주 큰** blob(임계값은 설정 → 보안에서),

@@ -16,12 +16,12 @@ repozytorium, a nie do aplikacji.
 | Zakładka | Co zawiera |
 |---|---|
 | **Ogólne** | Chronione gałęzie (wielokrotny wybór gałęzi, zapisany w konfiguracji gita), podpisywanie |
-| **Config** | [Zasady, które niesie to repozytorium](repo-config.md) w `.gitcito.json`, oraz doctor, który je sprawdza |
+| **Config** | [Zasady, które niesie to repozytorium](repo-config.md) w `.geminio.json`, oraz doctor, który je sprawdza |
 | **Informacje** | Dowolne notatki i pola o tym repozytorium, trzymane lokalnie |
 | **Sejf** | Wpisy [sejfu](vault.md) tego repozytorium |
 | **Statystyki** | [Panel historii](insights.md) |
 | **Analityka** | Co zrobiłeś w tym repozytorium, policzone lokalnie |
-| **Historia** · **Logi** | Dziennik operacji: każde polecenie gita, które Gitcito uruchomiło, wraz z jego wyjściem |
+| **Historia** · **Logi** | Dziennik operacji: każde polecenie gita, które Geminio uruchomiło, wraz z jego wyjściem |
 
 Dziennik operacji jest tym uczciwym: gdy coś zachowuje się dziwnie, pokazuje
 dokładne polecenie i dokładny błąd, więc zgłoszenie błędu może nieść fakty,

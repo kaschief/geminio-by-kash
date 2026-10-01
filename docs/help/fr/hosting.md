@@ -93,7 +93,7 @@ se termine.
 ## Jetons
 
 Des jetons par profil pour plusieurs comptes ou organisations, stockés dans le
-trousseau de votre système. Gitcito peut aussi emprunter ce que votre
+trousseau de votre système. Geminio peut aussi emprunter ce que votre
 **assistant d'identifiants git** détient déjà : une organisation pour laquelle
 vous vous êtes déjà authentifié ne demande souvent aucune configuration. Voir
 [Sécurité et secrets](security.md).

@@ -11,7 +11,7 @@ keywords: semantischer diff semantic diff ast tree-sitter umbenennung rename sig
 Eine reine Umbenennung sieht im Zeilen-Diff aus wie eine komplett gelöschte und
 eine komplett hinzugefügte Datei. Technisch korrekt und vollkommen nutzlos.
 
-Über jedem Datei-Diff zeigt Gitcito einen Streifen **Was sich geändert hat**:
+Über jedem Datei-Diff zeigt Geminio einen Streifen **Was sich geändert hat**:
 Beide Fassungen der Datei werden mit **tree-sitter** geparst — echte
 Syntaxbäume, keine regulären Ausdrücke — und ihre Deklarationen einander
 zugeordnet.

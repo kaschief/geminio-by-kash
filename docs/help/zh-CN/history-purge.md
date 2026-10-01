@@ -43,7 +43,7 @@ keywords: 清除 历史 重写 泄露 密钥 凭据 令牌 移除 大文件 瘦�
 
 ## 这次重写实际做了什么
 
-Gitcito 会先把每一个分支和标签复制到 `refs/gitcito/pre-purge/<timestamp>/…`，然后运行：
+Geminio 会先把每一个分支和标签复制到 `refs/gitcito/pre-purge/<timestamp>/…`，然后运行：
 
 ```sh
 git filter-branch --force \
@@ -76,6 +76,6 @@ git filter-branch --force \
 
 - **它不会推送。** 重写是本地的。发布结果意味着对每一个受影响的分支做一次强制推送，而其他所有人都必须重新克隆或者硬重置——那个决定属于[强制推送守卫](syncing.md)。
 - **工作区不干净时它会拒绝**，处于合并／变基中途时也一样。重写会反复移动 HEAD，围着未提交的工作做这件事，正是它被弄丢的方式。
-- **它按路径重写，不按内容。** 如果一份密钥是被粘贴进某个源文件里的，而不是自己独占一个文件，那就需要内容过滤器——那是 `git filter-repo --replace-text` 的地盘，Gitcito 没有为它做封装。
-- **`filter-branch` 在极大的历史上很慢。** 但它是各处的 git 都自带的东西，这也是 Gitcito 用它的原因。在一个有几万个提交的仓库上，在[终端](terminal.md)里用 `git filter-repo` 才是更快的工具。
+- **它按路径重写，不按内容。** 如果一份密钥是被粘贴进某个源文件里的，而不是自己独占一个文件，那就需要内容过滤器——那是 `git filter-repo --replace-text` 的地盘，Geminio 没有为它做封装。
+- **`filter-branch` 在极大的历史上很慢。** 但它是各处的 git 都自带的东西，这也是 Geminio 用它的原因。在一个有几万个提交的仓库上，在[终端](terminal.md)里用 `git filter-repo` 才是更快的工具。
 - **别人的克隆不是你的仓库。** 在他们重新克隆之前，他们手里保留的仍是旧历史。

@@ -2,13 +2,13 @@
 title: Security & secrets
 category: Security
 order: 70
-summary: Masking, guards, the keychain — and what Gitcito refuses to do.
+summary: Masking, guards, the keychain — and what Geminio refuses to do.
 keywords: security secrets masking keychain safeStorage tokens protected branch large file guard privacy
 ---
 
 # Security & secrets
 
-Gitcito has **no backend**. The only network calls are to your Git host and, if
+Geminio has **no backend**. The only network calls are to your Git host and, if
 you turn it on, your AI provider.
 
 ![Security settings](../screenshots/settings-security.webp)
@@ -43,7 +43,7 @@ Tokens and [vault](vault.md) entries are encrypted with your OS keychain
 (Electron `safeStorage`), never with a key in the settings file.
 
 **Nothing touches the keychain until you say so.** Before the system's own
-permission dialog can appear, Gitcito explains what is being stored, what it
+permission dialog can appear, Geminio explains what is being stored, what it
 cannot do (an app only ever reads back the entry it created — your other
 passwords are unreachable), and that saying no is fine: tokens then live in
 memory for the session only, the vault stays closed, and you can turn it on

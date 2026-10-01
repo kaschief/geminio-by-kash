@@ -74,7 +74,7 @@ strona otworzy się wtedy we własnej karcie: otwieranie musi zawsze coś otworz
 Przestrzeń robocza to **cały zapisany pasek kart**. Przełączenie podmienia
 wszystkie karty naraz: `Praca` i `Prywatne` przestają sobie wchodzić w drogę.
 
-Nazwa przestrzeni siedzi w lewym górnym rogu, obok znaku Gitcito. Kliknij ją,
+Nazwa przestrzeni siedzi w lewym górnym rogu, obok znaku Geminio. Kliknij ją,
 żeby przełączyć, utworzyć, zmienić nazwę, przestawić lub usunąć. Obok znajduje
 się wskaźnik otwierający [Centrum dowodzenia](mission-control.md) dla
 przestrzeni, w której jesteś.

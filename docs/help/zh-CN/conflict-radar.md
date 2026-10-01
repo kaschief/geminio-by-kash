@@ -10,7 +10,7 @@ keywords: conflict 冲突 radar 雷达 merge 合并 preview 预览 clash 碰撞 
 
 靠真的合一次来搞清楚某个分支会不会冲突，是一种代价高昂的提问方式。雷达提前替你回答。
 
-Gitcito 会把每个分支**在对象数据库内部**合并进你选定的基准（`git merge-tree --write-tree`）。不检出，不动索引，不动工作区，事后也没有任何东西要收拾。扫描进行时，你那些未提交的活儿可以原地待着，一动不动。
+Geminio 会把每个分支**在对象数据库内部**合并进你选定的基准（`git merge-tree --write-tree`）。不检出，不动索引，不动工作区，事后也没有任何东西要收拾。扫描进行时，你那些未提交的活儿可以原地待着，一动不动。
 
 ![雷达，每个分支一条判定](../../screenshots/conflict-radar.webp)
 

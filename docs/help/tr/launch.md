@@ -2,13 +2,13 @@
 title: Çalıştırma ve hata ayıklama (launch.json)
 category: Çalışma alanı araçları
 order: 91
-summary: VS Code launch yapılandırmalarınızı Gitcito'dan çıkmadan çalıştırın.
+summary: VS Code launch yapılandırmalarınızı Geminio'dan çıkmadan çalıştırın.
 keywords: launch.json çalıştır run hata ayıklama debug vscode yapılandırma configs görevler tasks preLaunchTask input background compound compounds stopAll serverReadyAction paralel oturumlar hot reload hot restart device simulator emulator run target flutter metro expo vite nodemon vitest jest mocha ava wrangler dotnet watch adb simctl avd xcodebuild capacitor
 ---
 
 # Çalıştırma ve hata ayıklama
 
-Gitcito `.vscode/launch.json` dosyanızı okur — kök dizindekini ve iç içe
+Geminio `.vscode/launch.json` dosyanızı okur — kök dizindekini ve iç içe
 olanları, ayraçlarla gruplanmış hâlde — ve seçtiğiniz yapılandırmayı tümleşik
 terminalde çalıştırır.
 
@@ -33,7 +33,7 @@ terminalde çalıştırır.
 - **`serverReadyAction`** dikkate alınır: oturumun çıktısı yapılandırılan
   desenle eşleştiğinde, duyurulan URL tarayıcınızda açılır
   (`openExternally`; `debugWithChrome` / `debugWithEdge` de tarayıcıyı açar —
-  Gitcito ona bir hata ayıklayıcı bağlayamaz).
+  Geminio ona bir hata ayıklayıcı bağlayamaz).
 
 ![İki paralel oturum çalıştıran bir compound](../../screenshots/launch-compound.webp)
 
@@ -50,7 +50,7 @@ yalnızca o üyeyi yeniden başlatır.
 Araç çubuğu ihtiyacınız olan bir şeyi örtüyorsa, tutamacından kenara
 sürükleyin — konum hatırlanır ve tutamaca çift tıklamak onu yeniden ortalar.
 
-Gitcito'nun bilerek **yapmadığı** şey: programlarınızı gerçek terminallerde
+Geminio'nun bilerek **yapmadığı** şey: programlarınızı gerçek terminallerde
 çalıştırır ama bir hata ayıklayıcı değildir — kesme noktası yok, değişken
 incelemesi yok, Debug Adapter Protocol yok. Yalnızca attach yapılandırmaları
 bir `preLaunchTask` taşıdığında çalışır (iş, görevin kendisidir); saf bir
@@ -66,7 +66,7 @@ yeniden çalıştırır. Aynı sonucu almak için başlatma yapılandırmasını
 başlatmak yavaş yoldur — süreci öldürür, her `preLaunchTask` adımını yeniden
 çalıştırır ve uygulamanın durumunu çöpe atar.
 
-Bu yüzden Gitcito bir yapılandırmanın gerçekten başlattığı komutu okur — bir
+Bu yüzden Geminio bir yapılandırmanın gerçekten başlattığı komutu okur — bir
 `npm run dev` izini `package.json` betiklerinize kadar sürer — ve o çalışma
 zamanının tuşlarını hata ayıklama çubuğuna koyar. Bir tuşa basmak, o tuşu
 oturumun standart girdisine yazar; tıpkı terminale kendiniz yazmışsınız gibi.
@@ -91,7 +91,7 @@ Kimsenin okumadığı bir tuşu gönderen düğme, düğme olmamasından daha k�
 çünkü işe yaramış gibi görünür.
 
 **Sınırlar.** Algılama metinseldir: komut satırındaki program adını eşleştirir,
-dolayısıyla geliştirme sunucunuzu Gitcito'nun okuyamadığı bir sarmalayıcı betik
+dolayısıyla geliştirme sunucunuzu Geminio'nun okuyamadığı bir sarmalayıcı betik
 üzerinden başlatan bir yapılandırma hiçbir şey almaz. Tuş vuruşu da
 onaylanmaz — düğme yanıp söner, gerçek yanıt sürecin kendi çıktısıdır.
 Duraklatılmış veya sonlanmış bir oturum girdi kabul etmez, o yüzden düğmeler
@@ -104,7 +104,7 @@ soluklaşır.
   "name": "API (watch)",
   "type": "node-terminal",
   "command": "./scripts/dev.sh",
-  "gitcito": { "hotActions": [{ "label": "Reload", "send": "r", "icon": "reload" }] }
+  "geminio": { "hotActions": [{ "label": "Reload", "send": "r", "icon": "reload" }] }
 }
 ```
 
@@ -119,7 +119,7 @@ Boş bir `hotActions` dizisi o yapılandırma için düğmeleri kapatır.
 
 Mobil uygulama derleyen bir yapılandırmaya nerede çalışacağı söylenmelidir. Bu
 seçim yalnızca Flutter’ın değil — React Native, Expo, Capacitor ve xcodebuild de
-bir hedef alır ve her biri farklı yazar. Bu yüzden Gitcito bir kez sorar, tam
+bir hedef alır ve her biri farklı yazar. Bu yüzden Geminio bir kez sorar, tam
 **LAUNCH** sekmesinin yanında, ve yanıtı o yapılandırmanın çalışma zamanının
 okuduğu biçimde yazar. Seçici, yalnızca depodaki bir yapılandırma gerçekten bir
 cihaz alabiliyorsa görünür.
@@ -153,12 +153,12 @@ liste kendini açıklamalıdır.
 Başlatılan her yapılandırma ayrıca ortamında `GITCITO_DEVICE_ID`,
 `GITCITO_DEVICE_NAME` ve `GITCITO_DEVICE_PLATFORM` alır; hedef gerçek bir Android
 cihazsa `ANDROID_SERIAL` de eklenir. Bir sarmalayıcı betiğin, bir Gradle görevinin
-ya da yalın bir `adb`nin aynı telefona ulaşmasını sağlayan da budur — Gitcito
+ya da yalın bir `adb`nin aynı telefona ulaşmasını sağlayan da budur — Geminio
 hiçbir şeyi yeniden yazmadan.
 
 **Soğuk bir cihazı başlatmak.** *Çalışmıyor* altındaki her şey seçildiğinde
 açılır: `flutter emulators --launch`, `xcrun simctl boot` (ve Simulator penceresi)
-veya ayrık `emulator -avd` — böylece Gitcito’dan çıkmak Android emülatörünü
+veya ayrık `emulator -avd` — böylece Geminio’dan çıkmak Android emülatörünü
 beraberinde götürmez.
 
 **Sınırlar.** Zaten bir cihaz adı taşıyan bir yapılandırma — açık bir `-d`, bir
@@ -175,7 +175,7 @@ Seçim depo başına hatırlanır ve o cihaz ortadan kalktığında unutulur.
 
 ## JSON ve YAML dosyalarından girdi değerleri
 
-Bir alan geçerli sürümü gösterebilir veya proje dosyasından başlangıç değeri alabilir. Gitcito dosyayı her başlatmada, alanlar gösterilmeden önce okur. VS Code eklentisi gerekmez.
+Bir alan geçerli sürümü gösterebilir veya proje dosyasından başlangıç değeri alabilir. Geminio dosyayı her başlatmada, alanlar gösterilmeden önce okur. VS Code eklentisi gerekmez.
 
 promptString veya pickString alanına fileValues ekleyin. Her değer, başlatma yapılandırmasının klasörüne göre dosya yolu ve noktalarla ayrılmış özellik yolu tanımlar. description veya default içinde ${fileValue:name} kullanın. Boş default metin alanını isteğe bağlı tutar.
 
@@ -192,4 +192,4 @@ promptString veya pickString alanına fileValues ekleyin. Her değer, başlatma 
 }
 ```
 
-Klasör içindeki en fazla 1 MiB boyutlu JSON, YAML ve YML dosyaları ile metin, sayı ve mantıksal değerler desteklenir. Eksik dosya, geçersiz veri, eksik özellik ve dış yollar başlatmayı hatayla durdurur. Komut veya JavaScript ifadesi çalıştırılmaz. Her yeni başlatma dosyayı tekrar okur; Restart önceki yanıtları kullanır. VS Code bu Gitcito alanlarını yerleşik olarak çözümlemez.
+Klasör içindeki en fazla 1 MiB boyutlu JSON, YAML ve YML dosyaları ile metin, sayı ve mantıksal değerler desteklenir. Eksik dosya, geçersiz veri, eksik özellik ve dış yollar başlatmayı hatayla durdurur. Komut veya JavaScript ifadesi çalıştırılmaz. Her yeni başlatma dosyayı tekrar okur; Restart önceki yanıtları kullanır. VS Code bu Geminio alanlarını yerleşik olarak çözümlemez.

@@ -9,7 +9,7 @@ keywords: podpis podpisywanie gpg ssh x509 zweryfikowany plakietka zaufanie sign
 # Podpisane commity
 
 Włącz podpisywanie dla każdego repozytorium osobno (**Ustawienia → koło zębate
-repozytorium**): GPG, SSH albo X.509, kluczem, który wybierzesz. Gitcito
+repozytorium**): GPG, SSH albo X.509, kluczem, który wybierzesz. Geminio
 zapisuje dla tego repozytorium `commit.gpgsign`, `gpg.format`
 i `user.signingkey` — tę samą konfigurację, którą czyta każde inne narzędzie.
 

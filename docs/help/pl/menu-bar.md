@@ -2,7 +2,7 @@
 title: Pasek menu
 category: Zacznij tutaj
 order: 5
-summary: Co zawierają menu Gitcito w macOS i dlaczego Windows oraz Linux nie mają paska menu.
+summary: Co zawierają menu Geminio w macOS i dlaczego Windows oraz Linux nie mają paska menu.
 keywords: pasek menu menu aplikacja plik edycja widok okno pomoc repozytorium macos natywne o programie zakończ
 ---
 
@@ -21,7 +21,7 @@ której użytkownicy Windowsa i Linuksa nie mają.
 
 | Menu | Zawiera |
 |---|---|
-| **Gitcito** | O programie, sprawdzanie aktualizacji, [Ustawienia](repo-settings.md), standardowe pozycje ukrywania i wyjścia |
+| **Geminio** | O programie, sprawdzanie aktualizacji, [Ustawienia](repo-settings.md), standardowe pozycje ukrywania i wyjścia |
 | **Plik** | Nowa karta, otwarcie lub [sklonowanie](cloning.md) repozytorium, otwórz ostatnie, zamykanie i przywracanie kart |
 | **Edycja** | Wytnij, kopiuj, wklej, cofnij — edycja tekstu, którą klawiatura już wykonuje — plus [wyszukiwanie w kodzie](search.md) |
 | **Widok** | Paleta poleceń, przełączniki panelu bocznego i prawego, [terminal](terminal.md), [mission control](mission-control.md), [sejf](vault.md), powiększenie |
@@ -39,16 +39,16 @@ Klawisze obok każdej pozycji to te, które faktycznie przypisałeś. Zmień
 przypisanie <kbd>⌘K</kbd> w Ustawieniach, a menu Widok to pokaże.
 
 Działa to, ponieważ menu *wyświetla* te kombinacje, nie zgłaszając do nich
-pretensji: obsługą klawiatury nadal steruje sam Gitcito, dzięki czemu skrót może
+pretensji: obsługą klawiatury nadal steruje sam Geminio, dzięki czemu skrót może
 zachować się inaczej w zależności od tego, gdzie stoi kursor. Jedyne, czego w
-ten sposób nie da się pokazać, to skrót, którego Gitcito nie posiada —
+ten sposób nie da się pokazać, to skrót, którego Geminio nie posiada —
 <kbd>⌘F</kbd> należy do czytanego pliku lub diffa, więc żadna pozycja menu go
 nie zajmuje.
 
 ## Ograniczenia
 
 - **Tylko macOS.** W Windows i Linuksie okno nie ma ramki — pasek tytułu rysuje
-  sam Gitcito i pasek menu nie ma gdzie się zmieścić. Tam te same polecenia
+  sam Geminio i pasek menu nie ma gdzie się zmieścić. Tam te same polecenia
   prowadzą przez [paletę poleceń](search.md) i [skróty
   klawiaturowe](keyboard.md).
 - **Przeładuj i Narzędzia deweloperskie pojawiają się tylko w kompilacjach

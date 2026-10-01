@@ -701,7 +701,7 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
     )
 
   return (
-    <div className="file-viewer">
+    <div className="file-viewer" data-mode={mode}>
       <div className="fv-header">
         {/* Right-click for the path and the permalink — rarely needed, so they
             do not take a header button. */}
@@ -753,8 +753,8 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
       <div className="fv-body-wrap">
         {/* Floating chrome — the find bar, the diff's line-selection actions —
             lives on a layer over the content that never scrolls and takes no
-            space, so opening either moves nothing and covers no hunk button
-            (those sit at the right edge; these are centred). */}
+            space, so opening either moves nothing. The diff find bar sits
+            below the first hunk header, including in narrow panes. */}
         <div className="fv-overlay" ref={setOverlayHost}>
           {findOpen && (
             <div className="fv-find">

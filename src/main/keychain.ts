@@ -7,7 +7,7 @@ import { existsSync } from 'fs'
  * Consent gate in front of the OS keychain.
  *
  * Electron's safeStorage asks the OS for an encryption key, and on macOS that
- * pops the alarming "Gitcito wants to use your confidential information stored
+ * pops the alarming "Geminio wants to use your confidential information stored
  * in your keychain" dialog — with no explanation of what for. Every keychain
  * touch therefore goes through here: nothing reaches safeStorage until the user
  * has seen our own window saying what is stored, what is not, and that none of

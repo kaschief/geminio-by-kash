@@ -10,7 +10,7 @@ keywords: sicheres teilen secure share export import paket bundle verschlüsselt
 
 Eine neue Maschine — oder ein neues Teammitglied — einzurichten heißt
 normalerweise, alles noch einmal von Hand einzutippen. Sicheres Teilen packt es
-stattdessen in eine einzige verschlüsselte `.gitcito`-Datei: Gitcitos
+stattdessen in eine einzige verschlüsselte `.geminio`-Datei: Geminios
 Team-Funktionen haben **kein Backend**, die Datei *ist* also der Transport.
 Verschicke sie, wie du ohnehin Dateien verschickst; das Passwort reist
 getrennt.
@@ -43,7 +43,7 @@ Import nicht die halbe Welt noch einmal klont.
 Ein Abschnitt **Workspace-Struktur** baut den Workspace mit den Repositorys
 wieder auf, die du schon hast; die, die dir fehlen, werden mit ihrem Remote
 aufgelistet, damit du sie zuerst klonen und dann erneut importieren kannst —
-Gitcito klont hier nie von sich aus. Ein Abschnitt **Commit-Notizen** zeigt
+Geminio klont hier nie von sich aus. Ein Abschnitt **Commit-Notizen** zeigt
 vorab, was landen würde — neu, identisch, abweichend oder an Commits hängend,
 die du nicht hast — und abweichende Notizen werden nur ersetzt, wenn du
 **Überschreiben** ankreuzt; ein Merge auseinanderlaufender Notizen findet nicht

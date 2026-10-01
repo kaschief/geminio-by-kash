@@ -1,5 +1,5 @@
 import type { AppSettings } from '../../../shared/types'
-import type { EditorSetting } from '../../../shared/editors'
+import { isEditorApp, type EditorSetting } from '../../../shared/editors'
 import type { MenuItem } from '../stores/ui'
 import { shellApi } from '../infrastructure/api'
 import { editorMenuItems } from './editorOpen'
@@ -18,7 +18,7 @@ export function openWithMenuItems(
   opts?: { isDir?: boolean }
 ): MenuItem[] {
   const items: MenuItem[] = editorMenuItems(editor, { path, isDir: opts?.isDir })
-  if (defaultApp?.path) {
+  if (defaultApp?.path && !isEditorApp(editor, defaultApp.path)) {
     items.push({
       label: labels.openWithDefault(defaultApp.name),
       onClick: () => void shellApi.openWithApp(path, defaultApp.path)

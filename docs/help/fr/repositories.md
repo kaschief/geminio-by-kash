@@ -2,7 +2,7 @@
 title: Dépôts
 category: Synchronisation et multi-dépôts
 order: 52
-summary: Tous les dépôts que Gitcito connaît, ouverts ou non, dans une liste consultable.
+summary: Tous les dépôts que Geminio connaît, ouverts ou non, dans une liste consultable.
 keywords: dépôts registre tous les dépôts favoris étoilés récents parcourir dossier explorer trouver ouvrir gérer gestion de dépôts couleur section teinte surligner espaces de travail depuis dossiers arbre générer import groupé repositories registry favourites starred recent scan folder workspaces
 ---
 
@@ -11,7 +11,7 @@ keywords: dépôts registre tous les dépôts favoris étoilés récents parcour
 Le [centre de contrôle](mission-control.md) répond à "lequel de mes dépôts
 ouverts a besoin de moi ?". Il ne connaît que les onglets de l'espace de
 travail actif. Dépôts répond à une autre question : **où est ce dépôt, et est-il
-même ouvert quelque part ?** Il couvre tout ce que Gitcito a jamais vu. Chaque
+même ouvert quelque part ?** Il couvre tout ce que Geminio a jamais vu. Chaque
 espace de travail, chaque onglet, plus ce qu'il trouve en parcourant les
 dossiers que vous lui indiquez.
 
@@ -70,7 +70,7 @@ Trois choses à savoir :
   recolore jamais celles au-dessus. Seules les couleurs que vous changez sont
   enregistrées.
 - La couleur est **locale à cette page**. Teindre ici la section d'un espace
-  ne dit rien de cet espace ailleurs dans Gitcito. La couleur de son onglet
+  ne dit rien de cet espace ailleurs dans Geminio. La couleur de son onglet
   est un réglage à part.
 - La couleur est **diluée** à un faible pourcentage de la surface plutôt
   qu'appliquée à pleine force, pour qu'un choix saturé reste un fond lisible
@@ -82,9 +82,9 @@ partager une teinte.
 
 ## Ce qui rend un dépôt connu
 
-Une ligne existe ici dès que Gitcito l'a **ouvert** à un moment, ou l'a
+Une ligne existe ici dès que Geminio l'a **ouvert** à un moment, ou l'a
 trouvé sous un **dossier à parcourir**. Rien n'est indexé juste parce que ça
-existe sur le disque quelque part dont vous n'avez jamais parlé à Gitcito.
+existe sur le disque quelque part dont vous n'avez jamais parlé à Geminio.
 
 Ouvrir cette page indexe aussi ce que vous avez **ouvert dans un onglet**,
 c'est ainsi que les dépôts restaurés au démarrage reçoivent une ligne sans
@@ -117,7 +117,7 @@ tableau, pas comme une pile.
 Les actions de fin sont visibles au repos, pas révélées au survol : **ouvrir
 dans un onglet**, et un **⋮** qui ouvre le même [menu contextuel du
 dépôt](repo-menu.md) qu'un clic droit. C'est le menu utilisé partout ailleurs
-dans Gitcito, étendu de deux entrées propres à cette page :
+dans Geminio, étendu de deux entrées propres à cette page :
 
 | Action | Ce qu'elle fait |
 |---|---|
@@ -166,7 +166,7 @@ Sans danger à répéter. Un second parcours **ajoute et ne retire jamais** :
 - Les nouveaux dépôts sont ajoutés à l'espace de travail correspondant.
 - Les dépôts que vous avez déplacés, renommés ou retirés à la main restent
   comme vous les avez laissés.
-- Un espace que vous avez **renommé** est toujours reconnu. Gitcito se
+- Un espace que vous avez **renommé** est toujours reconnu. Geminio se
   souvient du dossier d'où il vient, donc il fusionne au lieu de créer un
   doublon.
 - Un dépôt supprimé du disque garde son onglet et s'affiche introuvable.
@@ -226,7 +226,7 @@ déjà quel type de pull vous voulez.
 ## La barre d'actions
 
 **Ouvrir un dossier…**, **Cloner…** et **Ajouter un dossier à parcourir…**.
-Trois façons de faire entrer un dépôt dans le registre de Gitcito, depuis la
+Trois façons de faire entrer un dépôt dans le registre de Geminio, depuis la
 même page où vous en cherchez un qui est déjà là.
 
 ## Résumé WIP

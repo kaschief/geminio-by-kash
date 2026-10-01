@@ -21,7 +21,7 @@ keywords: 대화형 리베이스 interactive rebase squash 스쿼시 fixup rewor
 | **edit** | 여기서 멈춰서 amend할 수 있게 해요 |
 | **drop** | 커밋을 버려요 |
 
-행을 끌어서 순서를 바꾸세요. 편집기는 절대 터미널에서 열리지 않아요 — Gitcito가
+행을 끌어서 순서를 바꾸세요. 편집기는 절대 터미널에서 열리지 않아요 — Geminio가
 todo를 대신 써 주거든요.
 
 ## 클릭 한 번으로 autosquash

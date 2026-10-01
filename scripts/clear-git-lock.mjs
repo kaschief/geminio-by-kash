@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Release guard: clear a stale `.git/index.lock` before release-it runs.
 //
-// Why this exists: when Gitcito itself is open on this repo (dev mode), its
+// Why this exists: when Geminio itself is open on this repo (dev mode), its
 // background `git status` refreshes briefly create `.git/index.lock`. If
 // release-it's commit step races one of those refreshes — or a previous git
 // process crashed — the lock lingers and release-it dies with:
@@ -25,10 +25,10 @@ const gitDir = (() => {
 
 const lockPath = resolve(gitDir, 'index.lock')
 
-// A Gitcito instance open on THIS repo is the usual culprit: its background
+// A Geminio instance open on THIS repo is the usual culprit: its background
 // `git status` refreshes grab index.lock and race release-it's commit. Detect
 // it up front so the user can close it instead of hitting a mid-release crash.
-const gitcitoOnThisRepo = () => {
+const geminioOnThisRepo = () => {
   try {
     const repoRoot = execSync('git rev-parse --show-toplevel', { encoding: 'utf-8' }).trim()
     const out = execSync('pgrep -fl Electron', { encoding: 'utf-8' })
@@ -40,11 +40,11 @@ const gitcitoOnThisRepo = () => {
   }
 }
 
-if (gitcitoOnThisRepo()) {
+if (geminioOnThisRepo()) {
   console.error(
-    '\n✖ Gitcito appears to be running on this repository.\n' +
+    '\n✖ Geminio appears to be running on this repository.\n' +
       '  Its background git refreshes race release-it for .git/index.lock.\n' +
-      '  Close Gitcito (and any `electron-vite dev` session) for this repo, then retry.\n'
+      '  Close Geminio (and any `electron-vite dev` session) for this repo, then retry.\n'
   )
   process.exit(1)
 }
@@ -85,7 +85,7 @@ if (!existsSync(lockPath)) {
 if (gitProcessRunning()) {
   console.error(
     `\n✖ ${lockPath} is held by a running git process.\n` +
-      `  Close other git clients (including Gitcito if it has this repo open) and retry.\n`
+      `  Close other git clients (including Geminio if it has this repo open) and retry.\n`
   )
   process.exit(1)
 }

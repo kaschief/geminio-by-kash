@@ -10,7 +10,7 @@ keywords: condivisione sicura secure share esporta export importa import bundle 
 
 Mettere in piedi una macchina nuova — o un collega nuovo — di solito significa
 reinserire tutto. La condivisione sicura impacchetta invece il tutto in un unico
-file `.gitcito` cifrato: le funzioni di squadra di Gitcito **non hanno alcun
+file `.geminio` cifrato: le funzioni di squadra di Geminio **non hanno alcun
 backend**, quindi il file *è* il trasporto. Invialo come già invii i file; la
 password viaggia a parte.
 
@@ -41,7 +41,7 @@ riclona il mondo daccapo.
 
 Una sezione **struttura dell'area di lavoro** ricrea l'area di lavoro con i
 repository che hai già; quelli che ti mancano vengono elencati con il loro
-remote, così puoi clonarli prima e poi reimportare — Gitcito qui non clona mai
+remote, così puoi clonarli prima e poi reimportare — Geminio qui non clona mai
 al posto tuo. Una sezione **note sui commit** mostra in anteprima cosa
 arriverebbe — nuove, identiche, diverse o agganciate a commit che non hai — e le
 note diverse vengono sostituite solo se spunti **sovrascrivi**; non c'è alcun

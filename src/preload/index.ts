@@ -437,15 +437,15 @@ const api = {
     isInstalled: (): Promise<boolean> => ipcRenderer.invoke('cli:isInstalled'),
     install: (): Promise<{ ok: boolean; error?: string }> => ipcRenderer.invoke('cli:install'),
     uninstall: (): Promise<{ ok: boolean; error?: string }> => ipcRenderer.invoke('cli:uninstall'),
-    // Fired when `gitcito <dir>` asks this window to open a folder — on cold
+    // Fired when `geminio <dir>` asks this window to open a folder — on cold
     // launch (main sends it once the page finishes loading) or when a second
-    // `gitcito` invocation hands off to this already-running instance.
+    // `geminio` invocation hands off to this already-running instance.
     onOpenPath: (cb: (payload: CliOpenPayload) => void): (() => void) => {
       const listener = (_e: unknown, payload: CliOpenPayload): void => cb(payload)
       ipcRenderer.on('cli:open-path', listener)
       return () => ipcRenderer.removeListener('cli:open-path', listener)
     },
-    // `gitcito --wait <file>` — git is blocked until finishEdit is called, so
+    // `geminio --wait <file>` — git is blocked until finishEdit is called, so
     // every path out of the editor surface must call it exactly once.
     onEdit: (cb: (req: { file: string; sentinel: string; content: string }) => void): (() => void) => {
       const listener = (_e: unknown, req: { file: string; sentinel: string; content: string }): void => cb(req)

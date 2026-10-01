@@ -10,7 +10,7 @@ keywords: compartilhamento seguro secure share exportar export importar import b
 
 Configurar uma máquina nova — ou um colega novo — normalmente significa
 redigitar tudo. O compartilhamento seguro empacota isso num único arquivo
-`.gitcito` criptografado: os recursos de equipe do Gitcito **não têm backend**,
+`.geminio` criptografado: os recursos de equipe do Geminio **não têm backend**,
 então o arquivo *é* o transporte. Envie-o do jeito que você já envia arquivos; a
 senha viaja separadamente.
 
@@ -40,7 +40,7 @@ novo.
 
 Uma seção de **estrutura do workspace** recria o workspace com os repositórios
 que você já tem; os que você não tem são listados com o remote deles, para que
-você possa cloná-los primeiro e importar de novo — o Gitcito nunca clona por
+você possa cloná-los primeiro e importar de novo — o Geminio nunca clona por
 você aqui. Uma seção de **notas de commit** mostra uma prévia do que chegaria —
 novas, idênticas, divergentes ou presas a commits que você não tem — e notas
 divergentes só são substituídas quando você marca **sobrescrever**; não há merge

@@ -63,7 +63,7 @@ erreur.
   dessous.
 - **Cloner un dossier local** ignore normalement `--depth` complètement, parce
   que git crée des liens durs vers la base d'objets au lieu de récupérer quoi que
-  ce soit. Gitcito clone via une URL `file://` quand vous demandez une copie
+  ce soit. Geminio clone via une URL `file://` quand vous demandez une copie
   superficielle d'un dépôt local : la profondeur demandée est donc bien celle que
   vous obtenez.
 

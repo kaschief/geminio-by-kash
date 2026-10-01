@@ -8,7 +8,7 @@ keywords: theme themes dunkel hell dark light erscheinungsbild farben schriftgr�
 
 # Themes & Erscheinungsbild
 
-Eingebaute Themes — Gitcito, Nord, Dracula, Solarized, GitHub, Monokai,
+Eingebaute Themes — Geminio, Nord, Dracula, Solarized, GitHub, Monokai,
 Midnight, Contrast und Daltonic — jedes mit einer hellen und einer dunklen
 Variante.
 

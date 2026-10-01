@@ -55,7 +55,7 @@ import { t, interp, type TranslationKey } from '../i18n'
 /** Repos already warned this session about pushing tracked secrets (don't nag). */
 const secretPushWarned = new Set<string>()
 
-/** Repos whose `.gitcito.json` push checklist has been shown this session. A
+/** Repos whose `.geminio.json` push checklist has been shown this session. A
  *  reminder that appears on every push is a reminder nobody reads. */
 const pushChecklistShown = new Set<string>()
 
@@ -122,7 +122,7 @@ export interface RepoData {
   teammateRadar: TeammateRadarResult | null
   /** Local-CI verdicts pinned to commits (git notes, refs/notes/gitcito-ci). */
   localCiVerdicts: Record<string, LocalCiVerdict>
-  /** The repository's own `.gitcito.json`, or null while it has not been read. */
+  /** The repository's own `.geminio.json`, or null while it has not been read. */
   config: RepoConfigResult | null
   /** Last doctor sweep. Only run on demand — each check spawns a process. */
   doctor: DoctorCheck[]
@@ -195,7 +195,7 @@ interface RepoStoreState {
   /** Re-run the repository's doctor checks. Spawns processes — call it on
    *  demand (opening the panel, applying a fix), not on every refresh. */
   refreshDoctor(path: string): Promise<void>
-  /** Write `.gitcito.json` and adopt the result. Leaves the file staged for the
+  /** Write `.geminio.json` and adopt the result. Leaves the file staged for the
    *  user to commit: it is a tracked file like any other. */
   saveRepoConfig(path: string, config: RepoConfig): Promise<boolean>
 
@@ -1068,7 +1068,7 @@ async function pushGuards(
     }
   }
   // The repository's own pre-push reminders. Inert text it ships in
-  // `.gitcito.json`, so it is shown verbatim and never translated — and it can
+  // `.geminio.json`, so it is shown verbatim and never translated — and it can
   // only ever add a confirmation, never remove one.
   const checklist = repoConfig?.checklist?.push ?? []
   if (checklist.length && !pushChecklistShown.has(path)) {

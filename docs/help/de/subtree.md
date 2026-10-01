@@ -19,7 +19,7 @@ eigenen detached HEAD braucht, den man auseinanderhalten muss.
 
 `⌘K` → **Subtrees**.
 
-![Ein eingebettetes Verzeichnis, in der Historie gefunden, mit der Quelle, die Gitcito sich dafür merkt](../../screenshots/subtree.webp)
+![Ein eingebettetes Verzeichnis, in der Historie gefunden, mit der Quelle, die Geminio sich dafür merkt](../../screenshots/subtree.webp)
 
 ## Der Haken, den niemand erwähnt
 
@@ -28,12 +28,12 @@ jede URL und jeder Pfad steht. Ein Subtree hat nichts — nur einen
 `git-subtree-dir:`-Trailer an dem Commit, der den Import gemacht hat.
 
 Ein Repository kann also einen Subtree enthalten und dir keinerlei Möglichkeit
-geben herauszufinden, woher er kam. Gitcito tut, was es kann:
+geben herauszufinden, woher er kam. Geminio tut, was es kann:
 
 - Die Liste wird aus der Historie ermittelt, indem diese Trailer gelesen werden.
   Jeder Subtree, den irgendwer mit irgendeinem Werkzeug hinzugefügt hat, taucht
   auf.
-- Das **Quell-Repository und die Ref** merkt sich Gitcito in der git-Konfiguration
+- Das **Quell-Repository und die Ref** merkt sich Geminio in der git-Konfiguration
   dieses Repositorys. Ein aus der Historie ermittelter Subtree startet mit leeren
   Feldern — trag sie einmal ein, und Pull und Push funktionieren von da an.
 
@@ -70,14 +70,14 @@ Subtree auf, ein Subtree zu sein.
 
 - **Push ist langsam.** Er berechnet die Historie des Verzeichnisses jedes Mal
   komplett neu. Bei einem großen Repository sind das Sekunden bis Minuten, nicht
-  sofort, und Gitcito kann nur darauf warten.
+  sofort, und Geminio kann nur darauf warten.
 - **Ein Pull ist ein Merge**, kann also wie jeder Merge Konflikte erzeugen — du
   landest [im Resolver](conflicts.md).
 - **`git subtree` ist ein contrib-Skript**, kein git-Builtin. Einer abgespeckten
-  git-Installation kann es fehlen; Gitcito sagt das klar, statt dir
+  git-Installation kann es fehlen; Geminio sagt das klar, statt dir
   "'subtree' is not a git command" weiterzureichen.
 - **Gesquashte Historie lässt sich später nicht ent-squashen.** Die Commits wurden
   nie importiert.
-- Gitcito wandelt kein Submodul in einen Subtree um, und auch nicht umgekehrt.
+- Geminio wandelt kein Submodul in einen Subtree um, und auch nicht umgekehrt.
 
 Siehe auch: [Mergen & Rebasen](merging.md) · [Plumbing mit UI](lfs-sparse.md)

@@ -7,7 +7,7 @@ import { lintCommit, subjectCounterLevel, SUBJECT_IDEAL_LEN } from '../lib/commi
 import { editKindFor, splitMessage, type CliEditKind } from '../lib/cliEdit'
 
 /**
- * The file git handed us through `core.editor = gitcito --wait`.
+ * The file git handed us through `core.editor = geminio --wait`.
  *
  * A `git commit` is blocked on a shell process for as long as this dialog is
  * open, which makes one rule absolute: **every exit path answers**. Saving

@@ -28,7 +28,7 @@ codice è sul tuo disco.
 | Bitbucket Cloud, Bitbucket Server | `refs/pull-requests/<n>/from` |
 | Azure DevOps | `refs/pull/<n>/merge` |
 
-Gitcito sonda tutti e quattro in un unico `ls-remote`, quindi una forge
+Geminio sonda tutti e quattro in un unico `ls-remote`, quindi una forge
 sconosciuta o self-hosted funziona finché segue una di queste convenzioni.
 
 ## Aprirla
@@ -47,7 +47,7 @@ normalmente `origin`. Non il fork.
 
 **Pull request** — il numero, o un URL del browser incollato. `7`, `#7` e
 `https://github.com/owner/repo/pull/7` funzionano tutti; così come le forme di
-URL di GitLab, Bitbucket e Azure DevOps. Premi **Trova** e Gitcito ti riporta il
+URL di GitLab, Bitbucket e Azure DevOps. Premi **Trova** e Geminio ti riporta il
 ref che ha risolto e il commit che punta, prima che venga recuperato qualsiasi
 cosa.
 
@@ -67,7 +67,7 @@ andartene non è un'anteprima.
 
 Fare l'anteprima della stessa pull request due volte riusa lo stesso branch,
 spostandolo sulla nuova testa — comodo quando l'autore pubblica una correzione
-mentre stai provando. Quando quel branch esiste già, Gitcito lo dice e chiede
+mentre stai provando. Quando quel branch esiste già, Geminio lo dice e chiede
 prima di resettarlo, perché qualunque commit che viva solo lì andrebbe perso.
 
 ## Cosa non farà

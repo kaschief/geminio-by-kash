@@ -42,12 +42,15 @@ export function GraphHeaderFilter({
       setOpen(false)
     }
     const onKey = (e: KeyboardEvent): void => {
-      if (e.key === 'Escape') setOpen(false)
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        setOpen(false)
+      }
     }
-    window.addEventListener('mousedown', onDown)
+    window.addEventListener('pointerdown', onDown, true)
     window.addEventListener('keydown', onKey)
     return () => {
-      window.removeEventListener('mousedown', onDown)
+      window.removeEventListener('pointerdown', onDown, true)
       window.removeEventListener('keydown', onKey)
     }
   }, [open])

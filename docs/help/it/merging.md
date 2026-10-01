@@ -17,7 +17,7 @@ vedi [opzioni di merge](merge-options.md).
 ## Trascina un ref su un altro
 
 Il gesto più rapido dell'app: prendi un branch e lascialo cadere su un altro.
-Gitcito apre un piccolo menu con i significati possibili di quel rilascio, e non
+Geminio apre un piccolo menu con i significati possibili di quel rilascio, e non
 fa niente finché non scegli.
 
 ![Trascinare un branch su un altro apre il menu dei possibili significati del rilascio](../../screenshots/clip-branch-drop.webp)

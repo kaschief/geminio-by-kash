@@ -2,7 +2,7 @@
 title: Flutter DevTools
 category: Workspace tools
 order: 93
-summary: The network view, timeline, inspector and memory profiler, in a Gitcito tab.
+summary: The network view, timeline, inspector and memory profiler, in a Geminio tab.
 keywords: devtools flutter dart network view timeline inspector memory profiler webview embedded panel vm service
 ---
 
@@ -10,10 +10,10 @@ keywords: devtools flutter dart network view timeline inspector memory profiler 
 
 DevTools already has the network view, the timeline, the widget inspector and the
 memory profiler, and it is a Flutter web app served on your own machine. So
-Gitcito does not re-implement any of it, and does not talk to the Dart VM
+Geminio does not re-implement any of it, and does not talk to the Dart VM
 Service itself: it notices the address and embeds it.
 
-![DevTools open in a Gitcito tab](../screenshots/devtools.webp)
+![DevTools open in a Geminio tab](../screenshots/devtools.webp)
 
 `flutter run` prints the line the moment the VM service is up:
 
@@ -64,13 +64,13 @@ The embedded view is on a short leash, because this app holds credentials:
 - **Loopback only.** `127.0.0.1`, `localhost`, `::1`. An attach with any other
   address is refused, and so is a redirect to one.
 - **No preload, no node integration, context isolation on.** The page has no
-  bridge into Gitcito.
+  bridge into Geminio.
 - **Links open in your real browser**, in a normal window, not inside the panel.
 
 ## The limits
 
 - **It is DevTools, not ours.** Whatever that version can do, the panel can do;
-  whatever it cannot, neither can we. There is no Gitcito-flavoured network view.
+  whatever it cannot, neither can we. There is no Geminio-flavoured network view.
 - **Only Flutter announces itself this way.** A plain Dart program prints a VM
   service URL but no DevTools address, so no button appears.
 - **A blank panel means the app stopped.** DevTools is served *by the running

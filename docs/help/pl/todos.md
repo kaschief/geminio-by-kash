@@ -21,7 +21,7 @@ Zadania to właśnie ta lista, przypięta do repozytorium, w którym stoisz.
 ## Gdzie mieszkają
 
 Nigdzie w twoim repozytorium. Zadanie zapisuje się razem z ustawieniami samego
-Gitcito, kluczowane ścieżką repozytorium — a z tego wynikają trzy rzeczy warte
+Geminio, kluczowane ścieżką repozytorium — a z tego wynikają trzy rzeczy warte
 zapamiętania:
 
 - **Nic nie trafia do commita.** W `git status` nie pojawia się żaden plik, więc

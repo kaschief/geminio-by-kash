@@ -27,7 +27,7 @@ type, **Save note**. Multi-line is fine.
 
 ![Writing a note under a pushed commit's message, then saving it](../screenshots/clip-commit-note.webp)
 
-Saving a note is an ordinary Gitcito action — it toasts, and **Undo** puts the
+Saving a note is an ordinary Geminio action — it toasts, and **Undo** puts the
 previous text back, including restoring a note you removed.
 
 Clearing the text and saving removes the note; there is no such thing as an
@@ -36,7 +36,7 @@ empty note.
 ## Finding one
 
 Notes are invisible in a normal log, which is the main reason people never
-discover them. Gitcito marks a commit that carries one with a small note icon in
+discover them. Geminio marks a commit that carries one with a small note icon in
 the graph's message column, so the annotation is findable without knowing it is
 there.
 
@@ -56,11 +56,11 @@ git push <remote> refs/notes/commits
 git fetch <remote> +refs/notes/commits:refs/notes/commits
 ```
 
-Only the commit-notes ref travels — Gitcito's own machine-local refs (like the
+Only the commit-notes ref travels — Geminio's own machine-local refs (like the
 [local CI](local-ci.md) verdicts) are deliberately not published.
 
 Some hosts also need notes enabled or allowed on their side; a rejection there
-is the host's policy, not a Gitcito limit.
+is the host's policy, not a Geminio limit.
 
 No shared remote, or no write access? [Secure share](secure-share.md) can pack
 a repository's notes into an encrypted file a teammate imports directly, with a
@@ -69,7 +69,7 @@ notes.
 
 ## Limits
 
-- **One notes ref.** Gitcito reads and writes the default
+- **One notes ref.** Geminio reads and writes the default
   `refs/notes/commits`. Custom namespaces (`git notes --ref=review`) are not
   exposed — a repository using them will not see those notes here.
 - **No merge of diverging notes.** If two people annotate the same commit and

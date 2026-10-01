@@ -8,12 +8,12 @@ keywords: credential helper password https chiede di nuovo osxkeychain wincred m
 
 # Credential helper
 
-Gitcito ha a che fare con tre tipi diversi di segreto, e le persone danno per
+Geminio ha a che fare con tre tipi diversi di segreto, e le persone danno per
 scontato — non a torto — che siano una cosa sola:
 
 | | Custodito da |
 |---|---|
-| Token API dell'host — PR, issue, controlli CI | Gitcito, nel tuo [portachiavi di sistema](security.md) |
+| Token API dell'host — PR, issue, controlli CI | Geminio, nel tuo [portachiavi di sistema](security.md) |
 | Trasporto `git@…` | La tua [chiave SSH](ssh-keys.md), tramite l'agente ssh di sistema |
 | **Trasporto `https://`** | **Il credential helper di git** |
 
@@ -54,7 +54,7 @@ risposta a "perché proprio quell'host si comporta diversamente".
 | `cache` | In memoria, per 15 minuti. Niente su disco |
 | `store` | **Un file in chiaro nella tua home. Non cifrato** |
 
-Gitcito propone ciò che è davvero installato su questa macchina, segna quello
+Geminio propone ciò che è davvero installato su questa macchina, segna quello
 adatto al tuo sistema operativo e disattiva il resto.
 
 **L'ambito conta.** *Per ogni repository* scrive nella tua configurazione
@@ -81,7 +81,7 @@ vecchio e ogni push fallisce con un 401 che non nomina niente. **Dimentica**
 chiede all'helper configurato di cancellare la propria voce per quell'host —
 `git credential reject`, cioè la strada documentata da git stesso.
 
-Nel farlo non si legge nulla: Gitcito non chiama mai `git credential fill`, il
+Nel farlo non si legge nulla: Geminio non chiama mai `git credential fill`, il
 comando che stamperebbe una password valida sullo standard output.
 
 Il push successivo te la chiede una volta, e l'helper memorizza la nuova
@@ -89,15 +89,15 @@ risposta.
 
 ## Limiti da conoscere
 
-- **Questo è l'archivio di git, non quello di Gitcito.** Cambiarlo cambia anche
+- **Questo è l'archivio di git, non quello di Geminio.** Cambiarlo cambia anche
   quello che fa il tuo terminale — che è esattamente il punto, e vale la pena
   saperlo prima di cambiarlo.
 - **Gli helper a livello di sistema sono mostrati, non modificabili.** Vivono in
   una configurazione che solo un amministratore può scrivere.
-- **Gitcito non può elencare cosa contiene un helper.** Nessuna API delle
+- **Geminio non può elencare cosa contiene un helper.** Nessuna API delle
   credenziali lo espone senza consegnare i segreti, quindi la finestra riporta la
   configurazione e cancella su richiesta, e nient'altro.
-- **Un token dato a Gitcito è un'altra cosa.** Revocarne uno non tocca l'altro;
+- **Un token dato a Geminio è un'altra cosa.** Revocarne uno non tocca l'altro;
   per il lato portachiavi vedi [sicurezza](security.md).
 
 Vedi anche: [Sicurezza](security.md) · [Chiavi SSH](ssh-keys.md) ·

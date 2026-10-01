@@ -12,7 +12,7 @@ import { cloneFixture, cleanupFixtures } from './fixtures'
 let fakeDir = ''
 
 beforeAll(() => {
-  fakeDir = mkdtempSync(join(tmpdir(), 'gitcito-fake-act-'))
+  fakeDir = mkdtempSync(join(tmpdir(), 'geminio-fake-act-'))
   const bin = join(fakeDir, 'fake-act')
   writeFileSync(bin, '#!/bin/sh\nif [ "$1" = "--version" ]; then echo fake-act 1.0; exit 0; fi\necho "run in $PWD"\ntest -f ok.flag\n')
   chmodSync(bin, 0o755)

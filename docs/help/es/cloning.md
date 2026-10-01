@@ -59,7 +59,7 @@ real.
   una rama* sin marcar es lo que pide de vuelta las demás ramas
   (`--no-single-branch`), y por eso cambia la pista que hay debajo.
 - **Clonar una carpeta local** normalmente ignora `--depth` por completo, porque
-  git enlaza en duro el almacén de objetos en lugar de descargarlo. Gitcito clona
+  git enlaza en duro el almacén de objetos en lugar de descargarlo. Geminio clona
   a través de una URL `file://` cuando pides una copia superficial de un
   repositorio local, así que la profundidad que pediste es la profundidad que
   obtienes.

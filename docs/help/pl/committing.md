@@ -43,12 +43,12 @@ przed zacommitowaniem.
 
 ## Amend
 
-Amend przepisuje ostatni commit tym, co jest w przechowalni. Gitcito pokazuje ci
+Amend przepisuje ostatni commit tym, co jest w przechowalni. Geminio pokazuje ci
 najpierw istniejącą wiadomość, żebyś ją edytował, a nie przepisywał od nowa.
 
 **Popraw commit…** na wierszu grafu robi to samo dla HEAD: wczytuje pełną
 wiadomość, przełącza kompozytor w tryb amend i ustawia na nim fokus. HEAD, który
-został już wypchnięty, wciąż da się poprawić, ale Gitcito ostrzega, że
+został już wypchnięty, wciąż da się poprawić, ale Geminio ostrzega, że
 zaktualizowanie zdalnego będzie wymagało force pusha.
 
 **Cofnij commit…** to bliźniacza akcja dla niewypchniętego HEAD: mixed reset do

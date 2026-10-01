@@ -20,13 +20,13 @@ const ASSETS = join(dirname(fileURLToPath(import.meta.url)), 'assets')
 
 /** Throwaway SSH keys for the ssh-keys shot. Outside the repository on purpose:
  *  disposable or not, these are real private key files. */
-const DEMO_SSH = join(tmpdir(), 'gitcito-demo-ssh')
+const DEMO_SSH = join(tmpdir(), 'geminio-demo-ssh')
 
 /** A throwaway HOME for the credential-helper shot: the real one holds this
  *  machine's global git config and possibly live passwords. */
-const DEMO_HOME = join(tmpdir(), 'gitcito-demo-home')
+const DEMO_HOME = join(tmpdir(), 'geminio-demo-home')
 // Stand-in SDK CLIs for the run-target shot — see the launch-device entry.
-const DEMO_SDK = join(tmpdir(), 'gitcito-demo-sdk')
+const DEMO_SDK = join(tmpdir(), 'geminio-demo-sdk')
 
 /**
  * Expand sidebar sections by their title (as rendered: 'WORKTREES').
@@ -85,6 +85,8 @@ async function seedTodos(page, repoPath) {
 /**
  * @typedef {Object} Shot
  * @property {string}   out      Output basename under docs/screenshots.
+ * @property {number} [width] Content width, default 1440.
+ * @property {number} [height] Content height, default 900.
  * @property {string[]} repos    Playground repo dir names; first is active.
  * @property {'repo'|'group'} [kind]  Tab kind (default 'repo').
  * @property {boolean}  [groupLanding]  Show the group landing page (no active repo).
@@ -105,6 +107,112 @@ async function seedTodos(page, repoPath) {
 /** @type {Shot[]} */
 export const shots = [
   {
+    out: 'toolbar-selectors',
+    repos: ['deep-history-monorepo'],
+    themes: ['light'],
+    appTheme: 'solarized',
+    width: 1100,
+    height: 760,
+    clipTo: '.toolbar-left',
+    drive: async (page) => {
+      const selectors = page.locator('.repo-pill')
+      await selectors.first().waitFor()
+      const separated = await selectors.evaluateAll((buttons) => buttons.every((button) => {
+        const text = button.querySelector('.repo-pill-value').getBoundingClientRect()
+        const icon = button.querySelector('.repo-pill-icon').getBoundingClientRect()
+        const arrow = button.querySelector('.repo-pill-chevron').getBoundingClientRect()
+        return text.left >= icon.right + 5 && text.right <= arrow.left - 5 && arrow.right <= button.getBoundingClientRect().right - 5
+      }))
+      if (!separated) throw new Error('Selector text overlaps its icon or dropdown arrow')
+      await selectors.first().click()
+      await page.locator('.repo-picker-popover').waitFor()
+      await selectors.last().click()
+      await page.locator('.repo-picker-popover').waitFor({ state: 'hidden' })
+      await page.locator('.branch-picker-popover').waitFor()
+      await page.locator('.graph-header [data-col="message"]').click()
+      await page.locator('.branch-picker-popover').waitFor({ state: 'hidden' })
+    }
+  },
+  {
+    out: 'pull-fetch-menu',
+    repos: ['octopus-merge'],
+    drive: async (page) => {
+      const arrow = () => page.locator('.toolbar .tool-btn').filter({ hasText: /^(Pull|Fetch)/ }).locator('.split-arrow')
+      await arrow().click()
+      await page.getByRole('menuitem', { name: /Fetch All/ }).click()
+      await page.waitForFunction(() => window.__shot.settings.getState().settings.toolbarPullAction === 'fetch')
+      await page.locator('.toolbar .tool-btn').filter({ hasText: /^Fetch/ }).waitFor()
+      await arrow().click()
+      await page.getByRole('menuitem', { name: /Pull \(fast-forward if possible\)/ }).click()
+      await page.waitForFunction(() => window.__shot.settings.getState().settings.toolbarPullAction === 'default')
+      await arrow().click()
+      await page.getByRole('menuitem', { name: /Fetch All/ }).waitFor()
+    }
+  },
+  {
+    out: 'composer-resize',
+    repos: ['line-staging'],
+    width: 1100,
+    height: 760,
+    drive: async (page, paths) => {
+      await page.evaluate((p) => window.__shot.repo.getState().select(p, { type: 'wip' }), paths['line-staging'])
+      await page.locator('.commit-summary').click()
+      const box = page.locator('.commit-box')
+      const before = await box.boundingBox()
+      const descriptionBefore = await page.locator('.commit-description').boundingBox()
+      const drag = async (delta) => {
+        await page.locator('.composer-message-rh').hover()
+        const start = await box.boundingBox()
+        const r = await page.locator('.composer-message-rh').boundingBox()
+        await page.mouse.move(r.x + r.width / 2, r.y + r.height / 2)
+        await page.mouse.down()
+        await page.mouse.move(r.x + r.width / 2, r.y + r.height / 2 + delta, { steps: 12 })
+        await page.mouse.up()
+        await page.waitForFunction((height) => Math.abs(document.querySelector('.commit-box').getBoundingClientRect().height - height) < 2, start.height - delta)
+      }
+      await drag(-120)
+      const after = await box.boundingBox()
+      const descriptionAfter = await page.locator('.commit-description').boundingBox()
+      if (Math.abs(after.height - before.height - 120) > 2 || Math.abs(descriptionAfter.height - descriptionBefore.height - 120) > 2) {
+        throw new Error(JSON.stringify({ before, after, descriptionBefore, descriptionAfter }))
+      }
+      await drag(55)
+      if (Math.abs((await box.boundingBox()).height - after.height + 55) > 2) throw new Error('Message section did not shrink')
+      await drag(-55)
+      await page.reload()
+      await page.waitForFunction(() => window.__shot?.repo.getState().repos && Object.values(window.__shot.repo.getState().repos).some((r) => !r.loading))
+      await page.evaluate((p) => window.__shot.repo.getState().select(p, { type: 'wip' }), paths['line-staging'])
+      await page.locator('.commit-summary').click()
+      await page.locator('.commit-box').waitFor()
+      if (Math.abs((await box.boundingBox()).height - after.height) > 2) throw new Error('Message height was not remembered')
+      const actions = await page.locator('.commit-actions').boundingBox()
+      const lists = await page.locator('.composer-lists').boundingBox()
+      if (actions.y + actions.height > page.viewportSize().height || lists.height < 112) throw new Error('Resizing hid the commit controls or file lists')
+    }
+  },
+  {
+    out: 'graph-columns-menu',
+    repos: ['octopus-merge'],
+    themes: ['light'],
+    drive: async (page) => {
+      await page.locator('.graph-header [data-col="author"]').click({ button: 'right' })
+      await page.getByRole('menuitem', { name: /AUTHOR/ }).click()
+      await page.locator('.graph-header [data-col="author"]').waitFor({ state: 'hidden' })
+      await page.locator('.graph-header [data-col="message"]').click({ button: 'right' })
+      await page.getByRole('menuitem', { name: /AUTHOR/ }).click()
+      await page.locator('.graph-header [data-col="author"]').waitFor()
+      await page.locator('.graph-header [data-col="author"]').click({ button: 'right' })
+      await page.getByRole('menuitem', { name: /Reset Columns/ }).waitFor()
+      // The filter button stops bubbling; outside dismissal must still run.
+      await page.locator('.ghc-filter').first().click()
+      await page.locator('.context-menu').waitFor({ state: 'hidden' })
+      await page.locator('.col-filter-menu').waitFor()
+      await page.locator('.graph-header [data-col="message"]').click()
+      await page.locator('.col-filter-menu').waitFor({ state: 'hidden' })
+      await page.locator('.graph-header [data-col="author"]').click({ button: 'right' })
+    }
+  },
+  {
     out: 'repo-groups',
     kind: 'group',
     repos: ['octopus-merge', 'merge-conflict', 'tags-and-releases', 'deep-history-monorepo'],
@@ -116,6 +224,78 @@ export const shots = [
     out: 'graph',
     repos: ['octopus-merge'],
     themes: ['light', 'dark']
+  },
+  {
+    out: 'sidecar-graph',
+    repos: ['deep-history-monorepo'],
+    width: 1366,
+    height: 1024,
+    drive: async (page, paths) => {
+      await page.evaluate((p) => {
+        const s = window.__shot
+        const commit = s.repo.getState().repos[p].commits[0]
+        s.repo.getState().select(p, { type: 'commit', hash: commit.hash })
+      }, paths['deep-history-monorepo'])
+      // Fit must include an author beyond the virtualized viewport.
+      const previousAuthor = await page.evaluate((p) => {
+        const store = window.__shot.repo
+        const data = store.getState().repos[p]
+        const previous = data.commits[100].author
+        store.setState({ repos: { ...store.getState().repos, [p]: { ...data, commits: data.commits.map((c, i) => i === 100 ? { ...c, author: 'A deliberately long offscreen author for column fitting' } : c) } } })
+        return previous
+      }, paths['deep-history-monorepo'])
+      await page.locator('.col-resize').first().dblclick()
+      await page.waitForFunction(() => document.querySelector('[data-col="author"]').getBoundingClientRect().width > 200)
+      await page.evaluate(({ p, author }) => {
+        const store = window.__shot.repo
+        const data = store.getState().repos[p]
+        store.setState({ repos: { ...store.getState().repos, [p]: { ...data, commits: data.commits.map((c, i) => i === 100 ? { ...c, author } : c) } } })
+      }, { p: paths['deep-history-monorepo'], author: previousAuthor })
+      await page.locator('.col-resize').first().dblclick()
+    }
+  },
+  {
+    out: 'sidecar-diff',
+    repos: ['line-staging'],
+    width: 1100,
+    height: 760,
+    drive: async (page, paths) => {
+      await page.evaluate((p) => {
+        const s = window.__shot
+        s.repo.getState().select(p, { type: 'wip' })
+        s.ui.getState().setFileView({ repoPath: p, file: 'config.js', source: { type: 'wip', staged: false, untracked: false }, mode: 'diff' })
+      }, paths['line-staging'])
+      await page.locator('.diff-line.add').first().click()
+      await page.locator('.diff-select-bar').waitFor()
+      const before = await page.locator('.diff-line.add').first().boundingBox()
+      await page.keyboard.press('Meta+f')
+      await page.locator('.fv-find').waitFor()
+      const after = await page.locator('.diff-line.add').first().boundingBox()
+      if (Math.abs(before.y - after.y) > 1) throw new Error('Opening find shifted the diff')
+      const usable = await page.evaluate(() => {
+        const find = document.querySelector('.fv-find').getBoundingClientRect()
+        const buttons = [...document.querySelectorAll('.diff-hunk-actions button')]
+        return buttons.every((button) => {
+          const r = button.getBoundingClientRect()
+          return r.bottom <= find.top || r.top >= find.bottom || r.right <= find.left || r.left >= find.right
+        })
+      })
+      if (!usable) throw new Error('Find covers a hunk action at minimum width')
+      await page.keyboard.press('Escape')
+      await page.locator('.fv-find').waitFor({ state: 'hidden' })
+      await page.locator('.file-viewer').waitFor()
+      await page.keyboard.press('Meta+f')
+    }
+  },
+  {
+    out: 'settings-files',
+    repos: ['line-staging'],
+    width: 1366,
+    height: 1024,
+    drive: async (page) => {
+      await page.evaluate(() => window.__shot.ui.getState().openModal({ kind: 'settings', page: 'general' }))
+      await page.locator('.settings-profiles').getByRole('button', { name: 'Files & Diffs', exact: true }).click()
+    }
   },
   {
     out: 'reset-to-commit',
@@ -249,8 +429,8 @@ export const shots = [
       const repo = repoPaths['image-showcase']
       await run('rm', ['-rf', repo])
       await run('git', ['init', '-q', repo])
-      await run('git', ['-C', repo, 'config', 'user.email', 'team@gitcito.dev'])
-      await run('git', ['-C', repo, 'config', 'user.name', 'Gitcito'])
+      await run('git', ['-C', repo, 'config', 'user.email', 'team@geminio.dev'])
+      await run('git', ['-C', repo, 'config', 'user.name', 'Geminio'])
       await run('cp', [join(ASSETS, 'hero-before.png'), join(repo, 'mascot.png')])
       await run('git', ['-C', repo, 'add', '-A'])
       await run('git', ['-C', repo, 'commit', '-qm', 'feat: add mascot illustration'])
@@ -1181,7 +1361,18 @@ export const shots = [
     drive: async (page, repoPaths) => {
       const repo = repoPaths['deep-history-monorepo']
       await page.evaluate((p) => window.__shot.ui.getState().openModal({ kind: 'repo-settings', repoPath: p }), repo)
-      await page.waitForTimeout(400)
+      await page.locator('.settings .repo-settings').waitFor()
+      await page.locator('.repo-settings-tabs').getByRole('button', { name: 'Config', exact: true }).click()
+      await page.locator('.rc input[type="checkbox"]').first().click()
+      await page.locator('.rc[data-unsaved-changes="true"]').waitFor()
+      await page.locator('.modal-backdrop').click({ position: { x: 2, y: 2 } })
+      if (await page.locator('.settings').count() !== 1) throw new Error('Outside click discarded repository edits')
+      await page.locator('.rc-actions .btn.ghost').click()
+      await page.locator('.rc[data-unsaved-changes="false"]').waitFor()
+      await page.locator('.modal-backdrop').click({ position: { x: 2, y: 2 } })
+      await page.locator('.settings').waitFor({ state: 'hidden' })
+      await page.evaluate((p) => window.__shot.ui.getState().openModal({ kind: 'repo-settings', repoPath: p }), repo)
+      await page.locator('.settings .repo-settings').waitFor()
       // Click the Insights tab to show the relocated repo-insights dashboard.
       await page.evaluate(() => {
         const btn = [...document.querySelectorAll('.repo-settings-tabs button')].find((b) => /Insights|Métricas/.test(b.textContent || ''))
@@ -1204,7 +1395,8 @@ export const shots = [
       await page.waitForTimeout(500)
       // By label, not by position: the first toggle is Whitespace, and this shot
       // spent a while photographing a unified diff because of it.
-      await page.click('.diff-toggles button:has-text("Split")').catch(() => {})
+      await page.getByRole('button', { name: 'Split', exact: true }).click()
+      await page.locator('.diff-viewer.is-split').waitFor()
       await page.waitForTimeout(500)
     }
   },
@@ -1385,7 +1577,7 @@ export const shots = [
     appTheme: 'midnight',
     env: { GITCITO_DEVICE_BIN: DEMO_SDK },
     prepare: async ({ repoPaths }) => {
-      // A pubspec.yaml is what makes Gitcito ask the (fake) Flutter CLI at all.
+      // A pubspec.yaml is what makes Geminio ask the (fake) Flutter CLI at all.
       await writeFile(join(repoPaths['launch-configs'], 'pubspec.yaml'), 'name: demo_app\n')
       await rm(DEMO_SDK, { recursive: true, force: true })
       await mkdir(DEMO_SDK, { recursive: true })
@@ -1427,7 +1619,7 @@ export const shots = [
   {
     // DevTools embedded in a page tab. The playground's stand-in `flutter`
     // serves a placeholder that says so and announces it the way the real CLI
-    // does — the shot is of Gitcito's panel, not a fabricated product page.
+    // does — the shot is of Geminio's panel, not a fabricated product page.
     out: 'devtools',
     repos: ['launch-configs'],
     themes: ['dark'],
@@ -1719,7 +1911,8 @@ export const shots = [
       }, repo)
       await page.waitForTimeout(800)
       // Hover a changed line so its stage-this-line affordance is in the frame.
-      await page.hover('.diff-line.add').catch(() => {})
+      await page.locator('.diff-line.add').first().click()
+      await page.locator('.diff-select-bar').waitFor()
       await page.waitForTimeout(400)
     }
   },
@@ -2431,7 +2624,7 @@ export const shots = [
     }
   },
   {
-    // The repository's own rules — `.gitcito.json` and the doctor that checks
+    // The repository's own rules — `.geminio.json` and the doctor that checks
     // them. Written in `prepare` rather than shipped in a scenario so the shot
     // shows a mixed verdict on purpose: Node passing, a hooks path and a
     // missing `.env` failing with a repair offered.
@@ -2442,7 +2635,7 @@ export const shots = [
       const repo = repoPaths['deep-history-monorepo']
       await writeFile(join(repo, '.env.example'), 'API_URL=https://staging.example.com\nAPI_TOKEN=replace-me\n')
       await writeFile(
-        join(repo, '.gitcito.json'),
+        join(repo, '.geminio.json'),
         `${JSON.stringify(
           {
             version: 1,
@@ -2495,7 +2688,7 @@ export const shots = [
     }
   },
   {
-    // `gitcito --wait` — what git gets instead of vim. Driven through the same
+    // `geminio --wait` — what git gets instead of vim. Driven through the same
     // IPC payload the shim sends, with a realistic COMMIT_EDITMSG (subject,
     // body, and git's own comment block) so the counter and hints have
     // something true to say.
@@ -2522,7 +2715,7 @@ export const shots = [
         window.__shot.ui.getState().openModal({
           kind: 'cli-edit',
           file: `${p}/.git/COMMIT_EDITMSG`,
-          sentinel: '/tmp/gitcito-wait.example',
+          sentinel: '/tmp/geminio-wait.example',
           content
         })
       }, repo)
@@ -2660,13 +2853,13 @@ export const clips = [
     themes: ['light'],
     gif: {
       durationMs: 5000,
-      // Start on Gitcito light, swap to Nord dark, then back — shows both the
+      // Start on Geminio light, swap to Nord dark, then back — shows both the
       // light/dark switch and a different built-in theme in one clip.
       drive: async (page) => {
         const steps = [
-          { appThemeId: 'gitcito', codeThemeId: 'gitcito', themeMode: 'light' },
+          { appThemeId: 'geminio', codeThemeId: 'geminio', themeMode: 'light' },
           { appThemeId: 'nord', codeThemeId: 'nord', themeMode: 'dark' },
-          { appThemeId: 'gitcito', codeThemeId: 'gitcito', themeMode: 'light' }
+          { appThemeId: 'geminio', codeThemeId: 'geminio', themeMode: 'light' }
         ]
         for (const patch of steps) {
           await page.evaluate(

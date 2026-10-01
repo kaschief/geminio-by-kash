@@ -21,7 +21,7 @@ Le attività sono quell'elenco, attaccato al repository in cui ti trovi.
 ## Dove vivono
 
 In nessun punto del tuo repository. Un'attività è salvata con le impostazioni di
-Gitcito, indicizzata per percorso del repository: da qui tre conseguenze che vale
+Geminio, indicizzata per percorso del repository: da qui tre conseguenze che vale
 la pena conoscere.
 
 - **Non viene committato nulla.** In `git status` non compare alcun file, quindi

@@ -75,7 +75,7 @@ Un'area di lavoro è un'**intera striscia di schede salvata**. Cambiarla scambia
 tutte le schede in una volta: `Lavoro` e `Personale` smettono di pestarsi i
 piedi.
 
-Il nome dell'area di lavoro sta in alto a sinistra, accanto al marchio Gitcito.
+Il nome dell'area di lavoro sta in alto a sinistra, accanto al marchio Geminio.
 Cliccalo per cambiare, creare, rinominare, riordinare o eliminare. Accanto c'è
 l'indicatore che apre [Mission control](mission-control.md) per l'area di lavoro
 in cui sei.

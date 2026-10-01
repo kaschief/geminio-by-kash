@@ -23,7 +23,7 @@ To jest przycisk „właśnie zresetowałem nie tę gałąź".
 
 ## Migawki WIP
 
-Niezacommitowana praca to jedyna rzecz, której reflog nie uratuje — więc Gitcito
+Niezacommitowana praca to jedyna rzecz, której reflog nie uratuje — więc Geminio
 robi jej migawki: **całe drzewo robocze — pliki zmodyfikowane, zestage'owane i
 nieśledzone** — zacommitowane przez jednorazowy indeks i przypięte pod
 `refs/gitcito/wip`. Ani twój prawdziwy indeks, ani lista stashy nie są ruszane.
@@ -56,7 +56,7 @@ bezpieczne przed `git gc`, trzymanych jest 50 najnowszych.
 ## Prowadzony bisect
 
 Oznaczaj commity jako dobre i złe, patrz, jak zakres się zawęża, wyląduj na
-pierwszym złym commicie. Gitcito śledzi, ile kroków zostało, więc wiesz, czy
+pierwszym złym commicie. Geminio śledzi, ile kroków zostało, więc wiesz, czy
 jesteś dwa pytania od odpowiedzi, czy dziesięć.
 
 ![Prowadzony bisect](../../screenshots/bisect.webp)
@@ -74,7 +74,7 @@ uruchamia twoje polecenie i czyta jego kod wyjścia:
 | cokolwiek innego | Zły |
 
 Zestaw testów już mówi tym językiem — i dlatego `npm test` jest zwykle całą
-odpowiedzią. Gitcito podsuwa skrypty tego projektu jako wypełnienia jednym
+odpowiedzią. Geminio podsuwa skrypty tego projektu jako wypełnienia jednym
 kliknięciem, strumieniuje wyjście w trakcie i ląduje na pierwszym złym commicie,
 a ty nie odpowiadasz na ani jedno pytanie.
 
@@ -105,13 +105,13 @@ Unable to create '…/refs/remotes/origin/x.lock': File exists.
 
 Repozytorium nie jest uszkodzone. Po prostu na drodze leży plik.
 
-Gitcito najpierw ponawia kilka razy, bo blokada trzymana przez *działający* git
+Geminio najpierw ponawia kilka razy, bo blokada trzymana przez *działający* git
 zwykle zwalnia się w milisekundach. Gdy tak się nie stanie, błąd otwiera okno
 zamiast ściany tekstu: wszystkie blokady wciąż na dysku, wiek każdej z nich i
 jeden przycisk, który je usuwa i ponawia operację, która się nie udała.
 
 **Wiek to cały argument.** Blokadę młodszą niż 30 sekund przypisuje się gitowi,
-który wciąż pracuje, i Gitcito odmawia jej usunięcia — proponuje poczekać i
+który wciąż pracuje, i Geminio odmawia jej usunięcia — proponuje poczekać i
 spróbować ponownie. Starsze są proponowane do usunięcia, od najstarszej, a okno
 mówi wprost, co sprawdzić przed zgodą: że żaden edytor, terminal ani inny klient
 Gita nie pracuje teraz w tym repozytorium. Wyjęcie blokady spod żywego zapisu to

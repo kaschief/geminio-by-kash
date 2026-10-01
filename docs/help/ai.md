@@ -29,11 +29,11 @@ through Google's OpenAI-compatible endpoint.
 ### Using a subscription instead of an API key
 
 Pick the **Local CLI** provider to answer with an agent CLI already installed
-and signed in on this machine — `claude`, `gemini` or `codex`. Gitcito runs the
+and signed in on this machine — `claude`, `gemini` or `codex`. Geminio runs the
 binary with your prompt and reads its reply; there is no API key to paste and no
 token is stored.
 
-Gitcito only ever runs a command you configured as an account, always with an
+Geminio only ever runs a command you configured as an account, always with an
 argument list rather than a shell, so nothing in a diff or a branch name can be
 interpreted as a command.
 
@@ -59,7 +59,7 @@ Upgrading from a version before accounts shows this once. The provider and key y
 ## Models
 
 Model lists come from the provider itself and are cached for a day; **Fetch
-models** refreshes one immediately. Under the list Gitcito says where it came
+models** refreshes one immediately. Under the list Geminio says where it came
 from — live, cached (with when), or the built-in fallback and why.
 
 The list is filtered to models that can answer a chat request, so embeddings,
@@ -70,7 +70,7 @@ always usable even when the provider does not list it.
 A provider you have not given a key to yet, or one that is unreachable, falls
 back to a small built-in list rather than an empty dropdown.
 
-No provider publishes a ranked or curated list, so the shaping is Gitcito's: dated snapshots collapse into the model they are a snapshot of (`gpt-4o` covers `gpt-4o-2024-08-06`), and what remains is ordered newest first rather than alphabetically. **Show all models** at the bottom of the list brings back everything the provider returned.
+No provider publishes a ranked or curated list, so the shaping is Geminio's: dated snapshots collapse into the model they are a snapshot of (`gpt-4o` covers `gpt-4o-2024-08-06`), and what remains is ordered newest first rather than alphabetically. **Show all models** at the bottom of the list brings back everything the provider returned.
 
 ## What it can do
 
@@ -94,7 +94,7 @@ outcome is "No AI API key configured".
 ## Grounded, not guessing
 
 The review sees the diff as **labelled hunks** and may only cite those labels;
-Gitcito then resolves each label to a real file and line. A model that invents a
+Geminio then resolves each label to a real file and line. A model that invents a
 location is **rejected and asked again**, so findings always point at code that
 exists.
 
@@ -105,7 +105,7 @@ instead of inventing it. Answers are cached per file version.
 [Repository chat](repo-chat.md) works the same way: it may cite only the
 excerpts it was handed, and the two-pass request picks those from Git's own
 tracked-file list rather than from anything the model writes. When it proposes
-a change, Gitcito validates exact file actions, computes their diffs locally,
+a change, Geminio validates exact file actions, computes their diffs locally,
 then runs any following Git actions under the configured approval policy.
 
 **Masked secret files are never sent.** Neither are files the secret-masking

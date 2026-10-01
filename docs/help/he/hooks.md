@@ -15,11 +15,11 @@ keywords: הוקים החרגה הסרה מהמעקב hooks pre-commit husky cor
 
 ![מנהל ההוקים](../../screenshots/hooks.webp)
 
-Gitcito מזהה **`core.hooksPath`** מותאם אישית (husky וחבריו) ותצורה של
+Geminio מזהה **`core.hooksPath`** מותאם אישית (husky וחבריו) ותצורה של
 **מסגרת pre-commit**, ואומר לכם כשההוקים חיים במקום אחר מ־`.git/hooks` — אחרת
 הייתם עורכים קובץ ש־git לעולם אינו מריץ.
 
-> הוקים רצים עבור הקומיטים של Gitcito בדיוק כמו שהם רצים עבור `git commit`. הוק
+> הוקים רצים עבור הקומיטים של Geminio בדיוק כמו שהם רצים עבור `git commit`. הוק
 > שנכשל חוסם את הקומיט, והפלט שלו חוזר בתוך השגיאה.
 
 ## .gitignore חכם

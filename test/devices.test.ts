@@ -10,7 +10,7 @@ import {
 } from '../src/main/devices'
 
 // Real-shaped output from each SDK tool. These formats are the only contract
-// between Gitcito and four CLIs it does not control, so they are pinned here.
+// between Geminio and four CLIs it does not control, so they are pinned here.
 
 describe('run devices: flutter devices --machine', () => {
   const stdout = `Warning: dart is not on your PATH.
@@ -82,7 +82,7 @@ Pixel_7_API_34      • Pixel 7 API 34 • Google • android
       }
     })
     const devices = parseSimctl(json)
-    // The watch runtime is dropped: nothing Gitcito launches can target it.
+    // The watch runtime is dropped: nothing Geminio launches can target it.
     expect(devices.map((d) => d.id)).toEqual(['UDID-1', 'UDID-2'])
     expect(devices[0].running).toBe(true)
     expect(devices[0].detail).toBe('iOS 18.0')

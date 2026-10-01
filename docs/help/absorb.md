@@ -20,7 +20,7 @@ Absorb does the honest thing for you.
 
 1. Stage the fixes.
 2. Tools → **Absorb staged changes…** (or <kbd>⌘K</kbd>).
-3. Gitcito blames the lines each staged hunk touches, finds which of **your
+3. Geminio blames the lines each staged hunk touches, finds which of **your
    unpushed commits** introduced them, and shows you the plan before doing
    anything.
 

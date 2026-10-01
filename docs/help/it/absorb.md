@@ -20,7 +20,7 @@ Absorb fa la cosa onesta al posto tuo.
 
 1. Metti in stage le correzioni.
 2. Strumenti → **Assorbi le modifiche in stage…** (oppure <kbd>⌘K</kbd>).
-3. Gitcito esegue il blame sulle righe toccate da ciascun hunk in stage, trova
+3. Geminio esegue il blame sulle righe toccate da ciascun hunk in stage, trova
    quale dei **tuoi commit non ancora pubblicati** le ha introdotte e ti mostra
    il piano prima di fare qualsiasi cosa.
 

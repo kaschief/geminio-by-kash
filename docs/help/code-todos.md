@@ -70,7 +70,7 @@ Clicking a row opens the file at the line.
 ## What it does not do
 
 - **It reads, it never writes.** There is no "mark done" — the way to close a
-  TODO is to delete the line and commit that. For a checklist Gitcito keeps for
+  TODO is to delete the line and commit that. For a checklist Geminio keeps for
   you, see [todos](todos.md), which is a different thing entirely: private notes
   that live in the app, not in the source.
 - **Ignored files are skipped**, along with `node_modules`, whatever the tags

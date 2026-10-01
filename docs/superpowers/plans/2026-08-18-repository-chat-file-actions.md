@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Let Gitcito repository chat safely create, edit, replace, and delete repository files, then run ordered Git actions with truthful previews and results.
+**Goal:** Let Geminio repository chat safely create, edit, replace, and delete repository files, then run ordered Git actions with truthful previews and results.
 
 **Architecture:** Keep model output provider-portable by using structured exact-edit, whole-file-write, and delete actions. The main process expands repository evidence, validates and prepares all file changes, computes local unified diffs, applies file batches under the repository write lock, and reports stable results through the existing renderer approval lifecycle. A final model call receives execution results with actions disabled.
 
@@ -21,7 +21,7 @@
 - Do not add shell access to repository chat and do not execute action-shaped content from Markdown.
 - Reject `.git/**`, secret-looking, ignored, generated, binary, oversized, stale, and symlinked targets.
 - Every user-visible renderer string must use translation keys present in all 16 locale dictionaries.
-- Do not launch Gitcito. Validate with typecheck, i18n/docs lint, tests, build, and `git diff --check`.
+- Do not launch Geminio. Validate with typecheck, i18n/docs lint, tests, build, and `git diff --check`.
 - Do not store the supplied endpoint or credential in repository files or command output.
 - The repository says to commit only when explicitly asked. Each task includes a conditional commit checkpoint; skip `git commit` until that authorization exists.
 
@@ -460,7 +460,7 @@ import { prepareRepoFileActions, RepoFileActionError } from '../src/main/repoFil
 
 const roots: string[] = []
 const root = (): string => {
-  const value = mkdtempSync(join(tmpdir(), 'gitcito-file-actions-'))
+  const value = mkdtempSync(join(tmpdir(), 'geminio-file-actions-'))
   roots.push(value)
   return value
 }
@@ -1130,7 +1130,7 @@ reference wording is:
 'chat.actionStale': 'A file changed after this proposal was prepared.',
 'chat.actionNoStaged': 'There are no staged changes to commit.',
 'chat.actionHookFailed': 'A Git hook stopped the commit.',
-'chat.actionRollbackFailed': 'Gitcito could not fully restore the file batch.'
+'chat.actionRollbackFailed': 'Geminio could not fully restore the file batch.'
 ```
 
 Translate every value idiomatically in `ar`, `de`, `es`, `fr`, `he`, `it`, `ja`, `ko`, `nl`, `pl`,
@@ -1190,7 +1190,7 @@ Replace the Git-only action-set paragraph with a section that states:
 
 ```text
 Repository chat can propose exact edits, whole-file creation or replacement, and file deletion,
-followed by the existing Git actions. Gitcito computes the displayed diff locally. Existing files must
+followed by the existing Git actions. Geminio computes the displayed diff locally. Existing files must
 come from the evidence the assistant read; unsafe, secret, ignored, generated, binary, stale, and
 symlinked targets are refused. Auto-run all actions includes file changes, while destructive Git
 operations always ask first.
@@ -1264,11 +1264,11 @@ live('prepares a license file action through an OpenAI-compatible provider', asy
   const model = process.env.GITCITO_LIVE_MODEL
   expect(endpoint && apiKey && model).toBeTruthy()
 
-  const repo = mkdtempSync(join(tmpdir(), 'gitcito-live-chat-'))
+  const repo = mkdtempSync(join(tmpdir(), 'geminio-live-chat-'))
   roots.push(repo)
   execFileSync('git', ['-C', repo, 'init'])
-  execFileSync('git', ['-C', repo, 'config', 'user.name', 'Gitcito Test'])
-  execFileSync('git', ['-C', repo, 'config', 'user.email', 'gitcito@example.invalid'])
+  execFileSync('git', ['-C', repo, 'config', 'user.name', 'Geminio Test'])
+  execFileSync('git', ['-C', repo, 'config', 'user.email', 'geminio@example.invalid'])
   writeFileSync(join(repo, 'LICENSE'), 'MIT License\n\nCopyright MyAppDesk\n')
   execFileSync('git', ['-C', repo, 'add', 'LICENSE'])
   execFileSync('git', ['-C', repo, 'commit', '-m', 'test: seed license'])

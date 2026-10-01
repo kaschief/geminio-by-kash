@@ -57,7 +57,7 @@ directory prefix, not an absence.
 
 ## What the rewrite actually does
 
-Gitcito copies every branch and tag to `refs/gitcito/pre-purge/<timestamp>/…`,
+Geminio copies every branch and tag to `refs/gitcito/pre-purge/<timestamp>/…`,
 then runs:
 
 ```sh
@@ -106,10 +106,10 @@ Rotate the key. Then purge, so the next person to clone does not find it.
   HEAD repeatedly, and doing that around uncommitted work is how it gets lost.
 - **It rewrites by path, not by content.** Removing a secret that was pasted
   into a source file, rather than living in its own file, needs a content
-  filter — that is `git filter-repo --replace-text` territory, and Gitcito does
+  filter — that is `git filter-repo --replace-text` territory, and Geminio does
   not wrap it.
 - **`filter-branch` is slow on very large histories.** It is what ships with git
-  everywhere, which is why it is what Gitcito uses. On a repository with tens of
+  everywhere, which is why it is what Geminio uses. On a repository with tens of
   thousands of commits, `git filter-repo` in the [terminal](terminal.md) is the
   faster tool.
 - **Other people's clones are not your repository.** They keep the old history

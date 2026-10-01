@@ -2,7 +2,7 @@
 title: La barre de menus
 category: Pour commencer
 order: 5
-summary: Ce que contiennent les menus macOS de Gitcito, et pourquoi Windows et Linux n'en ont pas.
+summary: Ce que contiennent les menus macOS de Geminio, et pourquoi Windows et Linux n'en ont pas.
 keywords: barre de menus menus application fichier édition affichage fenêtre aide dépôt macos natif à propos quitter
 ---
 
@@ -22,7 +22,7 @@ menu est une fonction dont les utilisateurs de Windows et de Linux sont privés.
 
 | Menu | Contient |
 |---|---|
-| **Gitcito** | À propos, recherche de mises à jour, [Réglages](repo-settings.md), les entrées standard masquer et quitter |
+| **Geminio** | À propos, recherche de mises à jour, [Réglages](repo-settings.md), les entrées standard masquer et quitter |
 | **Fichier** | Nouvel onglet, ouvrir ou [cloner](cloning.md) un dépôt, ouvrir un élément récent, fermer et rouvrir des onglets |
 | **Édition** | Couper, copier, coller, annuler — l'édition de texte que votre clavier fait déjà — plus la [recherche dans le code](search.md) |
 | **Affichage** | Palette de commandes, bascules de la barre latérale et du panneau, le [terminal](terminal.md), [mission control](mission-control.md), le [coffre](vault.md), le zoom |
@@ -41,16 +41,16 @@ réellement associées. Réassignez <kbd>⌘K</kbd> dans les Réglages et le men
 Affichage le dira.
 
 Cela fonctionne parce que le menu *affiche* ces combinaisons sans les réclamer :
-la gestion clavier de Gitcito reste aux commandes, ce qui permet à un raccourci
+la gestion clavier de Geminio reste aux commandes, ce qui permet à un raccourci
 de se comporter différemment selon l'endroit où se trouve le curseur. La seule
-chose que cela ne peut pas montrer est un raccourci que Gitcito ne possède pas :
+chose que cela ne peut pas montrer est un raccourci que Geminio ne possède pas :
 <kbd>⌘F</kbd> appartient au fichier ou au diff que vous lisez, aucune entrée de
 menu ne le réclame donc.
 
 ## Les limites
 
 - **macOS uniquement.** Sous Windows et Linux la fenêtre est sans cadre — la
-  barre de titre est dessinée par Gitcito et une barre de menus n'a nulle part
+  barre de titre est dessinée par Geminio et une barre de menus n'a nulle part
   où vivre. Ces plateformes obtiennent les mêmes commandes via la [palette de
   commandes](search.md) et les [raccourcis clavier](keyboard.md).
 - **Recharger et les Outils de développement n'apparaissent que dans les builds

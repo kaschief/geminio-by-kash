@@ -9,7 +9,7 @@ keywords: avatar avatarlar gravatar blobatar yazar fotoğraf resim identicon yü
 # Yazar avatarları
 
 Commit listesi bir isim duvarıdır ve isimler yavaş okunur. Her birinin yanındaki resim,
-"bunu kim yazdı" sorusunu bir bakışta cevaplanan bir şeye dönüştürür. Gitcito
+"bunu kim yazdı" sorusunu bir bakışta cevaplanan bir şeye dönüştürür. Geminio
 gösterdiği her yazara bir tane koyar: graftaki yazar sütununda, commit ayrıntılarında
 yazarın ve her ortak yazarın yanında, yazarken açılan ortak yazar seçicisinde, profil
 değiştiricide ve Ayarlar'daki her profilin yanında.
@@ -37,7 +37,7 @@ adres gerçekten aynı kişiyse [yazar öznitelikleri](attributes.md) ile düzel
 
 ## Başlık çubuğundaki yüz
 
-Profil adınızın yanındaki avatar, Gitcito'da **sizi, bu depoda, şu anda** temsil eden tek
+Profil adınızın yanındaki avatar, Geminio'da **sizi, bu depoda, şu anda** temsil eden tek
 avatardır — dolayısıyla deponun durumuna tepki veren tek avatar. Bir şey olduğunda yüzünü
 değiştirir, geri kalan zamanda nötr kalır.
 

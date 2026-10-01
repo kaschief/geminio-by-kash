@@ -1,5 +1,5 @@
 # shellcheck shell=bash
-# Shared helpers for the Gitcito playground scenarios.
+# Shared helpers for the Geminio playground scenarios.
 # Sourced by setup-playground.sh; every scenario file may use these.
 #
 # Globals expected to be set by the orchestrator before sourcing scenarios:
@@ -79,7 +79,7 @@ print_summary() {
     (( ${#name} > width )) && width=${#name}
   done < "$MANIFEST"
   echo
-  echo "Playground ready! Open these repos in Gitcito:"
+  echo "Playground ready! Open these repos in Geminio:"
   while IFS=$'\t' read -r name desc; do
     printf "  %s/%-${width}s  → %s\n" "$ROOT" "$name" "$desc"
   done < "$MANIFEST"

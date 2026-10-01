@@ -11,7 +11,7 @@ keywords: problemas analisador diagnósticos erros avisos lint tsc typescript es
 Todo projeto já traz uma ferramenta que diz o que está errado nele — `tsc`,
 `dart analyze`, ESLint, Clippy, `go vet`, Ruff. O que nenhuma delas diz é se foi
 o **seu** diff que introduziu os quarenta avisos que acabou de imprimir. O
-Gitcito sabe quais arquivos estão sujos, então a mesma lista responde a isso com
+Geminio sabe quais arquivos estão sujos, então a mesma lista responde a isso com
 um botão.
 
 ![O painel de Problemas e o contador da barra de status](../../screenshots/problems.webp)
@@ -23,7 +23,7 @@ linha abre o arquivo ali. Antes da primeira varredura ele mostra traços em vez 
 
 ## O que ele executa
 
-| Se o repositório tem | O Gitcito executa |
+| Se o repositório tem | O Geminio executa |
 |----------------------|-------------------|
 | `pubspec.yaml` | `dart analyze --format=machine` |
 | `tsconfig.json` | `tsc --noEmit` |
@@ -48,7 +48,7 @@ ferramenta vira uma forma só, sem duplicatas e ordenada: dois analisadores
 apontando a mesma linha viram uma linha só.
 
 **Nada roda sozinho.** `tsc --noEmit` num repositório grande são dezenas de
-segundos, e esses comandos são a toolchain do repositório, não do Gitcito. Eles
+segundos, e esses comandos são a toolchain do repositório, não do Geminio. Eles
 começam quando você abre o painel ou aperta atualizar, nunca por conta própria.
 Por isso a lista é um retrato: edite um arquivo e ela fica velha até você rodar
 de novo.
@@ -61,7 +61,7 @@ barra de status e o comando.
 **Saída gerada é descartada.** Uma ferramenta apontada para a raiz do projeto
 analisa o que encontrar, e o que encontra inclui `.next/build/chunks`, um `dist`
 empacotado, uma cópia vendorizada — centenas de reclamações sobre código escrito
-por máquina que enterram as poucas sobre o seu. O Gitcito pergunta ao git quais
+por máquina que enterram as poucas sobre o seu. O Geminio pergunta ao git quais
 arquivos são ignorados e descarta esses, e nunca descarta um arquivo
 *rastreado*: commitar saída gerada é uma escolha, e `git check-ignore` a
 respeita. `node_modules` sai de qualquer jeito.

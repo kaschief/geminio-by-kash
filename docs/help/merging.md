@@ -17,7 +17,7 @@ see [merge options](merge-options.md).
 ## Drag one ref onto another
 
 The quickest gesture in the app: pick up a branch and drop it on another one.
-Gitcito opens a small menu of what that drop could mean, and does nothing until
+Geminio opens a small menu of what that drop could mean, and does nothing until
 you choose.
 
 ![Dragging one branch onto another opens the menu of what the drop could mean](../screenshots/clip-branch-drop.webp)

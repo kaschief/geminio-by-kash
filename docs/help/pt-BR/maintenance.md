@@ -82,7 +82,7 @@ A caixa de seleção registra o repositório no **`git maintenance`**, que empac
 faz prefetch numa agenda que o seu sistema operacional executa (launchd, systemd ou
 Agendador de Tarefas).
 
-Nada aqui é específico do Gitcito: a mesma agenda serve ao seu terminal, e
+Nada aqui é específico do Geminio: a mesma agenda serve ao seu terminal, e
 `git maintenance unregister` desfaz isso de qualquer lugar. Desmarcar a caixa faz
 exatamente isso, e deixa a agenda no lugar para quaisquer outros repositórios
 registrados.
@@ -101,7 +101,7 @@ registrados.
   commit, ele é alcançável, e o gc vai mantê-lo para sempre — isso é
   [remover um arquivo do histórico](history-purge.md), uma operação diferente e
   muito mais disruptiva.
-- **O Gitcito nunca roda gc pelas suas costas.** O próprio `gc --auto` do git ainda
+- **O Geminio nunca roda gc pelas suas costas.** O próprio `gc --auto` do git ainda
   pode, como sempre pôde; se um falhar, ele deixa uma nota em `.git/gc.log`, que
   este painel traz à tona.
 

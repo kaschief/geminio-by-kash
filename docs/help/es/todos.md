@@ -21,7 +21,7 @@ Las tareas son esa lista, pegada al repositorio en el que estás.
 ## Dónde viven
 
 En ningún sitio de tu repositorio. Una tarea se guarda con los ajustes del
-propio Gitcito, indexada por la ruta del repositorio, y eso tiene tres
+propio Geminio, indexada por la ruta del repositorio, y eso tiene tres
 consecuencias que conviene conocer:
 
 - **No se hace commit de nada.** No aparece ningún archivo en `git status`, así

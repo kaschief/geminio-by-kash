@@ -10,7 +10,7 @@ keywords: compartir seguro secure share exportar export importar import paquete 
 
 Poner a punto una máquina nueva — o a un compañero nuevo — suele significar
 volver a meterlo todo a mano. Compartir seguro lo empaqueta en un único archivo
-`.gitcito` cifrado: las funciones de equipo de Gitcito **no tienen backend**,
+`.geminio` cifrado: las funciones de equipo de Geminio **no tienen backend**,
 así que el archivo *es* el transporte. Envíalo por donde ya envíes archivos; la
 contraseña viaja por separado.
 
@@ -40,7 +40,7 @@ clonar el mundo entero.
 
 Una sección de **estructura del espacio de trabajo** recrea el espacio de
 trabajo con los repositorios que ya tienes; los que te faltan se listan con su
-remoto para que puedas clonarlos primero y volver a importar — Gitcito nunca
+remoto para que puedas clonarlos primero y volver a importar — Geminio nunca
 clona aquí por ti. Una sección de **notas de commit** muestra en vista previa lo
 que aterrizaría — nuevas, idénticas, distintas o ancladas a commits que no
 tienes — y las notas distintas solo se reemplazan cuando marcas

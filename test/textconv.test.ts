@@ -40,7 +40,7 @@ describe('xlsxToCsv', () => {
 
 describe('convertFile', () => {
   it('dispatches .json end to end from a real file', async () => {
-    const dir = await mkdtemp(join(tmpdir(), 'gitcito-textconv-'))
+    const dir = await mkdtemp(join(tmpdir(), 'geminio-textconv-'))
     try {
       const f = join(dir, 'config.json')
       await writeFile(f, '{"b":1,"a":2}')
@@ -55,7 +55,7 @@ describe('convertFile', () => {
   })
 
   it('fails loudly on a corrupt document rather than printing garbage', async () => {
-    const dir = await mkdtemp(join(tmpdir(), 'gitcito-textconv-'))
+    const dir = await mkdtemp(join(tmpdir(), 'geminio-textconv-'))
     try {
       const f = join(dir, 'broken.docx')
       await writeFile(f, 'this is not a zip archive')
@@ -69,7 +69,7 @@ describe('convertFile', () => {
 describe('bundled converter wiring', () => {
   it('resolves the shipped shim and reports it executable', () => {
     const shim = bundledTextconvPath()
-    expect(shim.endsWith('gitcito-textconv')).toBe(true)
+    expect(shim.endsWith('geminio-textconv')).toBe(true)
     expect(converterAvailable(`"${shim}"`)).toBe(true)
   })
 
@@ -121,7 +121,7 @@ describe('stringsToText', () => {
 
 describe('Apple localization files end to end', () => {
   it('converts a .strings and a .xcstrings from disk', async () => {
-    const dir = await mkdtemp(join(tmpdir(), 'gitcito-textconv-'))
+    const dir = await mkdtemp(join(tmpdir(), 'geminio-textconv-'))
     try {
       const strings = join(dir, 'Localizable.strings')
       await writeFile(

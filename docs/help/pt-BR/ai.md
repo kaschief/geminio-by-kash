@@ -30,11 +30,11 @@ O Gemini é alcançado pelo endpoint compatível com OpenAI do Google.
 ### Usar uma assinatura em vez de uma chave de API
 
 Escolha o provedor **CLI local** para responder com uma CLI de agente já
-instalada e autenticada nesta máquina — `claude`, `gemini` ou `codex`. O Gitcito
+instalada e autenticada nesta máquina — `claude`, `gemini` ou `codex`. O Geminio
 executa o binário com o seu prompt e lê a resposta; não há chave de API para
 colar nem token guardado.
 
-O Gitcito só executa um comando que você configurou como conta, e sempre com uma
+O Geminio só executa um comando que você configurou como conta, e sempre com uma
 lista de argumentos em vez de um shell, de modo que nada em um diff ou em um nome
 de branch pode ser interpretado como comando.
 
@@ -62,7 +62,7 @@ Ao atualizar de uma versão anterior às contas, isto aparece uma vez. O provedo
 ## Modelos
 
 As listas de modelos vêm do próprio provedor e ficam em cache por um dia;
-**Buscar modelos** atualiza uma na hora. Abaixo da lista o Gitcito diz de onde
+**Buscar modelos** atualiza uma na hora. Abaixo da lista o Geminio diz de onde
 ela veio — ao vivo, do cache (com a data) ou da lista embutida de reserva, e por
 quê.
 
@@ -74,7 +74,7 @@ Ollama recém-baixada continua utilizável mesmo que o provedor não a liste.
 Um provedor a quem você ainda não deu uma chave, ou que esteja inacessível,
 recorre a uma pequena lista embutida em vez de a um menu vazio.
 
-Nenhum provedor publica uma lista ordenada ou curada, então o recorte é do Gitcito: instantâneos datados se dobram no modelo do qual são um instantâneo (`gpt-4o` cobre `gpt-4o-2024-08-06`), e o que sobra vem do mais novo para o mais antigo em vez de alfabético. **Mostrar todos os modelos**, no fim da lista, traz de volta tudo o que o provedor devolveu.
+Nenhum provedor publica uma lista ordenada ou curada, então o recorte é do Geminio: instantâneos datados se dobram no modelo do qual são um instantâneo (`gpt-4o` cobre `gpt-4o-2024-08-06`), e o que sobra vem do mais novo para o mais antigo em vez de alfabético. **Mostrar todos os modelos**, no fim da lista, traz de volta tudo o que o provedor devolveu.
 
 ## O que ela consegue fazer
 
@@ -93,7 +93,7 @@ Nenhum provedor publica uma lista ordenada ou curada, então o recorte é do Git
 ## Ancorada, não chutando
 
 A revisão vê o diff como **hunks rotulados** e só pode citar aqueles rótulos; o
-Gitcito então resolve cada rótulo para um arquivo e uma linha de verdade. Um modelo
+Geminio então resolve cada rótulo para um arquivo e uma linha de verdade. Um modelo
 que inventa uma localização é **rejeitado e questionado de novo**, então os achados
 sempre apontam para código que existe.
 

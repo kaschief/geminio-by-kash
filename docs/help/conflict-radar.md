@@ -11,7 +11,7 @@ keywords: conflict radar merge preview clash risk branches merge-tree
 Finding out that a branch conflicts by merging it is an expensive way to ask a
 question. The radar answers it first.
 
-Gitcito merges every branch into a base of your choice **inside the object
+Geminio merges every branch into a base of your choice **inside the object
 database** (`git merge-tree --write-tree`). No checkout, no index change, no
 working-tree change, nothing to clean up afterwards. Your uncommitted work can
 stay exactly where it is while the scan runs.

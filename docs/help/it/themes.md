@@ -8,7 +8,7 @@ keywords: tema temi theme scuro chiaro aspetto colori dimensione del carattere g
 
 # Temi e aspetto
 
-Temi integrati — Gitcito, Nord, Dracula, Solarized, GitHub, Monokai,
+Temi integrati — Geminio, Nord, Dracula, Solarized, GitHub, Monokai,
 Midnight, Contrast e Daltonic — ciascuno con una variante chiara e una scura.
 
 ![Il passaggio dal chiaro allo scuro](../../screenshots/clip-themes.webp)

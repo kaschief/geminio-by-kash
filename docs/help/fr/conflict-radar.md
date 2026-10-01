@@ -11,7 +11,7 @@ keywords: radar de conflits conflict radar fusion merge aperçu preview collisio
 Découvrir qu'une branche entre en conflit en la fusionnant est une façon coûteuse
 de poser une question. Le radar y répond d'abord.
 
-Gitcito fusionne chaque branche dans une base de votre choix **à l'intérieur de
+Geminio fusionne chaque branche dans une base de votre choix **à l'intérieur de
 la base d'objets** (`git merge-tree --write-tree`). Aucune extraction, aucun
 changement d'index, aucun changement de la copie de travail, rien à nettoyer
 ensuite. Votre travail non validé peut rester exactement où il est pendant que le

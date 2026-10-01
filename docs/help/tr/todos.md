@@ -20,7 +20,7 @@ Yapılacaklar tam da bu liste — içinde durduğun depoya iliştirilmiş.
 
 ## Nerede duruyorlar
 
-Deponun hiçbir yerinde değil. Bir görev, Gitcito’nun kendi ayarlarıyla birlikte,
+Deponun hiçbir yerinde değil. Bir görev, Geminio’nun kendi ayarlarıyla birlikte,
 deponun yoluna göre saklanır. Bunun bilmeye değer üç sonucu var:
 
 - **Hiçbir şey commit’lenmez.** `git status` içinde dosya belirmez, yani bir

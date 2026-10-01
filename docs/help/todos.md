@@ -20,7 +20,7 @@ Todos are that list, attached to the repository you are standing in.
 
 ## Where they live
 
-Nowhere in your repository. A todo is stored with Gitcito's own settings, keyed
+Nowhere in your repository. A todo is stored with Geminio's own settings, keyed
 by the repository's path, which has three consequences worth knowing:
 
 - **Nothing is committed.** No file appears in `git status`, so a todo can never

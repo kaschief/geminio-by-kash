@@ -24,7 +24,7 @@ Este es el botón de "acabo de resetear la rama equivocada".
 ## Instantáneas WIP
 
 El trabajo sin commitear es lo único que el reflog no puede salvar, así que
-Gitcito le hace instantáneas: el **árbol de trabajo entero — archivos
+Geminio le hace instantáneas: el **árbol de trabajo entero — archivos
 modificados, preparados y sin seguimiento** — commiteado a través de un índice
 desechable y fijado bajo `refs/gitcito/wip`. Ni tu índice real ni tu lista de
 stashes se tocan.
@@ -59,7 +59,7 @@ pushean, están a salvo de `git gc`, y se conservan las 50 más recientes.
 ## Bisect guiado
 
 Marca commits como buenos y malos, mira cómo se estrecha el rango, aterriza en el
-primer commit malo. Gitcito lleva la cuenta de cuántos pasos quedan, así que
+primer commit malo. Geminio lleva la cuenta de cuántos pasos quedan, así que
 sabes si estás a dos preguntas de la respuesta o a diez.
 
 ![Bisect guiado](../../screenshots/bisect.webp)
@@ -77,7 +77,7 @@ comando y lee su código de salida:
 | cualquier otro | Malo |
 
 Una suite de tests ya habla ese idioma, y por eso `npm test` suele ser la
-respuesta completa. Gitcito ofrece los propios scripts de este proyecto para
+respuesta completa. Geminio ofrece los propios scripts de este proyecto para
 rellenarlo en un clic, transmite la salida mientras corre y aterriza en el primer
 commit malo sin que respondas ni una sola pregunta.
 
@@ -109,14 +109,14 @@ Unable to create '…/refs/remotes/origin/x.lock': File exists.
 
 El repositorio no está dañado. Simplemente hay un archivo en medio.
 
-Gitcito reintenta unas cuantas veces primero, porque un bloqueo en manos de un
+Geminio reintenta unas cuantas veces primero, porque un bloqueo en manos de un
 git *en marcha* suele liberarse en milisegundos. Cuando no ocurre, el fallo abre
 un diálogo en lugar de un muro de texto: todos los bloqueos que siguen en disco,
 la antigüedad de cada uno y un botón que los elimina y reintenta la acción que
 había fallado.
 
 **La antigüedad es todo el argumento.** Un bloqueo de menos de 30 segundos se
-presume de un git que sigue trabajando, y Gitcito se niega a borrarlo: ofrece
+presume de un git que sigue trabajando, y Geminio se niega a borrarlo: ofrece
 esperar y reintentar. Los más viejos sí se ofrecen para eliminar, del más
 antiguo al más reciente, y el diálogo dice sin rodeos qué comprobar antes de
 aceptar: que ningún editor, terminal u otro cliente de Git esté trabajando ahora

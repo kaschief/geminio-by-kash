@@ -16,12 +16,12 @@ pertenecen a **este** repositorio, no a la aplicación.
 | Pestaña | Qué contiene |
 |---|---|
 | **General** | Ramas protegidas (un multiselector de ramas, guardado en la config de git), firma |
-| **Config** | Las [reglas que este repositorio trae consigo](repo-config.md) en `.gitcito.json`, y el doctor que las comprueba |
+| **Config** | Las [reglas que este repositorio trae consigo](repo-config.md) en `.geminio.json`, y el doctor que las comprueba |
 | **Info** | Notas y campos libres sobre este repositorio, guardados en local |
 | **Caja fuerte** | Las entradas de la [caja fuerte](vault.md) de este repositorio |
 | **Métricas** | El [panel de historial](insights.md) |
 | **Analíticas** | Lo que has hecho en este repositorio, contado en local |
-| **Historial** · **Logs** | El registro de operaciones: cada comando de git que Gitcito ejecutó, con su salida |
+| **Historial** · **Logs** | El registro de operaciones: cada comando de git que Geminio ejecutó, con su salida |
 
 El registro de operaciones es el sincero: cuando algo se comporta de forma rara,
 muestra el comando exacto y el error exacto, para que un informe de fallo lleve

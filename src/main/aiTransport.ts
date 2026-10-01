@@ -6,7 +6,7 @@ import { runCliModel } from './aiCli'
 /**
  * The wire layer for every model call.
  *
- * Gitcito used to speak one protocol — OpenAI's `POST /chat/completions` — at
+ * Geminio used to speak one protocol — OpenAI's `POST /chat/completions` — at
  * whatever endpoint the user configured. That quietly failed for Anthropic,
  * whose API is `POST /v1/messages` with the system prompt hoisted out of the
  * message list and `max_tokens` required. Providers now declare a transport in

@@ -29,14 +29,14 @@ mostrar, editor y quitar. **Abrir repositorio…**, al final, abre el lanzador.
 
 | Acción | Efecto |
 |---|---|
-| **Crear alias…** / **Cambiar alias…** | Solo un nombre visible. Gitcito nunca renombra ni mueve la carpeta en disco. El mismo alias sigue al repositorio por pestañas, grupos y espacios de trabajo. |
+| **Crear alias…** / **Cambiar alias…** | Solo un nombre visible. Geminio nunca renombra ni mueve la carpeta en disco. El mismo alias sigue al repositorio por pestañas, grupos y espacios de trabajo. |
 | **Quitar alias** | Aparece cuando existe un alias. Restaura el nombre de la carpeta. |
 | **Mostrar worktrees** | Enfoca este repositorio y abre la sección de worktrees de la barra lateral. |
 | **Nuevo worktree…** | El mismo diálogo de crear worktree que se usa desde una rama. Deshabilitado mientras falte la ruta o haya un merge/rebase/cherry-pick/revert en curso. |
 | **Copiar nombre del repositorio** | Copia el nombre canónico de la carpeta, no el alias. |
 | **Copiar ruta del repositorio** | Copia la ruta absoluta. |
 | **Ver en GitHub** | El origin si es github.com; si no, el primer remoto de GitHub que se pueda interpretar. Deshabilitado cuando no se puede derivar ninguno. |
-| **Abrir en el terminal** | Abre el terminal de Gitcito con este repositorio como directorio de trabajo. |
+| **Abrir en el terminal** | Abre el terminal de Geminio con este repositorio como directorio de trabajo. |
 | **Mostrar en el Finder / Explorador** | Resalta la carpeta del repositorio en el gestor de archivos de la plataforma. |
 | **Abrir en el editor externo** | El editor configurado en Ajustes. Visible pero deshabilitado hasta que haya uno configurado. |
 | **Quitar…** | Cierra la pestaña o saca la ficha del grupo. Usa el mismo aviso de trabajo sin commitear que el botón **×**. Nunca borra archivos del disco. |

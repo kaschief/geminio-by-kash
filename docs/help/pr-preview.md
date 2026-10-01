@@ -27,7 +27,7 @@ token, and no second remote is added. One fetch, and the code is on your disk.
 | Bitbucket Cloud, Bitbucket Server | `refs/pull-requests/<n>/from` |
 | Azure DevOps | `refs/pull/<n>/merge` |
 
-Gitcito probes all four in a single `ls-remote`, so an unfamiliar or self-hosted
+Geminio probes all four in a single `ls-remote`, so an unfamiliar or self-hosted
 forge works as long as it follows one of these conventions.
 
 ## Opening it
@@ -44,7 +44,7 @@ forge works as long as it follows one of these conventions.
 
 **Pull request** — the number, or a pasted browser URL. `7`, `#7` and
 `https://github.com/owner/repo/pull/7` all work; so do the GitLab, Bitbucket
-and Azure DevOps URL shapes. Press **Find** and Gitcito reports the ref it
+and Azure DevOps URL shapes. Press **Find** and Geminio reports the ref it
 resolved and the commit it points at, before anything is fetched.
 
 **Remote branch** — the second tab, for when there is no PR ref to find: a host
@@ -63,7 +63,7 @@ from is not a preview.
 
 Previewing the same pull request twice reuses the same branch, moving it to the
 new head — handy when the author pushes a fix while you are testing. When that
-branch already exists, Gitcito says so and asks before resetting it, because
+branch already exists, Geminio says so and asks before resetting it, because
 any commit that lives only there would be lost.
 
 ## What it will not do

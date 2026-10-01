@@ -24,7 +24,7 @@ C'est le bouton « je viens de réinitialiser la mauvaise branche ».
 ## Instantanés de travail en cours
 
 Le travail non validé est la seule chose que le reflog ne peut pas sauver :
-Gitcito en prend donc des instantanés. La **copie de travail entière — fichiers
+Geminio en prend donc des instantanés. La **copie de travail entière — fichiers
 modifiés, indexés et non suivis** — validée via un index jetable et épinglée
 sous `refs/gitcito/wip`. Ni votre index réel ni votre liste de remisages ne
 sont touchés.
@@ -60,7 +60,7 @@ conservées.
 ## Bisect guidé
 
 Marquez les commits bons et mauvais, regardez la plage se resserrer, atterrissez
-sur le premier commit défectueux. Gitcito suit combien d'étapes il reste, pour
+sur le premier commit défectueux. Geminio suit combien d'étapes il reste, pour
 que vous sachiez si vous êtes à deux questions de la réponse ou à dix.
 
 ![Bisect guidé](../../screenshots/bisect.webp)
@@ -78,7 +78,7 @@ commande, et lit son code de sortie :
 | n'importe quoi d'autre | Mauvais |
 
 Une suite de tests parle déjà cette langue, ce qui explique pourquoi `npm test`
-est généralement toute la réponse. Gitcito propose les propres scripts de ce
+est généralement toute la réponse. Geminio propose les propres scripts de ce
 projet en remplissage d'un clic, diffuse la sortie pendant l'exécution, et
 atterrit sur le premier commit défectueux sans que vous répondiez à la moindre
 question.
@@ -112,14 +112,14 @@ Unable to create '…/refs/remotes/origin/x.lock': File exists.
 
 Le dépôt n’est pas abîmé. Un fichier est simplement en travers du chemin.
 
-Gitcito réessaie d’abord quelques fois, car un verrou tenu par un git *en cours*
+Geminio réessaie d’abord quelques fois, car un verrou tenu par un git *en cours*
 se libère généralement en quelques millisecondes. Sinon, l’échec ouvre une
 boîte de dialogue au lieu d’un mur de texte : tous les verrous encore sur le
 disque, l’âge de chacun, et un bouton qui les supprime et relance l’action qui
 avait échoué.
 
 **L’âge fait tout l’argument.** Un verrou de moins de 30 secondes est présumé
-appartenir à un git encore au travail, et Gitcito refuse de le supprimer — il
+appartenir à un git encore au travail, et Geminio refuse de le supprimer — il
 propose d’attendre et de réessayer. Les plus vieux sont proposés à la
 suppression, du plus ancien au plus récent, et la boîte de dialogue dit
 franchement quoi vérifier avant d’accepter : qu’aucun éditeur, terminal ou autre

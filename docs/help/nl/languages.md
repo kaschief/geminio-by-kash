@@ -8,8 +8,8 @@ keywords: taal talen language locale locales i18n internationalisatie vertaling 
 
 # Talen & rechts-naar-links
 
-De interface van Gitcito is vertaald. De taal is een instelling
-van Gitcito, niet van het besturingssysteem — een ontwikkelaar op een Engelse
+De interface van Geminio is vertaald. De taal is een instelling
+van Geminio, niet van het besturingssysteem — een ontwikkelaar op een Engelse
 macOS-installatie die liever Japans leest stelt dat hier in, en een ontwikkelaar
 op een Hebreeuws systeem die de app in het Engels wil, wordt niet overruled.
 
@@ -51,7 +51,7 @@ andere kant op.
 
 Wisselen gebeurt meteen en vraagt geen herstart.
 
-![Gitcito in het Arabisch, met de indeling gespiegeld](../../screenshots/rtl.webp)
+![Geminio in het Arabisch, met de indeling gespiegeld](../../screenshots/rtl.webp)
 
 ### Wat met opzet niet spiegelt
 
@@ -73,7 +73,7 @@ een commitboodschap, een bestandsnaam — de tekst eromheen niet kan herordenen.
 
 Hier is het eerlijk over waar het ophoudt:
 
-- **Commitboodschappen, branchnamen en bestandsinhoud krijgen van Gitcito nooit
+- **Commitboodschappen, branchnamen en bestandsinhoud krijgen van Geminio nooit
   een andere richting.** Ze worden getoond zoals hun auteur ze schreef. Een
   Hebreeuwse commitboodschap in een LTR-geïsoleerde lijst verschijnt als
   Hebreeuws, maar de omliggende rij klapt er niet voor om.

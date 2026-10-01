@@ -17,7 +17,7 @@ misgaat; zie [merge-opties](merge-options.md).
 ## Sleep de ene ref op de andere
 
 Het snelste gebaar in de app: pak een branch op en laat hem op een andere vallen.
-Gitcito opent een klein menu met wat die drop zou kunnen betekenen, en doet niets
+Geminio opent een klein menu met wat die drop zou kunnen betekenen, en doet niets
 tot jij kiest.
 
 ![De ene branch op de andere slepen opent het menu met wat de drop kan betekenen](../../screenshots/clip-branch-drop.webp)

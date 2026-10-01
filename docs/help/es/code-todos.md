@@ -73,7 +73,7 @@ Al pulsar una fila se abre el archivo en esa línea.
 ## Lo que no hace
 
 - **Lee, nunca escribe.** No hay «marcar como hecho»: la forma de cerrar un TODO
-  es borrar la línea y confirmarlo. Si quieres una lista que Gitcito guarde por
+  es borrar la línea y confirmarlo. Si quieres una lista que Geminio guarde por
   ti, mira [todos](todos.md), que es otra cosa distinta: notas privadas que viven
   en la app, no en el código.
 - **Los archivos ignorados se saltan**, junto con `node_modules`, digan lo que

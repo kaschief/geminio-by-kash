@@ -109,7 +109,7 @@ export function openInEditor(setting: EditorSetting, target: EditorTarget): Prom
     }
     const child = spawn(plan.command, plan.args, { detached: true, stdio: 'ignore' })
     child.once('error', (err) => resolve(err.message))
-    // Detached and unref'd so quitting Gitcito never takes the editor with it.
+    // Detached and unref'd so quitting Geminio never takes the editor with it.
     child.unref()
     resolve('')
   })

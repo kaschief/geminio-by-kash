@@ -21,7 +21,7 @@ Aufgaben sind genau diese Liste — am Repository, in dem du gerade stehst.
 ## Wo sie liegen
 
 Nirgendwo in deinem Repository. Eine Aufgabe wird bei den Einstellungen von
-Gitcito gespeichert, nach dem Pfad des Repositorys geschlüsselt. Daraus folgen
+Geminio gespeichert, nach dem Pfad des Repositorys geschlüsselt. Daraus folgen
 drei Dinge:
 
 - **Es wird nichts committet.** In `git status` taucht keine Datei auf, also

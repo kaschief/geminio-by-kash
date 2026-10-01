@@ -28,7 +28,7 @@ nota*, scrivi, **Salva la nota**. Il testo su più righe va benissimo.
 
 ![La scrittura di una nota sotto il messaggio di un commit già pubblicato, poi il salvataggio](../../screenshots/clip-commit-note.webp)
 
-Salvare una nota è una normale azione di Gitcito — produce un toast, e
+Salvare una nota è una normale azione di Geminio — produce un toast, e
 **Annulla** rimette il testo precedente, compreso il ripristino di una nota che
 avevi rimosso.
 
@@ -37,7 +37,7 @@ Svuotare il testo e salvare rimuove la nota; una nota vuota non esiste.
 ## Trovarne una
 
 Le note sono invisibili in un log normale, ed è il motivo principale per cui la
-gente non le scopre mai. Gitcito segna un commit che ne porta una con una piccola
+gente non le scopre mai. Geminio segna un commit che ne porta una con una piccola
 icona di nota nella colonna del messaggio del grafo, così l'annotazione è
 trovabile anche senza sapere che c'è.
 
@@ -60,11 +60,11 @@ git fetch <remote> +refs/notes/commits:refs/notes/commits
 ```
 
 Viaggia solo il ref delle note sui commit — i ref locali alla macchina propri di
-Gitcito (come i verdetti della [CI locale](local-ci.md)) deliberatamente non
+Geminio (come i verdetti della [CI locale](local-ci.md)) deliberatamente non
 vengono pubblicati.
 
 Alcuni host richiedono anche che le note siano abilitate o permesse dalla loro
-parte; un rifiuto lì è una politica dell'host, non un limite di Gitcito.
+parte; un rifiuto lì è una politica dell'host, non un limite di Geminio.
 
 Nessun remote condiviso, o niente accesso in scrittura? La
 [Condivisione sicura](secure-share.md) può impacchettare le note di un
@@ -74,7 +74,7 @@ note divergenti.
 
 ## Limiti
 
-- **Un solo ref di note.** Gitcito legge e scrive il `refs/notes/commits`
+- **Un solo ref di note.** Geminio legge e scrive il `refs/notes/commits`
   predefinito. Gli spazi dei nomi personalizzati (`git notes --ref=review`) non
   sono esposti — un repository che li usa non vedrà quelle note qui.
 - **Nessun merge di note divergenti.** Se due persone annotano lo stesso commit e

@@ -36,7 +36,7 @@ git -C "$R" config commit.gpgsign false
 cat > "$R/README.md" <<'EOF'
 # Signed Commits
 
-Three commits demonstrate every signature-badge state in Gitcito:
+Three commits demonstrate every signature-badge state in Geminio:
 
 | Commit                         | Badge                       |
 |--------------------------------|-----------------------------|

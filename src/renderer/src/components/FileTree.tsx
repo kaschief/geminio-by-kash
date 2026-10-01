@@ -34,7 +34,7 @@ const baseOf = (rel: string): string => rel.split('/').pop() ?? rel
 
 // Drag & drop. Internal drags carry the repo-relative path on a private MIME type
 // so foreign drags (Finder, other apps) are never mistaken for tree moves.
-const DRAG_MIME = 'application/x-gitcito-path'
+const DRAG_MIME = 'application/x-geminio-path'
 const isExternalDrag = (e: React.DragEvent): boolean => e.dataTransfer.types.includes('Files')
 // How long a drag has to hover a collapsed folder before it springs open.
 const SPRING_MS = 700

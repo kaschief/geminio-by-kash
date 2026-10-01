@@ -661,8 +661,8 @@ function OwnerSelect({
     const onDown = (e: MouseEvent): void => {
       if (ddRef.current && !ddRef.current.contains(e.target as Node)) setOpen(false)
     }
-    window.addEventListener('mousedown', onDown)
-    return () => window.removeEventListener('mousedown', onDown)
+    window.addEventListener('pointerdown', onDown, true)
+    return () => window.removeEventListener('pointerdown', onDown, true)
   }, [open])
 
   useEffect(() => {
@@ -1749,7 +1749,12 @@ export function ModalHost(): React.JSX.Element {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent): void => {
-      if (e.key === 'Escape') closeModal()
+      if (e.key === 'Escape') {
+        const current = useUIStore.getState().modal
+        queueMicrotask(() => {
+          if (!e.defaultPrevented && current === useUIStore.getState().modal && !dialogRef.current?.querySelector('[data-unsaved-changes="true"]')) closeModal()
+        })
+      }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -1804,8 +1809,8 @@ export function ModalHost(): React.JSX.Element {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.15 }}
-          onMouseDown={(e) => {
-            if (e.target === e.currentTarget) closeModal()
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !dialogRef.current?.querySelector('[data-unsaved-changes="true"]')) closeModal()
           }}
         >
           <motion.div
@@ -1868,7 +1873,7 @@ export function ModalHost(): React.JSX.Element {
             {modal.kind === 'addRemote' && <AddRemoteModal spec={modal} />}
             {modal.kind === 'editRemote' && <EditRemoteModal spec={modal} />}
             {modal.kind === 'clone' && <CloneModal spec={modal} />}
-            {modal.kind === 'settings' && <SettingsPanel initialPage={modal.page} initialThemeTab={modal.themeTab} />}
+            {modal.kind === 'settings' && <SettingsPanel key={`${modal.page}-${modal.repoPath}-${modal.repoTab}`} initialPage={modal.page} initialThemeTab={modal.themeTab} repoPath={modal.repoPath} initialRepoTab={modal.repoTab} />}
             {modal.kind === 'launcher' && <LauncherModal spec={modal} />}
             {modal.kind === 'create-repo' && <CreateRepoModal spec={modal} />}
             {modal.kind === 'ai-config-wizard' && <AIConfigWizard spec={modal} />}

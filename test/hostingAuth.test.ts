@@ -134,8 +134,9 @@ describe('GitHub credential guidance', () => {
     expect(githubCredentialMessage('signed-out')).toContain('gh auth login')
   })
 
-  it('explains when gh is authenticated but not wired into Git', () => {
-    expect(githubCredentialMessage('authenticated')).toContain('gh auth setup-git')
+  it('explains when gh is authenticated but its credential cannot be read', () => {
+    expect(githubCredentialMessage('authenticated')).toContain('token could not be read')
+    expect(githubCredentialMessage('authenticated')).not.toContain('gh auth setup-git')
   })
 
   it('does not claim a signed-out CLI when the probe merely timed out', () => {
@@ -143,5 +144,28 @@ describe('GitHub credential guidance', () => {
     expect(msg).toContain('timed out')
     expect(msg).not.toContain('not authenticated')
     expect(msg).not.toContain('not installed')
+  })
+})
+
+describe('connected GitHub identity', () => {
+  it('matches public and verified emails, excluding unverified ones', async () => {
+    const { fetchConnectedAccount } = await import('../src/main/hosting')
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => new Response(JSON.stringify(
+      url.endsWith('/user') ? { id: 42, login: 'octocat', email: 'Public@Example.com', avatar_url: 'https://avatars.githubusercontent.com/u/42', html_url: 'https://github.com/octocat' } :
+      url.endsWith('/emails') ? [{ email: 'private@example.com', verified: true }, { email: 'someone@example.com', verified: false }] : []
+    ), { status: 200 })))
+    const account = await fetchConnectedAccount('github', PAT)
+    expect(account.emails).toEqual(['public@example.com', 'private@example.com', '42+octocat@users.noreply.github.com', 'octocat@users.noreply.github.com'])
+    expect(account.avatarUrl).toContain('/42')
+  })
+
+  it('still connects when private email permission is unavailable', async () => {
+    const { fetchConnectedAccount } = await import('../src/main/hosting')
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => url.endsWith('/emails')
+      ? new Response('{}', { status: 403 })
+      : new Response(JSON.stringify(url.endsWith('/user') ? { id: 42, login: 'octocat', email: null } : []), { status: 200 })))
+    const account = await fetchConnectedAccount('github', PAT)
+    expect(account.login).toBe('octocat')
+    expect(account.emails).toHaveLength(2)
   })
 })

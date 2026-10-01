@@ -21,7 +21,7 @@ zostawiłeś, bez stashowania.
   postawić je w katalogu obok i otworzyć jako kartę.
 - Gałąź mieszka naraz tylko w jednym worktree, więc przełączenie się na gałąź,
   którą trzyma inny worktree, nie może się udać — git odmawia komunikatem
-  *already used by worktree at …*. Gitcito zamiast tego cię tam zabiera: menu
+  *already used by worktree at …*. Geminio zamiast tego cię tam zabiera: menu
   gałęzi mówi *Przejdź do `x` w jej worktree*, a dwuklik na wierszu otwiera kartę
   tego worktree, zamiast się wywalić.
 

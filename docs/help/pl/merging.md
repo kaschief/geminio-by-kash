@@ -16,7 +16,7 @@ raz po raz zawodzi; zobacz [opcje merge'a](merge-options.md).
 
 ## Przeciągnij jedną referencję na drugą
 
-Najszybszy gest w aplikacji: podnieś gałąź i upuść ją na inną. Gitcito otwiera
+Najszybszy gest w aplikacji: podnieś gałąź i upuść ją na inną. Geminio otwiera
 małe menu z tym, co to upuszczenie mogłoby oznaczać, i nie robi nic, dopóki nie
 wybierzesz.
 

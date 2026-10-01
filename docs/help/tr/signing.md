@@ -9,7 +9,7 @@ keywords: imza imzalama sign signing gpg ssh x509 doğrulanmış verified rozet 
 # İmzalı commit'ler
 
 İmzalamayı depo bazında açın (**Ayarlar → depo dişlisi**): GPG, SSH veya X.509,
-seçtiğiniz anahtarla. Gitcito o depo için `commit.gpgsign`, `gpg.format` ve
+seçtiğiniz anahtarla. Geminio o depo için `commit.gpgsign`, `gpg.format` ve
 `user.signingkey` değerlerini yazar — başka her aracın okuduğu aynı yapılandırma.
 
 | | |

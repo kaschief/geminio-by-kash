@@ -37,9 +37,9 @@ keywords: gitattributes 属性 attributes 差异驱动 diff driver textconv 合�
 
 **改动是外科式的。**为一个已经有规则的模式再加规则，会就地重写那一行，而不是追加第二条、靠位置靠后取胜。文件里的注释原封不动地活下来，因为规则旁边的那个「为什么」，通常比规则本身更值钱。
 
-每一次保存都是一次普通的 Gitcito 操作：会弹提示，而**撤销**会把文件一字不差地恢复原样。
+每一次保存都是一次普通的 Geminio 操作：会弹提示，而**撤销**会把文件一字不差地恢复原样。
 
-**一个仓库可以有好几个属性文件。**根目录一个，任何子目录里也可以有，还有一个私有的 `.git/info/attributes`——它从不被提交，只在你这台机器上生效，正是安放「关于你、而不关乎项目」的那类规则的地方。Gitcito 会把它们全部列出来，并说明哪个是哪个。
+**一个仓库可以有好几个属性文件。**根目录一个，任何子目录里也可以有，还有一个私有的 `.git/info/attributes`——它从不被提交，只在你这台机器上生效，正是安放「关于你、而不关乎项目」的那类规则的地方。Geminio 会把它们全部列出来，并说明哪个是哪个。
 
 ## 某个路径上生效的是什么？
 
@@ -56,14 +56,14 @@ keywords: gitattributes 属性 attributes 差异驱动 diff driver textconv 合�
 1. git config 里的 `diff.<name>.textconv`——转换器命令。
 2. `.gitattributes` 里的 `*.docx diff=<name>`——它适用于哪些文件。
 
-这里的按钮一次把两件都做了。对 Word、Excel、JSON 和 `.strings`，Gitcito **自己附带了转换器**——就是它的预览所用的那套文档解析，以应用内一条小小的 `gitcito-textconv` 命令的形式提供——所以这四个什么都不用装就能用。其余的仍然需要你 PATH 里有真正的工具：Gitcito 会检查，并把缺的置灰，而不是写下一条在第一次对比时就失败的驱动。
+这里的按钮一次把两件都做了。对 Word、Excel、JSON 和 `.strings`，Geminio **自己附带了转换器**——就是它的预览所用的那套文档解析，以应用内一条小小的 `geminio-textconv` 命令的形式提供——所以这四个什么都不用装就能用。其余的仍然需要你 PATH 里有真正的工具：Geminio 会检查，并把缺的置灰，而不是写下一条在第一次对比时就失败的驱动。
 
 | 驱动 | 需要 | 给你什么 |
 |--------|-------|-----------|
-| `word` | 无——随 Gitcito 附带 | `.docx` 的散文级差异 |
-| `excel` | 无——随 Gitcito 附带 | `.xlsx`/`.xls` 的按行差异（每个工作表一份 CSV） |
-| `json` | 无——随 Gitcito 附带 | 键已排序、结果稳定的 JSON 差异 |
-| `strings` | 无需安装——随 Gitcito 附带 | 让 git 视为二进制的 UTF-16 `.strings` 显示逐行差异 |
+| `word` | 无——随 Geminio 附带 | `.docx` 的散文级差异 |
+| `excel` | 无——随 Geminio 附带 | `.xlsx`/`.xls` 的按行差异（每个工作表一份 CSV） |
+| `json` | 无——随 Geminio 附带 | 键已排序、结果稳定的 JSON 差异 |
+| `strings` | 无需安装——随 Geminio 附带 | 让 git 视为二进制的 UTF-16 `.strings` 显示逐行差异 |
 | `pdf` | `pdftotext`（poppler） | `.pdf` 的文本差异 |
 | `exif` | `exiftool` | 当像素本身看不出名堂时，一张图片改了什么 |
 
@@ -83,15 +83,15 @@ Binary files a/Localizable.strings and b/Localizable.strings differ
 String Catalog（`.xcstrings`，Xcode 15 起）是 JSON，由 `json` 驱动覆盖：它会
 排序键，于是在顶部新增一条翻译不再让整份文件在 diff 里被重写一遍。
 
-附带的转换器的限制，明说：`.doc`（老式二进制 Word 格式）不认识，只认 `.docx`；PDF 没有覆盖——Gitcito 是用浏览器的查看器来预览 PDF 的，没有可以复用的文本提取器；另外每对比一次文档都要付出一小段转换器启动的开销。设置 `git config diff.<name>.cachetextconv true` 可以让 git 按 blob 缓存输出。
+附带的转换器的限制，明说：`.doc`（老式二进制 Word 格式）不认识，只认 `.docx`；PDF 没有覆盖——Geminio 是用浏览器的查看器来预览 PDF 的，没有可以复用的文本提取器；另外每对比一次文档都要付出一小段转换器启动的开销。设置 `git config diff.<name>.cachetextconv true` 可以让 git 按 blob 缓存输出。
 
-转换器那一半住在**你的**配置里，而不在仓库里——git 不会去运行一次克隆递给你的命令，这是一条值得守住的安全性质。附带的驱动还指向的是*你的* Gitcito 安装路径，所以一个克隆下来的同事拿到的是 `diff=word` 这条规则，而在他接好自己的转换器（Gitcito 或别的）之前，看到的还是那份没法读的旧差异。在你的 README 里说一声。
+转换器那一半住在**你的**配置里，而不在仓库里——git 不会去运行一次克隆递给你的命令，这是一条值得守住的安全性质。附带的驱动还指向的是*你的* Geminio 安装路径，所以一个克隆下来的同事拿到的是 `diff=word` 这条规则，而在他接好自己的转换器（Geminio 或别的）之前，看到的还是那份没法读的旧差异。在你的 README 里说一声。
 
 ## clean/smudge 过滤器——先做一次试运行
 
 **过滤器**会在内容进出仓库的路上重写它：`clean` 在暂存时运行（工作区 → 仓库），`smudge` 在检出时运行（仓库 → 工作区）。git-lfs 就是靠它工作的，团队从提交内容里剥掉凭据或生成的噪声，也是靠它。
 
-它同时也是 `.gitattributes` 能指向的最危险的东西：过滤器会在**每一个匹配文件的每一次检出**时运行，一个写错的过滤器会悄无声息地毁掉你的工作区。所以 Gitcito 拒绝在这里只当一个文本框。配置一个过滤器，要先对你仓库里真实匹配的文件做一次**试运行**：
+它同时也是 `.gitattributes` 能指向的最危险的东西：过滤器会在**每一个匹配文件的每一次检出**时运行，一个写错的过滤器会悄无声息地毁掉你的工作区。所以 Geminio 拒绝在这里只当一个文本框。配置一个过滤器，要先对你仓库里真实匹配的文件做一次**试运行**：
 
 1. `clean` 命令在每个匹配文件（最多五个）的副本上运行——仓库和它的配置都毫发无损。
 2. 如果给出了 `smudge` 命令，它会在 `clean` 过的输出上运行，结果与原文件逐字节比较——这就是**往返校验**。一个往返不回来的过滤器，意味着检出时还原不出你原来的东西。
@@ -106,7 +106,7 @@ String Catalog（`.xcstrings`，Xcode 15 起）是 JSON，由 `json` 驱动覆�
 - **`text=auto` 会改变被提交的内容**，在写入时把行尾规范化。在一个已有的仓库上，加完之后要有意识地运行一次 `git add --renormalize .`，单独提交这一次。
 - **属性不会追溯生效。**今天把一个文件标成 `binary`，不会改变它过去的差异是怎么存下来的；它改变的是从现在起 git 怎么对待它。
 - **规则只在文件可见的地方生效。**`design/.gitattributes` 里的规则对 `src/` 一言不发。
-- Gitcito 是整文件写入的，所以一个手工排版过的文件回来时排版还在——但被 Gitcito 重写过的那条规则，会按 git 规范的 `pattern attr attr` 间距重新排版。
+- Geminio 是整文件写入的，所以一个手工排版过的文件回来时排版还在——但被 Geminio 重写过的那条规则，会按 git 规范的 `pattern attr attr` 间距重新排版。
 
 另请参阅：[LFS 与稀疏检出](lfs-sparse.md) ·
 [Bundle 与归档](export.md) · [合并选项](merge-options.md) ·

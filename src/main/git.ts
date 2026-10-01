@@ -516,7 +516,7 @@ async function runSubtree(repoPath: string, args: string[]): Promise<string> {
  * later does not work: after a replay the file is absent from both, and so is a
  * conflict rerere never understood. So it is captured when it is said.
  *
- * Session state on purpose: if Gitcito restarts mid-conflict the hint is simply
+ * Session state on purpose: if Geminio restarts mid-conflict the hint is simply
  * gone, which is better than showing a guess.
  */
 const rerereReplayed = new Map<string, string[]>()
@@ -646,13 +646,13 @@ function hasBinary(command: string): boolean {
   }
 }
 
-/** The textconv shim Gitcito ships (resources/cli/gitcito-textconv). */
+/** The textconv shim Geminio ships (resources/cli/geminio-textconv). */
 export function bundledTextconvPath(): string {
   // Packaged: extraResources puts cli/ next to app.asar. Source checkout and
   // tests: resources/ sits at the repo root, two levels up from this file.
-  const packaged = process.resourcesPath ? join(process.resourcesPath, 'cli', 'gitcito-textconv') : ''
+  const packaged = process.resourcesPath ? join(process.resourcesPath, 'cli', 'geminio-textconv') : ''
   if (packaged && existsSync(packaged)) return packaged
-  return resolvePath(__dirname, '../../resources/cli/gitcito-textconv')
+  return resolvePath(__dirname, '../../resources/cli/geminio-textconv')
 }
 
 function canExecute(path: string): boolean {
@@ -965,7 +965,7 @@ async function mergeHunkIntoFile(
   const oursPath = join(repoPath, file)
   if (!existsSync(oursPath)) return null
 
-  const dir = await mkdtemp(join(tmpdir(), 'gitcito-merge-'))
+  const dir = await mkdtemp(join(tmpdir(), 'geminio-merge-'))
   try {
     const base = await runGit(repoPath, ['cat-file', 'blob', baseBlob]).catch(() => null)
     if (base === null) return null
@@ -1116,8 +1116,8 @@ async function rewriteWithEdits(
 ): Promise<CommitEditPreview> {
   const gitDir = (await runGit(repoPath, ['rev-parse', '--absolute-git-dir'])).trim()
   const stamp = `${process.pid}-${Date.now()}`
-  const tmpIndex = join(gitDir, `gitcito-edit-index-${stamp}`)
-  const tmpBlob = join(gitDir, `gitcito-edit-blob-${stamp}`)
+  const tmpIndex = join(gitDir, `geminio-edit-index-${stamp}`)
+  const tmpBlob = join(gitDir, `geminio-edit-blob-${stamp}`)
   const env = { GIT_INDEX_FILE: tmpIndex }
   try {
     // 1. The edited commit's replacement tree.
@@ -1612,7 +1612,8 @@ async function buildBisectStatus(repoPath: string, lastOut = ''): Promise<Bisect
   }
   if (!inProgress) return empty
 
-  const finishedMatch = lastOut.match(/([0-9a-f]{40}) is the first bad commit/)
+  // Git 2.56 quotes the bisect term; older releases print it unquoted.
+  const finishedMatch = lastOut.match(/([0-9a-f]{40}) is the first '?bad'? commit/)
   const stepsMatch = lastOut.match(/roughly (\d+) step/)
   const needGood = /waiting for good|waiting for both/.test(lastOut)
   const needBad = /waiting for both|bad commit/.test(lastOut) && !/bad commit known/.test(lastOut)
@@ -3083,7 +3084,7 @@ export const gitService = {
   /**
    * When this repository last fetched, from `FETCH_HEAD`'s mtime. Reading the
    * file rather than trusting our own bookkeeping is the point: a `git fetch`
-   * run in a terminal, or by another Gitcito window, counts the same as ours.
+   * run in a terminal, or by another Geminio window, counts the same as ours.
    * Null when the repository has never fetched.
    */
   async lastFetchAt(repoPath: string): Promise<number | null> {
@@ -3564,7 +3565,7 @@ export const gitService = {
   },
 
   // ─── Credential helpers ────────────────────────────────────────────────────
-  // Git has its own credential store, and it is neither Gitcito's keychain nor
+  // Git has its own credential store, and it is neither Geminio's keychain nor
   // your SSH agent. Misconfiguring it is the usual reason a push asks for a
   // password every single time — or, worse, the reason a password is sitting in
   // a plain file. Nothing here ever reads a secret: `git credential fill` would
@@ -3758,12 +3759,12 @@ export const gitService = {
     return [...(await read('repo')), ...(await read('global'))]
   },
 
-  /** Converters Gitcito can wire up for the formats it already previews. */
+  /** Converters Geminio can wire up for the formats it already previews. */
   // Takes the repo path it will never use: every repo-scoped method does, and
   // the dispatcher locks on it.
   async diffDriverSuggestions(_repoPath: string): Promise<DiffDriverSuggestion[]> {
-    // Word, Excel and JSON ride the converter Gitcito ships (resources/cli/
-    // gitcito-textconv), so they work with nothing installed. The rest still
+    // Word, Excel and JSON ride the converter Geminio ships (resources/cli/
+    // geminio-textconv), so they work with nothing installed. The rest still
     // need a real tool on PATH, and the UI says plainly which are missing
     // rather than writing a driver that fails at the first diff.
     const shim = bundledTextconvPath()
@@ -4480,7 +4481,7 @@ export const gitService = {
     await gitFor(repoPath).raw(['config', 'gitcito.protectedbranches', value])
   },
 
-  // ─── .gitcito.json ───────────────────────────────────────────────────────
+  // ─── .geminio.json ───────────────────────────────────────────────────────
   // The repository's own house rules, committed alongside the code. Thin
   // delegates: the reasoning, the validation and the safety rules all live in
   // main/repoConfig.ts, next to shared/repoConfig.ts which the editor shares.
@@ -4688,7 +4689,7 @@ export const gitService = {
 
   // ─── Notes ───────────────────────────────────────────────────────────────
   // `git notes` attaches text to a commit without touching the commit itself —
-  // the only way to annotate history that is already published. Gitcito uses the
+  // the only way to annotate history that is already published. Geminio uses the
   // default `refs/notes/commits` ref, which is what `git log` and every other
   // tool reads by default.
 
@@ -4714,7 +4715,7 @@ export const gitService = {
     // fighting the shell over quoting.
     const { writeFile, rm, mkdtemp } = await import('fs/promises')
     const { tmpdir } = await import('os')
-    const dir = await mkdtemp(join(tmpdir(), 'gitcito-note-'))
+    const dir = await mkdtemp(join(tmpdir(), 'geminio-note-'))
     const file = join(dir, 'note.txt')
     try {
       await writeFile(file, text, 'utf-8')
@@ -4996,7 +4997,7 @@ export const gitService = {
 
   // ─── git-flow ────────────────────────────────────────────────────────────
   // Stored under the same `gitflow.*` keys the `git flow` CLI writes, so a repo
-  // set up by either tool reads correctly in the other. Gitcito runs plain git
+  // set up by either tool reads correctly in the other. Geminio runs plain git
   // commands throughout — the CLI is never required to be installed.
 
   async gitflowStatus(repoPath: string): Promise<GitflowStatus> {
@@ -6598,7 +6599,7 @@ export const gitService = {
   },
 
   async runInteractiveRebase(repoPath: string, base: string, steps: RebaseStep[]): Promise<void> {
-    const tmpTodo = join(tmpdir(), `gitcito-rebase-${Date.now()}.txt`)
+    const tmpTodo = join(tmpdir(), `geminio-rebase-${Date.now()}.txt`)
     const lines: string[] = []
     for (const s of steps) {
       if (s.action === 'drop') {
@@ -6726,7 +6727,7 @@ export const gitService = {
   },
 
   async stagePatch(repoPath: string, patch: string): Promise<void> {
-    const tmpPatch = join(tmpdir(), `gitcito-patch-${Date.now()}.patch`)
+    const tmpPatch = join(tmpdir(), `geminio-patch-${Date.now()}.patch`)
     await writeFile(tmpPatch, patch, 'utf-8')
     try {
       await gitFor(repoPath).raw(['apply', '--cached', tmpPatch])
@@ -6769,7 +6770,7 @@ export const gitService = {
     ignoreWhitespace = false
   ): Promise<{ conflicts: number }> {
     if (target === 'worktree') await guardSnapshot(repoPath)
-    const tmpPatch = join(tmpdir(), `gitcito-hunk-${Date.now()}-${Math.random().toString(36).slice(2)}.patch`)
+    const tmpPatch = join(tmpdir(), `geminio-hunk-${Date.now()}-${Math.random().toString(36).slice(2)}.patch`)
     await writeFile(tmpPatch, patch, 'utf-8')
     try {
       const args = ['apply', '--whitespace=nowarn']
@@ -6915,7 +6916,7 @@ export const gitService = {
    * the working tree without committing. Both use 3-way merge for better fuzz.
    */
   async applyPatch(repoPath: string, content: string, am = false): Promise<void> {
-    const tmp = join(tmpdir(), `gitcito-apply-${Date.now()}.patch`)
+    const tmp = join(tmpdir(), `geminio-apply-${Date.now()}.patch`)
     await writeFile(tmp, content, 'utf-8')
     try {
       await gitFor(repoPath).raw(am ? ['am', '--3way', tmp] : ['apply', '--3way', tmp])
@@ -7307,7 +7308,7 @@ export const gitService = {
     if (!status || status.isClean()) return null
 
     const gitDir = (await runGit(repoPath, ['rev-parse', '--absolute-git-dir'])).trim()
-    const tmpIndex = join(gitDir, `gitcito-snap-${process.pid}-${Date.now()}`)
+    const tmpIndex = join(gitDir, `geminio-snap-${process.pid}-${Date.now()}`)
     const env = { GIT_INDEX_FILE: tmpIndex }
     try {
       const head = (await runGit(repoPath, ['rev-parse', '--verify', 'HEAD']).catch(() => '')).trim()
@@ -7332,7 +7333,7 @@ export const gitService = {
       }
 
       const ts = Math.floor(Date.now() / 1000)
-      const label = `gitcito-wip ${new Date(ts * 1000).toISOString()} (${kind})`
+      const label = `geminio-wip ${new Date(ts * 1000).toISOString()} (${kind})`
       const sha = (await runGit(repoPath, ['commit-tree', tree, '-m', label, ...(head ? ['-p', head] : [])])).trim()
       // Millisecond ref names keep a guard and a timer tick within the same
       // second from colliding; displayed time comes from the commit, not the name.

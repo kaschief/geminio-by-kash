@@ -2,13 +2,13 @@
 title: 安全与机密
 category: 安全
 order: 70
-summary: 遮蔽、防护、钥匙串——以及 Gitcito 拒绝去做的事。
+summary: 遮蔽、防护、钥匙串——以及 Geminio 拒绝去做的事。
 keywords: 安全 机密 密钥 遮蔽 钥匙串 令牌 保护分支 大文件 隐私 security secrets masking keychain safeStorage tokens protected branch large file guard privacy
 ---
 
 # 安全与机密
 
-Gitcito **没有后端**。唯一的网络请求发往你的 Git 托管方；如果你打开了 AI 功能，
+Geminio **没有后端**。唯一的网络请求发往你的 Git 托管方；如果你打开了 AI 功能，
 还会发往你的 AI 供应商。
 
 ![安全设置](../../screenshots/settings-security.webp)
@@ -40,7 +40,7 @@ Apple 的签名材料也算：`*.mobileprovision`、`*.provisionprofile`、`*.p1
 令牌和[保险库](vault.md)条目用你的操作系统钥匙串加密（Electron 的 `safeStorage`），
 而不是用设置文件里的某个密钥。
 
-**在你点头之前，什么都不会碰钥匙串。** 在系统自己的权限对话框出现之前，Gitcito 会
+**在你点头之前，什么都不会碰钥匙串。** 在系统自己的权限对话框出现之前，Geminio 会
 先说明要存的是什么、它做不到什么（一个应用只能读回它自己创建的那条记录——你的其他
 密码它够不着），以及拒绝也完全没问题：那样令牌只在本次会话的内存中存活，保险库保持
 关闭，你也可以稍后在 **设置 → 安全 → 操作系统钥匙串** 里打开它。

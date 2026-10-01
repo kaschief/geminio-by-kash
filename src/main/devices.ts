@@ -351,7 +351,7 @@ export async function bootRunDevice(device: RunDevice): Promise<{ ok: true } | {
     }
     if (device.source === 'avd') {
       // The emulator process outlives us by design — detach it, or quitting
-      // Gitcito would take the running Android device down with it.
+      // Geminio would take the running Android device down with it.
       const child = spawn(androidTool('emulator'), ['-avd', device.id], {
         detached: true,
         stdio: 'ignore',

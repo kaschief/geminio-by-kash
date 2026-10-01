@@ -29,7 +29,7 @@ dysku.
 | Bitbucket Cloud, Bitbucket Server | `refs/pull-requests/<n>/from` |
 | Azure DevOps | `refs/pull/<n>/merge` |
 
-Gitcito sonduje wszystkie cztery jednym `ls-remote`, więc nieznany albo
+Geminio sonduje wszystkie cztery jednym `ls-remote`, więc nieznany albo
 samodzielnie utrzymywany hosting zadziała, o ile trzyma się jednej z tych
 konwencji.
 
@@ -49,7 +49,7 @@ zwykle `origin`. Nie fork.
 
 **Pull request** — numer albo wklejony adres z przeglądarki. `7`, `#7`
 i `https://github.com/owner/repo/pull/7` działają tak samo; podobnie kształty
-adresów GitLaba, Bitbucketa i Azure DevOps. Naciśnij **Znajdź**, a Gitcito
+adresów GitLaba, Bitbucketa i Azure DevOps. Naciśnij **Znajdź**, a Geminio
 poinformuje o referencji, którą rozwiązał, i commicie, na który ona wskazuje —
 zanim cokolwiek zostanie pobrane.
 
@@ -69,7 +69,7 @@ nie jest podglądem.
 
 Podglądnięcie tego samego pull requesta po raz drugi używa ponownie tej samej
 gałęzi, przesuwając ją na nowy czubek — przydatne, gdy autor wypycha poprawkę
-w trakcie twoich testów. Kiedy ta gałąź już istnieje, Gitcito mówi o tym i pyta
+w trakcie twoich testów. Kiedy ta gałąź już istnieje, Geminio mówi o tym i pyta
 przed jej zresetowaniem, bo każdy commit, który żyje tylko tam, przepadłby.
 
 ## Czego nie zrobi

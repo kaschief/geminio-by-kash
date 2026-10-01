@@ -107,7 +107,7 @@ sélection, **Copier le message** le message entier — une réponse est copiée
 sous sa forme Markdown — et, si le clic a atterri sur un lien, **Copier le
 lien** prend son adresse.
 
-Les liens s'ouvrent dans votre navigateur par défaut, jamais dans Gitcito —
+Les liens s'ouvrent dans votre navigateur par défaut, jamais dans Geminio —
 qu'il s'agisse des liens Markdown des réponses ou des adresses `https://`
 écrites dans vos propres messages.
 
@@ -141,7 +141,7 @@ Le chat du dépôt peut proposer des modifications exactes, la création ou le
 remplacement de fichiers entiers et leur suppression, puis des actions Git :
 motifs d'ignorance, indexer, désindexer, commiter, remiser, abandonner, branche,
 changement de branche, étiquette et — parce qu'on lui montre la liste des
-branches et les commits récents — merge, rebase, revert et cherry-pick. Gitcito
+branches et les commits récents — merge, rebase, revert et cherry-pick. Geminio
 calcule le diff dépliable en local. Les fichiers existants doivent provenir des
 preuves lues ; les cibles risquées, secrètes, ignorées, générées, binaires,
 périmées, trop grosses ou atteintes par lien symbolique sont refusées. Reset,
@@ -154,11 +154,11 @@ a déjà tourné, et le bandeau de conflit prend le relais exactement comme pour
 même opération lancée depuis la barre d'outils.
 
 Le lot entier est revérifié avant la première écriture et annulé si une étape
-échoue. Avant un commit, Gitcito vérifie aussi que des changements sont indexés.
+échoue. Avant un commit, Geminio vérifie aussi que des changements sont indexés.
 La carte marque chaque action terminée, échouée ou ignorée et conserve les
 résultats partiels. Un appel séparé, sans actions, résume ensuite le résultat réel.
 
-**Il peut aussi écrire `.gitcito.json`.** Le chat reçoit la forme du
+**Il peut aussi écrire `.geminio.json`.** Le chat reçoit la forme du
 [fichier de configuration du dépôt](repo-config.md) : *ajoute des liens de
 tickets pour JIRA-1234* ou *protège les branches de release* devient une action
 de fichier écrite contre le vrai schéma, et non des clés plausibles que le
@@ -202,7 +202,7 @@ que le plan démarre, pas depuis l'intérieur.
 ### Annuler un plan
 
 Un plan est approuvé en bloc, donc il s'annule en bloc. Avant la première action
-capable de changer quoi que ce soit, Gitcito note où était la branche et prend
+capable de changer quoi que ce soit, Geminio note où était la branche et prend
 un instantané de l'arbre de travail ; la carte terminée propose alors **Annuler
 le plan**. Elle ramène la branche à ce commit et restaure l'arbre, ce qui jette
 ce que le plan a produit : elle demande donc confirmation et nomme le commit de
@@ -249,7 +249,7 @@ que vous pressiez Envoyer.
   destructrice confirme toujours. Avec **Proposer des actions git dans la
   discussion** désactivé, elle ne propose même pas.
 - **Les conversations ne vivent qu’en mémoire.** Chaque dépôt garde son fil ;
-  quitter Gitcito les efface.
+  quitter Geminio les efface.
 
 ## L’ouvrir
 

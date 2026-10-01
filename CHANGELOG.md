@@ -162,7 +162,7 @@
 
 ### Features
 
-* add .gitcito.json and repoConfig management ([d920be5](https://github.com/MyAppDesk/gitcito/commit/d920be5fee7aaa0ba0016dbb567e4c2936e098c5))
+* add .geminio.json and repoConfig management ([d920be5](https://github.com/MyAppDesk/gitcito/commit/d920be5fee7aaa0ba0016dbb567e4c2936e098c5))
 
 ## [3.28.0](https://github.com/MyAppDesk/gitcito/compare/v3.27.1...v3.28.0) (2026-08-25)
 
@@ -748,14 +748,14 @@
 
 ### Features
 
-* enhance gitcito CLI with name and group options ([e43c16d](https://github.com/MyAppDesk/gitcito/commit/e43c16d914bdeb9553b567b8a0f52a534e9af18f))
+* enhance geminio CLI with name and group options ([e43c16d](https://github.com/MyAppDesk/gitcito/commit/e43c16d914bdeb9553b567b8a0f52a534e9af18f))
 
 ## [1.19.4](https://github.com/MyAppDesk/gitcito/compare/v1.19.3...v1.19.4) (2026-07-03)
 
 
 ### Features
 
-* add CLI support for gitcito with installation and handling ([f5e7694](https://github.com/MyAppDesk/gitcito/commit/f5e769482695664cac407637442c5566373a49a2))
+* add CLI support for geminio with installation and handling ([f5e7694](https://github.com/MyAppDesk/gitcito/commit/f5e769482695664cac407637442c5566373a49a2))
 
 ## [1.19.3](https://github.com/MyAppDesk/gitcito/compare/v1.19.2...v1.19.3) (2026-07-02)
 
@@ -1004,7 +1004,7 @@
 
 ### Features
 
-* **in-app auto-update** — Gitcito now checks for new versions on launch and updates itself: a polished banner walks you from "update available" through download progress to "restart & install", a download badge sits beside the version in the status bar, and Settings shows an "Update to vX" entry. Skip a version to silence it until the next one ships.
+* **in-app auto-update** — Geminio now checks for new versions on launch and updates itself: a polished banner walks you from "update available" through download progress to "restart & install", a download badge sits beside the version in the status bar, and Settings shows an "Update to vX" entry. Skip a version to silence it until the next one ships.
 * the What’s-new page now shows the notes for your installed version, with a callout on top when a newer release is available.
 
 

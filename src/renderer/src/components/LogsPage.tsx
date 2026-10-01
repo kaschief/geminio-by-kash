@@ -42,7 +42,7 @@ function logTimeLabel(ms: number): string {
 }
 
 /** Full-page operation log: a chronological, append-only record of git
- *  operations gitcito ran, filterable by repository. Opened as a page tab. */
+ *  operations geminio ran, filterable by repository. Opened as a page tab. */
 export function LogsPage(): React.JSX.Element {
   const t = useT()
   const toast = useUIStore((s) => s.toast)

@@ -243,3 +243,20 @@ export function editorLaunch(
     source: setting.source
   }
 }
+
+/** Keep one launch action when the preferred app is the configured editor. */
+export function isEditorApp(editor: EditorSetting | undefined, appPath: string): boolean {
+  if (!editor?.command) return false
+  const normal = (value: string): string => value.replace(/\\/g, '/').replace(/\/+$/, '').toLowerCase()
+  if (normal(editor.command) === normal(appPath)) return true
+  // A custom command may add its own behaviour; do not hide a normal app launch.
+  if (editor.source !== 'cli') return false
+  const preset = presetFor(editor.id)
+  const commandName = normal(editor.command).split('/').pop() ?? ''
+  const variant = preset?.bins.indexOf(commandName) ?? -1
+  const bundle = preset?.macApps[variant]
+  const appName = normal(appPath).split('/').pop()
+  // Presets can contain distinct products: Code vs Insiders, or JetBrains IDEs.
+  // Only suppress the bundle paired with this executable, never the whole family.
+  return !!bundle && normal(bundle) === appName
+}

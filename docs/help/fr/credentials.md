@@ -8,12 +8,12 @@ keywords: assistant d'identifiants credential helper mot de passe password https
 
 # Assistant d'identifiants
 
-Gitcito détient trois sortes de secrets différentes, et on suppose
+Geminio détient trois sortes de secrets différentes, et on suppose
 raisonnablement qu'il s'agit d'une seule chose :
 
 | | Détenu par |
 |---|---|
-| Les jetons d'API de l'hébergeur — PR, tickets, vérifications de CI | Gitcito, dans le [trousseau du système](security.md) |
+| Les jetons d'API de l'hébergeur — PR, tickets, vérifications de CI | Geminio, dans le [trousseau du système](security.md) |
 | Le transport `git@…` | Votre [clé SSH](ssh-keys.md), via l'agent ssh du système |
 | **Le transport `https://`** | **L'assistant d'identifiants propre à git** |
 
@@ -56,7 +56,7 @@ différemment ».
 | `cache` | La mémoire, pendant 15 minutes. Rien sur le disque |
 | `store` | **Un simple fichier dans votre répertoire personnel. Non chiffré** |
 
-Gitcito propose ce qui est réellement installé sur cette machine, marque celui
+Geminio propose ce qui est réellement installé sur cette machine, marque celui
 qui correspond à votre système, et grise le reste.
 
 **La portée compte.** *Pour tous les dépôts* écrit dans votre configuration
@@ -84,22 +84,22 @@ chaque push échoue avec un 401 qui ne nomme rien. **Oublier** demande à
 l'assistant configuré d'effacer son entrée pour cet hôte — `git credential
 reject`, la voie documentée par git lui-même.
 
-Rien n'est lu au passage : Gitcito n'appelle jamais `git credential fill`, la
+Rien n'est lu au passage : Geminio n'appelle jamais `git credential fill`, la
 commande qui imprimerait un mot de passe actif sur la sortie standard.
 
 Le push suivant vous demande une fois, et l'assistant stocke la nouvelle réponse.
 
 ## Limites qu'il vaut mieux connaître
 
-- **C'est le magasin de git, pas celui de Gitcito.** Le modifier modifie aussi ce
+- **C'est le magasin de git, pas celui de Geminio.** Le modifier modifie aussi ce
   que fait votre terminal — c'est le but, et cela vaut la peine de le savoir
   avant de le modifier.
 - **Les assistants au niveau système sont affichés, pas modifiables.** Ils vivent
   dans une configuration que seul un administrateur peut écrire.
-- **Gitcito ne peut pas lister ce qu'un assistant détient.** Aucune API
+- **Geminio ne peut pas lister ce qu'un assistant détient.** Aucune API
   d'identifiants ne l'expose sans livrer les secrets : la boîte de dialogue
   rapporte donc la configuration et efface sur demande, rien de plus.
-- **Un jeton que vous avez confié à Gitcito est séparé.** En révoquer un ne
+- **Un jeton que vous avez confié à Geminio est séparé.** En révoquer un ne
   touche pas à l'autre ; voir [sécurité](security.md) pour le côté trousseau.
 
 Voir aussi : [Sécurité](security.md) · [Clés SSH](ssh-keys.md) ·

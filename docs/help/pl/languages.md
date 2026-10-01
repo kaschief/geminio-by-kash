@@ -8,7 +8,7 @@ keywords: język języki lokalizacja tłumaczenie od prawej do lewej arabski heb
 
 # Języki i pisanie od prawej do lewej
 
-Interfejs Gitcito jest przetłumaczony. Język jest ustawieniem Gitcito, a nie
+Interfejs Geminio jest przetłumaczony. Język jest ustawieniem Geminio, a nie
 systemu — deweloper na anglojęzycznym macOS, który woli czytać po japońsku,
 ustawia to tutaj, a deweloperowi na hebrajskim systemie, który woli aplikację po
 angielsku, nikt tego nie narzuca.
@@ -52,7 +52,7 @@ wskazują, wskazują w drugą stronę.
 
 Przełączenie jest natychmiastowe i nie wymaga restartu.
 
-![Gitcito po arabsku, z lustrzanie odbitym układem](../../screenshots/rtl.webp)
+![Geminio po arabsku, z lustrzanie odbitym układem](../../screenshots/rtl.webp)
 
 ### Co celowo się nie odbija
 
@@ -76,7 +76,7 @@ dookoła.
 Jesteśmy tu uczciwi co do tego, gdzie to się kończy:
 
 - **Wiadomości commitów, nazwy gałęzi i zawartość plików nigdy nie są przez
-  Gitcito przekierowywane.** Są pokazywane tak, jak napisał je autor. Hebrajska
+  Geminio przekierowywane.** Są pokazywane tak, jak napisał je autor. Hebrajska
   wiadomość commita na liście izolowanej jako LTR renderuje się po hebrajsku, ale
   otaczający ją wiersz nie odwraca się, żeby ją pomieścić.
 - **Powierzchnie firm trzecich zachowują własny kierunek** — terminal to xterm,

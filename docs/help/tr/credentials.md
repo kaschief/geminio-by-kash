@@ -8,12 +8,12 @@ keywords: kimlik bilgisi yardımcısı credential helper parola https tekrar sor
 
 # Kimlik bilgisi yardımcısı
 
-Gitcito üç ayrı türde gizli bilgi tutar ve insanlar bunların tek bir şey
+Geminio üç ayrı türde gizli bilgi tutar ve insanlar bunların tek bir şey
 olduğunu varsaymakta haksız da değiller:
 
 | | Kimde durur |
 |---|---|
-| Servis API token'ları — pull request'ler, issue'lar, CI kontrolleri | Gitcito, [işletim sistemi anahtar zincirinizde](security.md) |
+| Servis API token'ları — pull request'ler, issue'lar, CI kontrolleri | Geminio, [işletim sistemi anahtar zincirinizde](security.md) |
 | `git@…` taşıması | [SSH anahtarınız](ssh-keys.md), sistemin ssh ajanı üzerinden |
 | **`https://` taşıması** | **Git'in kendi kimlik bilgisi yardımcısı** |
 
@@ -54,7 +54,7 @@ listeler. Bunlar, eşleştikleri URL'ler için düz ayarı geçersiz kılar ve g
 | `cache` | Bellek, 15 dakikalığına. Diske hiçbir şey yazılmaz |
 | `store` | **Ev dizininizde düz bir dosya. Şifresiz** |
 
-Gitcito bu makinede gerçekten kurulu olanları önerir, işletim sisteminize
+Geminio bu makinede gerçekten kurulu olanları önerir, işletim sisteminize
 uyanı işaretler ve geri kalanını soluklaştırır.
 
 **Kapsam önemlidir.** *Her depo için* seçeneği genel yapılandırmanıza yazar ki
@@ -82,23 +82,23 @@ sürdürür ve her push, hiçbir şeyin adını vermeyen bir 401 ile başarısı
 **Unut**, yapılandırılmış yardımcıdan o sunucuya ait kaydı silmesini ister —
 git'in kendi belgelenmiş yolu olan `git credential reject`.
 
-Bu yolda hiçbir şey okunmaz: Gitcito, canlı bir parolayı standart çıktıya
+Bu yolda hiçbir şey okunmaz: Geminio, canlı bir parolayı standart çıktıya
 yazdıracak olan `git credential fill` komutunu asla çağırmaz.
 
 Sonraki push size bir kez sorar, yardımcı da yeni cevabı saklar.
 
 ## Bilmeye değer sınırlar
 
-- **Burası git'in deposu, Gitcito'nunki değil.** Burayı değiştirmek
+- **Burası git'in deposu, Geminio'nunki değil.** Burayı değiştirmek
   terminalinizin davranışını da değiştirir — zaten mesele bu, ama
   değiştirmeden önce bilmekte fayda var.
 - **Sistem düzeyindeki yardımcılar gösterilir, düzenlenemez.** Yalnızca bir
   yöneticinin yazabileceği bir yapılandırmada dururlar.
-- **Gitcito bir yardımcının neler tuttuğunu listeleyemez.** Hiçbir kimlik
+- **Geminio bir yardımcının neler tuttuğunu listeleyemez.** Hiçbir kimlik
   bilgisi API'si bunu gizli bilgileri teslim etmeden açığa vurmaz; bu yüzden
   pencere yalnızca yapılandırmayı bildirir ve istendiğinde siler, başka bir şey
   yapmaz.
-- **Gitcito'ya verdiğiniz bir token ayrıdır.** Birini iptal etmek diğerine
+- **Geminio'ya verdiğiniz bir token ayrıdır.** Birini iptal etmek diğerine
   dokunmaz; anahtar zinciri tarafı için [güvenlik](security.md) sayfasına bakın.
 
 Ayrıca bakınız: [Güvenlik](security.md) · [SSH anahtarları](ssh-keys.md) ·

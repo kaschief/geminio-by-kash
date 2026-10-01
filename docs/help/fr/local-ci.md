@@ -10,7 +10,7 @@ keywords: ci locale local ci act actions workflow runner docker pipeline tester 
 
 La boucle push–attente–croix rouge–correction–push gaspille dix minutes par
 aller-retour. Avec [act](https://nektosact.com), les mêmes workflows tournent
-dans des conteneurs Docker sur votre machine, et Gitcito les pilote :
+dans des conteneurs Docker sur votre machine, et Geminio les pilote :
 choisissez un workflow, appuyez sur Exécuter, regardez le même log que la CI
 imprimerait — avant que quoi que ce soit ne quitte votre machine.
 
@@ -18,11 +18,11 @@ imprimerait — avant que quoi que ce soit ne quitte votre machine.
 
 ## Une intégration, pas un runtime embarqué
 
-Gitcito ne fournit délibérément **ni** act **ni** Docker — une application qui
+Geminio ne fournit délibérément **ni** act **ni** Docker — une application qui
 traîne un runtime de conteneurs avec elle est le contraire d'un client git.
 C'est une intégration facultative : activez-la dans
 **Réglages → Intégrations** (ou dans la boîte de dialogue elle-même), et
-Gitcito détecte ce qui est installé et vous guide pour le reste —
+Geminio détecte ce qui est installé et vous guide pour le reste —
 `brew install act`, un démon Docker en marche, terminé. Rien ne s'exécute tant
 que les trois conditions ne sont pas réunies : activée, act installé, Docker
 joignable.
@@ -65,7 +65,7 @@ le graphe propose directement **Lancer la CI locale sur ce commit**.
 
 Le coût est annoncé avant que quoi que ce soit ne s'exécute, pas découvert
 après : tapez une révision ou une plage (`main..HEAD`, `HEAD~5..`, un sha),
-appuyez sur **Aperçu**, et Gitcito montre combien de commits correspondent à
+appuyez sur **Aperçu**, et Geminio montre combien de commits correspondent à
 la spécification et quels N plus récents — le budget explicite, plafonné à
 50 — s'exécuteraient réellement. Un balayage les exécute **séquentiellement**
 (act plus Docker est assez lourd pour que des exécutions parallèles se

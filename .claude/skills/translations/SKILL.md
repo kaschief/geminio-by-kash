@@ -1,11 +1,11 @@
 ---
 name: translations
-description: Working with Gitcito's locale dictionaries — adding a user-facing string, adding a whole new locale, or clearing a `npm run lint:i18n` failure. Use whenever renderer copy is added or changed, when the i18n guard reports a hardcoded string, or when someone asks to translate the app / support another language.
+description: Working with Geminio's locale dictionaries — adding a user-facing string, adding a whole new locale, or clearing a `npm run lint:i18n` failure. Use whenever renderer copy is added or changed, when the i18n guard reports a hardcoded string, or when someone asks to translate the app / support another language.
 ---
 
 # Translations
 
-Gitcito's UI copy lives in one dictionary file per locale under
+Geminio's UI copy lives in one dictionary file per locale under
 `src/renderer/src/i18n/`. Nothing a user can read may be hardcoded in a
 component.
 

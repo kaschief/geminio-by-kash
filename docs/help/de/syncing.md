@@ -23,7 +23,7 @@ lange Liste aktualisierter `origin/*`-Refs zieht vorbei, und dann bricht git ab
 mit *"There is no tracking information for the current branch"*. Es wurde nichts
 gepullt und nichts kaputtgemacht: der zweiten Hälfte fehlte schlicht das Ziel.
 
-Gitcito liest diesen Fehler und bietet die Reparatur als Button an — welche,
+Geminio liest diesen Fehler und bietet die Reparatur als Button an — welche,
 hängt davon ab, ob der Remote den Branch schon führt:
 
 | | |
@@ -88,7 +88,7 @@ Remotes zu veröffentlichen ist die doppelte Exposition, nicht die halbe Vorsich
 ## Branches, auf denen du nicht stehst
 
 `git pull` bewegt immer nur HEAD — deshalb verlangen die meisten Clients erst
-einen Checkout, bevor ein Branch nachziehen kann. Gitcito nicht: Rechtsklick auf
+einen Checkout, bevor ein Branch nachziehen kann. Geminio nicht: Rechtsklick auf
 einen lokalen Branch — in der Seitenleiste oder auf dem Badge im
 [Graphen](graph.md) — bringt **\<Branch\> pullen** und **\<Branch\> pushen**, beide
 auf *diesen* Branch bezogen.

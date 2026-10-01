@@ -34,7 +34,7 @@ edilebilmesi — ve bir dahaki sefere bu pencere olmadan bir terminalden
 
 **`-X ours`, `-s ours` değildir.** Buradaki anahtar yalnızca gerçekten çakışan
 hunk'lara karar verir; diğer dalın geri kalan tüm değişiklikleri normal şekilde
-birleşir. Gitcito'nun sunmadığı `ours` *stratejisi* ise sizin ağacınızı olduğu
+birleşir. Geminio'nun sunmadığı `ours` *stratejisi* ise sizin ağacınızı olduğu
 gibi alır ve karşı tarafı çöpe atar; ortaya içermediği bir çalışmayı içeriyormuş
 gibi görünen bir merge commit'i çıkar. Bu ayrım, git birleştirmeleri hakkında
 en çok yanlış anlaşılan tek şeydir.

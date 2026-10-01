@@ -45,7 +45,7 @@ export async function readHeadBranch(repoPath: string): Promise<string | null> {
  * The owning namespace of a remote URL: an org, a user, or the top level of a
  * GitLab group path.
  *
- * `parseRemoteUrl` handles the hosts Gitcito integrates with, but returns null
+ * `parseRemoteUrl` handles the hosts Geminio integrates with, but returns null
  * for a self-hosted GitLab or Gitea — which is exactly where an owner column
  * earns its keep. The fallback takes the first path segment after the host.
  */

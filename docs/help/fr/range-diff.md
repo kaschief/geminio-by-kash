@@ -12,7 +12,7 @@ Vous avez relu une branche. Quelqu'un l'a rebasée et l'a poussée en force. Un
 diff normal ne vaut plus rien : après un rebase, chaque commit est un nouveau
 commit, donc tout paraît nouveau.
 
-`git range-diff` apparie les deux versions commit par commit, et Gitcito lit les
+`git range-diff` apparie les deux versions commit par commit, et Geminio lit les
 anciennes positions directement dans le **reflog** — rien n'a donc eu besoin
 d'être enregistré à l'avance pour que cela fonctionne.
 

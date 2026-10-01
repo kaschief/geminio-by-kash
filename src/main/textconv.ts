@@ -1,7 +1,7 @@
 import { readFile } from 'fs/promises'
 import { extname } from 'path'
 
-// The formats Gitcito's bundled textconv converter understands. Word and Excel
+// The formats Geminio's bundled textconv converter understands. Word and Excel
 // reuse the same libraries the preview pane loads; JSON is native. PDF is
 // deliberately absent — the app previews PDFs with Chromium's viewer and has
 // no text extractor to reuse, so that suggestion still points at pdftotext.
@@ -53,7 +53,7 @@ export function stringsToText(buf: Buffer): string {
     // Node decodes little-endian only. Swap a copy — the caller's buffer is not
     // ours to reverse in place.
     const be = Buffer.from(buf.subarray(2))
-    if (be.length % 2 !== 0) throw new Error('gitcito-textconv: truncated UTF-16 .strings')
+    if (be.length % 2 !== 0) throw new Error('geminio-textconv: truncated UTF-16 .strings')
     text = be.swap16().toString('utf16le')
   } else {
     text = buf.toString('utf-8').replace(/^\uFEFF/, '')
@@ -71,6 +71,6 @@ export async function convertFile(path: string): Promise<string> {
   if (ext === '.docx') return docxToText(await readFile(path))
   if (ext === '.xlsx' || ext === '.xls') return xlsxToCsv(await readFile(path))
   throw new Error(
-    `gitcito-textconv: unsupported file type '${ext || path}' (supported: .docx, .xlsx, .xls, .json, .xcstrings, .strings)`
+    `geminio-textconv: unsupported file type '${ext || path}' (supported: .docx, .xlsx, .xls, .json, .xcstrings, .strings)`
   )
 }

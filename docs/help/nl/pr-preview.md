@@ -28,7 +28,7 @@ staat op je schijf.
 | Bitbucket Cloud, Bitbucket Server | `refs/pull-requests/<n>/from` |
 | Azure DevOps | `refs/pull/<n>/merge` |
 
-Gitcito peilt alle vier in één `ls-remote`, dus een onbekende of zelf gehoste
+Geminio peilt alle vier in één `ls-remote`, dus een onbekende of zelf gehoste
 forge werkt zolang hij een van deze conventies volgt.
 
 ## Openen
@@ -46,7 +46,7 @@ forge werkt zolang hij een van deze conventies volgt.
 
 **Pull request** — het nummer, of een geplakte browser-URL. `7`, `#7` en
 `https://github.com/owner/repo/pull/7` werken alle; net als de URL-vormen van
-GitLab, Bitbucket en Azure DevOps. Druk op **Zoeken** en Gitcito meldt de ref die
+GitLab, Bitbucket en Azure DevOps. Druk op **Zoeken** en Geminio meldt de ref die
 het oploste en de commit waar die naar wijst, vóór er iets gefetcht wordt.
 
 **Remote branch** — het tweede tabblad, voor wanneer er geen PR-ref te vinden is:
@@ -65,7 +65,7 @@ van weg kunt lopen is geen preview.
 
 Dezelfde pull request twee keer bekijken hergebruikt dezelfde branch en verzet
 hem naar de nieuwe head — handig wanneer de auteur een fix pusht terwijl jij aan
-het testen bent. Bestaat die branch al, dan zegt Gitcito dat en vraagt het
+het testen bent. Bestaat die branch al, dan zegt Geminio dat en vraagt het
 voordat het hem reset, want elke commit die alleen daar woont zou verloren gaan.
 
 ## Wat het niet zal doen

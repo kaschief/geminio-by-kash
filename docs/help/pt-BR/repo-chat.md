@@ -105,7 +105,7 @@ botão direito em um balão: **Copiar** pega a seleção, **Copiar mensagem** a
 mensagem inteira — uma resposta é copiada como sua fonte Markdown — e, quando
 o clique caiu em um link, **Copiar link** pega o endereço.
 
-Links abrem no seu navegador padrão, nunca dentro do Gitcito — tanto links
+Links abrem no seu navegador padrão, nunca dentro do Geminio — tanto links
 Markdown nas respostas quanto endereços `https://` nas suas próprias
 mensagens.
 
@@ -138,7 +138,7 @@ O chat do repositório pode propor edições exatas, criação ou substituição
 arquivos inteiros e exclusão, e depois ações Git: padrões de ignore, stage,
 unstage, commit, stash, descarte, branch, troca de branch, tag e — porque a
 lista de branches e os commits recentes lhe são mostrados — merge, rebase,
-revert e cherry-pick. O Gitcito calcula o diff expansível localmente. Arquivos
+revert e cherry-pick. O Geminio calcula o diff expansível localmente. Arquivos
 existentes precisam vir da evidência lida; alvos inseguros, secretos, ignorados,
 gerados, binários, desatualizados, grandes demais ou alcançados por symlink são
 recusados. Reset, reescrita de histórico, exclusão de branch e toda operação
@@ -150,12 +150,12 @@ que já rodou, e o aviso de conflito assume exatamente como faria para a mesma
 operação iniciada pela barra.
 
 O lote inteiro é conferido de novo antes da primeira escrita e sofre rollback
-se um passo falhar. Antes de um commit, o Gitcito confirma que existe algo no
+se um passo falhar. Antes de um commit, o Geminio confirma que existe algo no
 stage. O cartão marca cada linha concluída, falha ou pulada e preserva resultados
 parciais. Depois, uma chamada separada e sem ações resume o resultado real; se
 esse resumo falhar, o cartão continua sendo o registro autoritativo.
 
-**Ele também pode escrever `.gitcito.json`.** O chat recebe o formato do
+**Ele também pode escrever `.geminio.json`.** O chat recebe o formato do
 [arquivo de configuração do próprio repositório](repo-config.md), então *adicione
 links de tickets para JIRA-1234* ou *proteja os branches de release* vira uma
 ação de arquivo escrita contra o esquema real, e não chaves plausíveis que o
@@ -198,7 +198,7 @@ começar, não de dentro dele.
 ### Desfazer um plano
 
 Um plano é aprovado em lote, então é desfeito em lote. Antes da primeira ação
-capaz de mudar algo, o Gitcito registra onde o branch estava e tira um snapshot
+capaz de mudar algo, o Geminio registra onde o branch estava e tira um snapshot
 da árvore de trabalho; o cartão concluído passa a oferecer **Desfazer plano**.
 Ele leva o branch de volta àquele commit e restaura a árvore, o que joga fora o
 que o plano produziu — por isso confirma antes e nomeia o commit de destino. Os
@@ -237,11 +237,11 @@ editável — nada é enviado até você apertar Enviar.
 - **Binários e arquivos acima de 512 KB** vindos de fora do repositório são
   ignorados do mesmo jeito. Dentro dele valem as regras de sempre.
 - **O modelo nunca escreve diretamente.** Ele devolve propostas estruturadas;
-  o Gitcito valida, calcula o diff e executa apenas sob as
+  o Geminio valida, calcula o diff e executa apenas sob as
   [suas regras de aprovação](#modos-de-aprovação). Trabalho Git destrutivo sempre
   confirma. Com propostas de ações desligadas, o chat nem propõe mudanças.
 - **As conversas vivem só na memória.** Cada repositório mantém seu fio; sair do
-  Gitcito descarta tudo.
+  Geminio descarta tudo.
 
 ## Como abrir
 

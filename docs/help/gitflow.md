@@ -27,10 +27,10 @@ forgetting `develop`, or tagging the wrong branch.
 | `release/*` | A version being stabilised, branched off develop. |
 | `hotfix/*` | An urgent fix, branched off **main** — production cannot wait for develop. |
 
-Gitcito reads and writes the same `gitflow.*` git config keys the `git flow`
+Geminio reads and writes the same `gitflow.*` git config keys the `git flow`
 CLI uses (`gitflow.branch.master`, `gitflow.prefix.feature`, …). A repository
 someone already ran `git flow init` on is recognised immediately, and a
-repository set up here works with the CLI afterwards. Gitcito runs plain git
+repository set up here works with the CLI afterwards. Geminio runs plain git
 commands throughout — the CLI does not need to be installed.
 
 **Set up** writes those keys and, if the integration branch does not exist yet,
@@ -54,7 +54,7 @@ The name is what you type; the prefix comes from the layout.
 **Finish** is the part worth automating, because it is several steps that must
 all happen:
 
-| Kind | What Gitcito does |
+| Kind | What Geminio does |
 |------|-------------------|
 | Feature | Merges into develop with `--no-ff`, deletes the branch, leaves you on develop |
 | Release | Merges into main, tags it, merges into develop, deletes the branch, leaves you on develop |
@@ -75,7 +75,7 @@ message if you want more than the default.
   uncommitted work is how people lose it.
 - **A conflicting merge rolls the whole thing back.** If merging into main
   succeeds but merging into develop conflicts, you would otherwise be left with
-  a half-finished release. Gitcito restores every branch to where it was and
+  a half-finished release. Geminio restores every branch to where it was and
   reports the conflict. Merge that branch manually, resolve it in the
   [conflict resolver](conflicts.md), and the flow is yours to finish by hand.
 - **It never pushes.** Finishing is local. Push main, develop and the new tag

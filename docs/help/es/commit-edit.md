@@ -10,7 +10,7 @@ keywords: editar commit edit reescribir historia rewrite history amend pasado re
 
 La errata está en un commit de hace tres semanas. El arreglo habitual es un
 rebase interactivo: parar en el commit, editar, continuar, rezar. El arreglo de
-Gitcito es: clic derecho en el commit, **Editar este commit**, cambiar el
+Geminio es: clic derecho en el commit, **Editar este commit**, cambiar el
 texto, listo. El botón del lápiz en el panel de detalles del commit abre el
 mismo editor.
 

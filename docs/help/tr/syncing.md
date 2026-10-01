@@ -23,7 +23,7 @@ başarılı olur, güncellenen `origin/*` reflerinin uzun listesi akıp geçer, 
 git *"There is no tracking information for the current branch"* diyerek durur.
 Hiçbir şey çekilmedi ve hiçbir şey bozulmadı: ikinci yarının hedefi yoktu.
 
-Gitcito bu hatayı okur ve onarımı bir düğme olarak sunar; hangisini sunacağını
+Geminio bu hatayı okur ve onarımı bir düğme olarak sunar; hangisini sunacağını
 uzak deponun dalı zaten taşıyıp taşımadığına bakarak seçer:
 
 | | |
@@ -86,7 +86,7 @@ iki katı demektir; yarısı değil.
 ## Üzerinde olmadığın dallar
 
 `git pull` yalnızca HEAD’i oynatır; çoğu istemcinin bir dalı güncellemek için
-önce checkout etmeni istemesinin sebebi bu. Gitcito istemez: herhangi bir yerel
+önce checkout etmeni istemesinin sebebi bu. Geminio istemez: herhangi bir yerel
 dala sağ tıkla — kenar çubuğunda ya da [grafikteki](graph.md) rozetinde — ve
 **\<dal\> dalını çek** ile **\<dal\> dalını push’la** karşına çıksın; ikisi de
 checkout edilmiş dala değil, *o* dala uygulanır.

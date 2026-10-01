@@ -12,7 +12,7 @@ keywords: ssh key keys agent ssh-add ssh-keygen ed25519 publickey permission den
 
 ## Why this exists next to the tokens
 
-Gitcito authenticates two different things, and people reasonably assume they
+Geminio authenticates two different things, and people reasonably assume they
 are one:
 
 | | Authenticated by |
@@ -53,7 +53,7 @@ OS was told otherwise. "It worked yesterday" is usually this.
 
 **Test connection** exists because ssh's own answer is misleading: GitHub
 authenticates you successfully and *then* exits with a failure code, since it
-does not offer a shell. Gitcito reads the message rather than the exit code, and
+does not offer a shell. Geminio reads the message rather than the exit code, and
 shows the raw output underneath so you can check its reading.
 
 ## The limits, stated plainly
@@ -64,15 +64,15 @@ shows the raw output underneath so you can check its reading.
 - **Generating never overwrites.** A name already present in `~/.ssh` is
   refused. Overwriting a private key silently revokes your access to everything
   that trusts it, and no confirmation dialog makes that recoverable.
-- **Passphrases are not stored by Gitcito.** You type one when generating or
+- **Passphrases are not stored by Geminio.** You type one when generating or
   when adding to the agent; it is passed to `ssh-keygen`/`ssh-add` and dropped.
   Persisting it across reboots is the OS keychain's job, via `ssh-add`.
 - **No `~/.ssh/config` editing**, no host aliases, no per-repo key selection.
-  Those live in your ssh config, and Gitcito leaves that file alone.
+  Those live in your ssh config, and Geminio leaves that file alone.
 
 ## What never leaves your machine
 
-**Gitcito never reads, displays or transmits a private key.** The section lists
+**Geminio never reads, displays or transmits a private key.** The section lists
 public halves and fingerprints. The only thing that is ever sent anywhere is the
 public key you explicitly press **Upload** on — and that goes to GitHub, under
 your own token, after a confirmation that names the fingerprint.

@@ -49,7 +49,7 @@ man wissen sollte:
 - Sie sind **lokal, bis sie gepusht werden**: `git push origin "refs/replace/*"`
   teilt sie, und wer ohne sie klont, sieht die unangetastete Historie.
 - **Undo funktioniert** — die Ref zu entfernen stellt die echte Abstammung
-  sofort wieder her, und Gitcito zeichnet das Pfropfen wie alles andere als
+  sofort wieder her, und Geminio zeichnet das Pfropfen wie alles andere als
   rückgängig machbare Aktion auf.
 - `core.useReplaceRefs=false` bringt git dazu, sie alle auf einen Schlag zu
   ignorieren. Der Schalter hier schreibt genau das, und der Dialog sagt es dir,
@@ -82,7 +82,7 @@ noch per Sha fetchbar und immer noch in jedem existierenden Klon.
 - **Eine Ersetzung kann einen Commit vor Werkzeugen verbergen, nicht vor git.**
   `git cat-file` und der [Objekt-Explorer](objects.md) öffnen das Original
   weiterhin per Sha.
-- **Gitcito bietet `git replace --edit` nicht an** (den Inhalt eines Objekts von
+- **Geminio bietet `git replace --edit` nicht an** (den Inhalt eines Objekts von
   Hand umschreiben). Das ist die Aufgabe eines Texteditors auf einem rohen
   Objekt — und ein Schuss ins eigene Knie, wenn man eine UI drumherum baut.
 

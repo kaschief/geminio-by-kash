@@ -26,7 +26,7 @@ Point it at a repository and it writes a short wiki explaining the codebase.
 
 ## The written pages
 
-Gitcito plans a handful of pages from the files the repository tracks — docs and
+Geminio plans a handful of pages from the files the repository tracks — docs and
 manifests first, then whatever churns most — and writes each page from the files
 it covers.
 

@@ -72,7 +72,7 @@ Bir çalışma alanı, **kaydedilmiş bütün bir sekme şerididir**. Geçiş ya
 sekmeyi bir anda değiştirir: `Work` ile `Personal` birbirinin ayağına basmayı
 bırakır.
 
-Çalışma alanının adı sol üstte, Gitcito işaretinin yanında durur. Geçiş yapmak,
+Çalışma alanının adı sol üstte, Geminio işaretinin yanında durur. Geçiş yapmak,
 oluşturmak, yeniden adlandırmak, sıralamak veya silmek için ona tıklayın.
 Yanında ise içinde bulunduğunuz çalışma alanı için
 [Komuta merkezi](mission-control.md)'ni açan gösterge vardır.

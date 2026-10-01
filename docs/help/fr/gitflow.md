@@ -27,10 +27,10 @@ urgent dans `main` en oubliant `develop`, ou étiqueter la mauvaise branche.
 | `release/*` | Une version en cours de stabilisation, issue de develop. |
 | `hotfix/*` | Un correctif urgent, issu de **main** — la production ne peut pas attendre develop. |
 
-Gitcito lit et écrit les mêmes clés de configuration git `gitflow.*` que la CLI
+Geminio lit et écrit les mêmes clés de configuration git `gitflow.*` que la CLI
 `git flow` (`gitflow.branch.master`, `gitflow.prefix.feature`, …). Un dépôt sur
 lequel quelqu'un a déjà lancé `git flow init` est reconnu immédiatement, et un
-dépôt configuré ici fonctionne ensuite avec la CLI. Gitcito n'exécute que des
+dépôt configuré ici fonctionne ensuite avec la CLI. Geminio n'exécute que des
 commandes git ordinaires — la CLI n'a pas besoin d'être installée.
 
 **Configurer** écrit ces clés et, si la branche d'intégration n'existe pas
@@ -56,7 +56,7 @@ Le nom est ce que vous tapez ; le préfixe vient de la disposition.
 **Terminer** est la partie qui mérite d'être automatisée, parce qu'elle
 représente plusieurs étapes qui doivent toutes avoir lieu :
 
-| Type | Ce que fait Gitcito |
+| Type | Ce que fait Geminio |
 |------|-------------------|
 | Fonctionnalité | Fusionne dans develop avec `--no-ff`, supprime la branche, vous laisse sur develop |
 | Release | Fusionne dans main, l'étiquette, fusionne dans develop, supprime la branche, vous laisse sur develop |
@@ -79,7 +79,7 @@ défaut.
   façon de le perdre.
 - **Une fusion en conflit annule tout.** Si la fusion dans main réussit mais que
   celle dans develop entre en conflit, vous resteriez sinon avec une release à
-  moitié terminée. Gitcito remet chaque branche là où elle était et signale le
+  moitié terminée. Geminio remet chaque branche là où elle était et signale le
   conflit. Fusionnez cette branche manuellement, résolvez-la dans le [résolveur
   de conflits](conflicts.md), et le reste du flux est à vous de le terminer à la
   main.

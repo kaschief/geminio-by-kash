@@ -12,7 +12,7 @@ keywords: ssh clave claves key keys agente agent ssh-add ssh-keygen ed25519 publ
 
 ## Por qué esto vive al lado de los tokens
 
-Gitcito autentica dos cosas distintas, y es razonable dar por hecho que son una
+Geminio autentica dos cosas distintas, y es razonable dar por hecho que son una
 sola:
 
 | | Se autentica con |
@@ -55,7 +55,7 @@ suele ser esto.
 
 **Probar conexión** existe porque la respuesta del propio ssh induce a error:
 GitHub te autentica correctamente y *después* sale con un código de fallo,
-porque no ofrece shell. Gitcito lee el mensaje en lugar del código de salida, y
+porque no ofrece shell. Geminio lee el mensaje en lugar del código de salida, y
 enseña debajo la salida en crudo para que puedas comprobar su lectura.
 
 ## Los límites, dichos claramente
@@ -67,16 +67,16 @@ enseña debajo la salida en crudo para que puedas comprobar su lectura.
 - **Generar nunca sobrescribe.** Un nombre que ya exista en `~/.ssh` se rechaza.
   Sobrescribir una clave privada en silencio te revoca el acceso a todo lo que
   confía en ella, y no hay diálogo de confirmación que haga eso recuperable.
-- **Gitcito no guarda las frases de paso.** Escribes una al generar o al añadir
+- **Geminio no guarda las frases de paso.** Escribes una al generar o al añadir
   al agente; se le pasa a `ssh-keygen`/`ssh-add` y se descarta. Mantenerla entre
   reinicios es trabajo del llavero del sistema, vía `ssh-add`.
 - **No se edita `~/.ssh/config`**, ni hay alias de host, ni selección de clave
-  por repositorio. Eso vive en tu configuración de ssh, y Gitcito no toca ese
+  por repositorio. Eso vive en tu configuración de ssh, y Geminio no toca ese
   archivo.
 
 ## Qué no sale nunca de tu máquina
 
-**Gitcito nunca lee, muestra ni transmite una clave privada.** La sección lista
+**Geminio nunca lee, muestra ni transmite una clave privada.** La sección lista
 las mitades públicas y las huellas. Lo único que se envía a algún sitio alguna
 vez es la clave pública sobre la que pulsas **Subir** explícitamente — y eso va
 a GitHub, con tu propio token, después de una confirmación que nombra la huella.

@@ -23,7 +23,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, info: ErrorInfo): void {
     // Surface in the console for diagnosis.
-    console.error('[gitcito] UI error:', error, info.componentStack)
+    console.error('[geminio] UI error:', error, info.componentStack)
   }
 
   render(): ReactNode {

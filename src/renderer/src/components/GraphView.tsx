@@ -279,6 +279,9 @@ function GraphColumnsHeader({
   order,
   branchCol,
   graphCol,
+  fitCommits,
+  remoteNames,
+  dateFormat,
   onResize,
   onMenu,
   onReorder,
@@ -288,6 +291,9 @@ function GraphColumnsHeader({
   order: GraphFlowColumnId[]
   branchCol: number
   graphCol: number
+  fitCommits: GraphCommit[]
+  remoteNames: Set<string>
+  dateFormat: 'relative' | 'datetime' | 'iso'
   onResize: (updates: Partial<Record<GraphColumnId, number>>) => void
   onMenu: (x: number, y: number) => void
   onReorder: (from: GraphFlowColumnId, to: GraphFlowColumnId) => void
@@ -315,6 +321,7 @@ function GraphColumnsHeader({
   // slack at its position in the chain. The divider therefore follows the
   // pointer until every column on the shrinking side has hit its minimum.
   const startResize = (dividerLeft: GraphColumnId, e: React.PointerEvent): void => {
+    if (e.button !== 0) return
     const b = visibleCols.indexOf(dividerLeft)
     if (b < 0) return
     e.preventDefault()
@@ -396,11 +403,8 @@ function GraphColumnsHeader({
     window.addEventListener('pointercancel', up)
   }
 
-  // Double-click a divider: size the column to its widest content, the way
-  // Finder and spreadsheets do. Measures the rows on screen (the list is
-  // virtualized, so that is what exists) plus the heading. The message column
-  // fills the remaining space, so its divider fits the column to its right; the
-  // graph column goes back to sizing itself to its lanes.
+  // Measure loaded data as well as mounted cells: virtualization must not make
+  // the answer depend on which part of history happens to be on screen.
   const CELL_SELECTOR: Partial<Record<GraphColumnId, string>> = {
     branch: '.graph-refs',
     deployment: '.row-deploy',
@@ -423,7 +427,41 @@ function GraphColumnsHeader({
       return range.getBoundingClientRect().width + parseFloat(style.paddingLeft) + parseFloat(style.paddingRight)
     }
     let widest = 0
-    for (const cell of scroller.querySelectorAll<HTMLElement>(selector)) widest = Math.max(widest, textWidth(cell))
+    // Branch cells include a flex connector reaching the commit lane. Its width
+    // is layout, not content, and must never inflate the fitted badge width.
+    if (target !== 'branch') {
+      for (const cell of scroller.querySelectorAll<HTMLElement>(selector)) widest = Math.max(widest, textWidth(cell))
+    }
+    let sample = scroller.querySelector<HTMLElement>(target === 'branch' ? '.ref-badge' : selector)
+    let temporary: HTMLElement | null = null
+    if (!sample) {
+      temporary = document.createElement('span')
+      temporary.className = target === 'branch' ? 'ref-badge' : selector.slice(1)
+      temporary.style.cssText = 'position:absolute;visibility:hidden;pointer-events:none'
+      scroller.appendChild(temporary)
+      sample = temporary
+    }
+    const context = document.createElement('canvas').getContext('2d')
+    if (context && sample) {
+      const style = getComputedStyle(sample)
+      context.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`
+      const padding = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight)
+      const measure = (text: string): number => context.measureText(text).width + padding
+      for (const commit of fitCommits) {
+        if (commit.hash === WIP_HASH) continue
+        if (target === 'author') widest = Math.max(widest, measure(commit.author))
+        if (target === 'date') widest = Math.max(widest, measure(formatCommitDate(commit.date, dateFormat)))
+        if (target === 'sha') widest = Math.max(widest, measure(commit.hash.slice(0, 7)))
+        if (target === 'branch') {
+          const groups = buildRefGroups(commit.refs, remoteNames)
+          const group = groups[0]
+          // Badge borders, icon/check/star, remote icons, outer padding and +N.
+          if (group) widest = Math.max(widest, measure(group.label) + 44 + group.remotes.length * 14 +
+            (groups.length > 1 ? measure(`+${groups.length - 1}`) + 8 : 0))
+        }
+      }
+    }
+    temporary?.remove()
     const label = headerRef.current?.querySelector<HTMLElement>(`[data-col="${target}"] .ghc-label`)
     // The heading: its label, the cell padding, and room for a filter button.
     if (label) widest = Math.max(widest, label.getBoundingClientRect().width + 18 + (target === 'author' ? 18 : 0))
@@ -457,7 +495,15 @@ function GraphColumnsHeader({
   )
 
   return (
-    <div className="graph-header" ref={headerRef}>
+    <div
+      className="graph-header"
+      ref={headerRef}
+      onContextMenu={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        onMenu(e.clientX, e.clientY)
+      }}
+    >
       {columns.branch.visible && (
         <div className="ghc" data-col="branch" style={{ width: branchCol }}>
           <span className="ghc-label">{t(COL_LABEL_KEY.branch as Parameters<typeof t>[0])}</span>
@@ -559,20 +605,16 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
   const baseColumns = useSettingsStore((s) => s.settings.graphColumns ?? defaultGraphColumns())
   const baseColumnOrder = useSettingsStore((s) => s.settings.graphColumnOrder ?? defaultGraphColumnOrder())
   const repoLayout = useSettingsStore((s) => s.settings.repoLayouts?.[repo.path])
-  // Graph columns are per-repository: a repo's own override wins, otherwise the
-  // global defaults apply.
+  // Column presentation is shared across every repository.
   // Stored widths are clamped on the way in, so a column saved too wide (before
   // the caps existed) comes back to a sensible size by itself.
   const columns = useMemo(() => {
-    const raw = repoLayout?.graphColumns ?? baseColumns
+    const raw = baseColumns
     const out = { ...raw }
     for (const id of Object.keys(out) as GraphColumnId[]) out[id] = { ...out[id], width: clampCol(id, out[id].width) }
     return out
-  }, [repoLayout, baseColumns])
-  const columnOrderRaw = useMemo(
-    () => repoLayout?.graphColumnOrder ?? baseColumnOrder,
-    [repoLayout, baseColumnOrder]
-  )
+  }, [baseColumns])
+  const columnOrderRaw = baseColumnOrder
   // The deployment column shows GitHub CI/deploy status; drop it for other hosts.
   const isGitHub = repoIsGitHub(repo.remotes)
   const columnOrder = useMemo(
@@ -1849,6 +1891,9 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
         order={columnOrder}
         branchCol={branchCol}
         graphCol={graphCol}
+        fitCommits={displayCommits}
+        remoteNames={remoteNames}
+        dateFormat={dateFormat}
         onResize={setColumnWidths}
         onMenu={openColumnsMenu}
         onReorder={reorderColumns}

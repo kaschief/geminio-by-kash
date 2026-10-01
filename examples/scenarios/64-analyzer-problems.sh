@@ -2,7 +2,7 @@
 # 64. analyzer-problems — a repo whose own toolchain reports diagnostics, for
 # the Problems dock.
 #
-# Gitcito runs the project's analyzers exactly the way the project would: a
+# Geminio runs the project's analyzers exactly the way the project would: a
 # binary in node_modules/.bin wins over PATH. So the repo ships stand-in `tsc`
 # and `eslint` there — real executables printing real-shaped output — and the
 # panel exercises the whole path (detect → run → parse → group) without needing
@@ -69,7 +69,7 @@ void checkout([], 'tok_123')
 EOF
 
 # ── The stand-in analyzers ───────────────────────────────────────────────────
-# Both print what the real tools print, in the format Gitcito parses: tsc's
+# Both print what the real tools print, in the format Geminio parses: tsc's
 # `file(line,col): error TSxxxx: message`, and eslint's `-f json`.
 cat > "$R/node_modules/.bin/tsc" <<'EOF'
 #!/usr/bin/env node

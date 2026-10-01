@@ -2,13 +2,13 @@
 title: Rodar e depurar (launch.json)
 category: Ferramentas de workspace
 order: 91
-summary: Rode suas configurações de launch do VS Code sem sair do Gitcito.
+summary: Rode suas configurações de launch do VS Code sem sair do Geminio.
 keywords: launch.json rodar run depurar debug vscode configurações configs tasks preLaunchTask input background compound compounds stopAll serverReadyAction sessões paralelas hot reload hot restart device simulator emulator run target flutter metro expo vite nodemon vitest jest mocha ava wrangler dotnet watch adb simctl avd xcodebuild capacitor
 ---
 
 # Rodar e depurar
 
-O Gitcito lê o seu `.vscode/launch.json` — o da raiz e quaisquer aninhados,
+O Geminio lê o seu `.vscode/launch.json` — o da raiz e quaisquer aninhados,
 agrupados com divisórias — e roda a configuração que você escolher no terminal
 integrado.
 
@@ -33,7 +33,7 @@ integrado.
 - **`serverReadyAction`** é respeitada: quando a saída da sessão corresponde ao
   padrão configurado, a URL anunciada abre no seu navegador
   (`openExternally`; `debugWithChrome` / `debugWithEdge` também abrem o
-  navegador — o Gitcito não consegue anexar um depurador).
+  navegador — o Geminio não consegue anexar um depurador).
 
 ![Um compound executando duas sessões paralelas](../../screenshots/launch-compound.webp)
 
@@ -50,7 +50,7 @@ reinicia só aquele membro.
 Se a barra cobrir algo de que você precisa, arraste-a para o lado pela alça —
 a posição é lembrada, e um clique duplo na alça a centraliza de novo.
 
-O que o Gitcito deliberadamente **não** faz: ele executa seus programas em
+O que o Geminio deliberadamente **não** faz: ele executa seus programas em
 terminais reais, mas não é um depurador — sem breakpoints, sem inspeção de
 variáveis, sem Debug Adapter Protocol. Configurações somente attach funcionam
 quando carregam um `preLaunchTask` (a tarefa é o trabalho); um attach puro não
@@ -66,7 +66,7 @@ a suíte no **a**. Reiniciar a configuração de lançamento para conseguir o me
 o caminho lento — mata o processo, roda de novo cada `preLaunchTask` e joga fora
 o estado do app.
 
-Por isso o Gitcito lê o comando que a configuração realmente inicia — seguindo um
+Por isso o Geminio lê o comando que a configuração realmente inicia — seguindo um
 `npm run dev` até os scripts do seu `package.json` — e coloca as teclas daquele
 runtime na barra de depuração. Ao pressionar uma, a tecla é escrita na entrada
 padrão da sessão, exatamente como se você a tivesse digitado no terminal.
@@ -91,7 +91,7 @@ uma tecla que ninguém lê é pior do que botão nenhum, porque parece que funci
 
 **Os limites.** A detecção é textual: ela procura o nome do programa na linha de
 comando, então uma configuração que sobe seu servidor por um script invólucro que
-o Gitcito não consegue ler não recebe nada. Também não há confirmação — o botão
+o Geminio não consegue ler não recebe nada. Também não há confirmação — o botão
 pisca, e a saída do próprio processo é a resposta de verdade. Uma sessão pausada
 ou encerrada não aceita entrada, então os botões ficam desabilitados.
 
@@ -102,7 +102,7 @@ ou encerrada não aceita entrada, então os botões ficam desabilitados.
   "name": "API (watch)",
   "type": "node-terminal",
   "command": "./scripts/dev.sh",
-  "gitcito": { "hotActions": [{ "label": "Reload", "send": "r", "icon": "reload" }] }
+  "geminio": { "hotActions": [{ "label": "Reload", "send": "r", "icon": "reload" }] }
 }
 ```
 
@@ -117,7 +117,7 @@ Um array `hotActions` vazio desliga os botões para aquela configuração.
 
 Uma configuração que compila um app móvel precisa saber onde rodar. Essa escolha
 não é só do Flutter — React Native, Expo, Capacitor e xcodebuild também aceitam
-um destino, cada um escrito de um jeito. Então o Gitcito pergunta uma vez, ao
+um destino, cada um escrito de um jeito. Então o Geminio pergunta uma vez, ao
 lado da aba **LAUNCH**, e escreve a resposta na forma que o runtime daquela
 configuração lê. O seletor só aparece quando alguma configuração do repositório
 realmente aceita um dispositivo.
@@ -153,11 +153,11 @@ Toda configuração lançada também recebe `GITCITO_DEVICE_ID`,
 `GITCITO_DEVICE_NAME` e `GITCITO_DEVICE_PLATFORM` no ambiente, mais
 `ANDROID_SERIAL` quando o destino é um Android de verdade. É isso que deixa um
 script invólucro, uma task do Gradle ou um `adb` avulso acertarem o mesmo
-aparelho sem o Gitcito reescrever nada.
+aparelho sem o Geminio reescrever nada.
 
 **Ligar um dispositivo frio.** Tudo sob *Não iniciado* liga quando você escolhe:
 `flutter emulators --launch`, `xcrun simctl boot` (mais a janela do Simulator) ou
-`emulator -avd` desacoplado — assim fechar o Gitcito não derruba seu emulador
+`emulator -avd` desacoplado — assim fechar o Geminio não derruba seu emulador
 Android.
 
 **Os limites.** Uma configuração que já nomeia um dispositivo — um `-d`
@@ -175,7 +175,7 @@ de existir.
 
 ## Valores de JSON e YAML
 
-Um campo pode mostrar a versão atual ou preencher um valor a partir de um arquivo do projeto. Gitcito lê o arquivo ao iniciar, antes de mostrar os campos. Não requer extensão do VS Code.
+Um campo pode mostrar a versão atual ou preencher um valor a partir de um arquivo do projeto. Geminio lê o arquivo ao iniciar, antes de mostrar os campos. Não requer extensão do VS Code.
 
 Adicione fileValues a um campo promptString ou pickString. Cada valor define um caminho relativo à pasta da configuração de inicialização e uma propriedade separada por pontos. Use ${fileValue:name} em description ou default. Um default vazio mantém o campo opcional.
 
@@ -192,4 +192,4 @@ Adicione fileValues a um campo promptString ou pickString. Cada valor define um 
 }
 ```
 
-Suporta arquivos JSON, YAML e YML nessa pasta, de até 1 MiB, com textos, números ou booleanos. Arquivos ausentes, dados inválidos, propriedades inexistentes e caminhos externos interrompem a inicialização com um erro. Não executa comandos nem expressões JavaScript. Cada nova inicialização relê os arquivos; Restart reutiliza as respostas. O VS Code não resolve esses campos do Gitcito nativamente.
+Suporta arquivos JSON, YAML e YML nessa pasta, de até 1 MiB, com textos, números ou booleanos. Arquivos ausentes, dados inválidos, propriedades inexistentes e caminhos externos interrompem a inicialização com um erro. Não executa comandos nem expressões JavaScript. Cada nova inicialização relê os arquivos; Restart reutiliza as respostas. O VS Code não resolve esses campos do Geminio nativamente.

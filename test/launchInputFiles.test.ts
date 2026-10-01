@@ -7,7 +7,7 @@ import type { LaunchInput } from '../src/shared/types'
 
 const folders: string[] = []
 async function workspace(): Promise<string> {
-  const dir = await mkdtemp(join(tmpdir(), 'gitcito-input-files-'))
+  const dir = await mkdtemp(join(tmpdir(), 'geminio-input-files-'))
   folders.push(dir)
   return dir
 }

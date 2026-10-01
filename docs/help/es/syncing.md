@@ -24,7 +24,7 @@ de refs `origin/*` actualizadas, y entonces git se para con *"There is no
 tracking information for the current branch"*. No se hizo pull de nada y no se
 rompió nada: la segunda mitad sencillamente no tenía objetivo.
 
-Gitcito lee ese error y ofrece la reparación como un botón, eligiendo cuál según
+Geminio lee ese error y ofrece la reparación como un botón, eligiendo cuál según
 si el remoto ya tiene la rama:
 
 | | |
@@ -87,7 +87,7 @@ en dos remotos es el doble de exposición, no la mitad de precaución.
 ## Ramas en las que no estás
 
 `git pull` sólo mueve HEAD, y por eso casi todos los clientes te obligan a hacer
-checkout de una rama antes de poder ponerla al día. Gitcito no: haz clic derecho
+checkout de una rama antes de poder ponerla al día. Geminio no: haz clic derecho
 en cualquier rama local —en la barra lateral o en su etiqueta del
 [grafo](graph.md)— y tendrás **Pull de \<rama\>** y **Push de \<rama\>**, ambos
 sobre *esa* rama y no sobre la que tienes en checkout.

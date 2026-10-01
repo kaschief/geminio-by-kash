@@ -59,7 +59,7 @@ reporta o erro real.
   branch* desmarcado é o que pede as outras branches de volta
   (`--no-single-branch`), e é por isso que a dica embaixo dela muda.
 - **Clonar uma pasta local** normalmente ignora o `--depth` por completo, porque o
-  git faz hardlink do banco de objetos em vez de buscar. O Gitcito clona por uma
+  git faz hardlink do banco de objetos em vez de buscar. O Geminio clona por uma
   URL `file://` quando você pede uma cópia rasa de um repositório local, então a
   profundidade que você pediu é a profundidade que você recebe.
 

@@ -27,7 +27,7 @@ notitie toevoegen*, typen, **Notitie opslaan**. Meerdere regels mag.
 
 ![Een notitie schrijven onder de boodschap van een gepushte commit, en hem opslaan](../../screenshots/clip-commit-note.webp)
 
-Een notitie opslaan is een gewone Gitcito-actie — er verschijnt een melding, en
+Een notitie opslaan is een gewone Geminio-actie — er verschijnt een melding, en
 **Ongedaan maken** zet de vorige tekst terug, inclusief het herstellen van een
 notitie die je verwijderde.
 
@@ -37,7 +37,7 @@ niet.
 ## Er een vinden
 
 Notities zijn onzichtbaar in een gewone log, en dat is de belangrijkste reden dat
-mensen ze nooit ontdekken. Gitcito markeert een commit die er een draagt met een
+mensen ze nooit ontdekken. Geminio markeert een commit die er een draagt met een
 klein notitie-icoon in de boodschapkolom van de grafiek, zodat de aantekening
 vindbaar is zonder dat je weet dat hij er is.
 
@@ -59,12 +59,12 @@ git push <remote> refs/notes/commits
 git fetch <remote> +refs/notes/commits:refs/notes/commits
 ```
 
-Alleen de commitnotities-ref reist mee — Gitcito's eigen machine-lokale refs
+Alleen de commitnotities-ref reist mee — Geminio's eigen machine-lokale refs
 (zoals de oordelen van de [lokale CI](local-ci.md)) worden bewust niet
 gepubliceerd.
 
 Sommige hosts willen notities ook aan hun kant ingeschakeld of toegestaan zien;
-een weigering daar is het beleid van de host, geen beperking van Gitcito.
+een weigering daar is het beleid van de host, geen beperking van Geminio.
 
 Geen gedeelde remote, of geen schrijftoegang? [Veilig delen](secure-share.md)
 kan de notities van een repository in een versleuteld bestand pakken dat een
@@ -73,7 +73,7 @@ een uitdrukkelijke overschrijf-keuze voor uiteengelopen notities.
 
 ## Grenzen
 
-- **Eén notities-ref.** Gitcito leest en schrijft de standaard
+- **Eén notities-ref.** Geminio leest en schrijft de standaard
   `refs/notes/commits`. Eigen namespaces (`git notes --ref=review`) worden niet
   ontsloten — een repository die ze gebruikt ziet die notities hier niet.
 - **Geen merge van uiteengelopen notities.** Annoteren twee mensen dezelfde

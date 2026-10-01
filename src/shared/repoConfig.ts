@@ -1,5 +1,5 @@
 /**
- * Validation for `.gitcito.json` — the optional file a repository ships to
+ * Validation for `.geminio.json` — the optional file a repository ships to
  * describe its own house rules.
  *
  * Lives in `shared/` because both sides need the same verdict: the main process
@@ -33,7 +33,7 @@ import type {
 } from './types'
 
 /** The file name, at the repository root. */
-export const REPO_CONFIG_FILE = '.gitcito.json'
+export const REPO_CONFIG_FILE = '.geminio.json'
 
 /** Schema version this build understands. A newer file is ignored, not guessed at. */
 export const REPO_CONFIG_VERSION = 1
@@ -220,7 +220,7 @@ const TOP_LEVEL = new Set(['version', 'protect', 'links', 'commit', 'requires', 
  * Returns the config with every rejected field dropped, plus the list of what
  * was rejected. `config` is null only when the document is not an object or
  * carries a version this build does not understand — a version bump must not
- * make an old Gitcito guess at fields it has never seen.
+ * make an old Geminio guess at fields it has never seen.
  */
 export function validateRepoConfig(value: unknown): { config: RepoConfig | null; issues: RepoConfigIssue[] } {
   const issues: Issues = []

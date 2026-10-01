@@ -10,7 +10,7 @@ keywords: range-diff 区间差异 force push 强制推送 变基 rebase 重写 r
 
 你审阅过一个分支。有人对它做了变基（rebase）并强制推送。此时普通的差异（diff）已经毫无价值：变基之后每一个提交都是新提交，所以看上去什么都是新的。
 
-`git range-diff` 会把两个版本逐个提交地配对起来，而 Gitcito 直接从 **reflog** 里读出旧的位置——所以这件事根本不需要事先记录任何东西就能成立。
+`git range-diff` 会把两个版本逐个提交地配对起来，而 Geminio 直接从 **reflog** 里读出旧的位置——所以这件事根本不需要事先记录任何东西就能成立。
 
 ![强制推送之后被重写、新增和丢弃的提交](../../screenshots/range-diff.webp)
 

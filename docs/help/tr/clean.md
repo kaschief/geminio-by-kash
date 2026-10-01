@@ -16,7 +16,7 @@ var — `git clean` — ve bu, **arkasında hiçbir şey olmayan** tek git işle
 bir stash, ne bir geri alma, ne de onu geri getirecek bir `git` büyüsü var.
 
 İnsanların terminalde çalıştırıp pişman olduğu işlem olmasının sebebi budur.
-Gitcito'nun sürümü, hiçbir şey olmadan önce listenin tamamını gösterir.
+Geminio'nun sürümü, hiçbir şey olmadan önce listenin tamamını gösterir.
 
 `⌘K` → **İzlenmeyen dosyaları kaldır**.
 
@@ -43,7 +43,7 @@ toplamıdır.
 
 **kendi deposu** olarak işaretlenmiş bir klasörün kendi `.git`'i vardır: bunun
 içine bıraktığınız bir klon ya da hiç bağlamadığınız bir deneme. Git bunları
-kaldırmayı reddeder (`-ff` ister, ki Gitcito bu bayrağı sunmaz) — onları Çöp
+kaldırmayı reddeder (`-ff` ister, ki Geminio bu bayrağı sunmaz) — onları Çöp
 Kutusu alır.
 
 ## Çöp kutusu ya da silme

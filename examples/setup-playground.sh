@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Creates throwaway git repos under examples/playground/ to test Gitcito features.
+# Creates throwaway git repos under examples/playground/ to test Geminio features.
 #
 # This is the orchestrator: it wipes playground/, then runs every scenario in
 # scenarios/*.sh. Scenarios are independent, so they run in parallel — each in

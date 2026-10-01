@@ -27,10 +27,10 @@ que as pessoas erram às 18h de um dia de release — fazendo merge de um hotfix
 | `release/*` | Uma versão sendo estabilizada, ramificada a partir da develop. |
 | `hotfix/*` | Uma correção urgente, ramificada a partir da **main** — produção não pode esperar pela develop. |
 
-O Gitcito lê e escreve as mesmas chaves de git config `gitflow.*` que a CLI
+O Geminio lê e escreve as mesmas chaves de git config `gitflow.*` que a CLI
 `git flow` usa (`gitflow.branch.master`, `gitflow.prefix.feature`, …). Um
 repositório em que alguém já rodou `git flow init` é reconhecido imediatamente, e
-um repositório configurado aqui funciona com a CLI depois. O Gitcito roda comandos
+um repositório configurado aqui funciona com a CLI depois. O Geminio roda comandos
 git comuns o tempo todo — a CLI não precisa estar instalada.
 
 **Configurar** escreve essas chaves e, se a branch de integração ainda não existe,
@@ -55,7 +55,7 @@ O nome é o que você digita; o prefixo vem do layout.
 **Finalizar** é a parte que vale automatizar, porque são vários passos que
 precisam todos acontecer:
 
-| Tipo | O que o Gitcito faz |
+| Tipo | O que o Geminio faz |
 |------|-------------------|
 | Feature | Faz merge na develop com `--no-ff`, apaga a branch, deixa você na develop |
 | Release | Faz merge na main, tagueia, faz merge na develop, apaga a branch, deixa você na develop |
@@ -75,7 +75,7 @@ mensagem de tag se quiser mais do que o padrão.
   antes; finalizar faz merge de duas branches e move o HEAD duas vezes, e fazer
   isso em volta de trabalho não commitado é como as pessoas o perdem.
 - **Um merge conflitante desfaz tudo.** Se o merge na main der certo mas o merge na
-  develop conflitar, você ficaria com um release pela metade. O Gitcito restaura
+  develop conflitar, você ficaria com um release pela metade. O Geminio restaura
   toda branch para onde ela estava e reporta o conflito. Faça o merge daquela
   branch manualmente, resolva no [resolvedor de conflitos](conflicts.md), e o fluxo
   é seu para terminar na mão.

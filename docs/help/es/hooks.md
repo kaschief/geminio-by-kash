@@ -15,12 +15,12 @@ siendo `.sample`, y actívalos, desactívalos, edítalos o créalos.
 
 ![El gestor de hooks](../../screenshots/hooks.webp)
 
-Gitcito detecta un **`core.hooksPath`** personalizado (husky y compañía) y la
+Geminio detecta un **`core.hooksPath`** personalizado (husky y compañía) y la
 configuración de un **framework pre-commit**, y te avisa cuando los hooks viven
 en un sitio que no es `.git/hooks` — si no, estarías editando un archivo que git
 nunca ejecuta.
 
-> Los hooks se ejecutan para los commits de Gitcito exactamente igual que para
+> Los hooks se ejecutan para los commits de Geminio exactamente igual que para
 > `git commit`. Un hook que falla bloquea el commit, y su salida vuelve dentro
 > del error.
 

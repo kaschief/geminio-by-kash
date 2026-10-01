@@ -104,7 +104,7 @@ klik met de rechtermuisknop op een ballon: **Kopiëren** neemt de selectie,
 Markdown-bron — en als de klik op een link viel, neemt **Link kopiëren** het
 adres.
 
-Links openen in je standaardbrowser, nooit binnen Gitcito — Markdown-links in
+Links openen in je standaardbrowser, nooit binnen Geminio — Markdown-links in
 antwoorden en gewone `https://`-adressen in je eigen berichten.
 
 Wanneer een bericht een afbeelding noemt — een repositorypad zoals
@@ -137,7 +137,7 @@ Repository-chat kan exacte bewerkingen, het aanmaken of volledig vervangen van
 bestanden en verwijderen voorstellen, gevolgd door Git-acties: ignore-patronen,
 stagen, unstagen, committen, stashen, weggooien, branch, wisselen, tag en —
 omdat de branchlijst en de recente commits worden getoond — merge, rebase,
-revert en cherry-pick. Gitcito berekent de uitklapbare diff lokaal. Bestaande
+revert en cherry-pick. Geminio berekent de uitklapbare diff lokaal. Bestaande
 bestanden moeten uit gelezen bewijs komen; onveilige, geheime, genegeerde,
 gegenereerde, binaire, verouderde, te grote en via symlink bereikte doelen
 worden geweigerd. Reset, historie herschrijven, branches verwijderen en elke
@@ -149,12 +149,12 @@ neemt de conflictbanner het over, net als bij dezelfde operatie vanuit de
 werkbalk.
 
 De hele bestandsbatch wordt voor de eerste schrijfactie opnieuw gecontroleerd en
-bij een fout teruggedraaid. Voor een commit controleert Gitcito ook of er iets is
+bij een fout teruggedraaid. Voor een commit controleert Geminio ook of er iets is
 gestaged. De kaart markeert voltooide, mislukte en overgeslagen acties en bewaart
 gedeeltelijke resultaten. Daarna vat een afzonderlijke aanroep zonder acties het
 werkelijke resultaat samen.
 
-**Hij kan ook `.gitcito.json` schrijven.** De chat krijgt de vorm van het
+**Hij kan ook `.geminio.json` schrijven.** De chat krijgt de vorm van het
 [eigen configuratiebestand van de repository](repo-config.md), dus *voeg
 ticketlinks toe voor JIRA-1234* of *bescherm de release-branches* wordt een
 bestandsactie tegen het echte schema in plaats van plausibel ogende sleutels die
@@ -198,7 +198,7 @@ voordat het plan start, niet van binnenuit.
 ### Een plan ongedaan maken
 
 Een plan wordt als geheel goedgekeurd en dus als geheel teruggedraaid. Vóór de
-eerste actie die iets kan wijzigen legt Gitcito vast waar de branch stond en
+eerste actie die iets kan wijzigen legt Geminio vast waar de branch stond en
 maakt het een momentopname van de werkboom; de afgeronde kaart biedt dan **Plan
 ongedaan maken**. Dat zet de branch terug naar die commit en herstelt de boom,
 waarmee alles wat het plan opleverde vervalt — dus wordt eerst bevestigd, met de
@@ -242,7 +242,7 @@ er wordt niets verstuurd tot je op Verzenden drukt.
   altijd bevestiging. Met **Git-acties voorstellen in de chat** uit stelt hij
   niet eens voor.
 - **Gesprekken leven alleen in het geheugen.** Elke repository houdt zijn eigen
-  draad; Gitcito afsluiten gooit ze weg.
+  draad; Geminio afsluiten gooit ze weg.
 
 ## Openen
 

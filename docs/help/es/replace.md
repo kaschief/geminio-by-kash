@@ -47,7 +47,7 @@ consecuencias que conviene conocer:
 - Son **locales hasta que las publicas**: `git push origin "refs/replace/*"` las
   comparte, y quien clone sin ellas verá el historial intacto.
 - **El deshacer funciona** — borrar la ref restaura la ascendencia real al
-  momento, y Gitcito registra el injerto como una acción deshacible, igual que
+  momento, y Geminio registra el injerto como una acción deshacible, igual que
   cualquier otra.
 - `core.useReplaceRefs=false` hace que git las ignore todas de golpe. El
   interruptor de aquí escribe exactamente eso, y el diálogo lo dice cuando está
@@ -80,7 +80,7 @@ clones que ya existen.
 - **Una sustitución puede esconder un commit de las herramientas, no de git.**
   `git cat-file` y el [explorador de objetos](objects.md) siguen abriendo el
   original por sha.
-- **Gitcito no ofrece `git replace --edit`** (reescribir a mano el contenido de
+- **Geminio no ofrece `git replace --edit`** (reescribir a mano el contenido de
   un objeto). Eso es trabajo de un editor de texto sobre un objeto en crudo, y
   un tiro en el pie con una interfaz alrededor.
 

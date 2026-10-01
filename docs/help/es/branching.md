@@ -57,7 +57,7 @@ El desplegable de ramas de la barra de herramientas lista las ramas locales
 y remotas. Haz clic derecho en cualquier rama de ese desplegable para
 renombrar una rama local, copiar su nombre, abrirla en un nuevo worktree,
 fusionarla en la rama activa o eliminarla. Las ramas remotas omiten el
-renombrado y se eliminan de su remoto tras una confirmación. Gitcito omite
+renombrado y se eliminan de su remoto tras una confirmación. Geminio omite
 la fusión cuando la referencia seleccionada ya está contenida en la rama
 activa, y desactiva la creación del worktree cuando esa rama ya está extraída.
 
@@ -97,7 +97,7 @@ quien la tuviera activa debe reapuntar. En una etiqueta del grafo solo se ofrece
 cuando la rama sigue exactamente a un remoto; con varios, elige la rama en la
 barra lateral para que el upstream sea inequívoco.
 
-**Límites:** Gitcito no reescribe nada que se refiriera al nombre anterior — los
+**Límites:** Geminio no reescribe nada que se refiriera al nombre anterior — los
 pull requests abiertos siguen apuntando a la rama con la que se abrieron, y las
 reglas de CI que casan con un patrón de rama dejan de casar. Renombrar una rama
 que está activa en otro [worktree](worktrees.md) falla, y git lo dice.
@@ -118,7 +118,7 @@ estar en su sitio habitual más abajo.
 ## Hacer checkout de una rama remota
 
 Haz doble clic en una rama remota para crear la local que la sigue. Si ya existe
-una rama local con ese nombre y ha **divergido**, Gitcito pregunta cómo
+una rama local con ese nombre y ha **divergido**, Geminio pregunta cómo
 reconciliarla — rebase, merge o reset — y ofrece hacer antes una copia de
 seguridad de la rama.
 

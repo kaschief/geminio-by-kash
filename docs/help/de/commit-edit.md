@@ -10,7 +10,7 @@ keywords: commit bearbeiten edit historie umschreiben rewrite history amend verg
 
 Der Tippfehler steckt in einem Commit von vor drei Wochen. Die übliche Lösung
 ist ein interaktiver Rebase: beim Commit anhalten, bearbeiten, fortsetzen,
-beten. Gitcitos Lösung ist: Rechtsklick auf den Commit, **Diesen Commit
+beten. Geminios Lösung ist: Rechtsklick auf den Commit, **Diesen Commit
 bearbeiten**, Text ändern, fertig. Der Stift-Button im Commit-Details-Panel
 öffnet denselben Editor.
 

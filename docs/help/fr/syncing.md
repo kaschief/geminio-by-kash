@@ -24,7 +24,7 @@ refs `origin/*` mises à jour défile, puis git s'arrête sur *"There is no trac
 information for the current branch"*. Rien n'a été tiré et rien n'est cassé : la
 seconde moitié n'avait tout simplement pas de cible.
 
-Gitcito lit cette erreur et propose la réparation sous forme de bouton, en
+Geminio lit cette erreur et propose la réparation sous forme de bouton, en
 choisissant laquelle selon que le distant porte déjà la branche :
 
 | | |
@@ -89,7 +89,7 @@ prudence.
 ## Les branches sur lesquelles vous n'êtes pas
 
 `git pull` ne déplace jamais que HEAD : c'est pourquoi la plupart des clients
-exigent d'extraire une branche avant de pouvoir la mettre à jour. Pas Gitcito :
+exigent d'extraire une branche avant de pouvoir la mettre à jour. Pas Geminio :
 clic droit sur n'importe quelle branche locale — dans la barre latérale ou sur
 son badge dans le [graphe](graph.md) — et vous obtenez **Tirer \<branche\>** et
 **Pousser \<branche\>**, qui agissent sur *cette* branche.

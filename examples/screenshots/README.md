@@ -21,14 +21,16 @@ their serial order, so `prepare` mutations land exactly as they would one by
 one. Clips always record one at a time — their frames are sampled on
 wall-clock time, and CPU contention would stutter the recording.
 
-Needs **ffmpeg** (`brew install ffmpeg`): it encodes every image.
+Stills use **cwebp** when installed, otherwise an **ffmpeg** build with `libwebp`.
+Clips require ffmpeg with `libwebp`. Optional `width` / `height` on a shot set its
+viewport, including sizes larger than the host screen.
 
 ## How it works
 
 1. **Build** the app (`electron-vite build`), so shots reflect the current source
    rather than a stale `out/`. `--no-build` reuses what is there.
 2. **Seed** the playground repos (`setup-playground.sh`), then symlink them under
-   `/tmp/gitcito-demo/` so screenshots show a clean, username-free path.
+   `/tmp/geminio-demo/` so screenshots show a clean, username-free path.
    `--no-seed` skips it.
 3. For each shot: launch the built Electron app with `--shot`, which enables an
    in-app **store bridge** (`window.__shot`, see
@@ -114,7 +116,7 @@ every launch and the explainer would land on top of the shot. Each run therefore
 writes `gitcito-keychain.json` into the throwaway userData dir before launching.
 
 The answer is **declined** by default: refusing keeps tokens in memory and the
-app fully working, while granting makes macOS raise its own "Gitcito Safe
+app fully working, while granting makes macOS raise its own "Geminio Safe
 Storage" dialog — an OS window Playwright cannot dismiss, which stalls the run.
 Set `keychain: true` only on shots that need a readable vault (`vault`,
 `secure-share`, `secure-workspace`); expect a one-off OS prompt on those.

@@ -93,7 +93,7 @@ fertig ist.
 ## Tokens
 
 Tokens pro Profil für mehrere Accounts oder Organisationen, gespeichert im
-Schlüsselbund deines Betriebssystems. Gitcito kann sich außerdem ausleihen, was
+Schlüsselbund deines Betriebssystems. Geminio kann sich außerdem ausleihen, was
 dein **git credential helper** ohnehin schon hält — eine Organisation, für die du
 dich bereits authentifiziert hast, braucht deshalb oft gar keine Einrichtung.
 Siehe [Sicherheit & Secrets](security.md).

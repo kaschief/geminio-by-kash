@@ -19,7 +19,7 @@ un HEAD staccato suo da tenere a mente.
 
 `⌘K` → **Subtree**.
 
-![Una directory incorporata trovata nella storia, con la sorgente che Gitcito ricorda per lei](../../screenshots/subtree.webp)
+![Una directory incorporata trovata nella storia, con la sorgente che Geminio ricorda per lei](../../screenshots/subtree.webp)
 
 ## L'inghippo che nessuno menziona
 
@@ -28,11 +28,11 @@ un HEAD staccato suo da tenere a mente.
 solo un trailer `git-subtree-dir:` sul commit che ha fatto l'importazione.
 
 Quindi un repository può contenere un subtree e non darti alcun modo di scoprire
-da dove viene. Gitcito fa quello che può:
+da dove viene. Geminio fa quello che può:
 
 - L'elenco viene scoperto dalla storia, leggendo quei trailer. Qualunque subtree
   aggiunto da chiunque, con qualunque strumento, compare.
-- Il **repository sorgente e il ref** vengono ricordati da Gitcito, nella
+- Il **repository sorgente e il ref** vengono ricordati da Geminio, nella
   configurazione git di questo repository. Un subtree scoperto dalla storia parte
   con quei campi vuoti — riempili una volta e da lì in avanti pull e push
   funzionano.
@@ -69,15 +69,15 @@ essere un subtree.
 ## Limiti da conoscere
 
 - **Il push è lento.** Ricalcola da zero la storia della directory ogni volta. Su
-  un repository grande si parla di secondi o minuti, non di un istante, e Gitcito
+  un repository grande si parla di secondi o minuti, non di un istante, e Geminio
   non può che aspettare.
 - **Un pull è un merge**, quindi può andare in conflitto come qualsiasi merge —
   atterri [nel risolutore](conflicts.md).
 - **`git subtree` è uno script contrib**, non un comando integrato di git.
-  Un'installazione di git ridotta all'osso può non averlo; Gitcito lo dice
+  Un'installazione di git ridotta all'osso può non averlo; Geminio lo dice
   chiaramente invece di rigirarti un "'subtree' is not a git command".
 - **Una storia sottoposta a squash non si può più togliere dallo squash.** Quei
   commit non sono mai stati importati.
-- Gitcito non converte un sottomodulo in un subtree, né il contrario.
+- Geminio non converte un sottomodulo in un subtree, né il contrario.
 
 Vedi anche: [Merge e rebase](merging.md) · [Idraulica con un'interfaccia](lfs-sparse.md)

@@ -72,7 +72,7 @@ então uma página dele abre em aba própria — abrir algo sempre abre algo.
 Um workspace é uma **faixa de abas inteira, salva**. Alternar troca todas as abas
 de uma vez: `Trabalho` e `Pessoal` param de pisar um no outro.
 
-O nome do workspace fica no canto superior esquerdo, ao lado da marca do Gitcito.
+O nome do workspace fica no canto superior esquerdo, ao lado da marca do Geminio.
 Clique nele para alternar, criar, renomear, reordenar ou apagar. Ao lado dele fica
 o medidor que abre a [Central de controle](mission-control.md) do workspace em que
 você está.

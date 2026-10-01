@@ -1,9 +1,9 @@
 ---
-description: Add a new UI locale to Gitcito — scaffold its dictionary from the English reference, wire it up, and verify parity.
+description: Add a new UI locale to Geminio — scaffold its dictionary from the English reference, wire it up, and verify parity.
 argument-hint: <locale-code> [language endonym]
 ---
 
-Add the locale `$1` to Gitcito. If `$2` is given, use it as the language's
+Add the locale `$1` to Geminio. If `$2` is given, use it as the language's
 display name; otherwise use the language's own endonym (its name in that
 language — "Français", not "French").
 

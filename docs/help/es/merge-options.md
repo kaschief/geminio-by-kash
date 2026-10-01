@@ -34,7 +34,7 @@ vez, sin este diálogo.
 
 **`-X ours` no es `-s ours`.** El interruptor de aquí decide solo los hunks que
 realmente chocan; todos los demás cambios de la otra rama se fusionan con
-normalidad. La estrategia llamada `ours` — que Gitcito no ofrece — se queda con
+normalidad. La estrategia llamada `ours` — que Geminio no ofrece — se queda con
 tu árbol entero y tira el otro lado a la basura, produciendo un commit de merge
 que dice contener trabajo que no contiene. Esa distinción es lo peor entendido
 de todo lo que rodea a las fusiones en git.

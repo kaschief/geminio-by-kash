@@ -1,4 +1,4 @@
-// Reading `.gitcito.json` in the renderer — pure functions over an already
+// Reading `.geminio.json` in the renderer — pure functions over an already
 // validated config. No React, no IPC: the store fetches the file, everything
 // here just answers questions about it.
 //

@@ -112,7 +112,7 @@ git -C "$MATE" add -A && git -C "$MATE" commit -qm "add rate limiting"
 git -C "$MATE" push -q --force origin feature/login
 
 # Your clone is deliberately left un-fetched: origin/feature/login still points
-# at the version you reviewed, so fetching inside Gitcito is what reveals the
+# at the version you reviewed, so fetching inside Geminio is what reveals the
 # rewrite.
 git -C "$R" checkout -q main
 

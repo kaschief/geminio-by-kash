@@ -23,7 +23,7 @@ out without tracking, has none. The fetch still succeeds, a long list of updated
 information for the current branch"*. Nothing was pulled and nothing was broken:
 the second half simply had no target.
 
-Gitcito reads that error and offers the repair as a button, picking which one
+Geminio reads that error and offers the repair as a button, picking which one
 from whether the remote already carries the branch:
 
 | | |
@@ -85,7 +85,7 @@ twice the exposure, not half the caution.
 ## Branches you are not standing on
 
 `git pull` only ever moves HEAD, which is why most clients make you check a
-branch out before you can catch it up. Gitcito does not: right-click any local
+branch out before you can catch it up. Geminio does not: right-click any local
 branch — in the sidebar or on its badge in the [graph](graph.md) — and you get
 **Pull <branch>** and **Push <branch>**, both acting on *that* branch rather
 than the checked-out one.

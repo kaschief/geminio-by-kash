@@ -61,7 +61,7 @@ aktywne — te akcje kopiują tylko tekst. Foldery nadal kopiują ścieżkę fol
 
 ## Zanim zacommitujesz
 
-Gitcito sprawdza kilka rzeczy i pyta raz, nigdy po cichu:
+Geminio sprawdza kilka rzeczy i pyta raz, nigdy po cichu:
 
 - plik, który wygląda na **sekret** (`.env`, `*.pem`, `id_rsa`…),
 - **bardzo duży** blob (próg w Ustawienia → Bezpieczeństwo),

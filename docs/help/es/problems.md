@@ -11,7 +11,7 @@ keywords: problemas analizador analizadores diagnósticos errores avisos warning
 Todo proyecto ya trae una herramienta que te dice qué está mal en él — `tsc`,
 `dart analyze`, ESLint, Clippy, `go vet`, Ruff. Lo que ninguna te dice es si
 **tu** diff es el que ha metido los cuarenta avisos que acaba de imprimir.
-Gitcito sabe qué archivos están sucios, así que la misma lista responde a esa
+Geminio sabe qué archivos están sucios, así que la misma lista responde a esa
 pregunta con un interruptor.
 
 ![El panel de problemas y el contador de la barra de estado](../../screenshots/problems.webp)
@@ -23,7 +23,7 @@ pulsar una línea se abre el archivo justo ahí. Antes del primer barrido muestr
 
 ## Qué ejecuta
 
-| Si el repositorio tiene | Gitcito ejecuta |
+| Si el repositorio tiene | Geminio ejecuta |
 |-------------------------|-----------------|
 | `pubspec.yaml` | `dart analyze --format=machine` |
 | `tsconfig.json` | `tsc --noEmit` |
@@ -50,7 +50,7 @@ analizadores que informan de la misma línea producen una sola fila.
 
 **Nada se ejecuta solo.** `tsc --noEmit` en un repositorio grande son decenas de
 segundos, y estos comandos son la cadena de herramientas del repositorio, no de
-Gitcito. Arrancan cuando abres el panel o pulsas actualizar, nunca por su
+Geminio. Arrancan cuando abres el panel o pulsas actualizar, nunca por su
 cuenta. Por eso la lista es una foto fija: edita un archivo y queda obsoleta
 hasta que la vuelvas a ejecutar.
 
@@ -63,7 +63,7 @@ de estado y su comando.
 proyecto analiza lo que encuentre, y lo que encuentra incluye
 `.next/build/chunks`, un `dist` empaquetado, una copia vendorizada — cientos de
 quejas sobre código escrito por máquinas que entierran las pocas sobre el tuyo.
-Gitcito le pregunta a git qué archivos están ignorados y los descarta, pero nunca
+Geminio le pregunta a git qué archivos están ignorados y los descarta, pero nunca
 descarta un archivo *rastreado*: commitear la salida generada es una decisión, y
 `git check-ignore` la respeta. `node_modules` se va igualmente.
 

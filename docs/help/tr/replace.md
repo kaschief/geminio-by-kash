@@ -48,7 +48,7 @@ sonucu var:
 - **Push edilene kadar yereldir**: `git push origin "refs/replace/*"` onları
   paylaşır ve onlarsız klonlayan herkes dokunulmamış geçmişi görür.
 - **Geri alma çalışır** — ref'i düşürmek gerçek soy ağacını anında geri getirir
-  ve Gitcito graft'ı da her şey gibi geri alınabilir bir eylem olarak kaydeder.
+  ve Geminio graft'ı da her şey gibi geri alınabilir bir eylem olarak kaydeder.
 - `core.useReplaceRefs=false` git'in hepsini birden yok saymasını sağlar. Buradaki
   anahtar tam olarak bunu yazar ve kapalıyken pencere bunu söyler, çünkü kendi
   değiştirmelerini sessizce yok sayan bir depo kafa karıştırıcı bir yerdir.
@@ -77,7 +77,7 @@ hâlâ orada, hâlâ sha ile fetch edilebilir ve mevcut her klonun içinde.
   `git log` çıktısıyla sizinki haklı olarak birbirini tutmayabilir.
 - **Bir değiştirme, bir commit'i araçlardan gizleyebilir, git'ten gizleyemez.**
   `git cat-file` ve [nesne gezgini](objects.md) orijinali sha ile hâlâ açar.
-- **Gitcito `git replace --edit` sunmaz** (bir nesnenin içeriğini elle yeniden
+- **Geminio `git replace --edit` sunmaz** (bir nesnenin içeriğini elle yeniden
   yazmak). O, ham bir nesne üzerinde bir metin editörünün işidir ve etrafına
   arayüz konmuş bir ayak kurşunlama aracıdır.
 

@@ -56,7 +56,7 @@ field stays a plain text box and the clone itself reports the real error.
   one branch* unchecked is what asks for the other branches back
   (`--no-single-branch`), which is why the hint under it changes.
 - **Cloning a local folder** normally ignores `--depth` entirely, because git
-  hardlinks the object store instead of fetching. Gitcito clones through a
+  hardlinks the object store instead of fetching. Geminio clones through a
   `file://` URL when you ask for a shallow copy of a local repository, so the
   depth you asked for is the depth you get.
 

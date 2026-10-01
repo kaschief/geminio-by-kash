@@ -27,7 +27,7 @@ const TOKEN = /(#\d+)|(\B@[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})?)/g
 
 /**
  * Turn `#123` issue/PR refs and `@user` mentions in free text into links to the
- * hosting provider, and any token the repository's `.gitcito.json` describes
+ * hosting provider, and any token the repository's `.geminio.json` describes
  * into a link to its tracker. Plain http(s) URLs in the text are left to the
  * app's global external-link handler.
  *

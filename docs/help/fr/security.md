@@ -2,13 +2,13 @@
 title: Sécurité et secrets
 category: Sécurité
 order: 70
-summary: Le masquage, les garde-fous, le trousseau — et ce que Gitcito refuse de faire.
+summary: Le masquage, les garde-fous, le trousseau — et ce que Geminio refuse de faire.
 keywords: sécurité security secrets masquage masking trousseau keychain safeStorage jetons tokens branche protégée protected branch gros fichier large file garde-fou guard confidentialité privacy
 ---
 
 # Sécurité et secrets
 
-Gitcito n'a **aucun backend**. Les seuls appels réseau vont vers votre hébergeur
+Geminio n'a **aucun backend**. Les seuls appels réseau vont vers votre hébergeur
 Git et, si vous l'activez, vers votre fournisseur d'IA.
 
 ![Les réglages de sécurité](../../screenshots/settings-security.webp)
@@ -46,7 +46,7 @@ de votre système (le `safeStorage` d'Electron), jamais avec une clé rangée da
 le fichier de réglages.
 
 **Rien ne touche au trousseau tant que vous ne l'avez pas dit.** Avant même que
-la boîte de dialogue d'autorisation du système ne puisse apparaître, Gitcito
+la boîte de dialogue d'autorisation du système ne puisse apparaître, Geminio
 explique ce qui va être stocké, ce qu'il ne peut pas faire (une application ne
 relit jamais que l'entrée qu'elle a créée — vos autres mots de passe sont
 inatteignables), et que dire non ne pose aucun problème : les jetons vivent alors

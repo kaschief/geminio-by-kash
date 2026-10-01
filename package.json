@@ -1,6 +1,6 @@
 {
-  "name": "gitcito",
-  "productName": "Gitcito",
+  "name": "geminio",
+  "productName": "Geminio",
   "version": "4.10.0",
   "description": "A lightweight Git client built with Electron, React and clean architecture",
   "main": "out/main/index.js",
@@ -36,8 +36,8 @@
     "repo:stats": "bash examples/repo-stats.sh"
   },
   "build": {
-    "appId": "com.gitcito.desktop",
-    "productName": "Gitcito",
+    "appId": "com.geminio.desktop",
+    "productName": "Geminio",
     "files": [
       "out/**/*",
       "resources/**",
@@ -59,8 +59,8 @@
     ],
     "publish": {
       "provider": "github",
-      "owner": "MyAppDesk",
-      "repo": "gitcito"
+      "owner": "kaschief",
+      "repo": "geminio-by-kash"
     },
     "mac": {
       "category": "public.app-category.developer-tools",

@@ -76,7 +76,7 @@ Ein Workspace ist eine **komplette gespeicherte Tab-Leiste**. Ein Wechsel tausch
 alle Tabs auf einmal aus: `Work` und `Personal` treten sich nicht mehr gegenseitig
 auf die Füße.
 
-Der Workspace-Name sitzt oben links, neben dem Gitcito-Zeichen. Klick ihn an, um
+Der Workspace-Name sitzt oben links, neben dem Geminio-Zeichen. Klick ihn an, um
 zu wechseln, anzulegen, umzubenennen, umzusortieren oder zu löschen. Daneben liegt
 die Anzeige, die [Mission Control](mission-control.md) für den Workspace öffnet, in
 dem du gerade bist.

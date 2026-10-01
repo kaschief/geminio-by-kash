@@ -2,7 +2,7 @@
 title: Flutter DevTools
 category: Workspace-Werkzeuge
 order: 93
-summary: Netzwerkansicht, Timeline, Inspector und Memory-Profiler in einem Gitcito-Tab.
+summary: Netzwerkansicht, Timeline, Inspector und Memory-Profiler in einem Geminio-Tab.
 keywords: devtools flutter dart netzwerk timeline inspector speicher profiler webview eingebettet panel vm service
 ---
 
@@ -10,10 +10,10 @@ keywords: devtools flutter dart netzwerk timeline inspector speicher profiler we
 
 DevTools hat die Netzwerkansicht, die Timeline, den Widget-Inspector und den
 Memory-Profiler bereits — und ist eine Flutter-Web-App, die auf deinem eigenen
-Rechner ausgeliefert wird. Gitcito baut davon also nichts nach und spricht auch
+Rechner ausgeliefert wird. Geminio baut davon also nichts nach und spricht auch
 nicht selbst mit dem Dart VM Service: Es bemerkt die Adresse und bettet sie ein.
 
-![DevTools in einem Gitcito-Tab](../../screenshots/devtools.webp)
+![DevTools in einem Geminio-Tab](../../screenshots/devtools.webp)
 
 `flutter run` gibt die Zeile aus, sobald der VM-Service steht:
 
@@ -64,13 +64,13 @@ Die eingebettete Ansicht ist kurz angeleint, denn diese App hält Zugangsdaten:
 - **Nur Loopback.** `127.0.0.1`, `localhost`, `::1`. Ein Einbetten mit einer
   anderen Adresse wird abgelehnt, eine Weiterleitung dorthin ebenso.
 - **Kein Preload, keine Node-Integration, Context Isolation an.** Die Seite hat
-  keine Brücke nach Gitcito.
+  keine Brücke nach Geminio.
 - **Links öffnen im echten Browser**, in einem normalen Fenster, nicht im Panel.
 
 ## Die Grenzen
 
 - **Es ist DevTools, nicht unseres.** Was diese Version kann, kann das Panel; was
-  sie nicht kann, können wir auch nicht. Es gibt keine Gitcito-Netzwerkansicht.
+  sie nicht kann, können wir auch nicht. Es gibt keine Geminio-Netzwerkansicht.
 - **Nur Flutter meldet sich so.** Ein reines Dart-Programm gibt eine VM-Service-
   URL aus, aber keine DevTools-Adresse — also erscheint keine Schaltfläche.
 - **Ein leeres Panel heißt: die App ist beendet.** DevTools wird *von der

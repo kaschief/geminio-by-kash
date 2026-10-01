@@ -19,7 +19,7 @@ ayrık HEAD'i ister.
 
 `⌘K` → **Subtree'ler**.
 
-![Geçmişte bulunan, yerleştirilmiş bir dizin ve Gitcito'nun onun için hatırladığı kaynak](../../screenshots/subtree.webp)
+![Geçmişte bulunan, yerleştirilmiş bir dizin ve Geminio'nun onun için hatırladığı kaynak](../../screenshots/subtree.webp)
 
 ## Kimsenin söylemediği püf noktası
 
@@ -28,11 +28,11 @@ listeleyen `.gitmodules` dosyası vardır. Bir subtree'nin hiçbir şeyi yoktur 
 yalnızca içe aktarmayı yapan commit üzerindeki bir `git-subtree-dir:` alt bilgisi.
 
 Yani bir depo bir subtree içerebilir ve size onun nereden geldiğini öğrenmenin
-hiçbir yolunu vermeyebilir. Gitcito elinden geleni yapar:
+hiçbir yolunu vermeyebilir. Geminio elinden geleni yapar:
 
 - Liste, o alt bilgiler okunarak geçmişten keşfedilir. Kim tarafından, hangi
   araçla eklenmiş olursa olsun her subtree görünür.
-- **Kaynak depo ve ref**, Gitcito tarafından bu deponun git yapılandırmasında
+- **Kaynak depo ve ref**, Geminio tarafından bu deponun git yapılandırmasında
   hatırlanır. Geçmişten keşfedilen bir subtree bu alanlar boş olarak başlar —
   bir kez doldurun, o andan itibaren pull ve push çalışır.
 
@@ -67,15 +67,15 @@ deponun geçmişine dönüştürür; bir subtree'nin subtree olmaktan çıkma yo
 ## Bilmeye değer sınırlar
 
 - **Push yavaştır.** Dizinin geçmişini her seferinde sıfırdan yeniden hesaplar.
-  Büyük bir depoda bu anlık değil, saniyeler ya da dakikalar sürer ve Gitcito
+  Büyük bir depoda bu anlık değil, saniyeler ya da dakikalar sürer ve Geminio
   yalnızca bekleyebilir.
 - **Bir pull bir merge'dür**, dolayısıyla her merge gibi çakışabilir — [çakışma
   çözücüde](conflicts.md) bulursunuz kendinizi.
 - **`git subtree` bir contrib betiğidir**, git'in yerleşik komutu değil. Kırpılmış
-  bir git kurulumunda bulunmayabilir; Gitcito bunu "'subtree' is not a git
+  bir git kurulumunda bulunmayabilir; Geminio bunu "'subtree' is not a git
   command" mesajını olduğu gibi aktarmak yerine açıkça söyler.
 - **Squash'lanmış geçmiş sonradan geri açılamaz.** O commit'ler hiç içe
   aktarılmamıştır.
-- Gitcito bir alt modülü subtree'ye ya da tersine dönüştürmez.
+- Geminio bir alt modülü subtree'ye ya da tersine dönüştürmez.
 
 Ayrıca bakınız: [Birleştirme ve rebase](merging.md) · [Arayüzlü tesisat](lfs-sparse.md)

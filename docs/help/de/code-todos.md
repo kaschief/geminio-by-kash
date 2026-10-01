@@ -73,7 +73,7 @@ Ein Klick auf eine Zeile öffnet die Datei an dieser Stelle.
 ## Was es nicht tut
 
 - **Es liest, es schreibt nie.** Es gibt kein „erledigt“: Ein TODO schließt man,
-  indem man die Zeile löscht und das committet. Für eine Liste, die Gitcito für
+  indem man die Zeile löscht und das committet. Für eine Liste, die Geminio für
   Sie führt, siehe [Todos](todos.md) — etwas ganz anderes: private Notizen, die
   in der App leben, nicht im Quelltext.
 - **Ignorierte Dateien werden übersprungen**, `node_modules` inbegriffen, egal

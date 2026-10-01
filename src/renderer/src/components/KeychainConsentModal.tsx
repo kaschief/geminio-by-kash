@@ -9,9 +9,9 @@ import { useT } from '../i18n'
 /**
  * Shown *before* the OS keychain prompt, never after.
  *
- * macOS asks "Gitcito wants to use your confidential information stored in your
+ * macOS asks "Geminio wants to use your confidential information stored in your
  * keychain" with no context, which reads like spyware. This window says which
- * values are being encrypted, what Gitcito cannot reach, and that declining
+ * values are being encrypted, what Geminio cannot reach, and that declining
  * leaves the app perfectly usable.
  */
 export function KeychainConsentModal({

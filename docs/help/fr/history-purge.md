@@ -62,7 +62,7 @@ ou un préfixe de répertoire, pas une absence.
 
 ## Ce que la réécriture fait réellement
 
-Gitcito copie chaque branche et chaque étiquette vers
+Geminio copie chaque branche et chaque étiquette vers
 `refs/gitcito/pre-purge/<timestamp>/…`, puis exécute :
 
 ```sh
@@ -115,10 +115,10 @@ trouve pas.
   travail non validé est la meilleure façon de le perdre.
 - **Il réécrit par chemin, pas par contenu.** Retirer un secret collé dans un
   fichier source, plutôt que logé dans son propre fichier, exige un filtre de
-  contenu — c'est le domaine de `git filter-repo --replace-text`, et Gitcito ne
+  contenu — c'est le domaine de `git filter-repo --replace-text`, et Geminio ne
   l'enveloppe pas.
 - **`filter-branch` est lent sur de très gros historiques.** C'est ce qui est
-  livré avec git partout, et c'est pourquoi c'est ce que Gitcito utilise. Sur un
+  livré avec git partout, et c'est pourquoi c'est ce que Geminio utilise. Sur un
   dépôt de dizaines de milliers de commits, `git filter-repo` dans le
   [terminal](terminal.md) est l'outil le plus rapide.
 - **Les clones des autres ne sont pas votre dépôt.** Ils gardent l'ancienne

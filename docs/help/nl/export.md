@@ -59,7 +59,7 @@ overschreven. Vervolgens merge, rebase of check je `bundle/main` uit op jouw
 voorwaarden, precies zoals je een branch van elke andere remote zou behandelen.
 
 Wil je in plaats daarvan een *nieuwe* repository uit een bundle beginnen, kloon
-dan in een terminal uit het bestand: `git clone work.bundle myrepo`. Gitcito
+dan in een terminal uit het bestand: `git clone work.bundle myrepo`. Geminio
 importeert in een geopende repository; het kloont niet uit een bestand.
 
 ## Archieven
@@ -96,7 +96,7 @@ plaats van in iemands releasescript.
 - **Een bundle is een volledige kopie** tenzij je een bereik gebruikt. Een
   repository van 2 GB bundelen schrijft een bestand van 2 GB, en duurt net zo
   lang als een kloon.
-- **Lege bundles worden geweigerd** door git, niet door Gitcito: een bereik met
+- **Lege bundles worden geweigerd** door git, niet door Geminio: een bereik met
   niets tussen de uiteinden levert een fout op in plaats van een nutteloos
   bestand.
 - **Importeren merget niet.** Refs komen binnen onder `bundle/…` en blijven daar

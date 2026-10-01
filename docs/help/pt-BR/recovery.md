@@ -23,7 +23,7 @@ Este é o botão de "acabei de resetar a branch errada".
 ## Snapshots de WIP
 
 Trabalho não commitado é a única coisa que o reflog não consegue salvar, então o
-Gitcito tira snapshots dele: a **árvore de trabalho inteira — arquivos
+Geminio tira snapshots dele: a **árvore de trabalho inteira — arquivos
 modificados, preparados e não rastreados** — commitada por meio de um índice
 descartável e fixada em `refs/gitcito/wip`. Nem o seu índice de verdade nem a
 sua lista de stashes são tocados.
@@ -58,7 +58,7 @@ nunca enviadas por push, a salvo do `git gc`, os 50 mais recentes são mantidos.
 ## Bisect guiado
 
 Marque commits como bons e ruins, veja o intervalo estreitar, e caia no primeiro
-commit ruim. O Gitcito acompanha quantos passos faltam, então você sabe se está a
+commit ruim. O Geminio acompanha quantos passos faltam, então você sabe se está a
 duas perguntas da resposta ou a dez.
 
 ![Bisect guiado](../../screenshots/bisect.webp)
@@ -76,7 +76,7 @@ comando, e lê o código de saída:
 | qualquer outro | Ruim |
 
 Uma suíte de testes já fala essa língua, que é por que `npm test` costuma ser a
-resposta inteira. O Gitcito oferece os próprios scripts deste projeto como
+resposta inteira. O Geminio oferece os próprios scripts deste projeto como
 preenchimentos em um clique, transmite a saída enquanto roda, e cai no primeiro
 commit ruim sem você responder uma única pergunta.
 
@@ -108,13 +108,13 @@ Unable to create '…/refs/remotes/origin/x.lock': File exists.
 
 O repositório não está danificado. Só há um arquivo no caminho.
 
-O Gitcito primeiro tenta de novo algumas vezes, porque um lock nas mãos de um git
+O Geminio primeiro tenta de novo algumas vezes, porque um lock nas mãos de um git
 *em execução* costuma sair em milissegundos. Quando não sai, a falha abre um
 diálogo em vez de um muro de texto: todos os locks ainda em disco, a idade de
 cada um, e um botão que os remove e repete a ação que falhou.
 
 **A idade é o argumento inteiro.** Um lock com menos de 30 segundos é presumido
-de um git ainda trabalhando, e o Gitcito se recusa a apagá-lo — oferece esperar e
+de um git ainda trabalhando, e o Geminio se recusa a apagá-lo — oferece esperar e
 tentar de novo. Os mais velhos são oferecidos para remoção, do mais antigo para
 o mais novo, e o diálogo diz sem rodeios o que conferir antes de aceitar: que
 nenhum editor, terminal ou outro cliente Git esteja trabalhando neste repositório

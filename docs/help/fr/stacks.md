@@ -14,7 +14,7 @@ une énorme.
 
 ![Une pile de branches](../../screenshots/branch-stack.webp)
 
-Gitcito le dessine comme un **itinéraire** : une branche de départ en haut, puis
+Geminio le dessine comme un **itinéraire** : une branche de départ en haut, puis
 une étape par niveau. La PR de chaque étape vise l’étape au-dessus, et la première
 atterrit sur la branche de départ. Une étape affiche ses propres commits, s’il lui
 faut un restack, et son numéro de PR une fois soumise.
@@ -55,7 +55,7 @@ Tout ce qui change l’ordre — un échange, un déplacement, un autre départ 
 nouvelle base. Deux étapes qui touchent les mêmes lignes ne peuvent pas
 s’échanger sans un humain, et dans ce cas **il ne se passe rien** : la
 modification entière est annulée — pointes, liens de parent et rebase à moitié
-fait — et Gitcito nomme les deux étapes qui s’opposent. Un menu déroulant
+fait — et Geminio nomme les deux étapes qui s’opposent. Un menu déroulant
 effleuré ne devrait pas vous laisser en plein rebase.
 
 **Restack** est l’autre moitié du marché : c’est un rebase que vous avez demandé
@@ -114,7 +114,7 @@ reciblée. Fusionnez de bas en haut, appuyez sur Soumettre, recommencez.
 Les bases chaînées sont ce que comprend n’importe quel hôte, et sur GitLab,
 Bitbucket et Azure DevOps c’est tout ce qu’il y a. GitHub va plus loin : depuis
 sa préversion des stacked pull requests, une pile est un objet côté serveur. Une
-fois les PR créées, Gitcito les enregistre comme pile — de bas en haut — et vous
+fois les PR créées, Geminio les enregistre comme pile — de bas en haut — et vous
 obtenez la carte de la pile dans l’UI, un rebase en cascade côté serveur, et une
 fusion sur la PR du haut qui fait atterrir tous les niveaux en dessous.
 

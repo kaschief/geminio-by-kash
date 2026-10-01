@@ -144,7 +144,7 @@ function localDiff(beforePath: string, afterPath: string): Promise<string> {
 }
 
 async function previewFor(path: string, before: string | null, after: string | null): Promise<string> {
-  const dir = await mkdtemp(join(tmpdir(), 'gitcito-file-preview-'))
+  const dir = await mkdtemp(join(tmpdir(), 'geminio-file-preview-'))
   const beforePath = join(dir, 'before')
   const afterPath = join(dir, 'after')
   try {

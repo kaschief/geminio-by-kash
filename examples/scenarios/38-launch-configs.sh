@@ -1,7 +1,7 @@
 # shellcheck shell=bash disable=SC2154
 # 38. launch-configs — exercise the LAUNCH picker (.vscode/launch.json).
 #
-# Gitcito surfaces a Run/Launch dropdown in the sidebar (next to GIT / FILES)
+# Geminio surfaces a Run/Launch dropdown in the sidebar (next to GIT / FILES)
 # whenever a repo has a .vscode/launch.json (and the setting is on). This repo
 # seeds TWO launch.json files so you can see the divider behaviour:
 #   • root .vscode/launch.json   → group "Workspace" (a preLaunchTask wired to
@@ -22,7 +22,7 @@ mkdir -p "$R/.vscode" "$R/scripts" "$R/services/api/.vscode" "$R/services/api/sr
 # ── A couple of runnable Node scripts (no deps) ──────────────────────────
 cat > "$R/scripts/hello.js" <<'EOF'
 // Prints a friendly banner and exits — the simplest possible launch target.
-console.log('👋  Hello from Gitcito launch!')
+console.log('👋  Hello from Geminio launch!')
 console.log('args:', process.argv.slice(2).join(' ') || '(none)')
 console.log('GREETING =', process.env.GREETING || '(unset)')
 EOF
@@ -42,7 +42,7 @@ EOF
 
 cat > "$R/scripts/serve.js" <<'EOF'
 // A never-exiting dev server — used as an isBackground preLaunchTask so the
-// launch doesn't block waiting for it to finish (Gitcito runs it detached).
+// launch doesn't block waiting for it to finish (Geminio runs it detached).
 console.log('🌐  dev server listening — left running in the background')
 setInterval(() => {}, 1000)
 EOF
@@ -61,7 +61,7 @@ console.log('🛰   service B up — one member of the "Run both services" compo
 setInterval(() => console.log(`[B] beat ${++n}`), 1500)
 EOF
 
-# A task both services depend on — Gitcito runs it ONCE per compound launch
+# A task both services depend on — Geminio runs it ONCE per compound launch
 # (its own pane, before the members), exactly like VS Code's shared tasks.
 cat > "$R/scripts/prep.js" <<'EOF'
 console.log('🔧  prep — runs once for the whole compound, not once per member')
@@ -70,7 +70,7 @@ EOF
 
 cat > "$R/scripts/serve-ready.js" <<'EOF'
 // A real tiny HTTP server that announces its URL — exercises serverReadyAction:
-// Gitcito watches the output and opens the printed URL in your browser.
+// Geminio watches the output and opens the printed URL in your browser.
 const http = require('http')
 const srv = http.createServer((_q, res) => res.end('Hello from the launch demo!\n'))
 srv.listen(0, () => console.log(`- Local:   http://localhost:${srv.address().port}`))
@@ -117,8 +117,8 @@ header{display:flex;gap:18px;align-items:center;padding:10px 16px;border-bottom:
 main{padding:24px 16px}code{background:#f1f3f4;padding:2px 5px;border-radius:4px}</style>
 <header><strong>Flutter DevTools</strong><span class="tab on">Network</span><span class="tab">Performance</span>
 <span class="tab">CPU profiler</span><span class="tab">Memory</span><span class="tab">Inspector</span></header>
-<main><p><strong>Stand-in page served by the Gitcito playground.</strong></p>
-<p>The real DevTools is a Flutter web app served by <code>flutter run</code>; Gitcito embeds whatever
+<main><p><strong>Stand-in page served by the Geminio playground.</strong></p>
+<p>The real DevTools is a Flutter web app served by <code>flutter run</code>; Geminio embeds whatever
 address the session announces. This placeholder stands in for it so the panel can be photographed
 without a Flutter SDK.</p></main>`
 const srv = http.createServer((_q, res) => {
@@ -154,7 +154,7 @@ chmod +x "$R/scripts/flutter"
 # ── Root launch.json — three configs, JSONC with comments + a preLaunchTask ──
 cat > "$R/.vscode/launch.json" <<'EOF'
 {
-  // VS Code-style launch configs. Gitcito runs the ones it understands.
+  // VS Code-style launch configs. Geminio runs the ones it understands.
   "version": "0.2.0",
   "configurations": [
     {
@@ -162,7 +162,7 @@ cat > "$R/.vscode/launch.json" <<'EOF'
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/scripts/hello.js",
-      "args": ["--from", "gitcito"],
+      "args": ["--from", "geminio"],
       "env": { "GREETING": "hola" }
     },
     {
@@ -247,7 +247,7 @@ cat > "$R/.vscode/launch.json" <<'EOF'
       "id": "who",
       "type": "promptString",
       "description": "Who is saying hello?",
-      "default": "gitcito"
+      "default": "geminio"
     },
     {
       "id": "greeting",

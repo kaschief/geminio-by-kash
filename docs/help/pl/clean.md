@@ -16,7 +16,7 @@ nigdy nie była w commicie, więc nie ma wpisu w reflogu, nie ma stasha, nie ma
 cofnięcia i nie ma zaklęcia `git`, które by to przywróciło.
 
 Dlatego właśnie jest to operacja, którą ludzie uruchamiają w terminalu i której
-żałują. Wersja Gitcito pokazuje całą listę, zanim cokolwiek się wydarzy.
+żałują. Wersja Geminio pokazuje całą listę, zanim cokolwiek się wydarzy.
 
 `⌘K` → **Usuń pliki nieśledzone**.
 
@@ -44,7 +44,7 @@ tego, co zawiera.
 
 Katalog oznaczony jako **własne repozytorium** ma własny `.git`: klon, który
 wrzuciłeś do środka tego repozytorium, albo eksperyment, którego nigdy nie
-podpiąłeś. Git odmawia ich usunięcia (chce `-ff`, flagi, której Gitcito nie
+podpiąłeś. Git odmawia ich usunięcia (chce `-ff`, flagi, której Geminio nie
 oferuje) — bierze je Kosz.
 
 ## Kosz albo skasowanie

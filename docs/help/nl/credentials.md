@@ -8,12 +8,12 @@ keywords: credential helper wachtwoord password https vraagt opnieuw osxkeychain
 
 # Credential helper
 
-Gitcito houdt drie verschillende soorten geheim vast, en mensen nemen begrijpelijk
+Geminio houdt drie verschillende soorten geheim vast, en mensen nemen begrijpelijk
 aan dat het één ding is:
 
 | | Bewaard door |
 |---|---|
-| API-tokens van hosts — PR's, issues, CI-checks | Gitcito, in je [OS-sleutelhanger](security.md) |
+| API-tokens van hosts — PR's, issues, CI-checks | Geminio, in je [OS-sleutelhanger](security.md) |
 | `git@…`-transport | Je [SSH-sleutel](ssh-keys.md), via de ssh-agent van het systeem |
 | **`https://`-transport** | **De eigen credential helper van git** |
 
@@ -54,7 +54,7 @@ het antwoord op "waarom gedraagt juist deze host zich anders".
 | `cache` | Geheugen, 15 minuten lang. Niets op schijf |
 | `store` | **Een plat bestand in je thuismap. Onversleuteld** |
 
-Gitcito biedt aan wat er werkelijk op deze machine staat, markeert degene die bij
+Geminio biedt aan wat er werkelijk op deze machine staat, markeert degene die bij
 je besturingssysteem past, en maakt de rest grijs.
 
 **Scope doet ertoe.** *Voor elke repository* schrijft naar je globale config, en
@@ -82,7 +82,7 @@ en faalt elke push met een 401 die niets bij naam noemt. **Vergeten** vraagt de
 ingestelde helper zijn regel voor die host te wissen — `git credential reject`,
 de eigen gedocumenteerde route van git.
 
-Onderweg wordt er niets gelezen: Gitcito roept nooit `git credential fill` aan,
+Onderweg wordt er niets gelezen: Geminio roept nooit `git credential fill` aan,
 het commando dat een levend wachtwoord naar standaarduitvoer zou printen.
 
 De volgende push vraagt het je één keer, en de helper bewaart het nieuwe
@@ -90,15 +90,15 @@ antwoord.
 
 ## Grenzen die je moet kennen
 
-- **Dit is de kluis van git, niet van Gitcito.** Hem veranderen verandert ook wat
+- **Dit is de kluis van git, niet van Geminio.** Hem veranderen verandert ook wat
   je terminal doet — wat de bedoeling is, en goed om te weten voor je hem
   verandert.
 - **Helpers op systeemniveau worden getoond, niet bewerkt.** Die staan in een
   config die alleen een beheerder kan schrijven.
-- **Gitcito kan niet opsommen wat een helper bevat.** Geen enkele credential-API
+- **Geminio kan niet opsommen wat een helper bevat.** Geen enkele credential-API
   onthult dat zonder de geheimen te overhandigen, dus het venster rapporteert de
   configuratie en wist op verzoek, en verder niets.
-- **Een token dat je aan Gitcito gaf staat los.** De een intrekken raakt de ander
+- **Een token dat je aan Geminio gaf staat los.** De een intrekken raakt de ander
   niet; zie [beveiliging](security.md) voor de kant van de sleutelhanger.
 
 Zie ook: [Beveiliging](security.md) · [SSH-sleutels](ssh-keys.md) ·

@@ -29,7 +29,7 @@ Code liegt auf deiner Platte.
 | Bitbucket Cloud, Bitbucket Server | `refs/pull-requests/<n>/from` |
 | Azure DevOps | `refs/pull/<n>/merge` |
 
-Gitcito probiert alle vier in einem einzigen `ls-remote` durch, also
+Geminio probiert alle vier in einem einzigen `ls-remote` durch, also
 funktioniert auch eine unbekannte oder selbst gehostete Forge, solange sie einer
 dieser Konventionen folgt.
 
@@ -50,7 +50,7 @@ normalerweise `origin`. Nicht der Fork.
 **Pull Request** — die Nummer oder eine eingefügte Browser-URL. `7`, `#7` und
 `https://github.com/owner/repo/pull/7` funktionieren alle; genauso die
 URL-Formen von GitLab, Bitbucket und Azure DevOps. Drück auf **Suchen**, und
-Gitcito nennt dir die aufgelöste Ref und den Commit, auf den sie zeigt — bevor
+Geminio nennt dir die aufgelöste Ref und den Commit, auf den sie zeigt — bevor
 irgendetwas gefetcht wird.
 
 **Remote-Branch** — der zweite Tab, für den Fall, dass es keine PR-Ref zu finden
@@ -69,7 +69,7 @@ du nicht einfach wieder herauskommst, ist keine Vorschau.
 
 Denselben Pull Request ein zweites Mal anzusehen nutzt denselben Branch wieder
 und schiebt ihn auf den neuen Head — praktisch, wenn der Autor einen Fix pusht,
-während du gerade testest. Wenn dieser Branch schon existiert, sagt Gitcito das
+während du gerade testest. Wenn dieser Branch schon existiert, sagt Geminio das
 und fragt nach, bevor er zurückgesetzt wird, denn jeder Commit, der nur dort
 liegt, wäre verloren.
 

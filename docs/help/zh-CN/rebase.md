@@ -21,7 +21,7 @@ keywords: interactive 交互式 rebase 变基 squash 压缩 fixup reword 改写 
 | **edit** | 在这里停下，好让你修补 |
 | **drop** | 把这个提交扔掉 |
 
-拖动行来重新排序。编辑器绝不会在终端里打开——todo 由 Gitcito 替你写好。
+拖动行来重新排序。编辑器绝不会在终端里打开——todo 由 Geminio 替你写好。
 
 ## 一键 autosquash
 

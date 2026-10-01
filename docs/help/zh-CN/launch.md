@@ -2,13 +2,13 @@
 title: 运行与调试（launch.json）
 category: 工作区工具
 order: 91
-summary: 不必离开 Gitcito 就能运行你的 VS Code 启动配置。
+summary: 不必离开 Geminio 就能运行你的 VS Code 启动配置。
 keywords: launch.json 运行 调试 run debug vscode 启动配置 configs 任务 tasks preLaunchTask input 后台 background compound compounds stopAll serverReadyAction 并行会话 hot reload hot restart device simulator emulator run target flutter metro expo vite nodemon vitest jest mocha ava wrangler dotnet watch adb simctl avd xcodebuild capacitor
 ---
 
 # 运行与调试
 
-Gitcito 会读取你的 `.vscode/launch.json`——根目录那一份以及任何嵌套的，用分隔线分组——并在集成终端里运行你挑中的那条配置。
+Geminio 会读取你的 `.vscode/launch.json`——根目录那一份以及任何嵌套的，用分隔线分组——并在集成终端里运行你挑中的那条配置。
 
 ![启动配置选择器与悬浮工具栏](../../screenshots/launch-configs.webp)
 
@@ -26,7 +26,7 @@ Gitcito 会读取你的 `.vscode/launch.json`——根目录那一份以及任�
   该窗格成功后会自动关闭，失败时保持打开。
 - 支持 **`serverReadyAction`**：当会话输出匹配配置的模式时，宣告的 URL 会在浏览器中
   打开（`openExternally`；`debugWithChrome` / `debugWithEdge` 也只是打开浏览器 —
-  Gitcito 无法附加调试器）。
+  Geminio 无法附加调试器）。
 
 ![一个 compound 正在运行两个并行会话](../../screenshots/launch-compound.webp)
 
@@ -39,7 +39,7 @@ Gitcito 会读取你的 `.vscode/launch.json`——根目录那一份以及任�
 compound 成员显示为 *compound › 成员*，重启只会重启该成员。
 如果工具栏挡住了你需要的内容，可以拖动手柄把它移开 — 位置会被记住，双击手柄可让它回到居中位置。
 
-Gitcito 有意**不做**的事：它在真实终端里运行你的程序，但它不是调试器 — 没有断点、
+Geminio 有意**不做**的事：它在真实终端里运行你的程序，但它不是调试器 — 没有断点、
 没有变量检查、没有 Debug Adapter Protocol。仅 attach 的配置在带有 `preLaunchTask`
 时可用（任务就是全部工作）；纯 attach 没有可运行的内容。
 
@@ -51,7 +51,7 @@ Gitcito 有意**不做**的事：它在真实终端里运行你的程序，但�
 **r**，nodemon 按 **rs ⏎**，Vitest 按 **a** 重跑整套测试。为了同样的效果去重启
 启动配置是慢路：它会杀掉进程、重跑每一个 `preLaunchTask`，还把应用的状态丢掉。
 
-所以 Gitcito 会读取一个配置真正启动的命令 —— 顺着 `npm run dev` 一直读到你
+所以 Geminio 会读取一个配置真正启动的命令 —— 顺着 `npm run dev` 一直读到你
 `package.json` 里的脚本 —— 再把该运行时的按键放到调试工具栏上。按下按钮就是把
 这个按键写进会话的标准输入，和你自己在终端里敲一模一样。
 
@@ -73,7 +73,7 @@ Gitcito 有意**不做**的事：它在真实终端里运行你的程序，但�
 `tsc --watch`、`cargo watch`、`next dev`、webpack-dev-server。一个发出没人读的
 按键的按钮比没有按钮更糟，因为它看起来像是生效了。
 
-**限制。** 识别是文本层面的：它匹配命令行里的程序名，所以通过 Gitcito 读不到的
+**限制。** 识别是文本层面的：它匹配命令行里的程序名，所以通过 Geminio 读不到的
 包装脚本启动开发服务器的配置什么也拿不到。按键也没有回执 —— 按钮闪一下，真正
 的答复是进程自己的输出。暂停或已结束的会话不接受输入，按钮会变灰。
 
@@ -84,7 +84,7 @@ Gitcito 有意**不做**的事：它在真实终端里运行你的程序，但�
   "name": "API (watch)",
   "type": "node-terminal",
   "command": "./scripts/dev.sh",
-  "gitcito": { "hotActions": [{ "label": "Reload", "send": "r", "icon": "reload" }] }
+  "geminio": { "hotActions": [{ "label": "Reload", "send": "r", "icon": "reload" }] }
 }
 ```
 
@@ -99,7 +99,7 @@ Gitcito 有意**不做**的事：它在真实终端里运行你的程序，但�
 
 一个构建移动应用的配置，必须被告知要在哪里运行。这个选择不只属于 Flutter ——
 React Native、Expo、Capacitor 和 xcodebuild 同样接受一个目标，而且各写各的。
-所以 Gitcito 只问一次，就在 **LAUNCH** 标签旁边，再把答案写成那个配置的运行时
+所以 Geminio 只问一次，就在 **LAUNCH** 标签旁边，再把答案写成那个配置的运行时
 能读懂的形式。只有当仓库里确实有配置能接受设备时，选择器才会出现。
 
 **列表从哪来** —— 机器上有哪些 SDK 工具就问哪些，并行发问：
@@ -130,11 +130,11 @@ React Native、Expo、Capacitor 和 xcodebuild 同样接受一个目标，而且
 每个启动的配置还会在环境里拿到 `GITCITO_DEVICE_ID`、`GITCITO_DEVICE_NAME` 和
 `GITCITO_DEVICE_PLATFORM`；目标是真实 Android 设备时还会有 `ANDROID_SERIAL`。
 正是这一点，让包装脚本、Gradle 任务或者一句裸 `adb` 都能打到同一台手机，而
-Gitcito 不必改写任何命令。
+Geminio 不必改写任何命令。
 
 **启动一台冷设备。** *未运行* 下面的条目，选中即启动：`flutter emulators
 --launch`、`xcrun simctl boot`（外加 Simulator 窗口），或者以分离方式运行的
-`emulator -avd` —— 这样退出 Gitcito 不会把你的 Android 模拟器一起带走。
+`emulator -avd` —— 这样退出 Geminio 不会把你的 Android 模拟器一起带走。
 
 **限制。** 已经写明设备的配置 —— 显式的 `-d`、`--simulator`、Dart-Code 的
 `deviceId` —— 会原样保留：选择器绝不覆盖作者写下的东西。需要 shell 引号的 id 会
@@ -148,7 +148,7 @@ Gitcito 不必改写任何命令。
 
 ## 从 JSON 和 YAML 获取输入值
 
-输入框可以显示项目文件中的当前版本，或用文件值预填。Gitcito 在每次启动时读取文件，然后显示输入框。无需 VS Code 扩展。
+输入框可以显示项目文件中的当前版本，或用文件值预填。Geminio 在每次启动时读取文件，然后显示输入框。无需 VS Code 扩展。
 
 在 promptString 或 pickString 中添加 fileValues。每个值指定相对于启动配置文件夹的路径，以及用点分隔的属性路径。在 description 或 default 中使用 ${fileValue:name}。default 留空时，输入仍为可选。
 
@@ -165,4 +165,4 @@ Gitcito 不必改写任何命令。
 }
 ```
 
-支持该文件夹内不超过 1 MiB 的 JSON、YAML 和 YML 文件，以及字符串、数字和布尔值。文件缺失、数据无效、属性缺失或文件夹外的路径会导致启动中止并显示错误。不执行命令或 JavaScript 表达式。每次新启动都会重新读取文件；Restart 复用之前的回答。VS Code 不会原生解析这些 Gitcito 字段。
+支持该文件夹内不超过 1 MiB 的 JSON、YAML 和 YML 文件，以及字符串、数字和布尔值。文件缺失、数据无效、属性缺失或文件夹外的路径会导致启动中止并显示错误。不执行命令或 JavaScript 表达式。每次新启动都会重新读取文件；Restart 复用之前的回答。VS Code 不会原生解析这些 Geminio 字段。

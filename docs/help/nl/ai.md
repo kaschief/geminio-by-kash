@@ -30,11 +30,11 @@ op te lijken. Gemini wordt bereikt via Googles OpenAI-compatibele endpoint.
 ### Een abonnement in plaats van een API-sleutel
 
 Kies de aanbieder **Lokale CLI** om te laten antwoorden door een agent-CLI die
-al op deze machine staat en is ingelogd — `claude`, `gemini` of `codex`. Gitcito
+al op deze machine staat en is ingelogd — `claude`, `gemini` of `codex`. Geminio
 start het programma met je prompt en leest het antwoord; er is geen API-sleutel
 om te plakken en geen token wordt bewaard.
 
-Gitcito draait alleen een commando dat je zelf als account hebt ingesteld, en
+Geminio draait alleen een commando dat je zelf als account hebt ingesteld, en
 altijd met een lijst argumenten in plaats van een shell, zodat niets uit een
 diff of een branchnaam als commando gelezen kan worden.
 
@@ -61,7 +61,7 @@ Wie bijwerkt vanaf een versie van vóór de accounts, ziet dit één keer. De aa
 ## Modellen
 
 Modellijsten komen van de aanbieder zelf en worden een dag gecachet; **Modellen
-ophalen** ververst er één meteen. Onder de lijst zegt Gitcito waar die vandaan
+ophalen** ververst er één meteen. Onder de lijst zegt Geminio waar die vandaan
 komt — live, uit de cache (met tijdstip), of de ingebouwde reservelijst en
 waarom.
 
@@ -73,7 +73,7 @@ Ollama-tag altijd bruikbaar is, ook als de aanbieder die niet noemt.
 Een aanbieder die je nog geen sleutel gaf, of die onbereikbaar is, valt terug op
 een kleine ingebouwde lijst in plaats van op een lege keuzelijst.
 
-Geen enkele aanbieder publiceert een gerangschikte of samengestelde lijst, dus de bewerking is die van Gitcito: gedateerde snapshots vouwen samen in het model waarvan ze een snapshot zijn (`gpt-4o` dekt `gpt-4o-2024-08-06`), en de rest staat op datum in plaats van alfabetisch. **Alle modellen tonen**, onderaan de lijst, haalt alles terug wat de aanbieder stuurde.
+Geen enkele aanbieder publiceert een gerangschikte of samengestelde lijst, dus de bewerking is die van Geminio: gedateerde snapshots vouwen samen in het model waarvan ze een snapshot zijn (`gpt-4o` dekt `gpt-4o-2024-08-06`), en de rest staat op datum in plaats van alfabetisch. **Alle modellen tonen**, onderaan de lijst, haalt alles terug wat de aanbieder stuurde.
 
 ## Wat het kan
 
@@ -92,7 +92,7 @@ Geen enkele aanbieder publiceert een gerangschikte of samengestelde lijst, dus d
 ## Geworteld, niet gegokt
 
 De review ziet de diff als **gelabelde hunks** en mag alleen die labels citeren;
-Gitcito herleidt elk label vervolgens naar een echt bestand en een echte regel.
+Geminio herleidt elk label vervolgens naar een echt bestand en een echte regel.
 Een model dat een locatie verzint wordt **afgewezen en opnieuw bevraagd**, zodat
 bevindingen altijd naar bestaande code wijzen.
 

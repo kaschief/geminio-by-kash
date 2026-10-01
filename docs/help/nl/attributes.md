@@ -51,13 +51,13 @@ achteraan te plakken die wint omdat hij later komt. Commentaar in het bestand
 blijft ongemoeid, want het "waarom" naast een regel is meestal meer waard dan de
 regel zelf.
 
-Elke keer opslaan is een gewone Gitcito-actie: er verschijnt een melding, en
+Elke keer opslaan is een gewone Geminio-actie: er verschijnt een melding, en
 **Ongedaan maken** zet het bestand precies terug zoals het was.
 
 **Een repository kan meerdere attributenbestanden hebben.** Eén in de root, één
 in elke submap, en een privé `.git/info/attributes` dat nooit wordt gecommit en
 alleen op jouw machine geldt — de juiste plek voor een regel die over jou gaat en
-niet over het project. Gitcito toont ze alle en vertelt welke welke is.
+niet over het project. Geminio toont ze alle en vertelt welke welke is.
 
 ## Wat geldt er voor een pad?
 
@@ -83,19 +83,19 @@ Twee helften, en beide zijn nodig:
    toepassing is.
 
 De knoppen hier doen allebei tegelijk. Voor Word, Excel, JSON en `.strings` **levert
-Gitcito de converter zelf mee** — dezelfde documentanalyse die zijn
-voorvertoningen gebruiken, beschikbaar als een klein `gitcito-textconv`-commando
+Geminio de converter zelf mee** — dezelfde documentanalyse die zijn
+voorvertoningen gebruiken, beschikbaar als een klein `geminio-textconv`-commando
 in de app — dus die vier werken zonder iets te installeren. De rest heeft nog
-steeds een echt hulpmiddel in je PATH nodig: Gitcito controleert dat en grijst
+steeds een echt hulpmiddel in je PATH nodig: Geminio controleert dat en grijst
 uit wat ontbreekt, in plaats van een driver te schrijven die bij de eerste diff
 faalt.
 
 | Driver | Vereist | Levert je op |
 |--------|---------|--------------|
-| `word` | niets — zit bij Gitcito | Prozadiffs van `.docx` |
-| `excel` | niets — zit bij Gitcito | Rijdiffs (CSV per werkblad) van `.xlsx`/`.xls` |
-| `json` | niets — zit bij Gitcito | Op sleutel gesorteerde, stabiele JSON-diffs |
-| `strings` | niets — zit in Gitcito | Regeldiffs van een UTF-16-`.strings`, die git binair noemt |
+| `word` | niets — zit bij Geminio | Prozadiffs van `.docx` |
+| `excel` | niets — zit bij Geminio | Rijdiffs (CSV per werkblad) van `.xlsx`/`.xls` |
+| `json` | niets — zit bij Geminio | Op sleutel gesorteerde, stabiele JSON-diffs |
+| `strings` | niets — zit in Geminio | Regeldiffs van een UTF-16-`.strings`, die git binair noemt |
 | `pdf` | `pdftotext` (poppler) | Tekstdiffs van `.pdf` |
 | `exif` | `exiftool` | Wat er aan een afbeelding veranderde, als de pixels ondoorzichtig zijn |
 
@@ -121,7 +121,7 @@ langer het hele bestand in de diff herschrijft.
 
 De grenzen van de meegeleverde converter, zonder omhaal: `.doc` (het oude
 binaire Word-formaat) wordt niet begrepen, alleen `.docx`; PDF valt erbuiten —
-Gitcito toont PDF's met de viewer van de browser en heeft geen tekstextractor
+Geminio toont PDF's met de viewer van de browser en heeft geen tekstextractor
 om te hergebruiken; en elke diff van een document betaalt een korte opstarttijd
 van de converter. Met `git config diff.<name>.cachetextconv true` cachet git de
 uitvoer per blob.
@@ -129,8 +129,8 @@ uitvoer per blob.
 De converterhelft staat in **jouw** config, niet in de repository — git draait
 geen commando's die een kloon je aanreikt, en dat is een beveiligingseigenschap
 die het waard is om te behouden. De meegeleverde drivers wijzen bovendien naar
-*jouw* Gitcito-installatiepad, dus een collega die kloont krijgt wel de
-`diff=word`-regel en, tot die een eigen converter aansluit (Gitcito of iets
+*jouw* Geminio-installatiepad, dus een collega die kloont krijgt wel de
+`diff=word`-regel en, tot die een eigen converter aansluit (Geminio of iets
 anders), de oude onleesbare diff. Zet dat in je README.
 
 ## Clean/smudge-filters — met eerst een proefrun
@@ -142,7 +142,7 @@ ruis uit wat er gecommit wordt.
 
 Het is ook het gevaarlijkste waar `.gitattributes` naar kan wijzen: een filter
 draait bij **elke checkout van elk overeenkomend bestand**, en een verkeerd
-filter verminkt je werkboom in stilte. Daarom weigert Gitcito hier een simpel
+filter verminkt je werkboom in stilte. Daarom weigert Geminio hier een simpel
 tekstveld te zijn. Een filter instellen loopt via een **proefrun** tegen echte
 overeenkomende bestanden in je repository:
 
@@ -183,8 +183,8 @@ onveranderd door.
   verandert hoe git het van nu af aan behandelt.
 - **Regels gelden alleen waar het bestand zichtbaar is.** Een regel in
   `design/.gitattributes` zegt niets over `src/`.
-- Gitcito schrijft hele bestanden weg, dus een met de hand opgemaakt bestand komt
-  met zijn opmaak terug — maar een regel die Gitcito herschrijft krijgt de
+- Geminio schrijft hele bestanden weg, dus een met de hand opgemaakt bestand komt
+  met zijn opmaak terug — maar een regel die Geminio herschrijft krijgt de
   canonieke `pattern attr attr`-spatiëring van git.
 
 Zie ook: [LFS & sparse checkout](lfs-sparse.md) ·

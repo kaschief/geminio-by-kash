@@ -21,7 +21,7 @@ l'avevi lasciata, senza fare stash.
   crearne uno al volo in una cartella affiancata e aprirlo come scheda.
 - Un branch vive in un solo worktree alla volta, quindi fare checkout di un
   branch che un altro worktree già tiene non può funzionare: git rifiuta con
-  *already used by worktree at …*. Gitcito ti ci porta invece: il menu del branch
+  *already used by worktree at …*. Geminio ti ci porta invece: il menu del branch
   dice *Vai a `x` nel suo worktree*, e il doppio clic sulla riga apre la scheda
   di quel worktree anziché fallire.
 

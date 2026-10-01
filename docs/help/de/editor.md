@@ -12,14 +12,14 @@ Ein Git-Client ist der Ort, an dem du Code liest; er ist selten der Ort, an dem
 du ihn reparierst. Zwischen „Problem im Diff entdeckt“ und „Cursor steht auf
 dieser Zeile im Editor“ liegen eine Dateisuche und ein Scrollen — jedes Mal.
 
-Zeig Gitcito einmal, wo dein Editor ist, und diese Lücke schließt sich: Rechtsklick
+Zeig Geminio einmal, wo dein Editor ist, und diese Lücke schließt sich: Rechtsklick
 auf eine Zeile in der Datei- oder Blame-Ansicht öffnet sie dort, genau auf dieser
 Zeile.
 
 ## Einen auswählen
 
 **Einstellungen → Allgemein → Externer Editor.** Das Dropdown listet die
-Editoren, die Gitcito auf dieser Maschine finden kann — es sucht zuerst nach dem
+Editoren, die Geminio auf dieser Maschine finden kann — es sucht zuerst nach dem
 Befehl jedes Editors und dann, unter macOS, nach dem Application Bundle in
 `/Applications` und `~/Applications`. Der Scan läuft jedes Mal, wenn du die
 Einstellungen öffnest, sodass ein vor fünf Minuten installierter Editor ohne
@@ -42,7 +42,7 @@ Ab Werk erkannt:
 **Der Sprung zu einer Zeile braucht den Befehl des Editors, nicht sein Icon.**
 Ein macOS-`.app`-Bundle wird über `open` gestartet, und das akzeptiert einen Pfad
 und sonst nichts — ein Editor, der nur als Bundle gefunden wurde, öffnet die
-Datei also ganz oben, und Gitcito sagt das unter dem Dropdown, statt so zu tun
+Datei also ganz oben, und Geminio sagt das unter dem Dropdown, statt so zu tun
 als wäre es anders.
 
 Die Lösung liegt auf der Editor-Seite: VS Codes *Shell Command: Install 'code'
@@ -64,7 +64,7 @@ Zeilensprung funktioniert.
 Zeilenaktionen erscheinen nur dort, wo die Zeilennummer noch etwas bedeutet: Eine
 Datei, die auf einem alten Commit angezeigt wird, oder ein Blame, das auf eine
 frühere Revision zurückgespult wurde, hat Zeilen, die nicht mehr zu dem passen,
-was auf der Platte liegt. Gitcito bietet dort also keinen Sprung an, statt dich
+was auf der Platte liegt. Geminio bietet dort also keinen Sprung an, statt dich
 an die falsche Stelle zu schicken.
 
 ## Xcode-Projekte und andere Pakete
@@ -91,12 +91,12 @@ kosten als es bringt.
 
 **Das Paket wird über das System geöffnet, nicht über deinen Editor.** Ein
 `.xcodeproj`, das man einem Texteditor übergibt, öffnet sich als Ordner voller
-Property Lists — nicht das, was jemand beim Klicken wollte. Gitcito übergibt es
+Property Lists — nicht das, was jemand beim Klicken wollte. Geminio übergibt es
 deshalb an das, was das Betriebssystem damit verknüpft, auf einem Mac mit Xcode
 also an Xcode. Deine Editor-Wahl bleibt unberührt und gilt weiterhin für jede
 gewöhnliche Datei.
 
-**Es ist eine Namenskonvention, kein Dateisystem-Flag.** Gitcito prüft die
+**Es ist eine Namenskonvention, kein Dateisystem-Flag.** Geminio prüft die
 Endung — ein Verzeichnis, das du zufällig `notes.app` genannt hast, wird also
 ebenfalls zusammengeklappt, und unter Linux oder Windows, wo das gewöhnliche
 Ordner sind, öffnet ein Klick den Dateimanager statt einer IDE.
@@ -122,7 +122,7 @@ Platzhalter: `{path}`, `{line}`, `{col}`, `{repo}`.
 Ein Platzhalter ohne Wert nimmt sein Flag mit: `--line {line} {path}` ohne Zeile
 ausgeführt wird einfach zum Pfad, niemals zu einem einsamen `--line`, das den
 Dateinamen als sein Argument verschlucken würde. Eine Vorlage ohne `{line}`
-bedeutet schlicht, dass Gitcito für diesen Editor keine zeilengenauen Aktionen
+bedeutet schlicht, dass Geminio für diesen Editor keine zeilengenauen Aktionen
 anbietet.
 
 ## Was das nicht ist
@@ -133,5 +133,5 @@ Bild, ein PDF, einen Ordner im Finder. Der Editor ist der spezifischere der
 beiden: Wo beide gesetzt sind, gewinnt der Editor beim Icon am Zeilenende im
 Dateibaum; im Rechtsklick-Menü bleiben beide gelistet.
 
-Gitcito startet deinen Editor niemals von selbst, und Gitcito zu schließen
+Geminio startet deinen Editor niemals von selbst, und Geminio zu schließen
 schließt ihn nie mit: Der Editor wird abgekoppelt gestartet, als eigener Prozess.

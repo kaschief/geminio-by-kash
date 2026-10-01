@@ -16,6 +16,7 @@ import type { SecureBundleHeader, SecureBundleSectionSummary, SecureWorkspaceTab
 // v1 (legacy single-repo) bundles carried `{ files: [...] }` and no sections; we
 // still read them, upgrading to a single repo section on unpack.
 
+// Stable on-disk format: existing encrypted bundles must remain importable.
 export const BUNDLE_FORMAT = 'gitcito-secure-bundle'
 // v2: repo + vault sections. v3 added workspace-structure and git-notes
 // sections; a bundle is stamped v3 only when it carries one, so older builds
@@ -161,7 +162,7 @@ export function packBundle(project: string, files: BundleFile[], password: strin
 }
 
 /** Parse the plaintext envelope without decrypting. Returns null when the text
- *  is not a gitcito bundle at all; throws on a bundle from a newer version. */
+ *  is not a geminio bundle at all; throws on a bundle from a newer version. */
 export function readBundleHeader(text: string): SecureBundleHeader | null {
   let raw: Record<string, unknown>
   try {

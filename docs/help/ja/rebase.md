@@ -22,7 +22,7 @@ keywords: 対話的リベース interactive rebase squash スカッシュ fixup 
 | **drop** | そのコミットを捨てる |
 
 行をドラッグして並べ替えます。エディタがターミナルで開くことはありません。todo は
-Gitcito が書きます。
+Geminio が書きます。
 
 ## autosquash を 1 クリックで
 

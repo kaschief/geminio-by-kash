@@ -49,13 +49,13 @@ già una riscrive quella riga dove si trova, invece di accodare una seconda rego
 che vince solo perché viene dopo. I commenti nel file sopravvivono intatti,
 perché il "perché" accanto a una regola di solito vale più della regola stessa.
 
-Ogni salvataggio è una normale azione di Gitcito: produce un toast, e **Annulla**
+Ogni salvataggio è una normale azione di Geminio: produce un toast, e **Annulla**
 riporta il file esattamente com'era.
 
 **Un repository può avere più file di attributi.** Uno alla radice, uno in
 qualsiasi sottodirectory, e un `.git/info/attributes` privato che non viene mai
 committato e vale solo sulla tua macchina — il posto giusto per una regola che
-riguarda te, non il progetto. Gitcito li elenca tutti e dice quale è quale.
+riguarda te, non il progetto. Geminio li elenca tutti e dice quale è quale.
 
 ## Cosa si applica a un percorso?
 
@@ -78,19 +78,19 @@ Due metà, e servono entrambe:
 1. `diff.<name>.textconv` nella configurazione git — il comando di conversione.
 2. `*.docx diff=<name>` in `.gitattributes` — a quali file si applica.
 
-I pulsanti qui fanno entrambe le cose insieme. Per Word, Excel, JSON e `.strings`, Gitcito
+I pulsanti qui fanno entrambe le cose insieme. Per Word, Excel, JSON e `.strings`, Geminio
 **include il convertitore esso stesso** — lo stesso parsing dei documenti usato
-dalle sue anteprime, esposto come un piccolo comando `gitcito-textconv` dentro
+dalle sue anteprime, esposto come un piccolo comando `geminio-textconv` dentro
 l'app — quindi quei quattro funzionano senza installare nulla. Gli altri richiedono
-ancora uno strumento vero nel tuo PATH: Gitcito controlla e disattiva ciò che
+ancora uno strumento vero nel tuo PATH: Geminio controlla e disattiva ciò che
 manca, invece di scrivere un driver che fallisce al primo diff.
 
 | Driver | Richiede | Ti dà |
 |--------|-------|-----------|
-| `word` | niente — incluso in Gitcito | Diff in prosa dei `.docx` |
-| `excel` | niente — incluso in Gitcito | Diff riga per riga (CSV per foglio) dei `.xlsx`/`.xls` |
-| `json` | niente — incluso in Gitcito | Diff JSON stabili, con chiavi ordinate |
-| `strings` | niente — arriva con Gitcito | Diff per righe di un `.strings` UTF-16, che git chiama binario |
+| `word` | niente — incluso in Geminio | Diff in prosa dei `.docx` |
+| `excel` | niente — incluso in Geminio | Diff riga per riga (CSV per foglio) dei `.xlsx`/`.xls` |
+| `json` | niente — incluso in Geminio | Diff JSON stabili, con chiavi ordinate |
+| `strings` | niente — arriva con Geminio | Diff per righe di un `.strings` UTF-16, che git chiama binario |
 | `pdf` | `pdftotext` (poppler) | Diff testuali dei `.pdf` |
 | `exif` | `exiftool` | Cosa è cambiato in un'immagine, quando i pixel sono opachi |
 
@@ -115,7 +115,7 @@ riscrivere l'intero file nel diff.
 
 I limiti del convertitore incluso, detti chiaramente: `.doc` (il vecchio
 formato binario di Word) non è compreso, solo `.docx`; il PDF non è coperto —
-Gitcito mostra l'anteprima dei PDF con il visore del browser e non ha un
+Geminio mostra l'anteprima dei PDF con il visore del browser e non ha un
 estrattore di testo da riusare —; e ogni diff di un documento paga un breve
 costo di avvio del convertitore.
 Con `git config diff.<name>.cachetextconv true` git mette in cache l'output
@@ -124,8 +124,8 @@ per blob.
 La metà del convertitore vive nella **tua** configurazione, non nel repository:
 git non esegue comandi che un clone gli mette in mano, ed è una proprietà di
 sicurezza che vale la pena conservare. I driver inclusi, inoltre, puntano al
-*tuo* percorso di installazione di Gitcito, quindi un collega che clona riceve
-la regola `diff=word` e, finché non collega un proprio convertitore (Gitcito o
+*tuo* percorso di installazione di Geminio, quindi un collega che clona riceve
+la regola `diff=word` e, finché non collega un proprio convertitore (Geminio o
 altro), il vecchio diff illeggibile. Scrivilo nel tuo README.
 
 ## Filtri clean/smudge — con una prova a secco prima
@@ -137,7 +137,7 @@ credenziali o rumore generato da ciò che viene committato.
 
 È anche la cosa più pericolosa a cui `.gitattributes` possa puntare: un filtro
 gira a **ogni checkout di ogni file corrispondente**, e uno sbagliato corrompe
-in silenzio il tuo albero di lavoro. Per questo qui Gitcito si rifiuta di
+in silenzio il tuo albero di lavoro. Per questo qui Geminio si rifiuta di
 essere una semplice casella di testo.
 Configurare un filtro passa per una **prova a secco** contro file reali del tuo
 repository che corrispondono:
@@ -179,8 +179,8 @@ invariati.
   come git lo tratta d'ora in avanti.
 - **Le regole valgono solo dove il file è visibile.** Una regola in
   `design/.gitattributes` non dice nulla su `src/`.
-- Gitcito riscrive file interi, quindi un file formattato a mano torna con la sua
-  formattazione — ma una regola che Gitcito riscrive viene riformattata secondo
+- Geminio riscrive file interi, quindi un file formattato a mano torna con la sua
+  formattazione — ma una regola che Geminio riscrive viene riformattata secondo
   la spaziatura canonica di git, `pattern attr attr`.
 
 Vedi anche: [LFS e sparse checkout](lfs-sparse.md) ·

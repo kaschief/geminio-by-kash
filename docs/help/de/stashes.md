@@ -8,7 +8,7 @@ keywords: stash stashes stashen teilweise partial keep-index anwenden apply pop 
 
 # Stashes
 
-Stashen ist in Gitcito kein Alles-oder-nichts.
+Stashen ist in Geminio kein Alles-oder-nichts.
 
 | Aktion | Was sie tut |
 |---|---|
@@ -30,7 +30,7 @@ Dateien anwenden*) stellt nur die Auswahl wieder her.
 ## Wenn ein Stash sich nicht anwenden lässt
 
 Würde das Anwenden eines Stashes ungetrackte Dateien überbügeln, hält git an.
-Gitcito bietet an, sie zu überschreiben und es erneut zu versuchen, statt dich
+Geminio bietet an, sie zu überschreiben und es erneut zu versuchen, statt dich
 mit dem Herausfinden der richtigen Beschwörungsformel allein zu lassen.
 
 Ist das Arbeitsverzeichnis zu weit weggewandert, erzeugt **Stash → Branch** den

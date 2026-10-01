@@ -89,8 +89,8 @@ export function RefPicker({
       if (rootRef.current?.contains(target) || listRef.current?.contains(target)) return
       setOpen(false)
     }
-    document.addEventListener('mousedown', onDown)
-    return () => document.removeEventListener('mousedown', onDown)
+    document.addEventListener('pointerdown', onDown, true)
+    return () => document.removeEventListener('pointerdown', onDown, true)
   }, [open])
 
   // Keep the highlighted row in view when arrowing past the visible window.

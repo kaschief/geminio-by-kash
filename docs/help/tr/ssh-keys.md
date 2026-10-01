@@ -12,7 +12,7 @@ keywords: ssh anahtar anahtarları key keys agent ajan ssh-add ssh-keygen ed2551
 
 ## Bu neden belirteçlerin yanında duruyor
 
-Gitcito iki farklı şeyin kimliğini doğrular ve insanlar haklı olarak bunları tek
+Geminio iki farklı şeyin kimliğini doğrular ve insanlar haklı olarak bunları tek
 bir şey sanır:
 
 | | Kimliği şununla doğrulanır |
@@ -54,7 +54,7 @@ içeriğini unutur. "Dün çalışıyordu" genellikle budur.
 
 **Bağlantıyı test et** var, çünkü ssh'in kendi yanıtı yanıltıcıdır: GitHub
 kimliğinizi başarıyla doğrular ve *ardından* bir hata koduyla çıkar, çünkü kabuk
-sunmaz. Gitcito çıkış kodu yerine mesajı okur ve okumasını denetleyebilmeniz için
+sunmaz. Geminio çıkış kodu yerine mesajı okur ve okumasını denetleyebilmeniz için
 ham çıktıyı altında gösterir.
 
 ## Sınırlar, açıkça söylenmiş hâliyle
@@ -65,17 +65,17 @@ ham çıktıyı altında gösterir.
 - **Üretme asla üzerine yazmaz.** `~/.ssh` içinde zaten bulunan bir ad reddedilir.
   Bir özel anahtarın üzerine yazmak, ona güvenen her şeye erişiminizi sessizce
   iptal eder ve hiçbir onay penceresi bunu geri getirilebilir kılmaz.
-- **Parola cümleleri Gitcito tarafından saklanmaz.** Üretirken ya da ajana
+- **Parola cümleleri Geminio tarafından saklanmaz.** Üretirken ya da ajana
   eklerken birini yazarsınız; `ssh-keygen`/`ssh-add`'e iletilir ve düşürülür.
   Yeniden başlatmalar arasında kalıcı kılmak, `ssh-add` aracılığıyla işletim
   sistemi anahtarlığının işidir.
 - **`~/.ssh/config` düzenlemesi yok**, sunucu takma adı yok, depo başına anahtar
-  seçimi yok. Bunlar sizin ssh yapılandırmanızda yaşar ve Gitcito o dosyaya
+  seçimi yok. Bunlar sizin ssh yapılandırmanızda yaşar ve Geminio o dosyaya
   dokunmaz.
 
 ## Makinenizden asla çıkmayan şey
 
-**Gitcito hiçbir zaman bir özel anahtarı okumaz, göstermez ya da iletmez.** Bölüm
+**Geminio hiçbir zaman bir özel anahtarı okumaz, göstermez ya da iletmez.** Bölüm
 yalnızca açık yarıları ve parmak izlerini listeler. Herhangi bir yere gönderilen
 tek şey, açıkça **Yükle**'ye bastığınız açık anahtardır — o da kendi belirteciniz
 altında, parmak izini adıyla anan bir onaydan sonra GitHub'a gider.

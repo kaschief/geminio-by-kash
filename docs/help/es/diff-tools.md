@@ -2,14 +2,14 @@
 title: Herramientas externas de diff y merge
 category: Ramas y cirugía
 order: 43
-summary: Entrega un archivo a Kaleidoscope, Beyond Compare, Meld o lo que ya uses — Gitcito lee la propia lista de herramientas de git.
+summary: Entrega un archivo a Kaleidoscope, Beyond Compare, Meld o lo que ya uses — Geminio lee la propia lista de herramientas de git.
 keywords: difftool mergetool diff merge externo herramienta kaleidoscope beyond compare meld kdiff3 p4merge araxis opendiff filemerge vimdiff winmerge diff.tool merge.tool orig copia de seguridad backup
 ---
 
 # Herramientas externas de diff y merge
 
 El [visor de diffs](diffs.md) y el [resolutor de tres paneles](conflicts.md) de
-Gitcito cubren casi todos los días. Algunos no: un archivo generado de 4.000
+Geminio cubren casi todos los días. Algunos no: un archivo generado de 4.000
 líneas, una fusión donde necesitas ver cuatro columnas a la vez, o sencillamente
 la herramienta que llevas usando una década y lees más rápido que cualquier otra.
 
@@ -17,7 +17,7 @@ la herramienta que llevas usando una década y lees más rápido que cualquier o
 
 ## Es la lista de git, no la nuestra
 
-Gitcito no mantiene ninguna tabla propia. Los desplegables son
+Geminio no mantiene ninguna tabla propia. Los desplegables son
 `git difftool --tool-help` y `git mergetool --tool-help`, y por eso:
 
 - Las herramientas que git ya encontró en tu máquina aparecen primero; las que
@@ -32,7 +32,7 @@ Gitcito no mantiene ninguna tabla propia. Los desplegables son
 - Tus elecciones se escriben en **`diff.tool` y `merge.tool` de tu configuración
   global de git** — las mismas claves que lee tu terminal. Configúralo aquí y
   `git difftool` en la línea de comandos se comporta igual. Configúralo allí y
-  Gitcito lo recoge.
+  Geminio lo recoge.
 
 Git conoce de fábrica unas treinta herramientas, entre ellas Kaleidoscope, Beyond
 Compare, Meld, KDiff3, P4Merge, Araxis, DiffMerge, WinMerge, FileMerge, VS Code y
@@ -51,7 +51,7 @@ que ningún botón.
 
 ## Qué pasa mientras la herramienta está abierta
 
-Gitcito espera a que se cierre. Es deliberado — `git mergetool` solo prepara el
+Geminio espera a que se cierre. Es deliberado — `git mergetool` solo prepara el
 archivo resuelto *después* de que la herramienta salga, así que hay un resultado
 real que informar — y por eso el botón muestra un spinner en lugar de volver de
 inmediato.
@@ -62,13 +62,13 @@ herramienta de merge que dejas abierta durante la comida no congela la pestaña
 que hay detrás.
 
 Cuando una fusión externa sale bien, git prepara el archivo por su cuenta y
-Gitcito cierra el resolutor y refresca. Si cierras la herramienta sin guardar,
+Geminio cierra el resolutor y refresca. Si cierras la herramienta sin guardar,
 git lo dice y no cambia nada.
 
 ## El archivo `.orig`
 
 `git mergetool` deja por defecto una copia de seguridad `<file>.orig` junto al
-archivo resuelto — comportamiento de git, no de Gitcito. El interruptor de
+archivo resuelto — comportamiento de git, no de Geminio. El interruptor de
 Ajustes escribe `mergetool.keepBackup`; desactívalo y un archivo resuelto no deja
 nada detrás.
 
@@ -80,6 +80,6 @@ nada detrás.
   [comparación](merging.md) para eso.
 - **Un archivo cada vez.** No hay ninguna pasada de "diff de todos los archivos
   modificados".
-- **Gitcito nunca instala nada.** Una herramienta marcada como *no instalada*
+- **Geminio nunca instala nada.** Una herramienta marcada como *no instalada*
   sigue siendo seleccionable, porque git puede encontrarla después de que la
   instales — pero fallará hasta que lo hagas.

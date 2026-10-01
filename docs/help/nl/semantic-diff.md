@@ -12,7 +12,7 @@ Een zuivere hernoeming ziet er in een regeldiff uit als een heel bestand
 verwijderd en een heel bestand toegevoegd. Dat is technisch waar en volslagen
 nutteloos.
 
-Boven elke bestandsdiff toont Gitcito een strook **Wat er veranderde**: beide
+Boven elke bestandsdiff toont Geminio een strook **Wat er veranderde**: beide
 versies van het bestand worden geparseerd met **tree-sitter** — echte
 syntaxbomen, geen reguliere expressies — en hun declaraties worden aan elkaar
 gekoppeld.

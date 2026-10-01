@@ -34,7 +34,7 @@ tego okna.
 
 **`-X ours` to nie `-s ours`.** Ten przełącznik decyduje wyłącznie o hunkach,
 które faktycznie się gryzą; każda inna zmiana z drugiej gałęzi merguje się
-normalnie. Strategia o nazwie `ours` — której Gitcito nie oferuje — bierze twoje
+normalnie. Strategia o nazwie `ours` — której Geminio nie oferuje — bierze twoje
 drzewo w całości i wyrzuca drugą stronę, produkując commit scalający, który
 twierdzi, że zawiera pracę, której nie zawiera. To rozróżnienie jest
 najczęściej opacznie rozumianą rzeczą w merge'ach gita.

@@ -11,7 +11,7 @@ keywords: conflict radar conflictradar merge preview botsing risico branches mer
 Erachter komen dat een branch conflicteert door hem te mergen is een dure manier
 om een vraag te stellen. De radar beantwoordt hem vooraf.
 
-Gitcito merget elke branch in een basis naar keuze **binnen de objectdatabase**
+Geminio merget elke branch in een basis naar keuze **binnen de objectdatabase**
 (`git merge-tree --write-tree`). Geen checkout, geen wijziging aan de index, geen
 wijziging aan de werkboom, niets om achteraf op te ruimen. Je niet-gecommitte werk
 kan precies blijven waar het is terwijl de scan loopt.

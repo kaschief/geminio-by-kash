@@ -11,7 +11,7 @@ keywords: semantic diff ast tree-sitter rename signature moved symbols what chan
 A pure rename shows up in a line diff as an entire file deleted and an entire
 file added. That is technically true and completely useless.
 
-Above every file diff, Gitcito shows a **What changed** strip: both versions of
+Above every file diff, Geminio shows a **What changed** strip: both versions of
 the file are parsed with **tree-sitter** — real syntax trees, not regular
 expressions — and their declarations are matched up.
 

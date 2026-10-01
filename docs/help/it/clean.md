@@ -17,7 +17,7 @@ stash, non c'è annullamento e non esiste formula magica di `git` che lo riporti
 indietro.
 
 È per questo che è l'operazione che la gente lancia da terminale e poi rimpiange.
-La versione di Gitcito ti mostra l'elenco completo prima che succeda qualsiasi
+La versione di Geminio ti mostra l'elenco completo prima che succeda qualsiasi
 cosa.
 
 `⌘K` → **Rimuovi i file non tracciati**.
@@ -46,7 +46,7 @@ dimensione è la somma di ciò che contiene.
 
 Una cartella segnalata come **repository a sé** ha un proprio `.git`: un clone
 che hai lasciato cadere dentro questo, o un esperimento che non hai mai
-collegato. Git si rifiuta di rimuoverle (vorrebbe `-ff`, un flag che Gitcito non
+collegato. Git si rifiuta di rimuoverle (vorrebbe `-ff`, un flag che Geminio non
 offre) — il Cestino invece le prende.
 
 ## Cestino o eliminazione

@@ -8,7 +8,7 @@ keywords: toegankelijkheid accessibility a11y schermlezer VoiceOver NVDA toetsen
 
 # Toegankelijkheid
 
-Gitcito wil zonder muis bedienbaar zijn en leesbaar voor een schermlezer.
+Geminio wil zonder muis bedienbaar zijn en leesbaar voor een schermlezer.
 Deze pagina zegt wat dat concreet betekent — en waar de randen zitten.
 
 ## Toetsenbord

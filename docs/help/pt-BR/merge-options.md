@@ -33,7 +33,7 @@ o manual — e para ser rodado num terminal na próxima vez, sem este diálogo.
 
 **`-X ours` não é `-s ours`.** A chave aqui decide apenas os hunks que de fato
 colidem; toda outra mudança da outra branch é mesclada normalmente. A estratégia
-chamada `ours` — que o Gitcito não oferece — pega a sua árvore inteira e joga o
+chamada `ours` — que o Geminio não oferece — pega a sua árvore inteira e joga o
 outro lado fora, produzindo um commit de merge que afirma conter um trabalho que
 não contém. Essa distinção é a coisa mais mal-entendida sobre merges no git.
 

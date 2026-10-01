@@ -13,7 +13,7 @@ export const de = {
   'foot.reportIssue': 'Ein Problem melden',
   'foot.sponsor': 'Sponsern',
 
-  'meta.title': 'Gitcito — das ganze git, mit einer Oberfläche, die es dir zeigt',
+  'meta.title': 'Geminio — das ganze git, mit einer Oberfläche, die es dir zeigt',
   'meta.description':
     'Ein vollständig vibe-codierter Git-Client. Kostenlos. Graph, Staging bis auf die Zeile, Rebase, Worktrees, Submodule, LFS — dazu ein paar Dinge, von denen du nicht wusstest, dass git sie kann.',
 
@@ -23,11 +23,11 @@ export const de = {
   'hero.download': 'Für deine Plattform herunterladen',
   'hero.source': 'Quellcode ansehen',
   'hero.terms': 'Kostenlos · MIT · v{version}',
-  'hero.graphAlt': 'Der Commit-Graph von Gitcito',
+  'hero.graphAlt': 'Der Commit-Graph von Geminio',
 
   'features.title': 'Ein paar Dinge, von denen du nicht wusstest, dass git sie kann',
   'features.sub':
-    'Keines davon ist der Grund, Gitcito zu benutzen — die Liste oben ist es. Es gibt sie, weil git die Antwort ohnehin schon kennt; Gitcito fragt einfach danach.',
+    'Keines davon ist der Grund, Geminio zu benutzen — die Liste oben ist es. Es gibt sie, weil git die Antwort ohnehin schon kennt; Geminio fragt einfach danach.',
 
   'ordinary.title': 'Was du bekommst',
   'ordinary.sub':
@@ -53,7 +53,7 @@ export const de = {
   'download.sub':
     'Neuestes Release: <strong>v{version}</strong>. Jeder Build wird aus der CI veröffentlicht.',
   'download.cli':
-    'Oder öffne ein Repository aus deinem Terminal mit <code>gitcito .</code> — siehe <a href="{cli}">die Kommandozeile</a>.',
+    'Oder öffne ein Repository aus deinem Terminal mit <code>geminio .</code> — siehe <a href="{cli}">die Kommandozeile</a>.',
   'download.macNote': 'Apple silicon &amp; Intel · signiert und notarisiert',
   'download.winNote': 'Installer (x64)',
   'download.linuxNote': 'AppImage · deb',
@@ -62,12 +62,12 @@ export const de = {
   'handbook.title': 'Ein Handbuch mit {pages} Seiten, eingebaut in die App',
   'handbook.sub': 'Jede Funktion erklärt — offline in der App und genau hier.',
 
-  'sponsor.title': 'Gitcito sponsern',
+  'sponsor.title': 'Geminio sponsern',
   'sponsor.body':
     'Kostenlos, MIT, kein Backend, keine Telemetrie, nichts, was dir noch verkauft werden soll — es gibt also nichts zu kaufen. Sponsoring bezahlt das Apple-Developer-Zertifikat, das die signierten macOS-Builds brauchen, das Handbuch und die Übersetzungen. Fehlerberichte sind genauso viel wert.',
   'sponsor.cta': 'Auf GitHub sponsern',
 
-  'doc.titleSuffix': 'Gitcito-Handbuch',
+  'doc.titleSuffix': 'Geminio-Handbuch',
   'doc.filter': 'Seiten filtern…',
   'doc.filterLabel': 'Seiten filtern',
   'doc.edit': 'Diese Seite auf GitHub bearbeiten',
@@ -120,5 +120,5 @@ export const de = {
     'Kein Backend. Tokens und Tresor-Einträge werden mit dem Schlüsselbund deines Betriebssystems verschlüsselt — und nichts rührt diesen Schlüsselbund an, bevor dir gesagt wurde wofür und du ja gesagt hast.',
   'feature.cli.title': 'Eine Git-Oberfläche mit echter CLI',
   'feature.cli.body':
-    '`gitcito .` öffnet ein Repository, `gitcito blame src/api.ts -l 84` öffnet es an genau dieser Zeile, und `gitcito doctor` öffnet gar kein Fenster – es prüft, was das Repository verlangt, und endet mit einem Code, den deine CI lesen kann.'
+    '`geminio .` öffnet ein Repository, `geminio blame src/api.ts -l 84` öffnet es an genau dieser Zeile, und `geminio doctor` öffnet gar kein Fenster – es prüft, was das Repository verlangt, und endet mit einem Code, den deine CI lesen kann.'
 }

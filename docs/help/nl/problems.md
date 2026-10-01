@@ -10,7 +10,7 @@ keywords: problemen analyzer diagnostiek fouten waarschuwingen lint tsc typescri
 
 Elk project heeft al gereedschap dat vertelt wat er mis mee is — `tsc`,
 `dart analyze`, ESLint, Clippy, `go vet`, Ruff. Wat geen van alle vertelt: of
-**jouw** diff die veertig waarschuwingen heeft veroorzaakt. Gitcito weet welke
+**jouw** diff die veertig waarschuwingen heeft veroorzaakt. Geminio weet welke
 bestanden vuil zijn, dus dezelfde lijst beantwoordt die vraag met één schakelaar.
 
 ![Het Problemen-paneel en de teller in de statusbalk](../../screenshots/problems.webp)
@@ -22,7 +22,7 @@ regel klikken opent het bestand daar. Vóór de eerste sweep toont hij streepjes
 
 ## Wat er wordt uitgevoerd
 
-| Als de repository heeft | voert Gitcito uit |
+| Als de repository heeft | voert Geminio uit |
 |-------------------------|-------------------|
 | `pubspec.yaml` | `dart analyze --format=machine` |
 | `tsconfig.json` | `tsc --noEmit` |
@@ -49,7 +49,7 @@ analyzers die dezelfde regel melden leveren één rij op.
 
 **Niets draait uit zichzelf.** `tsc --noEmit` op een grote repository is tientallen
 seconden, en deze commando's zijn de toolchain van de repository, niet die van
-Gitcito. Ze starten wanneer je het paneel opent of ververst, nooit vanzelf.
+Geminio. Ze starten wanneer je het paneel opent of ververst, nooit vanzelf.
 Daarom is de lijst een momentopname: bewerk een bestand en hij is verouderd tot
 je opnieuw draait.
 
@@ -61,7 +61,7 @@ verbergt.
 **Gegenereerde uitvoer valt af.** Gereedschap dat op de projectroot is gericht
 controleert alles wat het vindt, en dat omvat `.next/build/chunks`, een gebundelde
 `dist`, een meegeleverde kopie — honderden klachten over machinaal geschreven code
-die de handvol over die van jou bedelven. Gitcito vraagt git welke bestanden
+die de handvol over die van jou bedelven. Geminio vraagt git welke bestanden
 genegeerd zijn en laat die vallen, en nooit een *gevolgd* bestand: gegenereerde
 uitvoer committen is een keuze, en `git check-ignore` respecteert die.
 `node_modules` gaat er sowieso uit.

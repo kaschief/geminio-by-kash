@@ -27,7 +27,7 @@ Apúntalo a un repositorio y escribe una wiki corta que explica el código.
 
 ## Las páginas escritas
 
-Gitcito planifica un puñado de páginas a partir de los archivos que el
+Geminio planifica un puñado de páginas a partir de los archivos que el
 repositorio versiona — primero documentación y manifiestos, luego lo que más se
 mueve — y escribe cada página con los archivos que cubre.
 

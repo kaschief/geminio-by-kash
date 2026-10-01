@@ -28,10 +28,10 @@ branch sbagliato.
 | `release/*` | Una versione in stabilizzazione, staccata da develop. |
 | `hotfix/*` | Una correzione urgente, staccata da **main** — la produzione non può aspettare develop. |
 
-Gitcito legge e scrive le stesse chiavi di configurazione `gitflow.*` usate dalla
+Geminio legge e scrive le stesse chiavi di configurazione `gitflow.*` usate dalla
 CLI `git flow` (`gitflow.branch.master`, `gitflow.prefix.feature`, …). Un
 repository su cui qualcuno ha già lanciato `git flow init` viene riconosciuto
-subito, e un repository configurato qui funziona poi con la CLI. Gitcito esegue
+subito, e un repository configurato qui funziona poi con la CLI. Geminio esegue
 comandi git normali dall'inizio alla fine — la CLI non deve essere installata.
 
 **Configura** scrive quelle chiavi e, se il branch di integrazione non esiste
@@ -55,7 +55,7 @@ Il nome è quello che scrivi tu; il prefisso viene dall'impianto.
 **Concludi** è la parte che vale la pena automatizzare, perché sono più passaggi
 che devono avvenire tutti:
 
-| Tipo | Cosa fa Gitcito |
+| Tipo | Cosa fa Geminio |
 |------|-------------------|
 | Feature | Fonde in develop con `--no-ff`, elimina il branch, ti lascia su develop |
 | Release | Fonde in main, la tagga, fonde in develop, elimina il branch, ti lascia su develop |
@@ -76,7 +76,7 @@ e scrivi un messaggio di tag se vuoi più del testo predefinito.
   farlo attorno a lavoro non committato è il modo in cui lo si perde.
 - **Un merge in conflitto annulla tutto quanto.** Se il merge in main riesce ma
   quello in develop va in conflitto, altrimenti ti ritroveresti con una release a
-  metà. Gitcito riporta ogni branch dov'era e riporta il conflitto. Fondi quel
+  metà. Geminio riporta ogni branch dov'era e riporta il conflitto. Fondi quel
   branch a mano, lo risolvi nel [risolutore di conflitti](conflicts.md) e il
   flusso resta tuo da concludere manualmente.
 - **Non fa mai push.** Concludere è un'operazione locale. Pubblica main, develop

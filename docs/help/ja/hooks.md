@@ -15,11 +15,11 @@ keywords: hooks フック pre-commit husky core.hooksPath gitignore ignore 無�
 
 ![フックマネージャー](../../screenshots/hooks.webp)
 
-Gitcito は独自の **`core.hooksPath`**（husky とその仲間）と **pre-commit フレーム
+Geminio は独自の **`core.hooksPath`**（husky とその仲間）と **pre-commit フレーム
 ワーク**の設定を検出し、フックが `.git/hooks` 以外の場所にある場合はそれを伝えます —
 そうでなければ、git が決して実行しないファイルを編集することになりかねません。
 
-> フックは Gitcito のコミットに対しても `git commit` とまったく同じように走ります。
+> フックは Geminio のコミットに対しても `git commit` とまったく同じように走ります。
 > 失敗したフックはコミットを止め、その出力はエラーとして返ってきます。
 
 ## かしこい .gitignore

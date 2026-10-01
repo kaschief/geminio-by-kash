@@ -2,13 +2,13 @@
 title: Uitvoeren & debuggen (launch.json)
 category: Werkomgeving & tools
 order: 91
-summary: Draai je VS Code-launchconfiguraties zonder Gitcito te verlaten.
+summary: Draai je VS Code-launchconfiguraties zonder Geminio te verlaten.
 keywords: launch.json uitvoeren run debug debuggen vscode configuraties configs tasks preLaunchTask input background compound compounds stopAll serverReadyAction parallelle sessies hot reload hot restart device simulator emulator run target flutter metro expo vite nodemon vitest jest mocha ava wrangler dotnet watch adb simctl avd xcodebuild capacitor
 ---
 
 # Uitvoeren & debuggen
 
-Gitcito leest je `.vscode/launch.json` — die in de root en alle geneste, met
+Geminio leest je `.vscode/launch.json` — die in de root en alle geneste, met
 scheidingslijnen gegroepeerd — en draait de configuratie die je kiest in de
 geïntegreerde terminal.
 
@@ -33,7 +33,7 @@ geïntegreerde terminal.
 - **`serverReadyAction`** wordt gehonoreerd: zodra de uitvoer van de sessie het
   geconfigureerde patroon matcht, opent de aangekondigde URL in je browser
   (`openExternally`; `debugWithChrome` / `debugWithEdge` openen ook de browser
-  — Gitcito kan er geen debugger aan koppelen).
+  — Geminio kan er geen debugger aan koppelen).
 
 ![Een compound met twee parallelle sessies](../../screenshots/launch-compound.webp)
 
@@ -51,7 +51,7 @@ Als de balk iets bedekt dat je nodig hebt, sleep hem dan opzij aan zijn greep
 — de positie wordt onthouden, en een dubbelklik op de greep centreert hem
 weer.
 
-Wat Gitcito bewust **niet** doet: het draait je programma's in echte
+Wat Geminio bewust **niet** doet: het draait je programma's in echte
 terminals, maar het is geen debugger — geen breakpoints, geen inspectie van
 variabelen, geen Debug Adapter Protocol. Attach-configuraties werken wanneer ze
 een `preLaunchTask` dragen (de taak is het werk); een pure attach heeft niets
@@ -67,7 +67,7 @@ startconfiguratie herstarten om hetzelfde te bereiken is de trage weg — het do
 het proces, draait elke `preLaunchTask` opnieuw en gooit de toestand van de app
 weg.
 
-Daarom leest Gitcito het commando dat een configuratie echt start — een
+Daarom leest Geminio het commando dat een configuratie echt start — een
 `npm run dev` volgt het tot in de scripts van je `package.json` — en zet de
 toetsen van die runtime op de debugbalk. Eén klik schrijft de toets naar de
 standaardinvoer van de sessie, precies alsof je hem zelf in de terminal typte.
@@ -93,7 +93,7 @@ lijkt alsof hij werkte.
 
 **De grenzen.** De herkenning is tekstueel: ze zoekt de programmanaam op de
 commandoregel, dus een configuratie die je dev-server via een wrapper-script
-start dat Gitcito niet kan lezen, krijgt niets. Er komt ook geen bevestiging — de
+start dat Geminio niet kan lezen, krijgt niets. Er komt ook geen bevestiging — de
 knop knippert, en de uitvoer van het proces is het echte antwoord. Een
 gepauzeerde of beëindigde sessie neemt geen invoer aan, dus dan zijn de knoppen
 uitgeschakeld.
@@ -105,7 +105,7 @@ uitgeschakeld.
   "name": "API (watch)",
   "type": "node-terminal",
   "command": "./scripts/dev.sh",
-  "gitcito": { "hotActions": [{ "label": "Reload", "send": "r", "icon": "reload" }] }
+  "geminio": { "hotActions": [{ "label": "Reload", "send": "r", "icon": "reload" }] }
 }
 ```
 
@@ -120,7 +120,7 @@ Een lege `hotActions`-array zet de knoppen uit voor die configuratie.
 
 Een configuratie die een mobiele app bouwt, moet horen waar hij moet draaien.
 Die keuze is niet alleen van Flutter — React Native, Expo, Capacitor en
-xcodebuild nemen ook een doel, elk anders geschreven. Gitcito vraagt het dus één
+xcodebuild nemen ook een doel, elk anders geschreven. Geminio vraagt het dus één
 keer, naast het **LAUNCH**-tabblad, en schrijft het antwoord in de vorm die de
 runtime van die configuratie leest. De kiezer verschijnt alleen als een
 configuratie in de repository echt een apparaat kan aannemen.
@@ -156,11 +156,11 @@ Elke gestarte configuratie krijgt ook `GITCITO_DEVICE_ID`,
 `GITCITO_DEVICE_NAME` en `GITCITO_DEVICE_PLATFORM` in de omgeving, plus
 `ANDROID_SERIAL` als het doel een echt Android-toestel is. Dat is wat een
 wrapper-script, een Gradle-taak of een kale `adb` hetzelfde toestel laat raken
-zonder dat Gitcito iets herschrijft.
+zonder dat Geminio iets herschrijft.
 
 **Een koud apparaat starten.** Alles onder *Niet gestart* start zodra je het
 kiest: `flutter emulators --launch`, `xcrun simctl boot` (plus het
-Simulator-venster) of `emulator -avd` losgekoppeld — Gitcito afsluiten neemt je
+Simulator-venster) of `emulator -avd` losgekoppeld — Geminio afsluiten neemt je
 Android-emulator dus niet mee.
 
 **De grenzen.** Een configuratie die al een apparaat noemt — een expliciete
@@ -178,7 +178,7 @@ meer bestaat.
 
 ## Invoerwaarden uit JSON en YAML
 
-Een veld kan de huidige versie tonen of een waarde uit een projectbestand invullen. Gitcito leest het bestand bij elke start voordat de invoervelden verschijnen. Geen VS Code-extensie nodig.
+Een veld kan de huidige versie tonen of een waarde uit een projectbestand invullen. Geminio leest het bestand bij elke start voordat de invoervelden verschijnen. Geen VS Code-extensie nodig.
 
 Voeg fileValues toe aan promptString of pickString. Elke waarde bevat een bestandspad relatief aan de map van de startconfiguratie en een eigenschapspad met punten. Gebruik ${fileValue:name} in description of default. Met een lege default blijft het tekstveld optioneel.
 
@@ -195,4 +195,4 @@ Voeg fileValues toe aan promptString of pickString. Elke waarde bevat een bestan
 }
 ```
 
-Ondersteunt JSON-, YAML- en YML-bestanden binnen deze map tot 1 MiB, met tekst, getallen of booleans. Ontbrekende bestanden, ongeldige gegevens, ontbrekende eigenschappen en externe paden stoppen de start met een fout. Er worden geen opdrachten of JavaScript-expressies uitgevoerd. Elke nieuwe start leest opnieuw; Restart hergebruikt de antwoorden. VS Code verwerkt deze Gitcito-velden niet standaard.
+Ondersteunt JSON-, YAML- en YML-bestanden binnen deze map tot 1 MiB, met tekst, getallen of booleans. Ontbrekende bestanden, ongeldige gegevens, ontbrekende eigenschappen en externe paden stoppen de start met een fout. Er worden geen opdrachten of JavaScript-expressies uitgevoerd. Elke nieuwe start leest opnieuw; Restart hergebruikt de antwoorden. VS Code verwerkt deze Geminio-velden niet standaard.

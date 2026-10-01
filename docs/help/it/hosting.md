@@ -91,7 +91,7 @@ CI finisce.
 ## Token
 
 Token per profilo per più account o organizzazioni, conservati nel portachiavi
-del tuo sistema operativo. Gitcito può anche prendere in prestito quello che il
+del tuo sistema operativo. Geminio può anche prendere in prestito quello che il
 tuo **credential helper di git** già custodisce, quindi un'organizzazione per cui
 ti sei già autenticato spesso non richiede alcuna configurazione. Vedi
 [Sicurezza e segreti](security.md).

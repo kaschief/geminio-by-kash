@@ -60,7 +60,7 @@ kopyalar. Klasörler hâlâ klasör yolunu kopyalar.
 
 ## Commit'lemeden önce
 
-Gitcito birkaç şeyi denetler ve bir kez sorar, asla sessizce geçmez:
+Geminio birkaç şeyi denetler ve bir kez sorar, asla sessizce geçmez:
 
 - **gizli bilgi** gibi görünen bir dosya (`.env`, `*.pem`, `id_rsa`…),
 - **çok büyük** bir blob (eşik değeri Ayarlar → Güvenlik altında),

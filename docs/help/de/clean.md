@@ -17,7 +17,7 @@ einem Commit, also gibt es keinen Reflog-Eintrag, keinen Stash, kein
 Rückgängig und keine `git`-Beschwörung, die ihn zurückholt.
 
 Deshalb ist es die Operation, die Leute im Terminal ausführen und danach
-bereuen. Gitcitos Variante zeigt dir die vollständige Liste, bevor irgendetwas
+bereuen. Geminios Variante zeigt dir die vollständige Liste, bevor irgendetwas
 passiert.
 
 `⌘K` → **Ungetrackte Dateien entfernen**.
@@ -47,7 +47,7 @@ niemand liest. Die angezeigte Größe ist die Summe des Inhalts.
 Ein Ordner, der als **eigenes Repository** markiert ist, hat ein eigenes `.git`:
 ein Klon, den du hier hineingelegt hast, oder ein Experiment, das du nie
 angebunden hast. Git weigert sich, so etwas zu entfernen (es will `-ff`, ein
-Flag, das Gitcito nicht anbietet) — der Papierkorb nimmt sie.
+Flag, das Geminio nicht anbietet) — der Papierkorb nimmt sie.
 
 ## Papierkorb oder löschen
 

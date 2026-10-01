@@ -16,6 +16,12 @@ repository.
 
 ![The repository context menu on a grouped chip](../screenshots/repo-context-menu.webp)
 
+The repository and branch selectors are compact, single-line controls with
+fixed space for their icons and arrows. Long names shorten with an ellipsis;
+hover the name to see it in full.
+
+![Compact repository and branch selectors](../screenshots/toolbar-selectors.webp)
+
 The repository dropdown in the toolbar lists every open repository, the same
 way the branch dropdown lists branches. Left-click a row to switch to it.
 Right-click a row (or the current-repository pill itself) for alias, worktrees,
@@ -28,14 +34,14 @@ opens the launcher.
 
 | Action | Effect |
 |---|---|
-| **Create Alias…** / **Change Alias…** | A display name only. Gitcito never renames or moves the folder on disk. The same alias follows the repository across tabs, groups and workspaces. |
+| **Create Alias…** / **Change Alias…** | A display name only. Geminio never renames or moves the folder on disk. The same alias follows the repository across tabs, groups and workspaces. |
 | **Remove Alias** | Shown when an alias exists. Restores the folder name. |
 | **Show Worktrees** | Focuses this repository and opens the sidebar's worktree section. |
 | **New Worktree…** | The same create-worktree prompt used from a branch. Disabled while the path is missing or a merge/rebase/cherry-pick/revert is in progress. |
 | **Copy Repo Name** | Copies the canonical folder name, not the alias. |
 | **Copy Repo Path** | Copies the absolute path. |
 | **View on GitHub** | Origin if it is github.com, otherwise the first parseable GitHub remote. Disabled when none can be derived. |
-| **Open in Terminal** | Opens Gitcito's terminal with this repository as the working directory. |
+| **Open in Terminal** | Opens Geminio's terminal with this repository as the working directory. |
 | **Reveal in Finder / Explorer** | Highlights the repository folder in the platform file manager. |
 | **Open in External Editor** | The editor configured in Settings. Visible but disabled until one is set. |
 | **Remove…** | Closes the tab or drops the chip from the group. Uses the same uncommitted-work warning as the **×** button. It never deletes files from disk. |

@@ -59,7 +59,7 @@ bir uzak depodan gelen bir dalla yapacağınız gibi birleştirir, rebase eder y
 checkout edersiniz.
 
 Bunun yerine bir bundle'dan *yeni* bir depo başlatmak için terminalden dosyayı
-klonlayın: `git clone work.bundle myrepo`. Gitcito açık bir depoya içe aktarır;
+klonlayın: `git clone work.bundle myrepo`. Geminio açık bir depoya içe aktarır;
 bir dosyadan klonlama yapmaz.
 
 ## Arşivler
@@ -94,7 +94,7 @@ yayın betiğinde değil, deponun kendisinde yaşar.
 
 - **Bundle, aralık kullanmadıkça tam bir kopyadır.** 2 GB'lık bir depoyu
   bundle'lamak 2 GB'lık bir dosya yazar ve bir klon kadar sürer.
-- **Boş bundle'ları Gitcito değil git reddeder**: uçları arasında hiçbir şey
+- **Boş bundle'ları Geminio değil git reddeder**: uçları arasında hiçbir şey
   olmayan bir aralık, işe yaramaz bir dosya yerine hata üretir.
 - **İçe aktarma birleştirme yapmaz.** Ref'ler `bundle/…` altına gelir ve siz
   onlarla bir şey yapana kadar orada kalır.

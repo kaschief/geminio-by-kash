@@ -21,7 +21,7 @@ stashing.
   sibling folder and open it as a tab.
 - A branch can live in only one worktree at a time, so checking out a branch
   another worktree already holds cannot work — git refuses with *already used by
-  worktree at …*. Gitcito takes you there instead: the branch's menu reads *Go
+  worktree at …*. Geminio takes you there instead: the branch's menu reads *Go
   to `x` in its worktree*, and double-clicking the row opens that worktree's
   tab rather than failing.
 

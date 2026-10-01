@@ -32,11 +32,11 @@ ulaşılır.
 ### API anahtarı yerine abonelik kullanmak
 
 Bu makinede kurulu ve oturumu açık bir aracı CLI ile cevap almak için **Yerel
-CLI** sağlayıcısını seç — `claude`, `gemini` ya da `codex`. Gitcito ikili dosyayı
+CLI** sağlayıcısını seç — `claude`, `gemini` ya da `codex`. Geminio ikili dosyayı
 isteminle çalıştırır ve cevabını okur; yapıştırılacak bir API anahtarı yoktur,
 saklanan bir belirteç de.
 
-Gitcito yalnızca hesap olarak senin tanımladığın komutu çalıştırır ve bunu her
+Geminio yalnızca hesap olarak senin tanımladığın komutu çalıştırır ve bunu her
 zaman kabuk yerine bir argüman listesiyle yapar; böylece bir diff'teki ya da dal
 adındaki hiçbir şey komut olarak yorumlanamaz.
 
@@ -63,7 +63,7 @@ Hesaplardan önceki bir sürümden yükseltirken bu bir kez görünür. Elindeki
 ## Modeller
 
 Model listeleri doğrudan sağlayıcıdan gelir ve bir gün önbellekte tutulur;
-**Modelleri getir** birini anında tazeler. Listenin altında Gitcito listenin
+**Modelleri getir** birini anında tazeler. Listenin altında Geminio listenin
 nereden geldiğini söyler — canlı, önbellekten (tarihiyle) ya da yerleşik yedek
 listeden, ve nedenini.
 
@@ -75,7 +75,7 @@ etiketi sağlayıcı listelemese bile hep kullanılabilir.
 Henüz anahtar vermediğin ya da erişilemeyen bir sağlayıcı, boş bir açılır liste
 yerine küçük bir yerleşik listeye düşer.
 
-Hiçbir sağlayıcı sıralanmış ya da seçilmiş bir liste yayımlamaz, dolayısıyla düzenleme Gitcito'nundur: tarihli anlık görüntüler, anlık görüntüsü oldukları modelin içine katlanır (`gpt-4o`, `gpt-4o-2024-08-06`'yı kapsar) ve geri kalanı alfabetik yerine yeniden eskiye sıralanır. Listenin altındaki **Tüm modelleri göster**, sağlayıcının döndürdüğü her şeyi geri getirir.
+Hiçbir sağlayıcı sıralanmış ya da seçilmiş bir liste yayımlamaz, dolayısıyla düzenleme Geminio'nundur: tarihli anlık görüntüler, anlık görüntüsü oldukları modelin içine katlanır (`gpt-4o`, `gpt-4o-2024-08-06`'yı kapsar) ve geri kalanı alfabetik yerine yeniden eskiye sıralanır. Listenin altındaki **Tüm modelleri göster**, sağlayıcının döndürdüğü her şeyi geri getirir.
 
 ## Neler yapabilir
 
@@ -94,7 +94,7 @@ Hiçbir sağlayıcı sıralanmış ya da seçilmiş bir liste yayımlamaz, dolay
 ## Tahmin değil, dayanaklı
 
 İnceleme diff'i **etiketlenmiş hunk'lar** olarak görür ve yalnızca bu etiketleri
-gösterebilir; Gitcito da her etiketi gerçek bir dosya ve satıra çözer. Bir konum
+gösterebilir; Geminio da her etiketi gerçek bir dosya ve satıra çözer. Bir konum
 uyduran model **reddedilir ve yeniden sorulur**; böylece bulgular her zaman var
 olan bir kodu işaret eder.
 

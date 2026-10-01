@@ -1,9 +1,9 @@
 #!/bin/sh
-# gitcito-textconv — the git textconv filter Gitcito ships.
+# geminio-textconv — the git textconv filter Geminio ships.
 #
 # git invokes this with one argument, a path to (a temp copy of) the file,
 # and diffs whatever is printed to stdout. It turns .docx/.xlsx/.json into
-# plain text using Gitcito's own runtime, so document diffs work with no
+# plain text using Geminio's own runtime, so document diffs work with no
 # pandoc/xlsx2csv/jq installed.
 #
 # Inside the packaged app this file lives at Contents/Resources/cli/, next to
@@ -14,7 +14,7 @@
 
 DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 
-APP_BIN="$DIR/../../MacOS/Gitcito"
+APP_BIN="$DIR/../../MacOS/Geminio"
 ASAR_MAIN="$DIR/../app.asar/out/main/textconvCli.js"
 
 if [ -x "$APP_BIN" ] && [ -e "$DIR/../app.asar" ]; then

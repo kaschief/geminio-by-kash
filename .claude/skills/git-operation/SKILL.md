@@ -1,11 +1,11 @@
 ---
 name: git-operation
-description: Add or change a git-backed operation in Gitcito end to end — main-process git service, IPC dispatch, renderer API adapter, store action, UI. Use when wiring a new git command, exposing new repo data to the UI, or debugging why a `gitApi.*` call fails or a UI action does not refresh.
+description: Add or change a git-backed operation in Geminio end to end — main-process git service, IPC dispatch, renderer API adapter, store action, UI. Use when wiring a new git command, exposing new repo data to the UI, or debugging why a `gitApi.*` call fails or a UI action does not refresh.
 ---
 
 # Adding a git operation
 
-Gitcito is Electron: git only ever runs in the **main** process. A feature
+Geminio is Electron: git only ever runs in the **main** process. A feature
 crosses four layers, and skipping one is the usual cause of "the button does
 nothing".
 

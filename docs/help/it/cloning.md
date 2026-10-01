@@ -59,7 +59,7 @@ l'errore vero.
   solo branch* non spuntato è ciò che richiede indietro gli altri branch
   (`--no-single-branch`), ed è per questo che il suggerimento sotto cambia.
 - **Clonare una cartella locale** normalmente ignora del tutto `--depth`, perché
-  git crea hardlink allo store degli oggetti invece di scaricare. Gitcito clona
+  git crea hardlink allo store degli oggetti invece di scaricare. Geminio clona
   attraverso un URL `file://` quando chiedi una copia shallow di un repository
   locale, così la profondità che hai chiesto è la profondità che ottieni.
 

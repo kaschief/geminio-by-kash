@@ -1,11 +1,11 @@
 ---
 name: playground-fixture
-description: Gitcito's test strategy — the generated playground repos under examples/, writing tests that run real git against them, and adding a new scenario. Use when adding or fixing a test, when a test needs a repo in a particular git state, or when a test mutates a repository.
+description: Geminio's test strategy — the generated playground repos under examples/, writing tests that run real git against them, and adding a new scenario. Use when adding or fixing a test, when a test needs a repo in a particular git state, or when a test mutates a repository.
 ---
 
 # Tests and the playground
 
-Gitcito's tests run **real git** against **real repositories**. There are no git
+Geminio's tests run **real git** against **real repositories**. There are no git
 mocks: a mock that agrees with a wrong assumption about git's output is worse
 than no test.
 

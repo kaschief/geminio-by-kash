@@ -61,7 +61,7 @@ copiam o caminho da pasta.
 
 ## Antes de você commitar
 
-O Gitcito verifica algumas coisas e pergunta uma vez, nunca em silêncio:
+O Geminio verifica algumas coisas e pergunta uma vez, nunca em silêncio:
 
 - um arquivo que parece um **segredo** (`.env`, `*.pem`, `id_rsa`…),
 - um blob **muito grande** (limite em Configurações → Segurança),

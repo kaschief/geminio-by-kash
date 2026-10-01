@@ -1,5 +1,5 @@
 /**
- * `.gitcito.json` on disk: reading it, writing it, checking what it requires,
+ * `.geminio.json` on disk: reading it, writing it, checking what it requires,
  * and proposing one for a repository that has none.
  *
  * The renderer never reaches this module directly — everything here is exposed
@@ -8,7 +8,7 @@
  *
  * The doctor's repairs are a closed set (see `DoctorFix`). The config supplies
  * data for them — a path to copy, a value for `core.hooksPath` — and never a
- * command, so opening a hostile repository cannot make Gitcito run anything it
+ * command, so opening a hostile repository cannot make Geminio run anything it
  * was not already prepared to run.
  */
 
@@ -63,7 +63,9 @@ function relativeInside(repoPath: string, value: string): string | undefined {
 }
 
 export async function readRepoConfig(repoPath: string): Promise<RepoConfigResult> {
-  const path = join(repoPath, REPO_CONFIG_FILE)
+  const preferred = join(repoPath, REPO_CONFIG_FILE)
+  const legacy = join(repoPath, '.gitcito.json')
+  const path = existsSync(preferred) || !existsSync(legacy) ? preferred : legacy
   let raw: string
   try {
     raw = await readFile(path, 'utf8')
@@ -118,7 +120,7 @@ async function lfsCheck(repoPath: string): Promise<DoctorCheck> {
   try {
     await run(repoPath, 'git', ['lfs', 'version'])
   } catch {
-    // git-lfs is not installed at all — nothing Gitcito can repair from here.
+    // git-lfs is not installed at all — nothing Geminio can repair from here.
     return { ...base, status: 'fail' }
   }
   const names = (await git(repoPath, ['lfs', 'ls-files', '-n']).catch(() => '')).split('\n').filter(Boolean)

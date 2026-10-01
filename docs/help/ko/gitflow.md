@@ -27,10 +27,10 @@ keywords: gitflow git flow 기능 feature 릴리스 release 핫픽스 hotfix dev
 | `release/*` | 안정화 중인 버전. develop 에서 갈라져 나와요. |
 | `hotfix/*` | 급한 수정. **main** 에서 갈라져 나와요 — 운영은 develop 을 기다릴 수 없으니까요. |
 
-Gitcito는 `git flow` CLI가 쓰는 것과 똑같은 `gitflow.*` git 설정 키를 읽고
+Geminio는 `git flow` CLI가 쓰는 것과 똑같은 `gitflow.*` git 설정 키를 읽고
 써요 (`gitflow.branch.master`, `gitflow.prefix.feature`, …). 누군가 이미
 `git flow init` 을 실행해 둔 저장소는 곧바로 인식되고, 여기서 설정한 저장소는
-그 뒤에 CLI로도 잘 동작해요. Gitcito는 처음부터 끝까지 평범한 git 명령을 실행해요
+그 뒤에 CLI로도 잘 동작해요. Geminio는 처음부터 끝까지 평범한 git 명령을 실행해요
 — CLI가 설치돼 있을 필요는 없어요.
 
 **설정**은 그 키들을 쓰고, 통합 브랜치가 아직 없으면 릴리스된 브랜치에서
@@ -54,7 +54,7 @@ hotfix/1.0.1     from main
 **완료**야말로 자동화할 값어치가 있는 부분이에요. 반드시 모두 일어나야 하는 여러
 단계로 이루어져 있으니까요.
 
-| 종류 | Gitcito가 하는 일 |
+| 종류 | Geminio가 하는 일 |
 |------|-------------------|
 | 기능 | `--no-ff` 로 develop 에 머지하고, 브랜치를 지우고, develop 에 남겨 둬요 |
 | 릴리스 | main 에 머지하고, 태그를 달고, develop 에 머지하고, 브랜치를 지우고, develop 에 남겨 둬요 |
@@ -75,7 +75,7 @@ hotfix/1.0.1     from main
   커밋하지 않은 작업 주변에서 그렇게 하는 것이 사람들이 작업을 잃는 방식이니까요.
 - **머지에서 충돌이 나면 전체가 되돌려져요.** main 에 머지하는 데는 성공했는데
   develop 에 머지하다 충돌이 나면, 그렇지 않을 경우 절반만 끝난 릴리스가 남게
-  돼요. Gitcito는 모든 브랜치를 원래 자리로 되돌리고 충돌을 알려 줘요. 그 브랜치를
+  돼요. Geminio는 모든 브랜치를 원래 자리로 되돌리고 충돌을 알려 줘요. 그 브랜치를
   직접 머지하고 [충돌 해결기](conflicts.md)에서 해결하면, 나머지 흐름은 손으로
   마무리하시면 돼요.
 - **절대 푸시하지 않아요.** 완료는 로컬 작업이에요. 준비되면 main, develop, 그리고

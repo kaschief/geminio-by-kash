@@ -19,7 +19,7 @@ desacoplado que llevar en la cabeza.
 
 `⌘K` → **Subtrees**.
 
-![Un directorio incorporado encontrado en el historial, con el origen que Gitcito recuerda para él](../../screenshots/subtree.webp)
+![Un directorio incorporado encontrado en el historial, con el origen que Geminio recuerda para él](../../screenshots/subtree.webp)
 
 ## La pega que nadie menciona
 
@@ -28,11 +28,11 @@ desacoplado que llevar en la cabeza.
 trailer `git-subtree-dir:` en el commit que hizo la importación.
 
 Así que un repositorio puede contener un subtree y no darte forma alguna de
-averiguar de dónde salió. Gitcito hace lo que puede:
+averiguar de dónde salió. Geminio hace lo que puede:
 
 - La lista se descubre desde el historial, leyendo esos trailers. Cualquier
   subtree añadido por cualquiera, con cualquier herramienta, aparece.
-- El **repositorio de origen y la ref** los recuerda Gitcito, en la configuración
+- El **repositorio de origen y la ref** los recuerda Geminio, en la configuración
   de git de este repositorio. Un subtree descubierto desde el historial empieza
   con esos campos vacíos — rellénalos una vez y pull y push funcionan a partir de
   entonces.
@@ -70,14 +70,14 @@ deja de ser un subtree.
 
 - **El push es lento.** Recalcula el historial del directorio desde cero cada
   vez. En un repositorio grande son segundos o minutos, no algo instantáneo, y
-  Gitcito solo puede esperar.
+  Geminio solo puede esperar.
 - **Un pull es una fusión**, así que puede dar conflictos como cualquier fusión —
   acabas en [el resolutor](conflicts.md).
 - **`git subtree` es un script de contrib**, no un builtin de git. Una
-  instalación de git recortada puede no traerlo; Gitcito lo dice claramente en
+  instalación de git recortada puede no traerlo; Geminio lo dice claramente en
   lugar de pasarte un "'subtree' is not a git command".
 - **Un historial con squash no se puede des-squashear** después. Esos commits
   nunca se importaron.
-- Gitcito no convierte un submódulo en un subtree, ni al revés.
+- Geminio no convierte un submódulo en un subtree, ni al revés.
 
 Ver también: [Fusionar y rebasar](merging.md) · [Fontanería con interfaz](lfs-sparse.md)

@@ -23,7 +23,7 @@ de refs `origin/*` atualizadas, e então o git para com *"There is no tracking
 information for the current branch"*. Nada foi puxado e nada quebrou: a segunda
 metade simplesmente não tinha alvo.
 
-O Gitcito lê esse erro e oferece o conserto como um botão, escolhendo qual
+O Geminio lê esse erro e oferece o conserto como um botão, escolhendo qual
 conforme o remoto já carregue ou não o branch:
 
 | | |
@@ -85,7 +85,7 @@ remotes é o dobro da exposição, não metade do cuidado.
 ## Branches em que você não está
 
 `git pull` só move o HEAD, e por isso a maioria dos clientes exige checkout antes
-de atualizar uma branch. O Gitcito não: clique com o botão direito em qualquer
+de atualizar uma branch. O Geminio não: clique com o botão direito em qualquer
 branch local — na sidebar ou no badge do [grafo](graph.md) — e você tem **Pull de
 \<branch\>** e **Push de \<branch\>**, ambos agindo sobre *aquela* branch.
 
