@@ -99,9 +99,11 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
             <Bug size={13} />
           </button>
         )}
-        <button title={t('toast.copyMessage')} onClick={copy}>
-          {copied ? <Check size={13} /> : <Copy size={13} />}
-        </button>
+        {toast.kind !== 'success' && (
+          <button title={t('toast.copyMessage')} onClick={copy}>
+            {copied ? <Check size={13} /> : <Copy size={13} />}
+          </button>
+        )}
         <button title={t('toast.dismiss')} onClick={onDismiss}>
           <X size={13} />
         </button>

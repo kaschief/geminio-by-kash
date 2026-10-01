@@ -1806,7 +1806,7 @@ export const repoActions = {
   pull: async (path: string, mode: PullMode) => {
     if (promptNoRemote(path, 'pull')) return false
     const before = new Set((useRepoStore.getState().repos[path]?.commits ?? []).map((c) => c.hash))
-    const ok = await useRepoStore.getState().run(path, interp(t('act.pulledMode'), { mode }), () => gitApi.pull(path, mode), {
+    const ok = await useRepoStore.getState().run(path, t('act.pulled'), () => gitApi.pull(path, mode), {
       label: interp(t('undoLabel.pull'), { mode }),
       undo: () => gitApi.reset(path, 'ORIG_HEAD', 'hard'),
       redo: () => gitApi.pull(path, mode)

@@ -3122,6 +3122,7 @@ export const en = {
   'act.createdFixup': 'Created fixup! for {sha}',
   'act.autosquashed': 'Autosquashed fixups',
   'act.pulledMode': 'Pulled ({mode})',
+  'act.pulled': 'Pulled successfully',
   'act.setUpstream': 'Linked {branch} to {upstream}',
   'act.pulledBranch': 'Pulled {branch}',
   'act.stashed': 'Stashed changes',
