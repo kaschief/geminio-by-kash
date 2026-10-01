@@ -105,7 +105,6 @@ export function NotificationsPage(): React.JSX.Element {
   const markAllRead = async (): Promise<void> => {
     await hostingApi.markAllNotificationsRead(token).catch(() => {})
     setItems((cur) => cur.map((x) => ({ ...x, unread: false })))
-    toast('success', t('notif.markedAll'))
   }
 
   const unreadCount = useMemo(() => items.filter((i) => i.unread).length, [items])

@@ -10,6 +10,10 @@ import { isLockErrorMessage, lockRepairPlan } from '../src/renderer/src/lib/gitL
 import { overwrittenLocalChanges, readableGitError, summarizePaths } from '../src/renderer/src/lib/gitErrors'
 import { sortFilesForList } from '../src/renderer/src/lib/fileNav'
 import { workingChangeCount } from '../src/renderer/src/lib/workingChanges'
+import { readDraft, settleDraft } from '../src/renderer/src/lib/boundedNumber'
+import { splitHunkHeader } from '../src/renderer/src/lib/diff'
+import { displayPath } from '../src/renderer/src/lib/pathDisplay'
+import { fitBranchAndGraph } from '../src/renderer/src/lib/graphColumnFit'
 import type { FileEntry } from '../src/shared/types'
 import { stackOrder, moveLevel, adoptableBranches, targetFor } from '../src/renderer/src/lib/stackOrder'
 import { planStackSubmit, summariseStackPlan } from '../src/shared/stackPr'
@@ -7117,5 +7121,68 @@ describe('workingChangeCount', () => {
         conflicted: [f('d.ts')]
       })
     ).toBe(4)
+  })
+})
+
+describe('bounded number drafts', () => {
+  const bounds = { min: 50, max: 5000 }
+
+  it('lets 2000 be typed digit by digit — the bug was clamping the leading 2 to 50', () => {
+    expect(readDraft('2', bounds)).toEqual({ status: 'out-of-range', nearest: 50 })
+    expect(readDraft('20', bounds)).toEqual({ status: 'out-of-range', nearest: 50 })
+    expect(readDraft('200', bounds)).toEqual({ status: 'valid', value: 200 })
+    expect(readDraft('2000', bounds)).toEqual({ status: 'valid', value: 2000 })
+  })
+
+  it('snaps to the nearest bound on leaving, and keeps the last good value for junk', () => {
+    expect(settleDraft('20', bounds, 300)).toBe(50)
+    expect(settleDraft('99999', bounds, 300)).toBe(5000)
+    expect(settleDraft('', bounds, 300)).toBe(300)
+    expect(settleDraft('1e3', bounds, 300)).toBe(300)
+    expect(settleDraft(' 750 ', bounds, 300)).toBe(750)
+  })
+
+  it('treats a missing max as open-ended', () => {
+    expect(readDraft('123456', { min: 0 })).toEqual({ status: 'valid', value: 123456 })
+  })
+})
+
+describe('splitHunkHeader', () => {
+  it('separates the line ranges from the code context git found', () => {
+    expect(splitHunkHeader('@@ -396,7 +396,7 @@ if barstate.islast')).toEqual({
+      range: '@@ -396,7 +396,7 @@',
+      context: 'if barstate.islast'
+    })
+    expect(splitHunkHeader('@@ -1,9 +1,10 @@')).toEqual({ range: '@@ -1,9 +1,10 @@', context: '' })
+    expect(splitHunkHeader('@@@ -1,2 -1,2 +1,3 @@@ fn()')).toEqual({ range: '@@@ -1,2 -1,2 +1,3 @@@', context: 'fn()' })
+  })
+})
+
+describe('displayPath', () => {
+  const deep = 'indicators/20-revelio/code/indicator/revelio.pine'
+  it('shows every folder by default, and the last N on request with a …/ marker', () => {
+    expect(displayPath(deep, 'all')).toEqual({ dir: 'indicators/20-revelio/code/indicator/', name: 'revelio.pine', trimmed: false })
+    expect(displayPath(deep, 2)).toEqual({ dir: '…/code/indicator/', name: 'revelio.pine', trimmed: true })
+    expect(displayPath(deep, 0)).toEqual({ dir: '…/', name: 'revelio.pine', trimmed: true })
+  })
+  it('does not mark a path as trimmed when it is already shallow enough', () => {
+    expect(displayPath('src/a.ts', 3)).toEqual({ dir: 'src/', name: 'a.ts', trimmed: false })
+    expect(displayPath('README.md', 0)).toEqual({ dir: '', name: 'README.md', trimmed: false })
+  })
+})
+
+describe('fitBranchAndGraph', () => {
+  const base = { branch: 168, graph: 80, fixed: 340, messageComfort: 260, minBranch: 90, minGraph: 50 }
+  it('leaves stored widths alone when everything fits', () => {
+    expect(fitBranchAndGraph({ ...base, available: 2000 })).toEqual({ branch: 168, graph: 80 })
+  })
+  it('shrinks the branch column first, then the graph, before the message', () => {
+    // 848 wanted; 800 available → branch gives 48.
+    expect(fitBranchAndGraph({ ...base, available: 800 })).toEqual({ branch: 120, graph: 80 })
+    // 700 available → branch to its minimum (−78), graph gives the remaining 70 down to 50.
+    expect(fitBranchAndGraph({ ...base, available: 700 })).toEqual({ branch: 90, graph: 50 })
+  })
+  it('never goes below the minimums — past that the message shrinks instead', () => {
+    expect(fitBranchAndGraph({ ...base, available: 300 })).toEqual({ branch: 90, graph: 50 })
   })
 })

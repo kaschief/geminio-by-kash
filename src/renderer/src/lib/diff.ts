@@ -271,3 +271,13 @@ export function gutterMarksByLine(changes: GutterChange[]): Map<number, GutterCh
   }
   return map
 }
+
+/**
+ * A hunk header split into what it says: the line ranges (`@@ -396,7 +396,7 @@`)
+ * and the code git found enclosing them (`if barstate.islast`) — git's
+ * function-context guess, empty when it has none.
+ */
+export function splitHunkHeader(text: string): { range: string; context: string } {
+  const m = /^(@@+ [^@]* @@+)\s?(.*)$/.exec(text)
+  return m ? { range: m[1], context: m[2].trim() } : { range: text, context: '' }
+}

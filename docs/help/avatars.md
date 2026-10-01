@@ -71,7 +71,7 @@ at a glance.
 ### Motion
 
 The title-bar avatar breathes and blinks on its own. Turn it off at
-**Settings → Themes → Graph → Animate the profile avatar** — the expression
+**Settings → Graph → Animate the profile avatar** — the expression
 still follows the repository, it just stops moving. Motion is also skipped
 automatically when your system asks for reduced motion.
 
@@ -81,7 +81,7 @@ hundred a scrolling graph draws.
 
 ## Turning the lookup off
 
-**Settings → Themes → Graph → Show avatars.**
+**Settings → Graph → Show avatars.**
 
 Off means:
 

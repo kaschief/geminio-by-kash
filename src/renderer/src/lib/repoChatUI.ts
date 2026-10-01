@@ -5,7 +5,7 @@ export interface RightPanelDetailsState {
   selectWip: boolean
 }
 
-export type RightPanelToggleAction = 'open-chat' | 'close-all' | 'show-required-details'
+export type RightPanelToggleAction = 'open-details' | 'close-all' | 'show-required-details'
 
 /**
  * Chat is an AI feature: with AI off, or chat switched off on its own, the tab,
@@ -20,12 +20,14 @@ export function repoChatAvailable(ai: { enabled?: boolean; repoChat?: boolean } 
 export function rightPanelToggleAction(
   hasSelection: boolean,
   forceConflict: boolean,
-  chatPanelOpen: boolean,
-  chatAvailable = true
+  chatPanelOpen: boolean
 ): RightPanelToggleAction {
   if (forceConflict) return 'show-required-details'
   if (hasSelection || chatPanelOpen) return 'close-all'
-  return chatAvailable ? 'open-chat' : 'close-all'
+  // Closed: reopen Details, never Chat. The toggle has to work without AI set
+  // up, and Chat has its own button. (Upstream opened Chat here, which with AI
+  // off left the shortcut doing nothing at all.)
+  return 'open-details'
 }
 
 /**

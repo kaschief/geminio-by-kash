@@ -92,6 +92,9 @@ export interface RepoData {
   /** Source/target branches + per-side commits of the in-progress conflict op. */
   conflictContext: ConflictContext | null
   selected: Selection | null
+  /** What the details panel showed when it was last closed, so reopening it
+   *  (⌥⌘B, the toolbar button) brings the same thing back. */
+  parkedSelection: Selection | null
   loading: boolean
   maxCount: number
   undoStack: UndoEntry[]
@@ -145,6 +148,7 @@ const emptyRepo = (path: string): RepoData => ({
   mergeState: null,
   conflictContext: null,
   selected: null,
+  parkedSelection: null,
   loading: true,
   maxCount: useSettingsStore.getState().settings.initialCommitCount ?? 400,
   undoStack: [],
@@ -173,6 +177,13 @@ interface RepoStoreState {
   refresh(path: string, opts?: { light?: boolean; only?: RefreshSlice[] }): Promise<void>
   patch(path: string, partial: Partial<RepoData>): void
   select(path: string, sel: Selection | null): void
+  /** Close the details panel, remembering what it showed. */
+  closeDetails(path: string): void
+  /**
+   * Reopen the details panel: what it last showed if that still exists, else
+   * the uncommitted changes when there are any, else the newest commit.
+   */
+  reopenDetails(path: string): void
   setDraft(path: string, value: string): void
   loadMore(path: string): Promise<void>
   refreshPRs(path: string, opts?: { silent?: boolean }): Promise<void>
@@ -188,7 +199,15 @@ interface RepoStoreState {
    *  user to commit: it is a tracked file like any other. */
   saveRepoConfig(path: string, config: RepoConfig): Promise<boolean>
 
-  run(path: string, label: string, fn: () => Promise<void>, undoEntry?: UndoEntry, op?: 'push' | 'pull' | 'fetch' | null, onError?: (message: string) => boolean, refetch?: RefreshSlice[]): Promise<boolean>
+  /**
+   * Success toasts are opt-in. A toast is for what the user cannot see happen:
+   * remote work (push, pull, fetch — announced by default via `op`), results
+   * somewhere else (a deleted remote branch, files moved to the Trash). Most
+   * actions show their result where the user is looking — the commit lands in
+   * the graph, the file moves list — and a toast saying so is noise. Errors,
+   * conflicts and warnings always toast; the busy label always shows.
+   */
+  run(path: string, label: string, fn: () => Promise<void>, undoEntry?: UndoEntry, op?: 'push' | 'pull' | 'fetch' | null, onError?: (message: string) => boolean, refetch?: RefreshSlice[], announce?: boolean): Promise<boolean>
   undo(path: string): Promise<void>
   redo(path: string): Promise<void>
 }
@@ -673,6 +692,34 @@ export const useRepoStore = create<RepoStoreState>((set, get) => ({
     return p
   },
 
+  closeDetails: (path) => {
+    const repo = get().repos[path]
+    if (!repo?.selected) return
+    get().patch(path, { parkedSelection: repo.selected, selected: null })
+  },
+
+  reopenDetails: (path) => {
+    const repo = get().repos[path]
+    if (!repo) return
+    const parked = repo.parkedSelection
+    // A parked commit may have been rewritten or garbage-collected since; a
+    // parked stash may have been dropped. Only bring back what is still there.
+    const stillThere =
+      parked?.type === 'commit'
+        ? repo.commits.some((c) => c.hash === parked.hash)
+        : parked?.type === 'stash'
+          ? repo.stashes.some((s) => s.sha === parked.sha)
+          : parked?.type === 'wip'
+    const dirty = !!repo.status && repo.status.staged.length + repo.status.unstaged.length + repo.status.conflicted.length > 0
+    const fallback: Selection | null = dirty
+      ? { type: 'wip' }
+      : repo.commits[0]
+        ? { type: 'commit', hash: repo.commits[0].hash }
+        : null
+    const next = stillThere && parked ? parked : fallback
+    if (next) get().select(path, next)
+  },
+
   select: (path, selected) => {
     get().patch(path, { selected })
     if (selected) useUIStore.getState().showDetailsPanel()
@@ -817,7 +864,7 @@ export const useRepoStore = create<RepoStoreState>((set, get) => ({
     }
   },
 
-  run: (path, label, fn, undoEntry, op = null, onError, refetch) =>
+  run: (path, label, fn, undoEntry, op = null, onError, refetch, announce = op !== null) =>
     enqueue(path, async () => {
       const ui = useUIStore.getState()
       ui.beginInflight()
@@ -827,7 +874,7 @@ export const useRepoStore = create<RepoStoreState>((set, get) => ({
       muteWatcher(path)
       try {
         await fn()
-        toast('success', label)
+        if (announce) toast('success', label)
         if (undoEntry) {
           const repo = get().repos[path]
           if (repo) {
@@ -843,7 +890,7 @@ export const useRepoStore = create<RepoStoreState>((set, get) => ({
         if (onError?.(message)) return false
         // Generic, because any write can lose to a leftover lock: offer the
         // repair and re-run the very operation that failed.
-        if (promptLockRepair(message, path, () => void get().run(path, label, fn, undoEntry, op, onError, refetch)))
+        if (promptLockRepair(message, path, () => void get().run(path, label, fn, undoEntry, op, onError, refetch, announce)))
           return false
         if (isConflictErrorMessage(message)) toast('info', conflictHint(message))
         else toast('error', readableGitError(message), { repoPath: path })
@@ -1144,7 +1191,6 @@ async function runCheckoutRemoteInner(
       })
       return false
     }
-    toast('success', interp(t('act.checkedOut'), { ref: localName }))
     return true
   } catch (err) {
     toast('error', err instanceof Error ? err.message : String(err))
@@ -1348,7 +1394,7 @@ export const repoActions = {
         null,
         undefined,
         ['log', 'branches']
-      ),
+      , true),
 
   // ─── git-flow ───
   gitflowStart: (path: string, kind: GitflowKind, name: string) => {
@@ -1473,7 +1519,7 @@ export const repoActions = {
       'push',
       undefined,
       ['branches', 'status']
-    ),
+    , true),
 
   /** Submit the whole stack as chained PRs (GitHub only): push every level with
    *  a lease, create missing PRs with the right bases, retarget any that point
@@ -1493,7 +1539,7 @@ export const repoActions = {
       'push',
       (message) => promptTrunkPush(message, path, leaf),
       ['branches', 'status']
-    )
+    , true)
     return ok ? outcome : null
   },
 
@@ -1870,12 +1916,12 @@ export const repoActions = {
   subtreePull: (path: string, prefix: string, url: string, ref: string, squash: boolean) =>
     useRepoStore
       .getState()
-      .run(path, interp(t('act.subtreePulled'), { prefix }), () => gitApi.subtreePull(path, prefix, url, ref, squash)),
+      .run(path, interp(t('act.subtreePulled'), { prefix }), () => gitApi.subtreePull(path, prefix, url, ref, squash), undefined, undefined, undefined, undefined, true),
 
   subtreePush: (path: string, prefix: string, url: string, ref: string) =>
     useRepoStore
       .getState()
-      .run(path, interp(t('act.subtreePushed'), { prefix, ref }), () => gitApi.subtreePush(path, prefix, url, ref), undefined, 'push'),
+      .run(path, interp(t('act.subtreePushed'), { prefix, ref }), () => gitApi.subtreePush(path, prefix, url, ref), undefined, 'push', undefined, undefined, true),
 
   subtreeSplit: (path: string, prefix: string, branch: string) =>
     useRepoStore
@@ -1942,7 +1988,7 @@ export const repoActions = {
       null,
       undefined,
       []
-    ),
+    , true),
 
   forgetCredential: (path: string, host: string) =>
     useRepoStore
@@ -1955,7 +2001,7 @@ export const repoActions = {
         null,
         undefined,
         []
-      ),
+      , true),
 
   // ─── Attributes ───
   // The whole file is rewritten, so the undo entry is simply the text that was
@@ -2062,7 +2108,7 @@ export const repoActions = {
         'fetch',
         undefined,
         ['branches', 'log']
-      ),
+      , true),
 
   // ─── Untracked files ───
   // No undo entry: content that was never committed cannot be brought back by a
@@ -2079,7 +2125,7 @@ export const repoActions = {
         null,
         undefined,
         ['status', 'treeStatus']
-      ),
+      , true),
 
   // ─── Notes ───
   setNote: (path: string, sha: string, text: string, previous: string) =>
@@ -2102,17 +2148,17 @@ export const repoActions = {
   fetchNotes: (path: string, remote = 'origin') =>
     useRepoStore
       .getState()
-      .run(path, interp(t('act.notesFetched'), { remote }), () => gitApi.fetchNotes(path, remote), undefined, 'fetch', undefined, ['log']),
+      .run(path, interp(t('act.notesFetched'), { remote }), () => gitApi.fetchNotes(path, remote), undefined, 'fetch', undefined, ['log'], true),
 
   pushNotes: (path: string, remote = 'origin') =>
     useRepoStore
       .getState()
-      .run(path, interp(t('act.notesPushed'), { remote }), () => gitApi.pushNotes(path, remote), undefined, 'push'),
+      .run(path, interp(t('act.notesPushed'), { remote }), () => gitApi.pushNotes(path, remote), undefined, 'push', undefined, undefined, true),
 
   pushAllTags: (path: string, remote = 'origin') =>
     useRepoStore
       .getState()
-      .run(path, interp(t('act.pushedTags'), { remote }), () => gitApi.pushAllTags(path, remote), undefined, 'push'),
+      .run(path, interp(t('act.pushedTags'), { remote }), () => gitApi.pushAllTags(path, remote), undefined, 'push', undefined, undefined, true),
 
   /** Push `branch`, or the checked-out one when it is omitted. */
   push: async (path: string, force = false, protectedConfirmed = false, branch?: string): Promise<boolean> => {
@@ -2481,10 +2527,10 @@ export const repoActions = {
     useRepoStore.getState().run(path, interp(t('act.deletedTag'), { name }), () => gitApi.deleteTag(path, name)),
 
   pushTag: (path: string, name: string, remote = 'origin') =>
-    useRepoStore.getState().run(path, interp(t('act.pushedTag'), { name, remote }), () => gitApi.pushTag(path, name, remote)),
+    useRepoStore.getState().run(path, interp(t('act.pushedTag'), { name, remote }), () => gitApi.pushTag(path, name, remote), undefined, undefined, undefined, undefined, true),
 
   deleteRemoteTag: (path: string, name: string, remote = 'origin') =>
-    useRepoStore.getState().run(path, interp(t('act.deletedRemoteTag'), { name, remote }), () => gitApi.deleteRemoteTag(path, name, remote)),
+    useRepoStore.getState().run(path, interp(t('act.deletedRemoteTag'), { name, remote }), () => gitApi.deleteRemoteTag(path, name, remote), undefined, undefined, undefined, undefined, true),
 
   refreshRemoteTags: (path: string) => useRepoStore.getState().refreshRemoteTags(path),
   refreshCiStatuses: (path: string) => useRepoStore.getState().refreshCiStatuses(path),
@@ -2584,7 +2630,7 @@ export const repoActions = {
   deleteRemoteBranches: (path: string, items: { remote: string; name: string }[]) =>
     useRepoStore.getState().run(path, interp(t('act.deletedRemoteBranches'), { n: items.length }), async () => {
       for (const it of items) await gitApi.deleteRemoteBranch(path, it.remote, it.name)
-    }),
+    }, undefined, undefined, undefined, undefined, true),
 
   stashDropMany: (path: string, indices: number[]) =>
     useRepoStore.getState().run(path, interp(t('act.droppedStashes'), { n: indices.length }), async () => {
@@ -2609,7 +2655,7 @@ export const repoActions = {
   fsDelete: (path: string, relPaths: string[], label?: string) =>
     useRepoStore
       .getState()
-      .run(path, interp(t('act.movedToTrash'), { what: label ?? interp(t('act.nItems'), { n: relPaths.length }) }), () => gitApi.fsDelete(path, relPaths)),
+      .run(path, interp(t('act.movedToTrash'), { what: label ?? interp(t('act.nItems'), { n: relPaths.length }) }), () => gitApi.fsDelete(path, relPaths), undefined, undefined, undefined, undefined, true),
 
   // Drag & drop in the project tree: moves within the repo, imports from the OS.
   fsMove: (path: string, froms: string[], destDir: string, mode?: FsDropMode) =>

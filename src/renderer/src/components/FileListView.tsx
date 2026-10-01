@@ -3,6 +3,7 @@ import { ChevronDown, ChevronRight, FolderOpen, Folder, Pencil } from 'lucide-re
 import type { CodeSearchHit, FileEntry } from '../../../shared/types'
 import { useSettingsStore } from '../stores/settings'
 import { sortFilesForList, stepPath, visiblePaths } from '../lib/fileNav'
+import { displayPath } from '../lib/pathDisplay'
 import { bucketOf } from '../lib/fileStats'
 import { MatchRows } from './SearchMatches'
 import { t, type TranslationKey } from '../i18n'
@@ -215,7 +216,9 @@ function FileRowInner({
         <span className={`file-status ${statusClass(file.status)}`} title={statusName(file.status)} aria-label={statusName(file.status)}>
           {file.status === 'R' ? <ChevronRight size={12} strokeWidth={3} aria-hidden="true" /> : statusLabel(file.status)}
         </span>
-        <span className="file-path">{label}</span>
+        <span className="file-path" title={label !== file.path ? file.path : undefined}>
+          {label}
+        </span>
         {hits && hits.length > 0 && <span className="sm-count">{hits.length}</span>}
         {props.action?.(file)}
       </div>
@@ -299,6 +302,7 @@ const PLAIN_CLICK = {
 export function FileListView(props: FileListProps): React.JSX.Element {
   const view = useSettingsStore((s) => s.settings.fileListView ?? 'path')
   const sort = useSettingsStore((s) => s.settings.fileListSort ?? 'git')
+  const pathDepth = useSettingsStore((s) => s.settings.pathDepth ?? 'all')
   const flatFiles = useMemo(() => sortFilesForList(props.files, sort), [props.files, sort])
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set())
   const tree = useMemo(() => (view === 'tree' ? buildTree(props.files) : []), [view, props.files])
@@ -359,7 +363,10 @@ export function FileListView(props: FileListProps): React.JSX.Element {
       {view === 'tree' ? (
         <TreeLevel nodes={tree} depth={0} collapsed={collapsed} toggle={toggle} props={rowProps} />
       ) : (
-        flatFiles.map((f) => <FileRowInner key={f.path} file={f} label={f.path} depth={0} props={rowProps} />)
+        flatFiles.map((f) => {
+          const shown = displayPath(f.path, pathDepth)
+          return <FileRowInner key={f.path} file={f} label={`${shown.dir}${shown.name}`} depth={0} props={rowProps} />
+        })
       )}
     </div>
   )

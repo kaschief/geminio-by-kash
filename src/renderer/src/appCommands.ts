@@ -19,7 +19,7 @@ import { useUpdatesStore } from './stores/updates'
 import { shellApi } from './infrastructure/api'
 import { openInEditor } from './lib/editorOpen'
 import { requestCloseTab } from './lib/repositoryMenuItems'
-import { repoChatAvailable, rightPanelToggleAction } from './lib/repoChatUI'
+import { rightPanelToggleAction } from './lib/repoChatUI'
 
 const ISSUES_URL = 'https://github.com/myappdesk/gitcito/issues/new'
 
@@ -46,18 +46,13 @@ function toggleRightPanel(): void {
   if (!data) return
   const ui = useUIStore.getState()
   const forceConflict = !!data.mergeState && (data.status?.conflicted.length ?? 0) > 0
-  const action = rightPanelToggleAction(
-    !!data.selected,
-    forceConflict,
-    ui.chatPanelOpen,
-    repoChatAvailable(useSettingsStore.getState().activeProfile().ai)
-  )
-  if (action === 'open-chat') {
-    ui.openChatPanel()
+  const action = rightPanelToggleAction(!!data.selected, forceConflict, ui.chatPanelOpen)
+  if (action === 'open-details') {
+    useRepoStore.getState().reopenDetails(repo.path)
   } else if (action === 'show-required-details') {
     ui.closeChatPanel()
   } else {
-    if (data.selected) useRepoStore.getState().select(repo.path, null)
+    useRepoStore.getState().closeDetails(repo.path)
     ui.closeChatPanel()
   }
 }

@@ -149,14 +149,14 @@ export function StashDetails({ repo, sha }: { repo: RepoData; sha: string }): Re
         </div>
 
         <div className="stash-actions">
-          <button className="btn" onClick={() => void repoActions.stashApply(repo.path, stash.index)}>
+          <button className="btn intent-forward" onClick={() => void repoActions.stashApply(repo.path, stash.index)}>
             {t('stashPanel.apply')}
           </button>
-          <button className="btn" onClick={() => void repoActions.stashPop(repo.path, stash.index)}>
+          <button className="btn intent-forward" onClick={() => void repoActions.stashPop(repo.path, stash.index)}>
             {t('stashPanel.pop')}
           </button>
           <button
-            className="btn danger"
+            className="btn intent-backward"
             onClick={() =>
               openModal({
                 kind: 'confirm',

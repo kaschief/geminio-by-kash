@@ -1,8 +1,9 @@
+import { useAiReady } from './components/useAiReady'
 import { WorkingChangesBanner } from './components/WorkingChangesBanner'
 import { workingChangeCount } from './lib/workingChanges'
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { GitMerge, FolderOpen, Download, ArrowDownToLine, Bug, LifeBuoy, MessageSquare, X, CheckSquare, Stethoscope, CircleX, TriangleAlert, Info, ListTodo, Pencil } from 'lucide-react'
+import { GitMerge, FolderOpen, Download, ArrowDownToLine, Bug, LifeBuoy, MessageSquare, CheckSquare, Stethoscope, CircleX, TriangleAlert, Info, ListTodo, Pencil } from 'lucide-react'
 import { takeAccountsNotice, useSettingsStore } from './stores/settings'
 import { useRepoStore, repoActions, type RepoData } from './stores/repo'
 import { useUIStore } from './stores/ui'
@@ -58,7 +59,7 @@ import { RepoChatPanel } from './components/RepoChatPanel'
 import gitcitoLaunch from './assets/gitcito-launch.png'
 import { matchShortcut, effectiveBindings, tabActionFromEvent, tabIndexFromEvent } from './lib/shortcuts'
 import { terminalShortcutFromEvent } from './lib/terminalShortcuts'
-import { repoChatAvailable, rightPanelDetailsState, rightPanelToggleAction } from './lib/repoChatUI'
+import { repoChatAvailable, rightPanelDetailsState } from './lib/repoChatUI'
 import { folderOpenMenuItems } from './lib/openWith'
 import { hostingApi, gitApi, cliApi, keychainApi } from './infrastructure/api'
 import { cliViewAction, type CliAction } from './lib/cliView'
@@ -514,6 +515,7 @@ export default function App(): React.JSX.Element {
   const settings = useSettingsStore((s) => s.settings)
   // Chat is only a surface while its provider is configured to answer.
   const activeProfile = useSettingsStore((s) => s.activeProfile())
+  const chatReady = useAiReady('chat')
   const ensure = useRepoStore((s) => s.ensure)
   const terminalOpenByRepo = useUIStore((s) => s.terminalOpenByRepo)
   const problemsOpenByRepo = useUIStore((s) => s.problemsOpenByRepo)
@@ -525,7 +527,6 @@ export default function App(): React.JSX.Element {
   const chatPanelOpen = useUIStore((s) => s.chatPanelOpen)
   const rightPanelTab = useUIStore((s) => s.rightPanelTab)
   const openChatPanel = useUIStore((s) => s.openChatPanel)
-  const closeChatPanel = useUIStore((s) => s.closeChatPanel)
   const showDetailsPanel = useUIStore((s) => s.showDetailsPanel)
   // The native menu bar, kept in step with the language and the open repository.
   useAppMenu()
@@ -1065,7 +1066,8 @@ export default function App(): React.JSX.Element {
           const selectedDetailsAvailable = !!repo.selected || forceConflictPanel
           const detailsState = rightPanelDetailsState(!!repo.selected, forceConflictPanel, repo.status)
           const detailsAvailable = detailsState.available
-          const chatAvailable = repoChatAvailable(activeProfile.ai)
+          // Ready, not merely switched on: with no key the tab could only fail.
+          const chatAvailable = repoChatAvailable(activeProfile.ai) && chatReady
           const chatOpen = chatPanelOpen && chatAvailable
           const activeRightPanelTab =
             rightPanelTab === 'chat' && chatOpen
@@ -1073,14 +1075,6 @@ export default function App(): React.JSX.Element {
               : detailsAvailable
                 ? 'details'
                 : 'chat'
-          const closeRightPanel = (): void => {
-            if (activeRightPanelTab === 'chat') {
-              closeChatPanel()
-              return
-            }
-            useRepoStore.getState().select(repo.path, null)
-            if (chatOpen) openChatPanel()
-          }
           const rightPanelNode = (
             <AnimatePresence>
               {(selectedDetailsAvailable || chatOpen) && (
@@ -1131,19 +1125,8 @@ export default function App(): React.JSX.Element {
                       </button>
                     )}
                   </div>
-                  {/* The close button lives outside the tablist — a non-tab child
-                      inside role="tablist" corrupts the announced tab count. */}
-                  {!(forceConflictPanel && activeRightPanelTab === 'details') && (
-                    <button
-                      type="button"
-                      className="right-panel-close"
-                      title={t('app.closePanel')}
-                      aria-label={t('app.closePanel')}
-                      onClick={closeRightPanel}
-                    >
-                      <X size={15} />
-                    </button>
-                  )}
+                  {/* No close button here: the toolbar's panel toggle (⌥⌘B) opens
+                      and closes this panel, and is reachable at every size. */}
                   <div
                     className="right-panel-inner"
                     id="right-panel-body"
@@ -1301,7 +1284,8 @@ export default function App(): React.JSX.Element {
                 <>
                   <span className="status-sep" />
                   <button
-                    className="status-issue-btn"
+                    className="status-issue-btn status-help-btn"
+                    aria-label={t('help.open')}
                     title={t('help.title')}
                     onClick={() => useSettingsStore.getState().openPageTab({ type: 'help' })}
                   >
@@ -1310,7 +1294,8 @@ export default function App(): React.JSX.Element {
                   </button>
                   <span className="status-sep" />
                   <button
-                    className="status-issue-btn"
+                    className="status-issue-btn status-report-btn"
+                    aria-label={t('app.reportIssue')}
                     title={t('app.reportIssueTitle')}
                     onClick={() => void window.api.openExternal('https://github.com/MyAppDesk/gitcito/issues/new')}
                   >

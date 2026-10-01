@@ -1,3 +1,5 @@
+import { useAiReady } from './useAiReady'
+import { runAppCommand } from '../appCommands'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
@@ -51,7 +53,6 @@ import {
   BarChart3,
   GitPullRequestArrow,
   Lock,
-  MessageSquare,
   Users,
   FlaskConical,
   X
@@ -105,11 +106,12 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
   const fileViewOpen = useUIStore((s) => !!s.fileView)
   const sidebarCollapsed = useUIStore((s) => s.sidebarCollapsed)
   const busyOp = useUIStore((s) => s.busyOp)
-  const chatAvailable = useSettingsStore((s) => repoChatAvailable(s.activeProfile().ai))
+  // Both hooks always run — `a && useHook()` would skip the hook on some renders.
+  const chatEnabled = useSettingsStore((s) => repoChatAvailable(s.activeProfile().ai))
+  const chatReady = useAiReady('chat')
+  const chatAvailable = chatEnabled && chatReady
   const chatPanelOpen = useUIStore((s) => s.chatPanelOpen)
-  const rightPanelTab = useUIStore((s) => s.rightPanelTab)
-  const openChatPanel = useUIStore((s) => s.openChatPanel)
-  const closeChatPanel = useUIStore((s) => s.closeChatPanel)
+  const panelOpen = !!repo.selected || (chatPanelOpen && chatAvailable)
   // Any mutating git op queued/running gates the action buttons — the user
   // can't fire a second action until the first has fully settled.
   const inflight = useUIStore((s) => s.inflight > 0)
@@ -658,6 +660,7 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
               if (e.key !== 'Escape') return
               // First Escape clears the query, the next one leaves the field —
               // so a mistyped search is one key from gone without losing focus.
+              e.preventDefault()
               e.stopPropagation()
               if (graphFilter) setGraphFilter('')
               else e.currentTarget.blur()
@@ -692,19 +695,17 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
         >
           <TerminalSquare size={16} />
         </button>
-        {chatAvailable && (
-          <button
-            className={`tool-btn icon-only ${chatPanelOpen && rightPanelTab === 'chat' ? 'toggled' : ''}`}
-            title={t('chat.toolbarTitle')}
-            aria-label={t('chat.toolbarTitle')}
-            onClick={() => {
-              if (chatPanelOpen && rightPanelTab === 'chat') closeChatPanel()
-              else openChatPanel()
-            }}
-          >
-            <MessageSquare size={16} />
-          </button>
-        )}
+        {/* One button for the right panel (Details and Chat are its tabs), the
+            same toggle as ⌥⌘B, mirroring the sidebar button on the left. */}
+        <button
+          className={`tool-btn icon-only ${panelOpen ? 'toggled' : ''}`}
+          title={t('toolbar.detailsPanelTitle')}
+          aria-label={t('toolbar.detailsPanelTitle')}
+          aria-pressed={panelOpen}
+          onClick={() => void runAppCommand('toggle-right-panel')}
+        >
+          <PanelRight size={16} />
+        </button>
         {sidebarSide === 'right' && sidebarToggle}
       </div>
     </div>

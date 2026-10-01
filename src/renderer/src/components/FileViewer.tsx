@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { X, GitCommitHorizontal, Sparkles, Loader2, Search, ChevronUp, ChevronDown, Pencil, Save, Link2 } from 'lucide-react'
+import { X, GitCommitHorizontal, Loader2, Search, ChevronUp, ChevronDown, Save } from 'lucide-react'
 import type { BlameLine, BlobSpec, FileHistoryEntry, NumberedLine } from '../../../shared/types'
-import { gitApi, aiApi, shellApi } from '../infrastructure/api'
+import { gitApi, shellApi } from '../infrastructure/api'
 import { useSettingsStore } from '../stores/settings'
 import { useUIStore, type FileViewMode, type FileViewState } from '../stores/ui'
 import { useRepoStore, repoActions, type HunkActionKind } from '../stores/repo'
@@ -12,6 +12,8 @@ import { editorLineMenuItems } from '../lib/editorOpen'
 import { useT, interp, type TranslationKey } from '../i18n'
 import { useHoverExplain } from './HoverExplain'
 import { DiffViewer, type HunkAction } from './DiffViewer'
+import { useAiReady } from './useAiReady'
+import { displayPath } from '../lib/pathDisplay'
 import { SemanticSummary } from './SemanticSummary'
 import { buildQueryRegExp, highlightHtml, type HighlightLayer } from './FileSearchBar'
 import { fileExt, guessLanguage, highlightLine } from '../lib/highlight'
@@ -23,7 +25,6 @@ import { PreviewPane } from './PreviewPane'
 import { GutterMark, ChangeGutterPopup } from './ChangeGutter'
 import { FileMinimap } from './FileMinimap'
 import { computeGutterChanges, gutterMarksByLine, type GutterChange } from '../lib/diff'
-import { renderMarkdown } from '../preview/markdown'
 import { previewKind, isBinaryKind } from '../preview/registry'
 import { GRAPH_COLORS } from '../graph/layout'
 
@@ -115,6 +116,8 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
   const [findOpen, setFindOpen] = useState(false)
   // The diff's display toggles portal into this header slot (see DiffViewer).
   const [diffToolsHost, setDiffToolsHost] = useState<HTMLDivElement | null>(null)
+  // The floating layer over the content (find bar, line-selection actions).
+  const [overlayHost, setOverlayHost] = useState<HTMLDivElement | null>(null)
   const [find, setFind] = useState({ query: '', caseSensitive: false, wholeWord: false, regex: false })
   const [hitCount, setHitCount] = useState(0)
   const [activeHit, setActiveHit] = useState(0)
@@ -132,7 +135,13 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
     return ls
   }, [findRe, searchRe])
 
+  // Where the reader was when they started searching. Typing jumps to each
+  // partial match ("t", "te", "tes"…); when the full query matches nothing, the
+  // view goes back here instead of stranding them wherever the last partial
+  // match happened to be.
+  const findOriginRef = useRef<number | null>(null)
   const openFind = (): void => {
+    if (!findOpen) findOriginRef.current = bodyRef.current?.scrollTop ?? null
     setFindOpen(true)
     setFind((f) =>
       f.query
@@ -149,11 +158,16 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
       findInputRef.current?.select()
     })
   }
-  const closeFind = (): void => setFindOpen(false)
+  const closeFind = (): void => {
+    setFindOpen(false)
+    findOriginRef.current = null
+  }
   const goHit = (delta: number): void =>
     setActiveHit((i) => (hitCount ? (i + delta + hitCount) % hitCount : 0))
   const t = useT()
-  const aiEnabled = useSettingsStore((s) => s.activeProfile().ai.enabled !== false)
+  // Ready, not merely enabled: with no key the Explain button and hover cards
+  // could only ever say "No AI API key configured".
+  const aiEnabled = useAiReady('explain')
   const hoverExplainOn = useSettingsStore((s) => s.activeProfile().ai.hoverExplain !== false)
   const hoverExplainKey = useSettingsStore((s) => s.activeProfile().ai.hoverExplainKey ?? 'shift')
   const [content, setContent] = useState<string | null>(null)
@@ -168,8 +182,6 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
   // walk a line's history backwards via "reblame at parent".
   const [blameOverrideRef, setBlameOverrideRef] = useState<string | null>(null)
   const [history, setHistory] = useState<FileHistoryEntry[]>([])
-  const [explain, setExplain] = useState<string | null>(null)
-  const [explaining, setExplaining] = useState(false)
 
   const [refreshKey, setRefreshKey] = useState(0)
   const [ignoreWs, setIgnoreWs] = useState(false)
@@ -312,7 +324,6 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
   // meaningful text view — they offer Preview + History only.
   const previewable = !!pvKind && !fileIsImage
   const binaryDoc = !!pvKind && isBinaryKind(pvKind) && !fileIsImage
-  const canExplain = !fileIsImage && (mode === 'file' || mode === 'diff') && !!content
   // Host permalink to this file at the viewed commit (commit source + a remote).
   const repoData = useRepoStore((s) => s.repos[repoPath])
   const originUrl = repoData?.remotes.find((r) => r.name === 'origin')?.url ?? repoData?.remotes[0]?.url
@@ -394,24 +405,6 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
     }
   }
 
-  const runExplain = async (): Promise<void> => {
-    if (!content) return
-    // Prefer a highlighted selection; fall back to the whole file/diff.
-    const sel = window.getSelection()?.toString().trim()
-    const snippet = sel && sel.length > 1 ? sel : content
-    setExplaining(true)
-    setExplain(null)
-    try {
-      const text = await aiApi.explainCode(snippet, lang, useSettingsStore.getState().aiFor('explain'))
-      setExplain(text || t('explain.empty'))
-    } catch (err) {
-      setExplain(null)
-      toast('error', err instanceof Error ? err.message : String(err))
-    } finally {
-      setExplaining(false)
-    }
-  }
-
   // Hover-to-explain over the file and blame views (the diff view has its own,
   // inside DiffViewer). Never over a masked secret file — the token would be a
   // run of bullets — and never while the editor owns the text.
@@ -431,12 +424,6 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
       return Number.isInteger(n) && n > 0 ? n : null
     }
   })
-
-  // Drop a stale explanation when the file/source/mode changes.
-  useEffect(() => {
-    setExplain(null)
-    setExplaining(false)
-  }, [repoPath, file, mode, source.type])
 
   // Blame can't run on images or files that don't exist in history (untracked/new).
   const isUntracked =
@@ -468,7 +455,11 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
         openFind()
         return
       }
-      if (e.key === 'Escape' && !useUIStore.getState().modal) {
+      // `defaultPrevented`: something closer already took this Escape (a find bar,
+      // a field reverting its value). Without the check, closing the find bar
+      // re-renders first, this listener then sees it closed, and the same key
+      // press closes the whole file.
+      if (e.key === 'Escape' && !e.defaultPrevented && !useUIStore.getState().modal) {
         if (findOpen) closeFind()
         else requestClose()
       }
@@ -577,6 +568,9 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
       const n = marks?.length ?? 0
       setHitCount(n)
       setActiveHit((i) => (n ? Math.min(i, n - 1) : 0))
+      if (n === 0 && findOriginRef.current !== null && bodyRef.current) {
+        bodyRef.current.scrollTop = findOriginRef.current
+      }
     })
     return () => cancelAnimationFrame(id)
   }, [findRe, searchRe, content, mode, file])
@@ -633,7 +627,7 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
       mo.disconnect()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode, editing, explaining, diffToolsHost])
+  }, [mode, editing, diffToolsHost])
 
   // Which hunk actions fit the diff on screen. With whitespace ignored they still
   // work: the patch is applied matching whitespace loosely (see applyHunkPatch),
@@ -649,7 +643,9 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
       hunkLabel: t(hunkKey),
       linesLabel: (n) => interp(t(linesKey), { n }),
       reverse: kind !== 'stage' && kind !== 'apply',
-      danger: kind === 'discard',
+      // Forward (stage, apply) is green; anything that takes work back or away
+      // (unstage, revert, discard) is red — one rule, whatever the undo story.
+      intent: kind === 'stage' || kind === 'apply' ? 'forward' : 'backward',
       run: (patch) =>
         void repoActions.applyHunk(repoPath, patch, kind, ignoreWs).then(() => setRefreshKey((k) => k + 1))
     })
@@ -673,6 +669,26 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
     el.scrollLeft += e.deltaY
   }
 
+  const pathDepth = useSettingsStore((s) => s.settings.pathDepth ?? 'all')
+  const headerPath = displayPath(file, pathDepth)
+
+  const openPathMenu = (e: React.MouseEvent): void => {
+    e.preventDefault()
+    const copy = (text: string, done: string): void => {
+      void navigator.clipboard.writeText(text)
+      toast('success', done)
+    }
+    useUIStore.getState().openContextMenu(e.clientX, e.clientY, [
+      { label: t('fileViewer.copyPath'), onClick: () => copy(file, t('fileViewer.pathCopied')) },
+      ...(permalink
+        ? [{ label: t('fileViewer.copyLink'), onClick: () => copy(permalink, t('fileViewer.permalinkCopied')) }]
+        : []),
+      // Editing in place is rare (most edits happen in an editor), so it lives
+      // here rather than as a header button.
+      ...(editableFile && !(editable && editing) ? [{ label: t('fileViewer.editFile'), onClick: startEditing }] : [])
+    ])
+  }
+
   const sourceChip =
     source.type === 'commit' ? (
       <span className="fv-chip commit">{source.hash.slice(0, 7)}</span>
@@ -687,9 +703,11 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
   return (
     <div className="file-viewer">
       <div className="fv-header">
-        <span className="fv-path" title={file}>
-          {file.includes('/') ? <span className="fv-dir">{file.slice(0, file.lastIndexOf('/') + 1)}</span> : null}
-          <strong>{file.split('/').pop()}</strong>
+        {/* Right-click for the path and the permalink — rarely needed, so they
+            do not take a header button. */}
+        <span className="fv-path" title={file} onContextMenu={openPathMenu}>
+          {headerPath.dir && <span className="fv-dir">{headerPath.dir}</span>}
+          <strong className="fv-name">{headerPath.name}</strong>
         </span>
         {sourceChip}
         {/* Everything but the close button lives in one strip that scrolls
@@ -716,33 +734,6 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
             {revealSecrets ? <EyeOff size={13} /> : <Eye size={13} />} {revealSecrets ? t('fileViewer.hide') : t('fileViewer.reveal')}
           </button>
         )}
-        {canExplain && aiEnabled && (
-          <button
-            className="btn ghost small fv-explain-btn"
-            disabled={explaining}
-            title={t('explain.title')}
-            onClick={() => void runExplain()}
-          >
-            {explaining ? <Loader2 size={13} className="spin" /> : <Sparkles size={13} />} {t('explain.action')}
-          </button>
-        )}
-        {permalink && (
-          <button
-            className="btn ghost small"
-            title={t('fileViewer.permalinkTitle')}
-            onClick={() => {
-              void navigator.clipboard.writeText(permalink)
-              toast('success', t('fileViewer.permalinkCopied'))
-            }}
-          >
-            <Link2 size={13} /> {t('fileViewer.link')}
-          </button>
-        )}
-        {editableFile && !(editable && editing) && (
-          <button className="btn ghost small" title={t('fileViewer.editFile')} onClick={startEditing}>
-            <Pencil size={13} /> {t('fileViewer.edit')}
-          </button>
-        )}
         {editable && editing && (
           <button
             className="btn small fv-save-btn"
@@ -759,277 +750,280 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
         </button>
       </div>
 
-      <div className="fv-body" ref={bodyRef}>
-        {findOpen && (
-          <div className="fv-find">
-            <Search size={13} className="fv-find-icon" />
-            <input
-              ref={findInputRef}
-              className="fv-find-input"
-              placeholder={t('fileViewer.findPlaceholder')}
-              value={find.query}
-              spellCheck={false}
-              onChange={(e) => setFind((f) => ({ ...f, query: e.target.value }))}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault()
-                  goHit(e.shiftKey ? -1 : 1)
-                } else if (e.key === 'Escape') {
-                  e.preventDefault()
-                  closeFind()
-                }
-              }}
-            />
-            <div className="fv-find-toggles">
-              <button
-                className={`fs-toggle${find.caseSensitive ? ' active' : ''}`}
-                title={t('fileSearch.matchCase')}
-                onClick={() => setFind((f) => ({ ...f, caseSensitive: !f.caseSensitive }))}
-              >
-                Aa
-              </button>
-              <button
-                className={`fs-toggle${find.wholeWord ? ' active' : ''}`}
-                title={t('fileSearch.matchWholeWord')}
-                onClick={() => setFind((f) => ({ ...f, wholeWord: !f.wholeWord }))}
-              >
-                ab
-              </button>
-              <button
-                className={`fs-toggle${find.regex ? ' active' : ''}`}
-                title={t('fileSearch.useRegex')}
-                onClick={() => setFind((f) => ({ ...f, regex: !f.regex }))}
-              >
-                .*
-              </button>
-            </div>
-            <span className="fv-find-count">{hitCount ? `${activeHit + 1}/${hitCount}` : '0/0'}</span>
-            <button className="icon-btn" title={t('fileViewer.findPrev')} disabled={!hitCount} onClick={() => goHit(-1)}>
-              <ChevronUp size={14} />
-            </button>
-            <button className="icon-btn" title={t('fileViewer.findNext')} disabled={!hitCount} onClick={() => goHit(1)}>
-              <ChevronDown size={14} />
-            </button>
-            <button className="icon-btn" title={t('fileViewer.close')} onClick={closeFind}>
-              <X size={14} />
-            </button>
-          </div>
-        )}
-        {error && <div className="fv-error">{error}</div>}
-        {!error && tooLarge !== null && (
-          <div className="fv-too-large">
-            <p>{interp(t('preview.tooLarge'), { size: formatBytes(tooLarge) })}</p>
-            <button className="btn small" onClick={() => setForceLoad(true)}>
-              {t('preview.tooLargeLoad')}
-            </button>
-          </div>
-        )}
-        {!error && tooLarge === null && content === null && mode !== 'preview' && (
-          <div className="graph-empty">
-            <div className="spinner" />
-          </div>
-        )}
-
-        {!error && mode === 'preview' && pvKind && (
-          <PreviewPane repoPath={repoPath} file={file} gitRef={sourceRef(view)} kind={pvKind} />
-        )}
-
-        {!error && imgDiff !== null && mode === 'diff' && (
-          <ImageDiff before={imgDiff.before} after={imgDiff.after} />
-        )}
-
-        {!error && content !== null && imgDiff === null && mode === 'diff' && semanticSides && (
-          <SemanticSummary
-            repoPath={repoPath}
-            file={file}
-            oldSide={semanticSides.oldSide}
-            newSide={semanticSides.newSide}
-          />
-        )}
-
-        {!error && content !== null && imgDiff === null && mode === 'diff' && (
-          <DiffViewer
-            diff={content}
-            file={file}
-            lang={lang}
-            highlightLayers={layers}
-            maskValues={maskOn}
-            ignoreWs={ignoreWs}
-            onToggleIgnoreWs={() => setIgnoreWs((v) => !v)}
-            toolbarHost={diffToolsHost}
-            externalFind={{ open: findOpen, toggle: findOpen ? closeFind : openFind }}
-            hunkActions={hunkActions}
-          />
-        )}
-
-        {!error && imageUrl !== null && mode === 'file' && (
-          <div className="image-preview">
-            <img src={imageUrl} alt={file} />
-          </div>
-        )}
-
-        {!error && content !== null && imageUrl === null && mode === 'file' && editing && (
-          <div className="code-editor">
-            <pre
-              ref={preRef}
-              className="code-editor-pre hljs"
-              aria-hidden="true"
-              dangerouslySetInnerHTML={{ __html: editorHtml }}
-            />
-            <textarea
-              ref={editorRef}
-              className="code-editor-area"
-              value={draft}
-              spellCheck={false}
-              autoFocus
-              onScroll={syncEditorScroll}
-              onChange={(e) => setDraft(e.target.value)}
-              onKeyDown={(e) => {
-                // Insert a real tab instead of moving focus.
-                if (e.key === 'Tab') {
-                  e.preventDefault()
-                  const ta = e.currentTarget
-                  const { selectionStart: s, selectionEnd: en } = ta
-                  const next = draft.slice(0, s) + '  ' + draft.slice(en)
-                  setDraft(next)
-                  requestAnimationFrame(() => ta.setSelectionRange(s + 2, s + 2))
-                }
-              }}
-            />
-          </div>
-        )}
-
-        {!error && content !== null && imageUrl === null && mode === 'file' && !editing && (() => {
-          const fileLines = content.split('\n')
-          const showMinimap = showMinimapSetting && fileLines.length <= HUGE_LINES
-          return (
-            <>
-              <div
-                className={`file-content hljs ${fileLines.length > HUGE_LINES ? 'is-huge' : ''} ${hoverArmed ? 'hover-armed' : ''}`}
-                {...hoverProps}
-              >
-                {fileLines.map((l, i) => {
-                  const change = gutterByLine.get(i + 1)
-                  return (
-                    <div className="code-line" key={i} onContextMenu={lineMenu(i + 1)}>
-                      {change && (
-                        <GutterMark
-                          change={change}
-                          active={openChange?.index === change.index}
-                          onClick={(e) => setOpenChange({ index: change.index, rect: e.currentTarget.getBoundingClientRect() })}
-                        />
-                      )}
-                      {editorTracksDisk && (
-                        <button
-                          className={`code-mark ${markedLines.has(i + 1) ? 'on' : ''}`}
-                          title={markedLines.has(i + 1) ? t('bookmarks.remove') : t('bookmarks.add')}
-                          aria-label={markedLines.has(i + 1) ? t('bookmarks.remove') : t('bookmarks.add')}
-                          onClick={() => toggleBookmark(i + 1, l)}
-                        />
-                      )}
-                      <span className="code-no">{i + 1}</span>
-                      <span
-                        className="code-text"
-                        dangerouslySetInnerHTML={{ __html: highlightHtml(highlightLine(maybeMask(l), lang), layers) || '&nbsp;' }}
-                      />
-                    </div>
-                  )
-                })}
-              </div>
-              {showMinimap && <FileMinimap lines={fileLines} gutterByLine={gutterByLine} scrollRef={bodyRef} />}
-            </>
-          )
-        })()}
-
-        {openChange && gutterChanges[openChange.index] && (
-          <ChangeGutterPopup
-            change={gutterChanges[openChange.index]}
-            total={gutterChanges.length}
-            lang={lang}
-            anchorRect={openChange.rect}
-            onPrev={() => gotoChange((openChange.index - 1 + gutterChanges.length) % gutterChanges.length)}
-            onNext={() => gotoChange((openChange.index + 1) % gutterChanges.length)}
-            onClose={() => setOpenChange(null)}
-          />
-        )}
-
-        {!error && content !== null && mode === 'blame' && (
-          <div
-            className={`blame-view hljs ${blame.length > HUGE_LINES ? 'is-huge' : ''} ${hoverArmed ? 'hover-armed' : ''}`}
-            {...hoverProps}
-          >
-            {blameOverrideRef && (
-              <div className="blame-rewind-bar">
-                <span>Blaming at <code>{blameOverrideRef}</code></span>
-                <button className="btn ghost tiny" onClick={() => setBlameOverrideRef(null)}>
-                  Back to latest
-                </button>
-              </div>
-            )}
-            {blame.map((b) => (
-              <div className="blame-line" key={b.lineNo} onContextMenu={lineMenu(b.lineNo)}>
-                <button
-                  className="blame-meta"
-                  style={{ borderLeftColor: shaColor(b.sha) }}
-                  title={`${b.sha.slice(0, 10)} — ${new Date(b.date * 1000).toLocaleDateString()}\nRight-click for more`}
-                  onClick={() => setFileView({ ...view, source: { type: 'commit', hash: b.sha }, mode: 'diff' })}
-                  onContextMenu={(e) => {
+      <div className="fv-body-wrap">
+        {/* Floating chrome — the find bar, the diff's line-selection actions —
+            lives on a layer over the content that never scrolls and takes no
+            space, so opening either moves nothing and covers no hunk button
+            (those sit at the right edge; these are centred). */}
+        <div className="fv-overlay" ref={setOverlayHost}>
+          {findOpen && (
+            <div className="fv-find">
+              <Search size={13} className="fv-find-icon" />
+              <input
+                ref={findInputRef}
+                className={`fv-find-input${find.query.trim() && hitCount === 0 ? ' is-no-results' : ''}`}
+                placeholder={t('fileViewer.findPlaceholder')}
+                value={find.query}
+                spellCheck={false}
+                onChange={(e) => setFind((f) => ({ ...f, query: e.target.value }))}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
                     e.preventDefault()
-                    openContextMenu(e.clientX, e.clientY, [
-                      { label: interp(t('fileViewer.openShaDiff'), { sha: b.sha.slice(0, 7) }), onClick: () => setFileView({ ...view, source: { type: 'commit', hash: b.sha }, mode: 'diff' }) },
-                      { label: t('fileViewer.reblame'), onClick: () => setBlameOverrideRef(`${b.sha}^`) },
-                      { label: t('fileViewer.copySha'), onClick: () => void navigator.clipboard.writeText(b.sha) }
-                    ])
-                  }}
+                    goHit(e.shiftKey ? -1 : 1)
+                  } else if (e.key === 'Escape') {
+                    // Escape here means "leave the find bar", never "close the file":
+                    // keep it from reaching the viewer's window-level shortcut.
+                    e.preventDefault()
+                    e.stopPropagation()
+                    closeFind()
+                  }
+                }}
+              />
+              <div className="fv-find-toggles">
+                <button
+                  className={`fs-toggle${find.caseSensitive ? ' active' : ''}`}
+                  title={t('fileSearch.matchCase')}
+                  onClick={() => setFind((f) => ({ ...f, caseSensitive: !f.caseSensitive }))}
                 >
-                  <code>{b.sha.slice(0, 7)}</code>
-                  <span>{b.author}</span>
+                  Aa
                 </button>
-                <span className="code-no">{b.lineNo}</span>
-                <span
-                  className="code-text"
-                  dangerouslySetInnerHTML={{ __html: highlightHtml(highlightLine(maybeMask(b.text), lang), layers) || '&nbsp;' }}
-                />
+                <button
+                  className={`fs-toggle${find.wholeWord ? ' active' : ''}`}
+                  title={t('fileSearch.matchWholeWord')}
+                  onClick={() => setFind((f) => ({ ...f, wholeWord: !f.wholeWord }))}
+                >
+                  ab
+                </button>
+                <button
+                  className={`fs-toggle${find.regex ? ' active' : ''}`}
+                  title={t('fileSearch.useRegex')}
+                  onClick={() => setFind((f) => ({ ...f, regex: !f.regex }))}
+                >
+                  .*
+                </button>
               </div>
-            ))}
-          </div>
-        )}
-
-        {!error && content !== null && mode === 'history' && (
-          <div className="history-view">
-            {history.map((h) => (
-              <button
-                key={h.hash}
-                className="history-item"
-                onClick={() => setFileView({ ...view, source: { type: 'commit', hash: h.hash }, mode: 'diff' })}
-              >
-                <GitCommitHorizontal size={14} style={{ color: shaColor(h.hash) }} />
-                <span className="history-subject">{h.subject}</span>
-                <span className="history-author">{h.author}</span>
-                <code>{h.hash.slice(0, 7)}</code>
-                <span className="history-date">{new Date(h.date * 1000).toLocaleDateString()}</span>
+              <span className="fv-find-count" role="status" aria-live="polite">
+                {!find.query.trim()
+                  ? ''
+                  : hitCount
+                    ? interp(t('find.position'), { i: activeHit + 1, n: hitCount })
+                    : t('search.noResults')}
+              </span>
+              <button className="icon-btn" title={t('fileViewer.findPrev')} disabled={!hitCount} onClick={() => goHit(-1)}>
+                <ChevronUp size={14} />
               </button>
-            ))}
-            {history.length === 0 && <div className="fv-error">{t('fileViewer.noHistory')}</div>}
-          </div>
-        )}
-
-        {hoverCard}
-
-        {explain !== null && (
-          <div className="fv-explain-panel">
-            <div className="fv-explain-head">
-              <span><Sparkles size={13} /> {t('explain.heading')}</span>
-              <button className="icon-btn" title={t('common.close')} onClick={() => setExplain(null)}>
+              <button className="icon-btn" title={t('fileViewer.findNext')} disabled={!hitCount} onClick={() => goHit(1)}>
+                <ChevronDown size={14} />
+              </button>
+              <button className="icon-btn" title={t('fileViewer.close')} onClick={closeFind}>
                 <X size={14} />
               </button>
             </div>
-            <div
-              className="fv-explain-body md-preview"
-              dangerouslySetInnerHTML={{ __html: renderMarkdown(explain) }}
+          )}
+        </div>
+        <div className="fv-body" ref={bodyRef}>
+          {error && <div className="fv-error">{error}</div>}
+          {!error && tooLarge !== null && (
+            <div className="fv-too-large">
+              <p>{interp(t('preview.tooLarge'), { size: formatBytes(tooLarge) })}</p>
+              <button className="btn small" onClick={() => setForceLoad(true)}>
+                {t('preview.tooLargeLoad')}
+              </button>
+            </div>
+          )}
+          {!error && tooLarge === null && content === null && mode !== 'preview' && (
+            <div className="graph-empty">
+              <div className="spinner" />
+            </div>
+          )}
+
+          {!error && mode === 'preview' && pvKind && (
+            <PreviewPane repoPath={repoPath} file={file} gitRef={sourceRef(view)} kind={pvKind} />
+          )}
+
+          {!error && imgDiff !== null && mode === 'diff' && (
+            <ImageDiff before={imgDiff.before} after={imgDiff.after} />
+          )}
+
+          {!error && content !== null && imgDiff === null && mode === 'diff' && semanticSides && (
+            <SemanticSummary
+              repoPath={repoPath}
+              file={file}
+              oldSide={semanticSides.oldSide}
+              newSide={semanticSides.newSide}
             />
-          </div>
-        )}
+          )}
+
+          {!error && content !== null && imgDiff === null && mode === 'diff' && (
+            <DiffViewer
+              diff={content}
+              file={file}
+              lang={lang}
+              highlightLayers={layers}
+              maskValues={maskOn}
+              ignoreWs={ignoreWs}
+              onToggleIgnoreWs={() => setIgnoreWs((v) => !v)}
+              toolbarHost={diffToolsHost}
+              overlayHost={overlayHost}
+              externalFind={{ open: findOpen, toggle: findOpen ? closeFind : openFind }}
+              hunkActions={hunkActions}
+            />
+          )}
+
+          {!error && imageUrl !== null && mode === 'file' && (
+            <div className="image-preview">
+              <img src={imageUrl} alt={file} />
+            </div>
+          )}
+
+          {!error && content !== null && imageUrl === null && mode === 'file' && editing && (
+            <div className="code-editor">
+              <pre
+                ref={preRef}
+                className="code-editor-pre hljs"
+                aria-hidden="true"
+                dangerouslySetInnerHTML={{ __html: editorHtml }}
+              />
+              <textarea
+                ref={editorRef}
+                className="code-editor-area"
+                value={draft}
+                spellCheck={false}
+                autoFocus
+                onScroll={syncEditorScroll}
+                onChange={(e) => setDraft(e.target.value)}
+                onKeyDown={(e) => {
+                  // Insert a real tab instead of moving focus.
+                  if (e.key === 'Tab') {
+                    e.preventDefault()
+                    const ta = e.currentTarget
+                    const { selectionStart: s, selectionEnd: en } = ta
+                    const next = draft.slice(0, s) + '  ' + draft.slice(en)
+                    setDraft(next)
+                    requestAnimationFrame(() => ta.setSelectionRange(s + 2, s + 2))
+                  }
+                }}
+              />
+            </div>
+          )}
+
+          {!error && content !== null && imageUrl === null && mode === 'file' && !editing && (() => {
+            const fileLines = content.split('\n')
+            const showMinimap = showMinimapSetting && fileLines.length <= HUGE_LINES
+            return (
+              <>
+                <div
+                  className={`file-content hljs ${fileLines.length > HUGE_LINES ? 'is-huge' : ''} ${hoverArmed ? 'hover-armed' : ''}`}
+                  {...hoverProps}
+                >
+                  {fileLines.map((l, i) => {
+                    const change = gutterByLine.get(i + 1)
+                    return (
+                      <div className="code-line" key={i} onContextMenu={lineMenu(i + 1)}>
+                        {change && (
+                          <GutterMark
+                            change={change}
+                            active={openChange?.index === change.index}
+                            onClick={(e) => setOpenChange({ index: change.index, rect: e.currentTarget.getBoundingClientRect() })}
+                          />
+                        )}
+                        {editorTracksDisk && (
+                          <button
+                            className={`code-mark ${markedLines.has(i + 1) ? 'on' : ''}`}
+                            title={markedLines.has(i + 1) ? t('bookmarks.remove') : t('bookmarks.add')}
+                            aria-label={markedLines.has(i + 1) ? t('bookmarks.remove') : t('bookmarks.add')}
+                            onClick={() => toggleBookmark(i + 1, l)}
+                          />
+                        )}
+                        <span className="code-no">{i + 1}</span>
+                        <span
+                          className="code-text"
+                          dangerouslySetInnerHTML={{ __html: highlightHtml(highlightLine(maybeMask(l), lang), layers) || '&nbsp;' }}
+                        />
+                      </div>
+                    )
+                  })}
+                </div>
+                {showMinimap && <FileMinimap lines={fileLines} gutterByLine={gutterByLine} scrollRef={bodyRef} />}
+              </>
+            )
+          })()}
+
+          {openChange && gutterChanges[openChange.index] && (
+            <ChangeGutterPopup
+              change={gutterChanges[openChange.index]}
+              total={gutterChanges.length}
+              lang={lang}
+              anchorRect={openChange.rect}
+              onPrev={() => gotoChange((openChange.index - 1 + gutterChanges.length) % gutterChanges.length)}
+              onNext={() => gotoChange((openChange.index + 1) % gutterChanges.length)}
+              onClose={() => setOpenChange(null)}
+            />
+          )}
+
+          {!error && content !== null && mode === 'blame' && (
+            <div
+              className={`blame-view hljs ${blame.length > HUGE_LINES ? 'is-huge' : ''} ${hoverArmed ? 'hover-armed' : ''}`}
+              {...hoverProps}
+            >
+              {blameOverrideRef && (
+                <div className="blame-rewind-bar">
+                  <span>Blaming at <code>{blameOverrideRef}</code></span>
+                  <button className="btn ghost tiny" onClick={() => setBlameOverrideRef(null)}>
+                    Back to latest
+                  </button>
+                </div>
+              )}
+              {blame.map((b) => (
+                <div className="blame-line" key={b.lineNo} onContextMenu={lineMenu(b.lineNo)}>
+                  <button
+                    className="blame-meta"
+                    style={{ borderLeftColor: shaColor(b.sha) }}
+                    title={`${b.sha.slice(0, 10)} — ${new Date(b.date * 1000).toLocaleDateString()}\nRight-click for more`}
+                    onClick={() => setFileView({ ...view, source: { type: 'commit', hash: b.sha }, mode: 'diff' })}
+                    onContextMenu={(e) => {
+                      e.preventDefault()
+                      openContextMenu(e.clientX, e.clientY, [
+                        { label: interp(t('fileViewer.openShaDiff'), { sha: b.sha.slice(0, 7) }), onClick: () => setFileView({ ...view, source: { type: 'commit', hash: b.sha }, mode: 'diff' }) },
+                        { label: t('fileViewer.reblame'), onClick: () => setBlameOverrideRef(`${b.sha}^`) },
+                        { label: t('fileViewer.copySha'), onClick: () => void navigator.clipboard.writeText(b.sha) }
+                      ])
+                    }}
+                  >
+                    <code>{b.sha.slice(0, 7)}</code>
+                    <span>{b.author}</span>
+                  </button>
+                  <span className="code-no">{b.lineNo}</span>
+                  <span
+                    className="code-text"
+                    dangerouslySetInnerHTML={{ __html: highlightHtml(highlightLine(maybeMask(b.text), lang), layers) || '&nbsp;' }}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+
+          {!error && content !== null && mode === 'history' && (
+            <div className="history-view">
+              {history.map((h) => (
+                <button
+                  key={h.hash}
+                  className="history-item"
+                  onClick={() => setFileView({ ...view, source: { type: 'commit', hash: h.hash }, mode: 'diff' })}
+                >
+                  <GitCommitHorizontal size={14} style={{ color: shaColor(h.hash) }} />
+                  <span className="history-subject">{h.subject}</span>
+                  <span className="history-author">{h.author}</span>
+                  <code>{h.hash.slice(0, 7)}</code>
+                  <span className="history-date">{new Date(h.date * 1000).toLocaleDateString()}</span>
+                </button>
+              ))}
+              {history.length === 0 && <div className="fv-error">{t('fileViewer.noHistory')}</div>}
+            </div>
+          )}
+
+          {hoverCard}
+        </div>
       </div>
     </div>
   )

@@ -22,6 +22,9 @@ export interface GraphCommit {
   date: number // unix seconds
   refs: string[]
   subject: string
+  /** The start of the message body on one line, trailers removed — for the
+   *  graph's optional description column. Omitted when the commit has none. */
+  bodyPreview?: string
   coAuthors?: CommitAuthor[]
   signature?: CommitSignature // omitted when unsigned
   signer?: string // signing identity (%GS), when known
@@ -2852,7 +2855,10 @@ export interface AppSettings {
   initialCommitCount: number
   loadMoreCount: number
   autoLoadOnScroll: boolean
+  /** Superseded by `dateFormat`; still read once to migrate an old choice. */
   relativeDates: boolean
+  /** How the graph's date column shows a commit's date. */
+  dateFormat: 'relative' | 'datetime' | 'iso'
   commitAvatars: boolean
   /** Idle motion on the title-bar profile avatar. The pose it holds still
    *  follows the working tree either way; this only stops it moving. */
@@ -2860,6 +2866,12 @@ export interface AppSettings {
   fileListView: 'path' | 'tree'
   /** Order of the flat (path) file list. The tree view always sorts by name. */
   fileListSort: 'git' | 'alpha'
+  /** Show the enclosing code git finds for each hunk (`@@ … @@ if x`) after its line ranges. */
+  diffHunkContext: boolean
+  /** Folders shown before a file name in headers and flat lists: all, or only the last N. */
+  pathDepth: 'all' | 0 | 1 | 2 | 3
+  /** Show the start of each commit's description after its title in the graph. */
+  graphShowBody: boolean
   /** Group local branches into collapsible folders by their `/`-separated
    *  prefix (feature/*, release/*, …). A prefix with a single branch stays flat. */
   groupBranches: boolean
@@ -3295,10 +3307,14 @@ export function defaultSettings(): AppSettings {
     loadMoreCount: 400,
     autoLoadOnScroll: true,
     relativeDates: true,
+    dateFormat: 'relative',
     commitAvatars: true,
     avatarMotion: true,
     fileListView: 'path',
     fileListSort: 'git',
+    diffHunkContext: true,
+    pathDepth: 'all',
+    graphShowBody: false,
     groupBranches: true,
     graphColumns: defaultGraphColumns(),
     graphColumnOrder: defaultGraphColumnOrder(),

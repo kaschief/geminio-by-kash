@@ -32,7 +32,7 @@ with a hundred.
 
 ## Making it show what you want
 
-- **Graph focus** decides how much history is drawn — Settings → Themes →
+- **Graph focus** decides how much history is drawn — Settings → Appearance →
   **Graph**, or the gear menu in the graph header. *Everything* draws it all;
   *Linear history* (first-parent) leaves only the trunk; *Hide merged branches*
   keeps the trunk plus the branches that are still unmerged; *Solo* keeps your
@@ -51,8 +51,20 @@ with a hundred.
 ![Graph filtered down to one path](../screenshots/graph-path-filter.webp)
 
 - **Columns**: show, hide, resize and reorder branch, message, author, date,
-  SHA, signature and deployment columns.
-- **Style**: Settings → Themes → **Graph** — lane palette (8 built-ins, custom,
+  SHA, signature and deployment columns. **Double-click a column edge** to fit
+  the column to its widest content on screen. The edge beside the message fits
+  the column to its right (the message fills what is left), and the graph
+  column goes back to fitting its lanes. Each column has a maximum, so the
+  table never scrolls sideways into empty space; when a narrow window does make
+  it scroll, the headings move with the rows.
+- **Dates**: *Date format in the graph* (Settings) picks Relative ("3d"), Date
+  & time ("15 Sep 2026, 17:22") or ISO ("2026-09-15 17:22"). With relative
+  dates, the row under the pointer shows its exact date and time in place.
+- **Descriptions**: *Commit descriptions in the graph* (Settings → Graph) shows
+  the start of each commit's description after its title, in a quieter shade.
+  Trailers such as `Co-authored-by:` are left out, and only the first 160
+  characters are loaded, so large repositories stay fast.
+- **Style**: Settings → Appearance → **Graph** — lane palette (8 built-ins, custom,
   or AI-generated), corner style, row density and line thickness, with a live
   mini-graph preview.
 

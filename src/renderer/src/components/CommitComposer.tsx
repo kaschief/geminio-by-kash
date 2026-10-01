@@ -1,3 +1,4 @@
+import { useAiReady } from './useAiReady'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Sparkles, Loader2, Trash2, AlignLeft, FolderTree, ArrowDownAZ, GitMerge, ChevronDown, CheckCheck, Users, Plus, Minus } from 'lucide-react'
@@ -219,7 +220,7 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
   const largeFileKb = useSettingsStore((s) => s.settings.largeFileKb)
   const defaultOpenApp = useSettingsStore((s) => s.settings.defaultOpenApp)
   const editor = useSettingsStore((s) => s.settings.editor)
-  const aiEnabled = useSettingsStore((s) => s.activeProfile().ai.enabled !== false)
+  const aiEnabled = useAiReady('commit')
   // The Conventional-Commit type dropdown shows only when the profile's commit
   // style is Conventional (Settings → Profile → Preferences).
   const commitStyle = useSettingsStore((s) => s.activeProfile().ai.commitStyle)
@@ -617,7 +618,11 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
       },
       { separator: true },
       {
-        label: t('composer.discardChanges'),
+        // Names its target, so it never reads as "discard everything".
+        label:
+          targets.length > 1
+            ? interp(t('composer.discardFilesN'), { n: targets.length })
+            : interp(t('composer.discardFileNamed'), { name: file.path.split('/').pop() ?? file.path }),
         danger: true,
         onClick: () =>
           useUIStore.getState().openModal({
@@ -733,7 +738,6 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
       const msg = await aiApi.commitMessage(stagedDiff, aiFor('commit'), { branch: repo.branches.current })
       setSummary(msg.summary)
       setDescription(msg.description)
-      toast('success', t('composer.aiGenerated'))
     } catch (err) {
       toast('error', err instanceof Error ? err.message : String(err))
     } finally {
@@ -857,9 +861,42 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
     ? { flex: '0 0 auto' }
     : { flex: bothExpanded ? `${1 - ratio} 1 0` : '1 1 0' }
 
+  // Throw away every change, staged and unstaged — after a confirm, since none
+  // of it exists anywhere else. Lives at the top of the panel (where GitKraken
+  // puts it) with a label, so it is found quickly and never mistaken for a
+  // single-file discard.
+  const confirmDiscardAll = (): void =>
+    useUIStore.getState().openModal({
+      kind: 'confirm',
+      title: t('composer.discardAllTitle'),
+      message: t('composer.discardAllMsg'),
+      danger: true,
+      confirmLabel: t('composer.discardAllConfirm'),
+      onConfirm: async () => {
+        await gitApi.unstageAll(path).catch(() => undefined)
+        const all = [...staged, ...unstaged]
+        const untracked = all.filter((fl) => fl.untracked).map((fl) => fl.path)
+        const tracked = all.filter((fl) => !fl.untracked).map((fl) => fl.path)
+        if (tracked.length) await repoActions.discard(path, tracked, false)
+        if (untracked.length) await repoActions.discard(path, untracked, true)
+      }
+    })
+
   return (
     <div className="composer">
       <div className="panel-toolbar">
+        {/* Icon-only to leave the row room for the summary; the quick tip and
+            the accessible name both say what it does. */}
+        <button
+          type="button"
+          className="btn ghost tiny intent-backward discard-all-btn"
+          aria-label={t('composer.discardAllTitle')}
+          data-tip={t('composer.discardAllTitle')}
+          disabled={staged.length + unstaged.length === 0}
+          onClick={confirmDiscardAll}
+        >
+          <Trash2 size={13} aria-hidden="true" />
+        </button>
         <span className="panel-title">
           <ChangeSummary
             files={[...conflicted, ...staged, ...unstaged]}
@@ -1000,7 +1037,7 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
                 </motion.button>
               )}
               <button
-                className="btn ghost tiny"
+                className="btn ghost tiny intent-forward"
                 disabled={unstaged.length === 0}
                 onClick={() => {
                   if (selectedCount('unstaged') > 1) {
@@ -1072,7 +1109,7 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
             <span>{t('composer.stagedFiles')}</span>
             <span className="sb-count">{active ? `${fStaged.length}/${staged.length}` : staged.length}</span>
             <button
-              className="btn ghost tiny"
+              className="btn ghost tiny intent-backward"
               disabled={staged.length === 0}
               onClick={(e) => {
                 e.stopPropagation()
@@ -1295,30 +1332,6 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
                     : ''
                 }).trim()}
           </motion.button>
-          <button
-            className="btn ghost small discard-btn"
-            title={t('composer.discardEverything')}
-            disabled={staged.length + unstaged.length === 0}
-            onClick={() =>
-              useUIStore.getState().openModal({
-                kind: 'confirm',
-                title: t('composer.discardAllTitle'),
-                message: t('composer.discardAllMsg'),
-                danger: true,
-                confirmLabel: t('composer.discardAllConfirm'),
-                onConfirm: async () => {
-                  await gitApi.unstageAll(path).catch(() => undefined)
-                  const all = [...staged, ...unstaged]
-                  const untracked = all.filter((fl) => fl.untracked).map((fl) => fl.path)
-                  const tracked = all.filter((fl) => !fl.untracked).map((fl) => fl.path)
-                  if (tracked.length) await repoActions.discard(path, tracked, false)
-                  if (untracked.length) await repoActions.discard(path, untracked, true)
-                }
-              })
-            }
-          >
-            <Trash2 size={13} />
-          </button>
         </div>
       </div>
     </div>

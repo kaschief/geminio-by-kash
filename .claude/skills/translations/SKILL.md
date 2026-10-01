@@ -21,9 +21,9 @@ Import from `'../i18n'`. The locale files are data; `index.ts` is the interface.
 
 ## Adding a string
 
-1. Add the key to `en.ts`, then the same key to **every** other locale file.
-   `Dict` makes a missing entry a compile error — never paper over it by
-   copying the English text into another locale. Translate it.
+1. Add the key to `en.ts` only. This fork is maintained in English: other
+   locales are `Partial<…>` and fall back to English for missing keys. Do not
+   translate new strings and do not copy English into other locale files.
 2. Key naming: `feature.thing` in lowerCamel (`titlebar.closeTab`,
    `act.checkedOut`). Group by feature; put a shared word under `common.`.
 3. Render it:

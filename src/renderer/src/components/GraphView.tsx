@@ -1,3 +1,5 @@
+import { formatAbsoluteDate } from '../lib/commitDate'
+import { fitBranchAndGraph } from '../lib/graphColumnFit'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Archive, GitCommitHorizontal, Tag, Laptop, Cloud, Check, Star, Settings2, Pencil, Plus, Minus, CheckCircle2, XCircle, Clock, MinusCircle, StickyNote, FlaskConical } from 'lucide-react'
@@ -38,6 +40,24 @@ const NODE_R = 4.5
 const AVA = 20 // avatar node diameter
 
 const COL_MIN: Record<GraphColumnId, number> = { branch: 90, graph: 8, message: 120, deployment: 70, author: 80, date: 56, sha: 56, signature: 56 }
+/**
+ * Widest each column may get. Without a cap a column could be dragged (or carry
+ * over) far past anything it shows — a 560px SHA column for a 7-character hash —
+ * and the graph scrolled sideways into empty space. Message is the flex column
+ * and graph sizes to its lanes; neither is capped here.
+ */
+const COL_MAX: Record<GraphColumnId, number> = {
+  branch: 480,
+  graph: 2000,
+  message: Number.POSITIVE_INFINITY,
+  deployment: 220,
+  author: 360,
+  date: 240,
+  sha: 140,
+  signature: 180
+}
+const clampCol = (id: GraphColumnId, width: number): number =>
+  id === 'message' || width <= 0 ? width : Math.min(COL_MAX[id], Math.max(COL_MIN[id], width))
 const COL_LABEL_KEY: Record<GraphColumnId, string> = {
   branch: 'graph.col.branch',
   graph: 'graph.col.graph',
@@ -47,6 +67,11 @@ const COL_LABEL_KEY: Record<GraphColumnId, string> = {
   date: 'graph.col.date',
   sha: 'graph.col.sha',
   signature: 'graph.col.signature'
+}
+
+/** A commit's date as the date column shows it (absolute forms: lib/commitDate). */
+function formatCommitDate(unixSeconds: number, format: 'relative' | 'datetime' | 'iso'): string {
+  return format === 'relative' ? timeAgo(unixSeconds) : formatAbsoluteDate(unixSeconds, format)
 }
 
 const WIP_HASH = '__WIP__'
@@ -340,7 +365,7 @@ function GraphColumnsHeader({
         got += take
       }
       // The flex column grows/shrinks by layout, never by a stored width.
-      if (growId && growId !== 'message') w[growId] = base[growId] + got
+      if (growId && growId !== 'message') w[growId] = clampCol(growId, base[growId] + got)
       for (const c of visibleCols) if (c !== 'message' && w[c] !== base[c]) touched.add(c)
       if (!touched.size) return
       const updates: Partial<Record<GraphColumnId, number>> = {}
@@ -371,19 +396,70 @@ function GraphColumnsHeader({
     window.addEventListener('pointercancel', up)
   }
 
+  // Double-click a divider: size the column to its widest content, the way
+  // Finder and spreadsheets do. Measures the rows on screen (the list is
+  // virtualized, so that is what exists) plus the heading. The message column
+  // fills the remaining space, so its divider fits the column to its right; the
+  // graph column goes back to sizing itself to its lanes.
+  const CELL_SELECTOR: Partial<Record<GraphColumnId, string>> = {
+    branch: '.graph-refs',
+    deployment: '.row-deploy',
+    author: '.row-author',
+    date: '.row-date',
+    sha: '.row-sha',
+    signature: '.row-signature'
+  }
+  // Width a column needs: its widest visible entry or its heading, whichever is
+  // wider — measured as text, not as cell boxes (a box is at least the current
+  // width, so fitting would only ever grow). Capped at a share of the graph.
+  const measureColumn = (target: GraphColumnId): number | null => {
+    const selector = CELL_SELECTOR[target]
+    const scroller = headerRef.current?.parentElement?.querySelector('.graph-scroll')
+    if (!selector || !scroller) return null
+    const textWidth = (el: HTMLElement): number => {
+      const range = document.createRange()
+      range.selectNodeContents(el)
+      const style = getComputedStyle(el)
+      return range.getBoundingClientRect().width + parseFloat(style.paddingLeft) + parseFloat(style.paddingRight)
+    }
+    let widest = 0
+    for (const cell of scroller.querySelectorAll<HTMLElement>(selector)) widest = Math.max(widest, textWidth(cell))
+    const label = headerRef.current?.querySelector<HTMLElement>(`[data-col="${target}"] .ghc-label`)
+    // The heading: its label, the cell padding, and room for a filter button.
+    if (label) widest = Math.max(widest, label.getBoundingClientRect().width + 18 + (target === 'author' ? 18 : 0))
+    if (widest <= 0) return null
+    const FIT_SHARE = 0.35
+    const share = Math.floor((headerRef.current?.clientWidth ?? Number.POSITIVE_INFINITY) * FIT_SHARE)
+    return clampCol(target, Math.min(Math.ceil(widest), share))
+  }
+
+  // Double-click any divider: fit every column at once, so the table uses its
+  // space well in one gesture. The message fills what is left, and the graph
+  // column goes back to sizing itself to its lanes.
+  const fitAllColumns = (): void => {
+    const updates: Partial<Record<GraphColumnId, number>> = { graph: 0 }
+    for (const id of visibleCols) {
+      if (id === 'message' || id === 'graph') continue
+      const w = measureColumn(id)
+      if (w !== null) updates[id] = w
+    }
+    onResize(updates)
+  }
+
   const handle = (dividerLeft: GraphColumnId): React.JSX.Element => (
     <span
       className="col-resize col-resize-right"
       draggable={false}
       onDragStart={(e) => e.preventDefault()}
       onPointerDown={(e) => startResize(dividerLeft, e)}
+      onDoubleClick={fitAllColumns}
     />
   )
 
   return (
     <div className="graph-header" ref={headerRef}>
       {columns.branch.visible && (
-        <div className="ghc" style={{ width: branchCol }}>
+        <div className="ghc" data-col="branch" style={{ width: branchCol }}>
           <span className="ghc-label">{t(COL_LABEL_KEY.branch as Parameters<typeof t>[0])}</span>
           {handle('branch')}
         </div>
@@ -402,6 +478,7 @@ function GraphColumnsHeader({
           return (
             <div
               key={id}
+              data-col={id}
               className={`ghc ghc-drag ${isFlex ? 'ghc-flex' : ''} ${dragId === id ? 'dragging' : ''} ${dropId === id ? 'drop-target' : ''}`}
               style={isFlex ? undefined : { width: columns[id].width }}
               draggable
@@ -477,14 +554,21 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
   const toast = useUIStore((s) => s.toast)
   const scrollToHash = useUIStore((s) => s.scrollToHash)
   const requestScrollTo = useUIStore((s) => s.requestScrollTo)
-  const relativeDates = useSettingsStore((s) => s.settings.relativeDates ?? true)
+  const dateFormat = useSettingsStore((s) => s.settings.dateFormat ?? 'relative')
   const autoLoadOnScroll = useSettingsStore((s) => s.settings.autoLoadOnScroll ?? true)
   const baseColumns = useSettingsStore((s) => s.settings.graphColumns ?? defaultGraphColumns())
   const baseColumnOrder = useSettingsStore((s) => s.settings.graphColumnOrder ?? defaultGraphColumnOrder())
   const repoLayout = useSettingsStore((s) => s.settings.repoLayouts?.[repo.path])
   // Graph columns are per-repository: a repo's own override wins, otherwise the
   // global defaults apply.
-  const columns = useMemo(() => repoLayout?.graphColumns ?? baseColumns, [repoLayout, baseColumns])
+  // Stored widths are clamped on the way in, so a column saved too wide (before
+  // the caps existed) comes back to a sensible size by itself.
+  const columns = useMemo(() => {
+    const raw = repoLayout?.graphColumns ?? baseColumns
+    const out = { ...raw }
+    for (const id of Object.keys(out) as GraphColumnId[]) out[id] = { ...out[id], width: clampCol(id, out[id].width) }
+    return out
+  }, [repoLayout, baseColumns])
   const columnOrderRaw = useMemo(
     () => repoLayout?.graphColumnOrder ?? baseColumnOrder,
     [repoLayout, baseColumnOrder]
@@ -592,16 +676,8 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
   }
   const scrollRef = useRef<HTMLDivElement>(null)
 
-  const fmtDate = (unix: number): string =>
-    relativeDates
-      ? timeAgo(unix)
-      : new Date(unix * 1000).toLocaleString(undefined, {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-        })
+  const showBody = useSettingsStore((s) => s.settings.graphShowBody ?? false)
+  const fmtDate = (unix: number): string => formatCommitDate(unix, dateFormat)
 
   const hasWip =
     (repo.status?.staged.length ?? 0) + (repo.status?.unstaged.length ?? 0) + (repo.status?.conflicted.length ?? 0) > 0
@@ -709,10 +785,16 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
   // stay correct regardless of which rows are in the DOM.
   const [scrollTop, setScrollTop] = useState(0)
   const [viewportH, setViewportH] = useState(0)
+  // The width the rows have to fill, so branch and graph can give way before
+  // the message does (see fitBranchAndGraph).
+  const [viewportW, setViewportW] = useState(0)
   useEffect(() => {
     const el = scrollRef.current
     if (!el) return
-    const measure = (): void => setViewportH(el.clientHeight)
+    const measure = (): void => {
+      setViewportH(el.clientHeight)
+      setViewportW(el.clientWidth)
+    }
     measure()
     if (typeof ResizeObserver === 'undefined') return
     const ro = new ResizeObserver(measure)
@@ -793,8 +875,24 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
     return vis.sort((a, b) => Math.max(b.fromLane, b.toLane) - Math.max(a.fromLane, a.toLane))
   }, [layout, firstRow, lastRow])
   const filter = graphFilter.trim().toLowerCase()
-  const branchCol = columns.branch.visible ? columns.branch.width : 0
-  const graphCol = columns.graph.visible ? (columns.graph.width > 0 ? columns.graph.width : graphAuto) : 0
+  const storedBranch = columns.branch.visible ? columns.branch.width : 0
+  const storedGraph = columns.graph.visible ? (columns.graph.width > 0 ? columns.graph.width : graphAuto) : 0
+  // In a narrow graph (a small window, the details panel open) the branch and
+  // graph columns give way before the message does. Display widths only: the
+  // stored ones come back as soon as there is room.
+  const fixedFlow =
+    columnOrder
+      .filter((id) => columns[id].visible && id !== 'message')
+      .reduce((n, id) => n + columns[id].width, 0) + 26
+  const { branch: branchCol, graph: graphCol } = fitBranchAndGraph({
+    available: viewportW,
+    branch: storedBranch,
+    graph: storedGraph,
+    fixed: fixedFlow,
+    messageComfort: 260,
+    minBranch: COL_MIN.branch,
+    minGraph: Math.min(storedGraph, LEFT_PAD + 2 * LANE_W + 18)
+  })
 
   // Distinct authors present in the loaded commits, for the author filter menu.
   const authorOptions = useMemo<FilterOption[]>(() => {
@@ -889,6 +987,12 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
   const onScroll = (): void => {
     const el = scrollRef.current
     if (!el) return
+    // The header sits outside the scroller, so a sideways scroll (a narrow window
+    // where the columns no longer fit, a trackpad swipe) moved the rows but not
+    // their headings — dates ended up under GRAPH. Mirror it synchronously, not
+    // in the rAF below, so the header never lags a frame behind.
+    const header = el.parentElement?.querySelector<HTMLElement>(':scope > .graph-header')
+    if (header && header.scrollLeft !== el.scrollLeft) header.scrollLeft = el.scrollLeft
     if (scrollRaf.current == null) {
       scrollRaf.current = requestAnimationFrame(() => {
         scrollRaf.current = null
@@ -2089,14 +2193,14 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
                         </span>
                       </span>
                     ) : stash ? (
-                      <span key="message" className="row-subject stash-subject" title={stash.message}>
+                      <span key="message" className="row-subject stash-subject" data-tip={stash.message} data-tip-delay="labelled">
                         <span className="ref-badge ref-stash">
                           <Archive size={10} />
                           <span className="stash-msg">{stash.message}</span>
                         </span>
                       </span>
                     ) : (
-                      <span key="message" className="row-subject" title={c.subject}>
+                      <span key="message" className="row-subject" data-tip={c.subject} data-tip-delay="labelled">
                         {newSet.has(c.hash) && <span className="row-new-badge">new</span>}
                         {/* A note is invisible in a plain log, so the row is the
                             only place anyone would find out it exists. */}
@@ -2115,6 +2219,7 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
                           </span>
                         )}
                         <span className="row-subject-text">{c.subject}</span>
+                        {showBody && c.bodyPreview && <span className="row-body-text">{c.bodyPreview}</span>}
                       </span>
                     )
                   if (id === 'deployment')
@@ -2152,7 +2257,18 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
                         className="row-date"
                         style={{ flex: `0 0 ${columns.date.width}px`, width: columns.date.width }}
                       >
-                        {isWip ? '' : stash ? fmtDate(stash.date) : fmtDate(c.date)}
+                        {!isWip &&
+                          (dateFormat === 'relative' ? (
+                            // Relative in the column; the hovered row shows the exact moment.
+                            <>
+                              <span className="date-rel">{fmtDate(stash ? stash.date : c.date)}</span>
+                              <span className="date-abs">
+                                {formatCommitDate(stash ? stash.date : c.date, 'datetime')}
+                              </span>
+                            </>
+                          ) : (
+                            fmtDate(stash ? stash.date : c.date)
+                          ))}
                       </span>
                     )
                   if (id === 'signature')

@@ -2,7 +2,7 @@ import { describe, it, expect, afterAll } from 'vitest'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { execFileSync } from 'node:child_process'
 import { join } from 'node:path'
-import { gitService } from '../src/main/git'
+import { gitService, previewBody } from '../src/main/git'
 import { cloneFixture, cleanupFixtures } from './fixtures'
 import { parseDiff } from '../src/renderer/src/lib/diff'
 import { buildLinePatch, extractHunks, singleHunkPatch } from '../src/renderer/src/lib/hunkPatch'
@@ -139,5 +139,22 @@ describe('hunk actions', () => {
     const before = config(R)
     await expect(gitService.applyHunkPatch(R, patch, 'worktree', true)).rejects.toThrow(/patch does not apply|patch failed/)
     expect(config(R)).toBe(before)
+  })
+})
+
+describe('graph body preview', () => {
+  it('drops trailers, joins lines, and only shows up when the commit has a body', async () => {
+    expect(previewBody('Explain why.\n\nSecond paragraph.\n\nCo-authored-by: A <a@x>\nSigned-off-by: B <b@x>\n')).toBe(
+      'Explain why. Second paragraph.'
+    )
+    expect(previewBody('   \n')).toBe('')
+
+    const R = cloneFixture('line-staging')
+    git(R, 'commit', '-qam', 'enable debug and tls', '-m', 'Needed for the staging rollout.\n\nCo-authored-by: Pat <pat@example.com>')
+    const [head] = await gitService.log(R, 5)
+    expect(head.subject).toBe('enable debug and tls')
+    expect(head.bodyPreview).toBe('Needed for the staging rollout.')
+    const older = (await gitService.log(R, 5)).find((c) => c.subject.startsWith('init'))
+    expect(older?.bodyPreview).toBeUndefined()
   })
 })

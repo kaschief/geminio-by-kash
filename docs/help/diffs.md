@@ -21,12 +21,13 @@ view stays in place but greyed out, so the row never shifts under the pointer.
 | **Unified ↔ split** | Side-by-side when you want to compare, stacked when you want to read |
 | **Word-level** | Highlights just the changed tokens inside an edited line — red on the old, green on the new |
 | **Ignore whitespace** | Hides reindentation so the real change surfaces |
-| **Wrap** (split only) | Folds long lines inside their column instead of scrolling them |
+| **Wrap** | Folds long lines inside their row (or column, in split view) instead of scrolling the diff sideways |
 | **Linked** (split, wrap off) | Scrolls both halves together, vertically and sideways — off, each column scrolls on its own |
 | **Find** / <kbd>⌘F</kbd> | Find inside the diff, with next/previous stepping; <kbd>Esc</kbd> closes it |
 
-Wrap is off by default, so one line stays on one row and the two sides remain
-comparable row for row; each half carries its own sideways scrollbar. Turn
+Wrap is off by default, so one line stays on one row. In split view that keeps
+the two sides comparable row for row, with each half carrying its own sideways
+scrollbar. Turn
 it on when you would rather read a long line than chase it — the cost is that a
 line folding over three rows on one side no longer sits opposite its
 counterpart. Every toggle remembers its state across files and sessions.
@@ -39,6 +40,16 @@ or when you want to compare two distant regions of the same file, and park each
 half where its own content is.
 
 ![Split diff with word-level highlighting](../screenshots/split-diff.webp)
+
+### Hunk headers
+
+Each hunk opens with a header such as `@@ -396,7 +396,7 @@ if barstate.islast`.
+The numbers say where the hunk sits: it starts at line 396, and 7 lines are
+shown on each side. The text after them is the code git found enclosing the
+change, usually the function or block it belongs to. Git guesses it from the
+indentation and keywords, so in some languages it is the nearest line that
+merely looks like a heading. To show only the line numbers, turn off **Code
+context in hunk headers** in Settings → Files & Diffs.
 
 Above every diff sits the [semantic summary](semantic-diff.md) — what changed,
 symbol by symbol, rather than line by line.
@@ -64,7 +75,7 @@ lines, with next/previous to step through every change in the file.
 The **minimap**, off by default, adds a scaled overview of the whole file at
 the right edge — click or drag it to jump around, the way a scrollbar would if
 it could also show you the shape of the file. Both are per-machine toggles
-under **Settings → General → File viewer**.
+under **Settings → Files & Diffs → File viewer**.
 
 Neither reads history: switch to Diff, Blame or an older commit and the gutter
 disappears — those views already show every change directly.

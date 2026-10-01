@@ -1,3 +1,4 @@
+import { useAiReady } from './useAiReady'
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
@@ -119,7 +120,7 @@ export function CommandPalette(): React.JSX.Element {
   const repos = useRepoStore((s) => s.repos)
   const tabs = useSettingsStore((s) => s.settings.tabs)
   const activeTabId = useSettingsStore((s) => s.settings.activeTabId)
-  const aiEnabled = useSettingsStore((s) => s.activeProfile().ai.enabled !== false)
+  const aiEnabled = useAiReady('chat')
   const analyzerMode = useSettingsStore((s) => s.settings.analyzerMode ?? 'onOpen')
   const editor = useSettingsStore((s) => s.settings.editor)
 

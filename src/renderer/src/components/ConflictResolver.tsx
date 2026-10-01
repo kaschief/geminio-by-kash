@@ -1,3 +1,4 @@
+import { useAiReady } from './useAiReady'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Boxes, Check, ChevronDown, ChevronUp, ExternalLink, GitMerge, History, Link2, Lock, Minus, Pencil, Plus, RotateCcw, Sparkles, Loader2, Unlink2, WrapText, X } from 'lucide-react'
 import hljs from 'highlight.js'
@@ -70,7 +71,7 @@ export function ConflictResolver({ view }: { view: ConflictViewState }): React.J
   const refresh = useRepoStore((s) => s.refresh)
   const ctx = useRepoStore((s) => s.repos[view.repoPath]?.conflictContext ?? null)
   const t = useT()
-  const aiEnabled = useSettingsStore((s) => s.activeProfile().ai.enabled !== false)
+  const aiEnabled = useAiReady('conflict')
   const [replayed, setReplayed] = useState(false)
   const [mergeTool, setMergeTool] = useState('')
   const [toolRunning, setToolRunning] = useState(false)
@@ -277,7 +278,7 @@ export function ConflictResolver({ view }: { view: ConflictViewState }): React.J
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent): void => {
-      if (e.key === 'Escape' && !useUIStore.getState().modal) {
+      if (e.key === 'Escape' && !e.defaultPrevented && !useUIStore.getState().modal) {
         setConflictView(null)
         return
       }

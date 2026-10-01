@@ -1,3 +1,4 @@
+import { useAiReady } from './useAiReady'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Settings, ShieldCheck, Loader2, BarChart3, History, ScrollText, Flame, Info, KeyRound, FileCog } from 'lucide-react'
 import { gitApi, logApi } from '../infrastructure/api'
@@ -133,7 +134,7 @@ function GeneralTab({ repoPath }: { repoPath: string }): React.JSX.Element {
 
 export function RepoSettingsModal({ repoPath, initialTab }: { repoPath: string; initialTab?: Tab }): React.JSX.Element {
   const repo = useRepoStore((s) => s.repos[repoPath])
-  const aiEnabled = useSettingsStore((s) => s.activeProfile().ai.enabled !== false)
+  const aiEnabled = useAiReady('chat')
   const t = useT()
   const [tab, setTab] = useState<Tab>(initialTab ?? 'general')
   // Easter egg: five title clicks inside 1.5s open the cosmos view. Deliberately

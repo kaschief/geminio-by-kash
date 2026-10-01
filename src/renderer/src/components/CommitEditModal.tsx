@@ -1,3 +1,4 @@
+import { useAiReady } from './useAiReady'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle, Check, CircleSlash, GitMerge, Loader2, Radar, Sparkles, SquarePen, Upload } from 'lucide-react'
 import type { CommitEditInfo, CommitEditPreview, FileEntry } from '../../../shared/types'
@@ -38,7 +39,7 @@ export function CommitEditModal({
   const [preview, setPreview] = useState<CommitEditPreview | null>(null)
   const [busy, setBusy] = useState(false)
   const [aiBusy, setAiBusy] = useState(false)
-  const aiEnabled = useSettingsStore((s) => s.activeProfile().ai.enabled !== false)
+  const aiEnabled = useAiReady('commit')
   const aiFor = useSettingsStore((s) => s.aiFor)
   const branch = useRepoStore((s) => s.repos[repoPath]?.branches.current ?? '')
 
@@ -123,7 +124,6 @@ export function CommitEditModal({
       const msg = await aiApi.commitMessage(diff, aiFor('commit'), { branch })
       setMessage(msg.description ? `${msg.summary}\n\n${msg.description}` : msg.summary)
       setPreview(null)
-      toast('success', t('commitPanel.aiGenerated'))
     } catch (err) {
       toast('error', err instanceof Error ? err.message : String(err))
     } finally {

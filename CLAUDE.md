@@ -111,9 +111,11 @@ non-reference locale gets raw English in the middle of a translated UI.
 
 ### The four rules
 
-**1. Add the key to every locale file.** `Dict` is derived from the reference
-locale, so a missing entry is a compile error. Never clear that error by
-copying the English text across — translate it.
+**1. Add the key to `en.ts` only.** This fork is maintained in English. The
+other locale files are kept (so upstream's changes to them still merge) but are
+typed `Partial`, and any key they lack falls back to English at runtime. Do not
+add translations for new strings, and do not copy English text into other
+locales.
 
 **2. Render through the hook.** `useT()` re-renders on a language switch. Call
 it at the top of the component, above any early return.
@@ -367,7 +369,7 @@ redaction logic in production code.
 ## 9. Before you say you are done
 
 - [ ] `npm run typecheck` passes
-- [ ] `npm run lint:i18n` passes — every new string is in **every** locale file
+- [ ] `npm run lint:i18n` passes — every new string is a key in `en.ts`
 - [ ] `npm run lint:docs` passes — every new surface has a handbook page
 - [ ] `npm test` passes
 - [ ] `npm run build` succeeds

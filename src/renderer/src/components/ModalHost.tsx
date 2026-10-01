@@ -1,3 +1,4 @@
+import { useAiReady } from './useAiReady'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X, Globe, Github, Gitlab, Cloud, Server, Loader2, Search, Lock, FolderGit2, Folder, Plus, Check, ChevronDown, ChevronRight, RefreshCw, Sparkles, GitMerge, ArrowUpFromLine, TextCursorInput } from 'lucide-react'
@@ -346,7 +347,7 @@ function CreateBranchModal({ spec }: { spec: Extract<ModalSpec, { kind: 'create-
   const toast = useUIStore((s) => s.toast)
   const profile = useSettingsStore((s) => s.activeProfile())
   const aiFor = useSettingsStore((s) => s.aiFor)
-  const aiEnabled = profile.ai.enabled !== false
+  const aiEnabled = useAiReady('chat')
 
   const [name, setName] = useState('')
   const [description, setDescription] = useState(spec.description ?? '')

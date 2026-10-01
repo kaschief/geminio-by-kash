@@ -10,13 +10,18 @@ import { createPortal } from 'react-dom'
  * name is the only explanation. One listener on the document serves every such
  * control, so a button opts in with an attribute instead of a wrapper.
  *
- * Opted-in elements must not also carry `title`, or both tips would show.
- * They keep an `aria-label`: this is a visual aid, the label is what a screen
- * reader announces.
+ * Buttons that only carry a `title` are taken over as well (see adoptTitle),
+ * so there is one tooltip style in the app, never the system's.
  */
 
 /** First tip waits this long, so sweeping the pointer across a toolbar stays quiet. */
 const SHOW_DELAY_MS = 250
+/**
+ * A labelled button already says what it is; its tip only adds detail, so it
+ * waits until the pointer has clearly settled — the same bubble, never the
+ * system's, but out of the way of anyone just passing over.
+ */
+const LABELLED_DELAY_MS = 900
 /** Moving to a neighbour this soon after a tip closed shows its tip at once. */
 const WARM_WINDOW_MS = 600
 /** Gap between the control and its tip, and the minimum margin from the window edge. */
@@ -28,8 +33,54 @@ interface Tip {
   anchor: DOMRect
 }
 
+const TITLED_CONTROL = 'button[title], [role="button"][title]'
+
+/** Normalised words, for comparing a tip with the text already on the button. */
+function words(text: string): string {
+  return text.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
+}
+
+/**
+ * Hand a control's native `title` to this bubble, so every tip in the app
+ * looks the same and none waits on the system's one-second delay.
+ *
+ * - A title that only repeats the visible label ("Push" on Push) is dropped:
+ *   a tip that says what the button already says is noise.
+ * - On a labelled button (a visible word of three or more letters) the tip
+ *   adds detail, so it waits longer (see LABELLED_DELAY_MS).
+ * - On an icon, or a glyph like "Aa" or ".*", the tip is the explanation, so
+ *   it is quick.
+ *
+ * The title stays with screen readers: on an icon it was the accessible name;
+ * next to a visible label the label stays the name (a name that differs from
+ * the screen breaks voice control) and the title becomes the description.
+ */
+function adoptTitle(el: HTMLElement): void {
+  const title = el.getAttribute('title')
+  if (!title) return
+  const label = (el.textContent ?? '').trim()
+  const labelled = /\p{L}{3,}/u.test(label)
+  el.removeAttribute('title')
+  if (!el.hasAttribute('aria-label') && !el.hasAttribute('aria-labelledby')) {
+    if (labelled) el.setAttribute('aria-description', title)
+    else el.setAttribute('aria-label', title)
+  }
+  const redundant = labelled && words(label).includes(words(title))
+  if (redundant) {
+    delete el.dataset.tip
+    return
+  }
+  el.dataset.tip = title
+  if (labelled) el.dataset.tipDelay = 'labelled'
+  else delete el.dataset.tipDelay
+}
+
 function tipTarget(node: EventTarget | null): HTMLElement | null {
-  return node instanceof Element ? (node.closest('[data-tip]') as HTMLElement | null) : null
+  if (!(node instanceof Element)) return null
+  const titled = node.closest(TITLED_CONTROL) as HTMLElement | null
+  // React re-sets `title` when the prop changes; adopting again keeps the new text.
+  if (titled) adoptTitle(titled)
+  return node.closest('[data-tip]') as HTMLElement | null
 }
 
 export function FastTooltip(): React.JSX.Element | null {
@@ -55,12 +106,13 @@ export function FastTooltip(): React.JSX.Element | null {
       window.clearTimeout(timer)
       current = el
       const warm = performance.now() - lastHiddenAt < WARM_WINDOW_MS
+      const delay = el.dataset.tipDelay === 'labelled' ? LABELLED_DELAY_MS : warm ? 0 : SHOW_DELAY_MS
       timer = window.setTimeout(
         () => {
           // The control may have been disabled-and-moved or unmounted meanwhile.
           if (current === el && el.isConnected) setTip({ text, anchor: el.getBoundingClientRect() })
         },
-        warm ? 0 : SHOW_DELAY_MS
+        delay
       )
     }
 

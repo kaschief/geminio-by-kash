@@ -48,10 +48,11 @@ describe('i18n', () => {
     expect(keys.filter((k, i) => keys.indexOf(k) !== i)).toEqual([])
   })
 
-  it.each(LOCALES.filter((l) => l !== 'en'))('%s covers exactly the English keys', (locale) => {
-    // `Dict = typeof en` already catches missing keys at compile time; this also
-    // catches stale keys a locale kept after English dropped them.
-    expect([...keysOf(source(locale))].sort()).toEqual([...keysOf(source('en'))].sort())
+  it.each(LOCALES.filter((l) => l !== 'en'))('%s has no keys English has dropped', (locale) => {
+    // Locales may lag behind English (this fork adds strings in English only;
+    // missing keys fall back to it), but a key English no longer has is dead.
+    const english = new Set(keysOf(source('en')))
+    expect([...keysOf(source(locale))].filter((k) => !english.has(k))).toEqual([])
   })
 
   it.each(LOCALES.filter((l) => l !== 'en'))(

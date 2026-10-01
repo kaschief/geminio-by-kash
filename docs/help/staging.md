@@ -41,6 +41,12 @@ keeps git's own order, which is by byte value, so `Zeta.md` comes before
 there. The choice applies to every file list (staging, commit details and
 stashes) and is remembered.
 
+Deep paths never push the file name off the row. When space runs out, folders
+give way from the left (`…/code/indicator/revelio.pine`). To keep paths short
+even when there is room, set **Folders shown in paths** in Settings →
+Files & Diffs: all of them, the last three, two or one, or none at all. A
+shortened path starts with `…/`, and hovering it shows the whole path.
+
 ## Three levels of precision
 
 | Level | How |
@@ -91,7 +97,13 @@ The limits:
 ## Discarding
 
 Discard works at the same levels, and always asks. Untracked files are deleted;
-tracked ones go back to their staged (or committed) state.
+tracked ones go back to their staged (or committed) state. The right-click
+entry names what it discards ("Discard Changes to kash-os.pine", or "… to 3
+Files" for a selection), so it never reads as discarding everything.
+
+To throw away everything at once, staged and unstaged, use the red trash
+button at the top-left of the changes panel (**Discard All Changes**). It asks
+first, and the files it removes are not recoverable from git.
 
 ## Keyboard
 

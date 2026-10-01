@@ -1,3 +1,4 @@
+import { useAiReady } from './useAiReady'
 import { useEffect, useRef, useState } from 'react'
 import { GitPullRequest, Loader2, ExternalLink, ArrowRight, Sparkles } from 'lucide-react'
 import { gitApi, hostingApi, aiApi } from '../infrastructure/api'
@@ -40,7 +41,7 @@ export function CreatePRModal({ spec }: { spec: Extract<ModalSpec, { kind: 'crea
   const [reviewers, setReviewers] = useState('')
   const [labels, setLabels] = useState('')
   const [assignees, setAssignees] = useState('')
-  const aiEnabled = profile.ai?.enabled !== false
+  const aiEnabled = useAiReady('review')
   const t = useT()
 
   // Draft the PR title + body from the branch's commits + diff via AI.

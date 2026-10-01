@@ -74,10 +74,14 @@ No provider publishes a ranked or curated list, so the shaping is Gitcito's: dat
 
 ## What it can do
 
+AI buttons, menu entries and the Chat tab only appear once an AI provider is
+actually set up: AI switched on *and* a key stored (or a provider that needs
+none). Until then they stay hidden, rather than offering an action whose only
+outcome is "No AI API key configured".
+
 | Feature | What you get |
 |---|---|
 | **Commit message** | Summary (and optional body) from your staged diff, in your chosen style |
-| **Explain this file** | Plain-language explanation in a side panel — Normal, Concise, ELI5… even Pirate |
 | **Hover to explain** | Hold <kbd>⇧</kbd> and point at an identifier for a one-line explanation, plus the lines it drew on |
 | **Conflict resolution** | Proposes a merge into the editable output — never auto-applies |
 | **PR review** | Summarises a diff and flags risks, each anchored to a real `path:line` |

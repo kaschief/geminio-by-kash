@@ -1017,6 +1017,23 @@ async function mergeHunkIntoFile(
   }
 }
 
+/**
+ * A commit body as one line for the graph: trailer lines (`Co-authored-by:`,
+ * `Signed-off-by:` …) dropped — they are metadata, shown elsewhere — and the
+ * rest joined by single spaces. `%<(N,trunc)` pads short bodies with spaces and
+ * marks cut ones with `..`, so both are tidied here.
+ */
+export function previewBody(raw: string): string {
+  return raw
+    .split('\n')
+    .map((l) => l.trim())
+    .filter((l) => l && !/^[A-Za-z][A-Za-z-]*-by:\s|^Change-Id:\s/.test(l))
+    .join(' ')
+    .replace(/\s+/g, ' ')
+    .replace(/\.\.$/, '…')
+    .trim()
+}
+
 async function guardSnapshot(repoPath: string): Promise<void> {
   try {
     const settings = await readSettings()
@@ -1709,7 +1726,9 @@ export const gitService = {
       '--date-order',
       `--max-count=${maxCount}`,
       ...(skip > 0 ? [`--skip=${skip}`] : []),
-      `--pretty=format:%H${SEP}%P${SEP}%an${SEP}%ae${SEP}%at${SEP}%D${SEP}%s${SEP}%(trailers:key=Co-authored-by,valueonly,separator=%x1d)${SEP}%G?${SEP}%GS${REC}`
+      // `%<(160,trunc)%b`: only the start of the body — the graph shows a one-line
+      // preview, and full bodies for thousands of commits would be wasted bytes.
+      `--pretty=format:%H${SEP}%P${SEP}%an${SEP}%ae${SEP}%at${SEP}%D${SEP}%s${SEP}%(trailers:key=Co-authored-by,valueonly,separator=%x1d)${SEP}%G?${SEP}%GS${SEP}%<(160,trunc)%b${REC}`
     ]
     let raw = ''
     try {
@@ -1730,8 +1749,9 @@ export const gitService = {
       .map((r) => r.trim())
       .filter(Boolean)
       .map((rec) => {
-        const [hash, parents, author, email, date, refs, subject, coauthors, sigChar, signer] = rec.split(SEP)
+        const [hash, parents, author, email, date, refs, subject, coauthors, sigChar, signer, body] = rec.split(SEP)
         const signature = mapSignature(sigChar)
+        const bodyPreview = previewBody(body ?? '')
         return {
           hash,
           parents: parents ? parents.split(' ').filter(Boolean) : [],
@@ -1747,7 +1767,8 @@ export const gitService = {
           subject: subject ?? '',
           coAuthors: parseCoAuthors(coauthors),
           signature: signature === 'none' ? undefined : signature,
-          signer: signer?.trim() || undefined
+          signer: signer?.trim() || undefined,
+          ...(bodyPreview ? { bodyPreview } : {})
         }
       })
   },

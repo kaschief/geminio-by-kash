@@ -674,6 +674,7 @@ export const aiApi = {
     window.api.ai.explainCode(code, lang, cfg) as Promise<string>,
   hoverExplain: (req: HoverExplainRequest, cfg: AIConfig) =>
     window.api.ai.hoverExplain(req, cfg) as Promise<HoverExplainResult>,
+  ready: (cfg: AIConfig) => window.api.ai.ready(cfg) as Promise<boolean>,
   resolveConflict: (file: string, content: string, cfg: AIConfig) =>
     window.api.ai.resolveConflict(file, content, cfg) as Promise<string>,
   generateConfig: (repoName: string, artifacts: ArtifactRequest[], context: string, cfg: AIConfig) =>

@@ -29,7 +29,7 @@ listed next to their commands in the [menu bar](menu-bar.md).
 | <kbd>⌘⇧T</kbd> | Reopen the last closed tab |
 | <kbd>⌃`</kbd> | Show or hide the [integrated terminal](terminal.md) — the physical Control key on every platform |
 | <kbd>⌘⇧E</kbd> / <kbd>Ctrl+Shift+E</kbd> | Show or hide the left sidebar |
-| <kbd>⌘⌥B</kbd> / <kbd>Ctrl+Alt+B</kbd> | Show or hide the right panel — Details, or [Repository chat](repo-chat.md) |
+| <kbd>⌘⌥B</kbd> / <kbd>Ctrl+Alt+B</kbd> | Show or hide the right panel (also the panel button at the right end of the toolbar). Reopening brings back what it last showed, or your uncommitted changes, or the newest commit |
 | <kbd>?</kbd> | This cheatsheet |
 
 While the terminal has focus, <kbd>⌘T</kbd> / <kbd>Ctrl+T</kbd> opens another

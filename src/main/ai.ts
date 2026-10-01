@@ -1004,6 +1004,10 @@ export function registerAiHandlers(): void {
   ipcMain.handle('ai:detectCli', () => detectCliBinaries())
   ipcMain.handle('ai:explainCode', (_e, code: string, lang: string, cfg: AIConfig) => explainCode(code, lang, cfg))
   ipcMain.handle('ai:hoverExplain', (_e, req: HoverExplainRequest, cfg: AIConfig) => hoverExplain(req, cfg))
+  // Whether a model call could run at all: a key (stored or typed) or a provider
+  // that needs none. Lets the UI hide AI actions that would only fail, instead of
+  // offering a button whose one outcome is "No AI API key configured".
+  ipcMain.handle('ai:ready', async (_e, cfg: AIConfig) => !missingCredential(await withStoredKey(cfg)))
   ipcMain.handle('ai:resolveConflict', (_e, file: string, content: string, cfg: AIConfig) =>
     resolveConflictAI(file, content, cfg)
   )

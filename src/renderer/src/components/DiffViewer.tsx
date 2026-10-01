@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import {
-  SplitSquareHorizontal,
+  Highlighter,
   Columns2,
   Pilcrow,
   Search,
@@ -17,6 +17,7 @@ import { highlightLine } from '../lib/highlight'
 import { maskSecretLine } from '../lib/secrets'
 import { useT, interp } from '../i18n'
 import { buildLinePatch, extractHunks, singleHunkPatch } from '../lib/hunkPatch'
+import { useAiReady } from './useAiReady'
 import { useSettingsStore } from '../stores/settings'
 import { useHoverExplain } from './HoverExplain'
 import type { NumberedLine } from '../../../shared/types'
@@ -24,6 +25,7 @@ import {
   parseDiff,
   wordRangesByLine,
   buildSplitRows,
+  splitHunkHeader,
   type DiffLine,
   type Range,
   type SplitCell,
@@ -79,8 +81,9 @@ export interface HunkAction {
   linesLabel: (n: number) => string
   /** The patch will be applied reversed, so a line selection is built mirrored. */
   reverse: boolean
-  /** Throws work away — drawn in the danger colour. */
-  danger?: boolean
+  /** Colour by direction: forward moves work ahead (green), backward takes it
+   *  back or away (red); neutral touches no files. */
+  intent: 'forward' | 'backward'
   run: (patch: string) => void
 }
 
@@ -135,6 +138,7 @@ export function DiffViewer({
   onToggleIgnoreWs,
   hunkActions = [],
   toolbarHost,
+  overlayHost,
   externalFind
 }: {
   diff: string
@@ -158,6 +162,12 @@ export function DiffViewer({
    */
   toolbarHost?: HTMLElement | null
   /**
+   * A layer over the diff that does not scroll (the file viewer has one). The
+   * line-selection actions then float there as a pill instead of a strip that
+   * pushes the diff down mid-click. Same `null` meaning as `toolbarHost`.
+   */
+  overlayHost?: HTMLElement | null
+  /**
    * A host with its own find bar (the file viewer) passes it here. The Find
    * toggle then drives that bar and ⌘F is left to the host, so one view never
    * shows two different find bars depending on where focus happened to be.
@@ -168,7 +178,7 @@ export function DiffViewer({
   const lines = useMemo(() => parseDiff(diff), [diff])
 
   // ─── Hover-to-explain over the diff's own lines ───
-  const aiEnabled = useSettingsStore((s) => s.activeProfile().ai.enabled !== false)
+  const aiEnabled = useAiReady('explain')
   const hoverOn = useSettingsStore((s) => s.activeProfile().ai.hoverExplain !== false)
   const hoverKey = useSettingsStore((s) => s.activeProfile().ai.hoverExplainKey ?? 'shift')
   // The diff only shows hunks, so the window has gaps. Numbers come from the new
@@ -196,6 +206,18 @@ export function DiffViewer({
       return no ?? null
     }
   })
+  const showHunkContext = useSettingsStore((s) => s.settings.diffHunkContext ?? true)
+  // The @@ bar's label: line ranges, then — quieter, and optional — the code
+  // git found around the hunk.
+  const hunkLabel = (text: string): React.JSX.Element => {
+    const { range, context } = splitHunkHeader(text)
+    return (
+      <span className="diff-text diff-hunk-label">
+        <span className="diff-hunk-range">{range}</span>
+        {showHunkContext && context && <span className="diff-hunk-context">{context}</span>}
+      </span>
+    )
+  }
   const hasHunkActions = hunkActions.length > 0
   const hunkData = useMemo(() => (hasHunkActions ? extractHunks(diff) : null), [diff, hasHunkActions])
 
@@ -205,9 +227,9 @@ export function DiffViewer({
   const [splitView, setSplitView] = useState(() => localStorage.getItem('gitcito-split-diff') === 'on')
   useEffect(() => localStorage.setItem('gitcito-split-diff', splitView ? 'on' : 'off'), [splitView])
 
-  // Split-view line wrapping. Off by default: one line per row keeps the two
-  // sides row-for-row comparable, which is the point of split view. On, long
-  // lines fold inside their column instead of scrolling.
+  // Line wrapping, for both views. Off by default: one line per row keeps split
+  // view's two sides row-for-row comparable. On, long lines fold inside their
+  // row (or column) instead of making the whole diff scroll sideways.
   const [wrapOn, setWrapOn] = useState(() => localStorage.getItem('gitcito-diff-wrap') === 'on')
   useEffect(() => localStorage.setItem('gitcito-diff-wrap', wrapOn ? 'on' : 'off'), [wrapOn])
 
@@ -305,7 +327,7 @@ export function DiffViewer({
           <button
             key={a.id}
             type="button"
-            className={`btn ghost tiny diff-stage-hunk${a.danger ? ' danger' : ''}`}
+            className={`btn ghost tiny diff-stage-hunk intent-${a.intent}`}
             onClick={() => a.run(singleHunkPatch(hunkData, hunkIdx))}
           >
             {a.hunkLabel}
@@ -315,7 +337,7 @@ export function DiffViewer({
     ) : null
   const splitHunk = (r: SplitRow, key: number, side?: 'left' | 'right'): React.JSX.Element => (
     <div key={key} className="diff-split-hunk">
-      <span className="diff-text">{side === 'right' ? '' : r.hunk}</span>
+      {side === 'right' ? <span className="diff-text" /> : hunkLabel(r.hunk ?? '')}
       {side !== 'left' && r.hunkIdx !== undefined && hunkButtons(r.hunkIdx)}
     </div>
   )
@@ -388,11 +410,29 @@ export function DiffViewer({
   if (!diff.trim()) return <div className="diff-empty">{t('diff.noChanges')}</div>
 
   const hasWordDiffs = wordRanges.size > 0
+  const selectBar = (
+        <div className={`diff-select-bar${overlayHost === undefined ? '' : ' is-floating'}`} role="status">
+          <span>{interp(t('diff.linesSelected'), { n: selected.size, s: selected.size === 1 ? '' : 's' })}</span>
+          <button className="btn ghost tiny" onClick={() => setSelected(new Set())}>
+            {t('diff.clearSelection')}
+          </button>
+          {hunkActions.map((a) => (
+            <button
+              key={a.id}
+              type="button"
+              className={`btn ghost tiny intent-${a.intent}`}
+              onClick={() => runOnSelection(a)}
+            >
+              {a.linesLabel(selected.size)}
+            </button>
+          ))}
+        </div>
+  )
   const hosted = toolbarHost !== undefined
 
   // Every toggle is always present, disabled when it does not apply, so the row
-  // never reflows under the pointer: Wrap and Linked only mean anything in split
-  // view, Linked only while each column scrolls on its own (wrap off).
+  // never reflows under the pointer: Linked only means anything in split view
+  // while each column scrolls on its own (wrap off).
   const toggles = (
     <div className={hosted ? 'diff-tools' : 'diff-toggles'} role="toolbar" aria-label={t('diff.toolsLabel')}>
       <DiffToggle hosted={hosted} on={splitView} label={t('diff.split')} title={t('diff.splitTitle')} onClick={() => setSplitView((v) => !v)}>
@@ -400,10 +440,9 @@ export function DiffViewer({
       </DiffToggle>
       <DiffToggle
         hosted={hosted}
-        on={splitView && wrapOn}
-        disabled={!splitView}
+        on={wrapOn}
         label={t('diff.wrap')}
-        title={splitView ? t('diff.wrapTitle') : t('diff.splitOnlyTitle')}
+        title={t('diff.wrapTitle')}
         onClick={() => setWrapOn((v) => !v)}
       >
         <WrapText size={hosted ? 13 : 12} />
@@ -431,7 +470,7 @@ export function DiffViewer({
         title={hasWordDiffs ? t('diff.wordDiffTitle') : t('diff.wordDiffNoneTitle')}
         onClick={() => setWordDiffOn((v) => !v)}
       >
-        <SplitSquareHorizontal size={hosted ? 13 : 12} />
+        <Highlighter size={hosted ? 13 : 12} />
       </DiffToggle>
       <DiffToggle
         hosted={hosted}
@@ -448,6 +487,8 @@ export function DiffViewer({
   return (
     <div
       className={`diff-viewer hljs ${splitView ? 'is-split' : ''} ${splitView && !wrapOn ? 'is-nowrap' : ''} ${
+        !splitView && wrapOn ? 'is-wrap' : ''
+      } ${
         lines.length > HUGE_LINES ? 'is-huge' : ''
       } ${hoverArmed ? 'hover-armed' : ''}`}
       ref={viewerRef}
@@ -462,7 +503,7 @@ export function DiffViewer({
           <Search size={13} className="diff-find-icon" />
           <input
             ref={findInputRef}
-            className="diff-find-input"
+            className={`diff-find-input${findQuery.trim() && matchCount === 0 ? ' is-no-results' : ''}`}
             placeholder={t('diff.findPlaceholder')}
             value={findQuery}
             onChange={(e) => setFindQuery(e.target.value)}
@@ -472,11 +513,18 @@ export function DiffViewer({
                 stepMatch(e.shiftKey ? -1 : 1)
               } else if (e.key === 'Escape') {
                 e.preventDefault()
+                e.stopPropagation()
                 closeFind()
               }
             }}
           />
-          <span className="diff-find-count">{matchCount ? `${matchIdx + 1}/${matchCount}` : findQuery ? '0/0' : ''}</span>
+          <span className="diff-find-count" role="status" aria-live="polite">
+            {matchCount
+              ? interp(t('find.position'), { i: matchIdx + 1, n: matchCount })
+              : findQuery.trim()
+                ? t('search.noResults')
+                : ''}
+          </span>
           <button className="diff-find-btn" title={t('diff.prevMatch')} disabled={matchCount === 0} onClick={() => stepMatch(-1)}>
             <ChevronUp size={14} />
           </button>
@@ -488,25 +536,8 @@ export function DiffViewer({
           </button>
         </div>
       )}
-      {hasHunkActions && selected.size > 0 && (
-        <div className="diff-select-bar" role="status">
-          <span>{interp(t('diff.linesSelected'), { n: selected.size, s: selected.size === 1 ? '' : 's' })}</span>
-          <button className="btn ghost tiny" onClick={() => setSelected(new Set())}>
-            {t('diff.clearSelection')}
-          </button>
-          {hunkActions.map((a, i) => (
-            <button
-              key={a.id}
-              type="button"
-              // The first action is the everyday one; the rest stay quieter.
-              className={`btn tiny ${a.danger ? 'danger' : i === 0 ? 'primary' : 'ghost'}`}
-              onClick={() => runOnSelection(a)}
-            >
-              {a.linesLabel(selected.size)}
-            </button>
-          ))}
-        </div>
-      )}
+      {hasHunkActions && selected.size > 0 &&
+        (overlayHost === undefined ? selectBar : overlayHost ? createPortal(selectBar, overlayHost) : null)}
       {splitView ? (
         wrapOn ? (
           <div className="diff-split">
@@ -552,7 +583,7 @@ export function DiffViewer({
             <div key={i} className="diff-line hunk">
               <span className="diff-gutter" />
               <span className="diff-gutter" />
-              <span className="diff-text">{l.text}</span>
+              {hunkLabel(l.text)}
               {hunkButtons(l.hunkIdx)}
             </div>
           )

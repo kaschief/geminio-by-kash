@@ -1,3 +1,11 @@
+import { useAiReady } from './useAiReady'
+import { PATH_DEPTHS, displayPath } from '../lib/pathDisplay'
+import { formatAbsoluteDate } from '../lib/commitDate'
+
+/** Fixed samples for the live examples on the date and path option cards. */
+const SAMPLE_DATE = Date.UTC(2026, 8, 15, 15, 22) / 1000
+const SAMPLE_PATH = 'src/app/ui/panels/Button.tsx'
+import { NumberField } from './NumberField'
 import { useCallback, useEffect, useId, useMemo, useState, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import {
@@ -61,7 +69,8 @@ import {
   SquarePen,
   ToggleLeft,
   Keyboard,
-  Map as MapIcon
+  Map as MapIcon,
+  FileDiff
 } from 'lucide-react'
 import hljs from 'highlight.js'
 import { useSettingsStore } from '../stores/settings'
@@ -115,18 +124,24 @@ type SettingsPage =
   | 'ai'
   | 'themes'
   | 'general'
+  | 'graph'
+  | 'files'
   | 'security'
   | 'shortcuts'
   | 'data'
 
 const PAGES: { id: SettingsPage; key: TranslationKey; icon: React.ReactNode }[] = [
+  // How the app looks and is laid out first, then what each view shows, then
+  // accounts and integrations — related choices next to each other.
   { id: 'general', key: 'settings.general', icon: <Settings2 size={13} /> },
+  { id: 'themes', key: 'settings.appearance', icon: <Palette size={13} /> },
   { id: 'layout', key: 'settings.layout', icon: <PanelBottom size={13} /> },
+  { id: 'graph', key: 'settings.graph', icon: <Network size={13} /> },
+  { id: 'files', key: 'settings.filesDiffs', icon: <FileDiff size={13} /> },
   { id: 'profile', key: 'settings.profile', icon: <UserCircle2 size={13} /> },
   { id: 'workspaces', key: 'settings.workspaces', icon: <LayoutGrid size={13} /> },
   { id: 'integrations', key: 'settings.integrations', icon: <Plug size={13} /> },
   { id: 'ai', key: 'settings.ai', icon: <Bot size={13} /> },
-  { id: 'themes', key: 'settings.themes', icon: <Palette size={13} /> },
   { id: 'security', key: 'settings.security', icon: <ShieldCheck size={13} /> },
   { id: 'shortcuts', key: 'settings.shortcuts', icon: <KeyboardIcon size={13} /> },
   { id: 'data', key: 'settings.data', icon: <HardDrive size={13} /> }
@@ -1267,7 +1282,7 @@ function GraphStyleTab(): React.JSX.Element {
   const customPalettes = settings.customGraphPalettes ?? []
   const palettes = allGraphPalettes(customPalettes)
   const current = findGraphPalette(style.paletteId, customPalettes)
-  const aiEnabled = activeProfile.ai.enabled
+  const aiEnabled = useAiReady('theme')
 
   const [showEditor, setShowEditor] = useState(false)
   const [draft, setDraft] = useState<string[]>(() => toSlots(current.colors))
@@ -1548,7 +1563,7 @@ function ThemesPage({ initialTab }: { initialTab?: 'theme' | 'graph' } = {}): Re
   const currentApp = findAppTheme(settings.appThemeId, settings.customAppThemes)
   const currentCode = findCodeTheme(settings.codeThemeId, settings.customCodeThemes)
   const currentCodeColors = resolveCodeColors(currentCode, mode)
-  const aiEnabled = activeProfile.ai.enabled
+  const aiEnabled = useAiReady('theme')
 
   // Custom editor drafts (seeded from the current selection in the active mode).
   const [appDraft, setAppDraft] = useState<AppThemeColors>(resolveAppColors(currentApp, mode))
@@ -2321,7 +2336,6 @@ function LayoutPage(): React.JSX.Element {
           className="btn small layout-reset-btn"
           onClick={() => {
             useUIStore.getState().resetLayout()
-            useUIStore.getState().toast('success', t('settings.resetPanelSizesDone'))
           }}
         >
           <RotateCcw size={13} /> {t('settings.resetPanelSizes')}
@@ -2331,7 +2345,8 @@ function LayoutPage(): React.JSX.Element {
   )
 }
 
-function GeneralPage(): React.JSX.Element {
+/** Settings → Graph: what the commit list loads and shows. */
+function GraphPage(): React.JSX.Element {
   const settings = useSettingsStore((s) => s.settings)
   const update = useSettingsStore((s) => s.update)
   const t = useT()
@@ -2340,53 +2355,49 @@ function GeneralPage(): React.JSX.Element {
     <div className="settings-general">
       <div className="settings-general-header">
         <h4>
-          <Settings2 size={14} /> {t('settings.general')}
+          <Network size={14} /> {t('settings.graph')}
         </h4>
-        <p className="settings-hint">{t('settings.generalIntro')}</p>
+        <p className="settings-hint">{t('settings.graphIntro')}</p>
       </div>
-
-      <label className="settings-field">
-        <span className="settings-field-label">{t('settings.language')}</span>
-        <LanguagePicker
-          value={settings.language}
-          onChange={(language) => update((s) => ({ ...s, language }))}
-        />
-      </label>
-
-      <h4 className="settings-section-title">
-        <Network size={13} style={{ marginRight: 6, verticalAlign: '-2px' }} />
-        {t('settings.graph')}
-      </h4>
-      <p className="settings-hint">{t('settings.graphIntro')}</p>
 
       <div className="settings-grid two">
         <label className="settings-field">
           <span className="settings-field-label">{t('settings.initialCommitCount')}</span>
-          <input
-            type="number"
+          <NumberField
             min={50}
             max={5000}
             step={50}
             value={settings.initialCommitCount}
-            onChange={(e) =>
-              update((s) => ({ ...s, initialCommitCount: Math.max(50, Number(e.target.value) || 50) }))
-            }
+            onChange={(n) => update((s) => ({ ...s, initialCommitCount: n }))}
           />
           <span className="settings-hint">{t('settings.initialCommitCountHint')}</span>
         </label>
 
         <label className="settings-field">
           <span className="settings-field-label">{t('settings.loadMoreCount')}</span>
-          <input
-            type="number"
+          <NumberField
             min={50}
             max={5000}
             step={50}
             value={settings.loadMoreCount}
-            onChange={(e) => update((s) => ({ ...s, loadMoreCount: Math.max(50, Number(e.target.value) || 50) }))}
+            onChange={(n) => update((s) => ({ ...s, loadMoreCount: n }))}
           />
         </label>
       </div>
+      <label className="settings-toggle-card">
+        <input
+          type="checkbox"
+          checked={settings.graphShowBody ?? false}
+          onChange={(e) => update((s) => ({ ...s, graphShowBody: e.target.checked }))}
+        />
+        <span className="settings-toggle-control" aria-hidden="true">
+          <span className="settings-toggle-thumb" />
+        </span>
+        <span className="settings-toggle-copy">
+          <strong>{t('settings.graphShowBody')}</strong>
+          <span className="settings-hint">{t('settings.graphShowBodyHint')}</span>
+        </span>
+      </label>
 
       <div className="settings-toggle-list">
         <label className="settings-toggle-card">
@@ -2404,20 +2415,33 @@ function GeneralPage(): React.JSX.Element {
           </span>
         </label>
 
-        <label className="settings-toggle-card">
-          <input
-            type="checkbox"
-            checked={settings.relativeDates}
-            onChange={(e) => update((s) => ({ ...s, relativeDates: e.target.checked }))}
-          />
-          <span className="settings-toggle-control" aria-hidden="true">
-            <span className="settings-toggle-thumb" />
-          </span>
-          <span className="settings-toggle-copy">
-            <strong>{t('settings.relativeDates')}</strong>
-            <span className="settings-hint">{t('settings.relativeDatesHint')}</span>
-          </span>
-        </label>
+        <div className="settings-field">
+          <span className="settings-field-label">{t('settings.dateFormat')}</span>
+          <span className="settings-hint">{t('settings.dateFormatHint')}</span>
+          {/* Option cards, like every other choice in Settings; each shows a live
+              example in the reader's own locale. */}
+          <div className="layout-segmented three" role="radiogroup" aria-label={t('settings.dateFormat')}>
+            {(['relative', 'datetime', 'iso'] as const).map((f) => (
+              <button
+                key={f}
+                type="button"
+                role="radio"
+                aria-checked={(settings.dateFormat ?? 'relative') === f}
+                className={`layout-seg-btn ${(settings.dateFormat ?? 'relative') === f ? 'active' : ''}`}
+                onClick={() => update((s) => ({ ...s, dateFormat: f }))}
+              >
+                <strong>
+                  {f === 'relative'
+                    ? t('settings.dateFormatRelative')
+                    : f === 'datetime'
+                      ? t('settings.dateFormatDatetime')
+                      : t('settings.dateFormatIso')}
+                </strong>
+                <span>{f === 'relative' ? t('settings.dateFormatRelativeEx') : formatAbsoluteDate(SAMPLE_DATE, f)}</span>
+              </button>
+            ))}
+          </div>
+        </div>
 
         <label className="settings-toggle-card">
           <input
@@ -2464,21 +2488,132 @@ function GeneralPage(): React.JSX.Element {
           </span>
         </label>
 
+      </div>
+
+    </div>
+  )
+}
+
+/** Settings → Files & Diffs: how files and their changes are shown. */
+function FilesPage(): React.JSX.Element {
+  const settings = useSettingsStore((s) => s.settings)
+  const update = useSettingsStore((s) => s.update)
+  const t = useT()
+
+  return (
+    <div className="settings-general">
+      <div className="settings-general-header">
+        <h4>
+          <FileDiff size={14} /> {t('settings.filesDiffs')}
+        </h4>
+        <p className="settings-hint">{t('settings.filesDiffsIntro')}</p>
+      </div>
+      <h4 className="settings-section-title">
+        <MapIcon size={13} style={{ marginRight: 6, verticalAlign: '-2px' }} />
+        {t('settings.fileViewer')}
+      </h4>
+      <p className="settings-hint">{t('settings.fileViewerIntro')}</p>
+      <div className="settings-toggle-list">
         <label className="settings-toggle-card">
           <input
             type="checkbox"
-            checked={settings.todosHideDone}
-            onChange={(e) => update((s) => ({ ...s, todosHideDone: e.target.checked }))}
+            checked={settings.showChangeGutter}
+            onChange={(e) => update((s) => ({ ...s, showChangeGutter: e.target.checked }))}
           />
           <span className="settings-toggle-control" aria-hidden="true">
             <span className="settings-toggle-thumb" />
           </span>
           <span className="settings-toggle-copy">
-            <strong>{t('settings.todosHideDone')}</strong>
-            <span className="settings-hint">{t('settings.todosHideDoneHint')}</span>
+            <strong>{t('settings.showChangeGutter')}</strong>
+            <span className="settings-hint">{t('settings.showChangeGutterHint')}</span>
+          </span>
+        </label>
+
+        <label className="settings-toggle-card">
+          <input
+            type="checkbox"
+            checked={settings.showMinimap}
+            onChange={(e) => update((s) => ({ ...s, showMinimap: e.target.checked }))}
+          />
+          <span className="settings-toggle-control" aria-hidden="true">
+            <span className="settings-toggle-thumb" />
+          </span>
+          <span className="settings-toggle-copy">
+            <strong>{t('settings.showMinimap')}</strong>
+            <span className="settings-hint">{t('settings.showMinimapHint')}</span>
           </span>
         </label>
       </div>
+
+      <label className="settings-toggle-card">
+        <input
+          type="checkbox"
+          checked={settings.diffHunkContext ?? true}
+          onChange={(e) => update((s) => ({ ...s, diffHunkContext: e.target.checked }))}
+        />
+        <span className="settings-toggle-control" aria-hidden="true">
+          <span className="settings-toggle-thumb" />
+        </span>
+        <span className="settings-toggle-copy">
+          <strong>{t('settings.diffHunkContext')}</strong>
+          <span className="settings-hint">{t('settings.diffHunkContextHint')}</span>
+        </span>
+      </label>
+      <div className="settings-field">
+        <span className="settings-field-label">{t('settings.pathDepth')}</span>
+        <span className="settings-hint">{t('settings.pathDepthHint')}</span>
+        <div className="layout-segmented five" role="radiogroup" aria-label={t('settings.pathDepth')}>
+          {PATH_DEPTHS.map((d) => {
+            const on = (settings.pathDepth ?? 'all') === d
+            const sample = displayPath(SAMPLE_PATH, d)
+            return (
+              <button
+                key={String(d)}
+                type="button"
+                role="radio"
+                aria-checked={on}
+                className={`layout-seg-btn ${on ? 'active' : ''}`}
+                onClick={() => update((s) => ({ ...s, pathDepth: d }))}
+              >
+                <strong>
+                  {d === 'all'
+                    ? t('settings.pathDepthAll')
+                    : d === 0
+                      ? t('settings.pathDepthNone')
+                      : interp(t('settings.pathDepthLast'), { n: d })}
+                </strong>
+                <span className="layout-seg-mono">{`${sample.dir}${sample.name}`}</span>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+    </div>
+  )
+}
+
+function GeneralPage(): React.JSX.Element {
+  const settings = useSettingsStore((s) => s.settings)
+  const update = useSettingsStore((s) => s.update)
+  const t = useT()
+
+  return (
+    <div className="settings-general">
+      <div className="settings-general-header">
+        <h4>
+          <Settings2 size={14} /> {t('settings.general')}
+        </h4>
+        <p className="settings-hint">{t('settings.generalIntro')}</p>
+      </div>
+
+      <label className="settings-field">
+        <span className="settings-field-label">{t('settings.language')}</span>
+        <LanguagePicker
+          value={settings.language}
+          onChange={(language) => update((s) => ({ ...s, language }))}
+        />
+      </label>
 
       <h4 className="settings-section-title">
         <ToggleLeft size={13} style={{ marginRight: 6, verticalAlign: '-2px' }} />
@@ -2489,13 +2624,11 @@ function GeneralPage(): React.JSX.Element {
       <div className="settings-grid">
         <label className="settings-field">
           <span className="settings-field-label">{t('settings.autoFetch')}</span>
-          <input
-            type="number"
+          <NumberField
             min={0}
             max={120}
-            step={1}
             value={settings.autoFetchMinutes}
-            onChange={(e) => update((s) => ({ ...s, autoFetchMinutes: Math.max(0, Number(e.target.value) || 0) }))}
+            onChange={(n) => update((s) => ({ ...s, autoFetchMinutes: n }))}
           />
           <span className="settings-hint">{t('settings.autoFetchHint')}</span>
         </label>
@@ -2589,18 +2722,46 @@ function GeneralPage(): React.JSX.Element {
         </span>
       </label>
 
-      <h4><ScanSearch size={14} /> {t('settings.analyzerMode')}</h4>
-      <label>
-        <select
-          value={settings.analyzerMode ?? 'onOpen'}
-          onChange={(e) => update((s) => ({ ...s, analyzerMode: e.target.value as AnalyzerMode }))}
-        >
-          <option value="onOpen">{t('settings.analyzerOnOpen')}</option>
-          <option value="manual">{t('settings.analyzerManual')}</option>
-          <option value="off">{t('settings.analyzerOff')}</option>
-        </select>
+      <label className="settings-toggle-card">
+        <input
+          type="checkbox"
+          checked={settings.todosHideDone}
+          onChange={(e) => update((s) => ({ ...s, todosHideDone: e.target.checked }))}
+        />
+        <span className="settings-toggle-control" aria-hidden="true">
+          <span className="settings-toggle-thumb" />
+        </span>
+        <span className="settings-toggle-copy">
+          <strong>{t('settings.todosHideDone')}</strong>
+          <span className="settings-hint">{t('settings.todosHideDoneHint')}</span>
+        </span>
       </label>
+
+      <h4><ScanSearch size={14} /> {t('settings.analyzerMode')}</h4>
       <span className="settings-hint">{t('settings.analyzerModeHint')}</span>
+      <div className="layout-segmented three" role="radiogroup" aria-label={t('settings.analyzerMode')}>
+        {(
+          [
+            ['onOpen', 'settings.analyzerOnOpen'],
+            ['manual', 'settings.analyzerManual'],
+            ['off', 'settings.analyzerOff']
+          ] as const
+        ).map(([mode, key]) => {
+          const on = (settings.analyzerMode ?? 'onOpen') === mode
+          return (
+            <button
+              key={mode}
+              type="button"
+              role="radio"
+              aria-checked={on}
+              className={`layout-seg-btn ${on ? 'active' : ''}`}
+              onClick={() => update((s) => ({ ...s, analyzerMode: mode as AnalyzerMode }))}
+            >
+              <strong>{t(key)}</strong>
+            </button>
+          )
+        })}
+      </div>
 
       <h4 className="settings-section-title">
         <Repeat2 size={13} style={{ marginRight: 6, verticalAlign: '-2px' }} />
@@ -2615,43 +2776,6 @@ function GeneralPage(): React.JSX.Element {
       </h4>
       <p className="settings-hint">{t('difftool.intro')}</p>
       <DiffToolCard />
-
-      <h4 className="settings-section-title">
-        <MapIcon size={13} style={{ marginRight: 6, verticalAlign: '-2px' }} />
-        {t('settings.fileViewer')}
-      </h4>
-      <p className="settings-hint">{t('settings.fileViewerIntro')}</p>
-      <div className="settings-toggle-list">
-        <label className="settings-toggle-card">
-          <input
-            type="checkbox"
-            checked={settings.showChangeGutter}
-            onChange={(e) => update((s) => ({ ...s, showChangeGutter: e.target.checked }))}
-          />
-          <span className="settings-toggle-control" aria-hidden="true">
-            <span className="settings-toggle-thumb" />
-          </span>
-          <span className="settings-toggle-copy">
-            <strong>{t('settings.showChangeGutter')}</strong>
-            <span className="settings-hint">{t('settings.showChangeGutterHint')}</span>
-          </span>
-        </label>
-
-        <label className="settings-toggle-card">
-          <input
-            type="checkbox"
-            checked={settings.showMinimap}
-            onChange={(e) => update((s) => ({ ...s, showMinimap: e.target.checked }))}
-          />
-          <span className="settings-toggle-control" aria-hidden="true">
-            <span className="settings-toggle-thumb" />
-          </span>
-          <span className="settings-toggle-copy">
-            <strong>{t('settings.showMinimap')}</strong>
-            <span className="settings-hint">{t('settings.showMinimapHint')}</span>
-          </span>
-        </label>
-      </div>
 
       <h4 className="settings-section-title">
         <SquarePen size={13} style={{ marginRight: 6, verticalAlign: '-2px' }} />
@@ -3029,12 +3153,10 @@ function SecurityPage(): React.JSX.Element {
 
       <label style={{ marginTop: 12 }}>
         {t('settings.largeFileWarn')}
-        <input
-          type="number"
+        <NumberField
           min={0}
-          step={1}
           value={Math.round((settings.largeFileKb ?? 0) / 1024)}
-          onChange={(e) => update((s) => ({ ...s, largeFileKb: Math.max(0, Number(e.target.value) || 0) * 1024 }))}
+          onChange={(mb) => update((s) => ({ ...s, largeFileKb: mb * 1024 }))}
           style={{ maxWidth: 120 }}
         />
       </label>
@@ -3322,13 +3444,11 @@ function ScanRootsSection(): React.JSX.Element {
               </span>
               <label style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, flex: '0 0 auto' }}>
                 {t('repos.scanDepth')}
-                <input
-                  type="number"
+                <NumberField
                   min={1}
                   max={10}
-                  step={1}
                   value={root.depth}
-                  onChange={(e) => setDepth(root.path, Math.min(10, Math.max(1, Number(e.target.value) || 1)))}
+                  onChange={(n) => setDepth(root.path, n)}
                   style={{ maxWidth: 50 }}
                 />
               </label>
@@ -3967,6 +4087,8 @@ export function SettingsPanel({ initialPage, initialThemeTab }: { initialPage?: 
           {page === 'ai' && <AIPage profile={profile} edit={edit} />}
           {page === 'themes' && <ThemesPage initialTab={initialThemeTab} />}
           {page === 'general' && <GeneralPage />}
+          {page === 'graph' && <GraphPage />}
+          {page === 'files' && <FilesPage />}
           {page === 'layout' && <LayoutPage />}
           {page === 'security' && <SecurityPage />}
           {page === 'shortcuts' && <ShortcutsPage />}

@@ -1,3 +1,4 @@
+import { useAiReady } from './useAiReady'
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
@@ -274,7 +275,7 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
   const openPageTab = useSettingsStore((s) => s.openPageTab)
   const openRepoTab = useSettingsStore((s) => s.openRepoTab)
   const activeProfile = useSettingsStore((s) => s.activeProfile)
-  const aiEnabled = activeProfile().ai.enabled !== false
+  const aiEnabled = useAiReady('wiki')
   const defaultOpenApp = useSettingsStore((s) => s.settings.defaultOpenApp)
   const editor = useSettingsStore((s) => s.settings.editor)
   // Todos are app state, not repository state: they live in settings keyed by

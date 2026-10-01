@@ -286,7 +286,7 @@ describe('repository chat session store', () => {
 
 describe('repository chat panel behavior', () => {
   it('toggles the right column while preserving required conflict details', () => {
-    expect(rightPanelToggleAction(false, false, false)).toBe('open-chat')
+    expect(rightPanelToggleAction(false, false, false)).toBe('open-details')
     expect(rightPanelToggleAction(false, false, true)).toBe('close-all')
     expect(rightPanelToggleAction(true, false, false)).toBe('close-all')
     expect(rightPanelToggleAction(true, true, true)).toBe('show-required-details')
@@ -372,9 +372,8 @@ describe('repository chat panel behavior', () => {
     expect(repoChatAvailable({ enabled: false, repoChat: true })).toBe(false)
     expect(repoChatAvailable({ enabled: true, repoChat: false })).toBe(false)
     expect(repoChatAvailable(null)).toBe(false)
-    // With no chat to open, the panel toggle stops offering it.
-    expect(rightPanelToggleAction(false, false, false, false)).toBe('close-all')
-    expect(rightPanelToggleAction(false, false, false, true)).toBe('open-chat')
+    // Closed, it reopens Details whether or not AI (and so Chat) is available.
+    expect(rightPanelToggleAction(false, false, false)).toBe('open-details')
   })
 
   it('blocks the composer while AI is disabled or a request is pending', () => {

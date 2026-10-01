@@ -135,6 +135,7 @@ interface PreloadApi {
     detectCli(): Promise<unknown>
     explainCode(code: string, lang: string, cfg: unknown): Promise<unknown>
     hoverExplain(req: unknown, cfg: unknown): Promise<unknown>
+    ready(cfg: unknown): Promise<unknown>
     resolveConflict(file: string, content: string, cfg: unknown): Promise<unknown>
     generateConfig(repoName: string, artifacts: unknown[], context: string, cfg: unknown): Promise<unknown>
     suggestArtifacts(repoName: string, selectedTools: string[], context: string, alreadySelected: unknown[], cfg: unknown): Promise<unknown>

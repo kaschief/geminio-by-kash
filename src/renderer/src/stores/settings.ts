@@ -361,10 +361,15 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
     settings.loadMoreCount = settings.loadMoreCount ?? sd.loadMoreCount
     settings.autoLoadOnScroll = settings.autoLoadOnScroll ?? sd.autoLoadOnScroll
     settings.relativeDates = settings.relativeDates ?? sd.relativeDates
+    // Someone who had switched relative dates off keeps absolute dates.
+    settings.dateFormat = settings.dateFormat ?? (settings.relativeDates === false ? 'datetime' : sd.dateFormat)
     settings.commitAvatars = settings.commitAvatars ?? sd.commitAvatars
     settings.avatarMotion = settings.avatarMotion ?? sd.avatarMotion
     settings.fileListView = settings.fileListView ?? sd.fileListView
     settings.fileListSort = settings.fileListSort ?? sd.fileListSort
+    settings.diffHunkContext = settings.diffHunkContext ?? sd.diffHunkContext
+    settings.pathDepth = settings.pathDepth ?? sd.pathDepth
+    settings.graphShowBody = settings.graphShowBody ?? sd.graphShowBody
     settings.groupBranches = settings.groupBranches ?? sd.groupBranches
     settings.graphColumns = { ...sd.graphColumns, ...(settings.graphColumns ?? {}) }
     settings.graphStyle = { ...defaultGraphStyle(), ...(settings.graphStyle ?? {}) }
