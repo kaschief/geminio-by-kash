@@ -107,6 +107,67 @@ async function seedTodos(page, repoPath) {
 /** @type {Shot[]} */
 export const shots = [
   {
+    out: 'app-icon-picker',
+    repos: ['line-staging'],
+    clipTo: '.app-icon-picker',
+    drive: async (page) => {
+      await page.evaluate(() => window.__shot.ui.getState().openModal({ kind: 'settings', page: 'themes' }))
+      await page.getByRole('button', { name: 'Monogram', exact: true }).click()
+      await page.getByRole('button', { name: 'Ocean', exact: true }).click()
+      await page.getByRole('button', { name: 'Ocean', exact: true }).filter({ has: page.locator('svg') }).waitFor()
+    }
+  },
+  {
+    out: 'file-view-controls-light',
+    repos: ['line-staging'],
+    themes: ['light'],
+    appTheme: 'geminio',
+    clipTo: '.fv-controls',
+    drive: async (page, paths) => {
+      await page.evaluate((p) => {
+        const repo = window.__shot.repo.getState().repos[p]
+        window.__shot.repo.getState().select(p, { type: 'commit', hash: repo.commits[0].hash })
+      }, paths['line-staging'])
+      await page.locator('.file-list [data-file-path="README.md"]').click()
+      await page.locator('.diff-viewer').waitFor()
+    }
+  },
+
+  {
+    out: 'file-pull-settings',
+    repos: ['line-staging'],
+    clipTo: '.settings-file-pull',
+    drive: async (page) => {
+      await page.evaluate(() => window.__shot.ui.getState().openModal({ kind: 'settings', page: 'files' }))
+      await page.locator('.settings-file-pull').waitFor()
+    }
+  },
+
+  {
+    out: 'elastic-file-navigation',
+    repos: ['line-staging'],
+    drive: async (page, paths) => {
+      await page.evaluate((p) => {
+        const repo = window.__shot.repo.getState().repos[p]
+        window.__shot.repo.getState().select(p, { type: 'commit', hash: repo.commits[0].hash })
+      }, paths['line-staging'])
+      await page.locator('.file-list [data-file-path="README.md"]').click()
+      await page.locator('.diff-viewer').waitFor()
+      await page.evaluate(() => {
+        const body = document.querySelector('.fv-body')
+        body.scrollTop = body.scrollHeight
+        // Keep a real wheel gesture held below the release threshold while
+        // the screenshot harness settles. Closing the window ends it.
+        let count = 0
+        window.setInterval(() => body.dispatchEvent(new WheelEvent('wheel', {
+          deltaY: count++ < 7 ? 40 : 0.05, bubbles: true, cancelable: true
+        })), 50)
+      })
+      await page.locator('.fv-file-pull').waitFor()
+    }
+  },
+
+  {
     out: 'toolbar-selectors',
     repos: ['deep-history-monorepo'],
     themes: ['light'],

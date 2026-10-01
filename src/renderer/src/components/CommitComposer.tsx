@@ -1095,6 +1095,7 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
                 transition={{ duration: 0.18, ease: 'easeOut' }}
               >
                 <FileListView
+                  navigationContext={{ repoPath: path, source: { type: 'wip', staged: false, untracked: false } }}
                   files={fUnstaged}
                   current={currentFile}
                   selected={selection.list === 'unstaged' ? selection.paths : undefined}
@@ -1167,6 +1168,7 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
                 transition={{ duration: 0.18, ease: 'easeOut' }}
               >
                 <FileListView
+                  navigationContext={{ repoPath: path, source: { type: 'wip', staged: true, untracked: false } }}
                   files={fStaged}
                   current={currentFile}
                   selected={selection.list === 'staged' ? selection.paths : undefined}

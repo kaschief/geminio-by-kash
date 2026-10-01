@@ -36,6 +36,11 @@ competing places to configure the app.
 - **A graph you can arrange directly.** Right-click any column header to choose
   visible columns; drag to rearrange or resize them, and double-click a divider
   to fit the loaded history. [Commit graph](docs/help/graph.md)
+- **Pull between files.** An adjustable elastic pull at the end or beginning of a diff
+  previews the adjacent file, then switches when you release past the threshold.
+  [Reading changes](docs/help/diffs.md#pull-between-files)
+- **Your app icon.** Choose a Dock icon style and color in Appearance settings.
+  [App icons](docs/help/themes.md#app-icon)
 - **Room for the message.** Drag the divider above the commit composer to give
   the description more space. The height is remembered. [Committing](docs/help/committing.md)
 - **A smaller toolbar.** Compact repository and branch selectors, plus one

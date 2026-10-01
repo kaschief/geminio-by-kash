@@ -1,3 +1,4 @@
+import { AppIconPicker } from './AppIconPicker'
 import { setGitHubAccount } from '../stores/githubAccount'
 import { useAiReady } from './useAiReady'
 import { PATH_DEPTHS, displayPath } from '../lib/pathDisplay'
@@ -1712,6 +1713,7 @@ function ThemesPage({ initialTab }: { initialTab?: 'theme' | 'graph' } = {}): Re
         <Palette size={14} /> {t('settings.appearance')}
       </h4>
       <p className="settings-hint">{t('settings.appearanceHint')}</p>
+      <AppIconPicker />
       <div className="theme-mode-switch">
         {MODES.map((m) => (
           <button
@@ -2568,6 +2570,41 @@ function FilesPage(): React.JSX.Element {
           <span className="settings-hint">{t('settings.diffHunkContextHint')}</span>
         </span>
       </label>
+      <div className="settings-file-pull">
+        <label className="settings-toggle-card">
+          <input
+            type="checkbox"
+            checked={settings.elasticFileNavigation ?? true}
+            onChange={(e) => update((s) => ({ ...s, elasticFileNavigation: e.target.checked }))}
+          />
+          <span className="settings-toggle-control" aria-hidden="true">
+            <span className="settings-toggle-thumb" />
+          </span>
+          <span className="settings-toggle-copy">
+            <strong>{t('settings.filePull')}</strong>
+            <span className="settings-hint">{t('settings.filePullHint')}</span>
+          </span>
+        </label>
+        <div className="settings-field">
+          <span className="settings-field-label">{t('settings.filePullFeel')}</span>
+          <div className="layout-segmented four" role="radiogroup" aria-label={t('settings.filePullFeel')}>
+            {(['fast', 'quick', 'balanced', 'deliberate'] as const).map((feel) => (
+              <button
+                key={feel}
+                type="button"
+                role="radio"
+                aria-checked={(settings.elasticFileNavigationFeel ?? 'balanced') === feel}
+                disabled={settings.elasticFileNavigation === false}
+                className={`layout-seg-btn ${(settings.elasticFileNavigationFeel ?? 'balanced') === feel ? 'active' : ''}`}
+                onClick={() => update((s) => ({ ...s, elasticFileNavigationFeel: feel }))}
+              >
+                <strong>{t(`settings.filePull.${feel}`)}</strong>
+                <span>{t(`settings.filePull.${feel}Hint`)}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
       <div className="settings-field">
         <span className="settings-field-label">{t('settings.pathDepth')}</span>
         <span className="settings-hint">{t('settings.pathDepthHint')}</span>

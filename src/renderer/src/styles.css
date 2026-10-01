@@ -4758,6 +4758,9 @@ body.col-resizing .node-ava {
   gap: 8px;
   margin-top: 6px;
 }
+.layout-segmented.four {
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+}
 .layout-segmented.three {
   grid-template-columns: repeat(3, 1fr);
 }
@@ -7581,6 +7584,17 @@ body.col-resizing .node-ava {
 .diff-tool:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: -2px;
+}
+/* Keep inactive controls quiet in Geminio light, like the search field. */
+:root[data-app-theme='geminio'][data-mode='light'] :is(.fv-modes, .fv-controls .diff-tools) {
+  background: color-mix(in srgb, var(--bg-0) 45%, var(--bg-1));
+  border-color: var(--border-soft);
+}
+:root[data-app-theme='geminio'][data-mode='light'] :is(.fv-mode, .fv-controls .diff-tool) {
+  border-inline-end-color: var(--border-soft);
+}
+:root[data-app-theme='geminio'][data-mode='light'] :is(.fv-mode:not(.active), .fv-controls .diff-tool:not(.on)):not(:hover) {
+  color: #9699a3;
 }
 .fv-body-wrap {
   flex: 1;
@@ -17342,3 +17356,42 @@ mark.diff-find-hit.current { background: #ff9632; color: #10121a; }
 .settings-form .repo-settings-tabs {
   flex-wrap: wrap;
 }
+
+/* Elastic file navigation reveals the adjacent filename behind the scroller. */
+.fv-elastic-wrap { overflow: hidden; }
+.fv-elastic-body { background: var(--bg-0); transition: transform var(--file-pull-return-ms, 320ms) cubic-bezier(.16,1,.3,1), opacity 200ms ease; overscroll-behavior-y: contain; }
+.fv-elastic-body.is-pulling { transition: none; }
+.fv-elastic-body .diff-split-col { overscroll-behavior-y: contain; }
+.fv-file-pull { position: absolute; inset-inline: 0; height: 148px; display: flex; align-items: center; justify-content: center; gap: 18px; color: var(--text-1); pointer-events: none; padding: 18px 32px; background: radial-gradient(ellipse at center, color-mix(in srgb, var(--accent) 9%, transparent), transparent 70%); }
+.fv-file-pull.at-top { top: 0; }
+.fv-file-pull.at-bottom { bottom: 0; }
+.fv-file-pull > div:not(.fv-pull-meter) { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.fv-file-pull span { font-size: 12px; }
+.fv-file-pull strong { font-size: 16px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fv-file-pull.is-ready { color: var(--accent); }
+@media (prefers-reduced-motion: reduce) { .fv-elastic-body { transition: none; } }
+
+.app-icon-picker { margin: 20px 0 24px; }
+.app-icon-styles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.app-icon-choice { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 8px 12px; border: 1px solid var(--border-soft); border-radius: 12px; background: var(--bg-1); color: var(--text-1); cursor: pointer; font-size: 12px; }
+.app-icon-choice img { width: min(100%, 90px); aspect-ratio: 1; }
+.app-icon-choice:hover { background: var(--bg-2); }
+.app-icon-choice.selected { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--bg-1)); color: var(--text-0); }
+.app-icon-check { position: absolute; top: 8px; right: 8px; color: var(--accent); }
+.app-icon-colors { display: flex; gap: 10px; justify-content: center; margin-top: 14px; }
+.app-icon-colors button { width: 26px; height: 26px; border-radius: 50%; border: 2px solid transparent; display: grid; place-items: center; color: white; cursor: pointer; }
+.app-icon-colors button[aria-pressed='true'] { outline: 2px solid var(--text-2); outline-offset: 3px; }
+.app-icon-colors button:disabled { opacity: .3; cursor: default; }
+
+.fv-pull-meter { position: relative; flex: 0 0 48px; width: 48px; height: 48px; }
+.fv-pull-meter > svg:first-child { position: absolute; inset: 0; width: 48px; height: 48px; transform: rotate(-90deg); fill: none; stroke-width: 2.5; }
+.fv-pull-meter > svg:last-child { position: absolute; left: 13px; top: 13px; }
+.fv-pull-track { stroke: var(--border); }
+.fv-pull-progress { stroke: var(--accent); stroke-linecap: round; }
+.fv-file-pull.is-ready .fv-pull-meter { filter: drop-shadow(0 0 10px color-mix(in srgb, var(--accent) 45%, transparent)); }
+.fv-file-pull.is-opening .fv-pull-meter { transform: scale(1.14); transition: transform 200ms ease; }
+.fv-elastic-body.is-opening-file { opacity: .3; }
+
+.app-icon-choice.github-photo img { width: min(calc(100% - 18px), 72px); border-radius: 22%; margin: 9px; }
+.app-icon-choice:disabled { cursor: default; opacity: .5; }
+@media (prefers-reduced-motion: reduce) { .fv-file-pull.is-opening .fv-pull-meter { transform: none; transition: none; } }

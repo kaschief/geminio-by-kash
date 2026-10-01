@@ -454,6 +454,7 @@ export function CommitDetails({ repo, hash }: { repo: RepoData; hash: string }):
         {hits && <MatchSummary hits={hits} label={(n, f) => interp(t('search.summary'), { n, files: f })} />}
         <div ref={listWrapRef}>
         <FileListView
+          navigationContext={{ repoPath: repo.path, source: { type: 'commit', hash } }}
           files={filteredFiles}
           current={currentFile}
           matches={hitsByFile ?? undefined}

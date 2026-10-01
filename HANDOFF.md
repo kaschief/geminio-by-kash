@@ -21,7 +21,7 @@ updates.
 | Local folder | `~/Code/geminio-by-kash` |
 | `origin` | `https://github.com/kaschief/geminio-by-kash` (public) — push here |
 | `upstream` | `https://github.com/MyAppDesk/gitcito` — fetch only; push is set to `DISABLED` |
-| Branch | `codex/geminio` (renamed at the owner's request); tracks `origin/main` |
+| Branch | `geminio-home` (renamed at the owner's request); tracks `origin/main` |
 
 ## 2. Working rules (the owner's, on top of `CLAUDE.md`)
 
@@ -107,7 +107,7 @@ npm run build                     # gate step; regenerates licenses.generated.js
 npm run typecheck && npm run lint:i18n && npm run lint:docs && npm test && npm run build
 ```
 
-The full gate passes: 1,635 tests passed, 2 intentionally skipped; typecheck,
+The full gate passes: 1,646 tests passed, 2 intentionally skipped; typecheck,
 i18n lint, docs lint and production build passed. Targeted checks also passed
 after the final editor-menu refinement. The two previously failing tests are fixed:
 
@@ -235,7 +235,7 @@ detail. Summary:
 ### Geminio rename and interaction changes (completed 2026-10-01)
 
 - Primary checkout moved to `/Users/kaschief/Code/geminio-by-kash`; no extra
-  checkout or worktree. Local branch is `codex/geminio`, tracking `origin/main`.
+  checkout or worktree. Local branch is `geminio-home`, tracking `origin/main`.
   GitHub repository was renamed to `kaschief/geminio-by-kash`; upstream remains
   `MyAppDesk/gitcito`. The owner requested a local commit after installation; no push was requested.
 - Product, CLI, assets, package identifiers, documentation and translations now
@@ -274,6 +274,50 @@ detail. Summary:
 - Installed bundle: `/Applications/Geminio.app`; dev log: `/tmp/geminio-dev.log`.
   Saved JSON path references were updated with backups at
   `/tmp/geminio-rename-backup-1790882601`.
+
+### Experimental file navigation and app icons (2026-10-01)
+
+- The owner requested branch `main` or `geminio-home` instead of the Codex
+  prefix; the local branch is now `geminio-home`, still tracking `origin/main`.
+- At a diff/file boundary, pause and pull again to preview the adjacent file.
+  Release past the threshold to switch; a short pull springs back. Backward
+  navigation enters at the preceding file's bottom. Momentum is blocked from
+  starting a pull, and a tail guard prevents skipping several files.
+- The mounted FileListView owns ordering/filtering and normal selection, scoped
+  to the exact repo and commit/stash or staged/unstaged area. No wraparound.
+  Animation state is isolated from expensive diff rendering. Editing, loading,
+  modal dialogs and horizontal/modified wheel gestures do not navigate.
+- Appearance now has Classic plus Monogram, Branch and Orbit Dock icons, with
+  six colors for the new styles. The choice persists and applies at startup.
+  Finder's bundle icon is unchanged. Original vector sources live in
+  `src/shared/appIcons.ts`; regenerate PNGs with
+  `node_modules/.bin/electron scripts/generate-app-icons.cjs`.
+- Gate passed: 1,644 tests; typecheck, i18n/docs checks and build. Native UI
+  checks passed for gesture cancellation, momentum, forward/backward navigation,
+  split diffs, staged/commit scope, live Dock updates and icon persistence.
+  The installed app was refreshed and a fresh test launch requested.
+- Pull between files is now configurable globally in Settings → Files & Diffs:
+  on/off plus Fast, Quick, Balanced (default), and Deliberate. Balanced uses a 360px
+  threshold, 220ms release pause, 120ms opening beat and 320ms entry animation.
+  Deliberate retains the previous 600px/320ms/200ms/460ms behavior. Quick uses
+  240px/180ms/80ms/240ms; Fast uses 200px/150ms/60ms/200ms. All retain the large progress ring and reduced motion.
+- Fixed post-navigation scrolling: the wheel-tail guard suppresses only another
+  file switch, allowing native scrolling within the new file immediately.
+  Native wheel checks cover unified and split diffs, disabling mid-pull,
+  default/preset selection and settings persistence across relaunch.
+- Monogram, Branch and Orbit now use dimensional vector artwork. GitHub Photo
+  is also available, using the connected account and a rounded icon cached in
+  userData. Only public GitHub avatar URLs are accepted; no photo is committed.
+- Latest refinement checks passed: 1,645 tests plus real Electron interaction
+  checks. The actual GitHub photo was verified in the picker, Dock application,
+  saved settings, relaunch and offline-cache path.
+- Geminio light now uses muted grey inactive file-view controls and softer
+  group borders/backgrounds; selected purple states and hover feedback remain.
+- Latest gesture settings gate passed: 1,646 tests, typecheck, i18n/docs checks,
+  build, and native interaction checks. Screenshots were refreshed.
+- The owner tested and approved these changes and requested a local commit.
+  A separate existing edit to `.geminio.json` removed the push checklist;
+  it remains outside this feature commit.
 
 ## 7. Where things live (new modules)
 

@@ -745,6 +745,7 @@ export function applyAppTheme(theme: AppTheme, mode: ThemeMode): void {
   const c = theme[resolved]
   r.style.colorScheme = resolved
   r.dataset.mode = resolved
+  r.dataset.appTheme = theme.id
   r.style.setProperty('--bg-0', c.bg0)
   r.style.setProperty('--bg-1', c.bg1)
   r.style.setProperty('--bg-2', c.bg2)

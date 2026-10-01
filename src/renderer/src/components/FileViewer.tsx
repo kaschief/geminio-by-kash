@@ -12,6 +12,7 @@ import { editorLineMenuItems } from '../lib/editorOpen'
 import { useT, interp, type TranslationKey } from '../i18n'
 import { useHoverExplain } from './HoverExplain'
 import { DiffViewer, type HunkAction } from './DiffViewer'
+import { ElasticFileNavigation } from './ElasticFileNavigation'
 import { useAiReady } from './useAiReady'
 import { displayPath } from '../lib/pathDisplay'
 import { SemanticSummary } from './SemanticSummary'
@@ -750,7 +751,9 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
         </button>
       </div>
 
-      <div className="fv-body-wrap">
+      <div className="fv-body-wrap fv-elastic-wrap">
+        <ElasticFileNavigation bodyRef={bodyRef} view={view}
+          enabled={!editing && !error && tooLarge === null && content !== null && (mode === 'diff' || mode === 'file')} />
         {/* Floating chrome — the find bar, the diff's line-selection actions —
             lives on a layer over the content that never scrolls and takes no
             space, so opening either moves nothing. The diff find bar sits
@@ -821,7 +824,7 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
             </div>
           )}
         </div>
-        <div className="fv-body" ref={bodyRef}>
+        <div className="fv-body fv-elastic-body" ref={bodyRef}>
           {error && <div className="fv-error">{error}</div>}
           {!error && tooLarge !== null && (
             <div className="fv-too-large">

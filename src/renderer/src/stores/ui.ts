@@ -214,6 +214,8 @@ export interface FileViewState {
   line?: number
   /** Bumped by `setFileView` per request, so re-opening the same line re-scrolls. */
   revealSeq?: number
+  /** Entry edge when elastically moving to an adjacent file. */
+  initialScroll?: 'start' | 'end'
 }
 
 export interface ConflictViewState {

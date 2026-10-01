@@ -21,6 +21,17 @@ Midnight, Contrast and Daltonic — each with a light and a dark variant.
 
 ![Theme settings](../screenshots/settings-themes.webp)
 
+## App icon
+
+On macOS, **Settings → Appearance → App Icon** offers the original Classic
+mascot, your connected **GitHub Photo**, and dimensional Monogram, Branch and Orbit styles. Each new style has six colors:
+Violet, Ocean, Mint, Sunset, Rose and Graphite. The selection changes the Dock
+icon immediately and is restored when Geminio launches. The GitHub photo is
+cached locally so it also works offline after the first selection. The Finder bundle
+icon remains the original icon. Choose **Classic** to return to the mascot.
+
+![App icon styles and colors](../screenshots/app-icon-picker.webp)
+
 ## Layout
 
 Sidebar on the left or the right, resizable panels everywhere, a collapsible

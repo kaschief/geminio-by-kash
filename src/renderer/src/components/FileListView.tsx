@@ -1,8 +1,9 @@
-import { useMemo, useRef, useState } from 'react'
+import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { ChevronDown, ChevronRight, FolderOpen, Folder, Pencil } from 'lucide-react'
 import type { CodeSearchHit, FileEntry } from '../../../shared/types'
 import { useSettingsStore } from '../stores/settings'
 import { sortFilesForList, stepPath, visiblePaths } from '../lib/fileNav'
+import { registerFileSequence, type FileSequenceContext } from '../lib/fileSequence'
 import { displayPath } from '../lib/pathDisplay'
 import { bucketOf } from '../lib/fileStats'
 import { MatchRows } from './SearchMatches'
@@ -58,6 +59,7 @@ export function statusLabel(s: string): string {
 }
 
 interface FileListProps {
+  navigationContext?: FileSequenceContext
   files: FileEntry[]
   current?: string | null
   selected?: Set<string>
@@ -310,6 +312,21 @@ export function FileListView(props: FileListProps): React.JSX.Element {
   // Fallback cursor for lists whose selection lives elsewhere (the conflicted
   // list opens the resolver, so `current` never points into it).
   const cursor = useRef<string | null>(null)
+
+  useLayoutEffect(() => {
+    if (!props.navigationContext) return
+    return registerFileSequence(props.navigationContext, (current, direction) => {
+      const order = view === 'tree' ? visiblePaths(tree, collapsed) : flatFiles.map((f) => f.path)
+      if (!order.includes(current)) return null
+      const path = stepPath(order, current, direction)
+      const file = props.files.find((f) => f.path === path)
+      return file ? { file: file.path, open: () => {
+        cursor.current = file.path
+        props.onFileClick(file, PLAIN_CLICK)
+        listRef.current?.querySelector(`[data-file-path="${CSS.escape(file.path)}"]`)?.scrollIntoView({ block: 'nearest' })
+      } } : null
+    })
+  }, [props, view, tree, collapsed, flatFiles])
 
   const toggle = (path: string): void =>
     setCollapsed((prev) => {

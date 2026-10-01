@@ -6,7 +6,9 @@ import { execFile, spawn } from 'child_process'
 import icon from '../../resources/icon.png?asset'
 import type { AppRelease } from '../shared/types'
 import { registerGitHandlers } from './git'
-import { registerSettingsHandlers } from './settings'
+import { registerAppIconHandlers } from './githubAppIcon'
+import { applyAppIcon } from './appIcon'
+import { readSettings, registerSettingsHandlers } from './settings'
 import { registerAiHandlers } from './ai'
 import { registerRepoChatHandlers } from './repoChat'
 import { registerWikiHandlers } from './wiki'
@@ -185,7 +187,7 @@ function createWindow(): void {
   }
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   app.setName(app.isPackaged ? 'Geminio' : 'Geminio Dev')
 
   // The embedded DevTools panel stays on loopback: a link inside it opens in
@@ -201,7 +203,7 @@ app.whenReady().then(() => {
     })
   })
 
-  if (process.platform === 'darwin') app.dock?.setIcon(icon)
+  applyAppIcon((await readSettings()).appIcon)
 
   ipcMain.handle('dialog:selectDirectory', async (_e, title?: string) => {
     const res = await dialog.showOpenDialog({
@@ -420,6 +422,7 @@ app.whenReady().then(() => {
 
   registerGitHandlers()
   registerSettingsHandlers()
+  registerAppIconHandlers()
   registerAiHandlers()
   registerRepoChatHandlers()
   registerWikiHandlers()

@@ -39,12 +39,43 @@ an indented block against an unindented one, a rename that shifted every line â€
 or when you want to compare two distant regions of the same file, and park each
 half where its own content is.
 
+In Geminio light mode, unselected header controls use a softer grey; the
+selected mode and enabled toggles retain their purple highlight.
+
+![File viewer controls in Geminio light](../screenshots/file-view-controls-light.webp)
+
 ![Split diff with word-level highlighting](../screenshots/split-diff.webp)
 
 ![Diff, find and selection controls in a narrow window](../screenshots/sidecar-diff.webp)
 
 The header controls scroll horizontally when the pane is narrow. Find and
 selected-line actions float within the viewer without moving the code.
+
+## Pull between files
+
+When reading a commit, stash, or staged/unstaged file list, scroll to the bottom
+of the current diff, pause, then pull a little further. The view stretches to
+show the next filename and a circular progress indicator. Keep pulling until
+the ring fills and **Release to open** appears, then stop scrolling. A brief
+release animation marks the switch before the next file slides into place. A shorter pull springs back. At the top, the same
+gesture opens the previous file at its bottom.
+
+The pause separates your deliberate pull from trackpad momentum. One gesture
+moves one file, following the visible list's sort order and filters. It stops
+at the first and last file and keeps staged and unstaged files separate.
+It works in unified and split diffs, and in read-only File View. Horizontal
+scrolling, zooming, and editing a file do not switch files. Press **Esc** to
+cancel a pull. Scrolling inside the newly opened file works immediately.
+
+In **Settings â†’ Files & Diffs**, turn **Pull between files** on or off and
+choose **Fast**, **Quick**, **Balanced**, or **Deliberate** under **Pull feel**. Balanced
+is the default. Fast is a little lighter and quicker than Quick. Quick needs a shorter pull and switches faster; Deliberate
+keeps the longer stretch and slower transition. These settings apply across
+all repositories.
+
+![Pull gesture settings](../screenshots/file-pull-settings.webp)
+
+![Pulling toward the next file](../screenshots/elastic-file-navigation.webp)
 
 ### Hunk headers
 

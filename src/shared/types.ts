@@ -2816,6 +2816,7 @@ export interface Workspace {
 }
 
 export interface AppSettings {
+  appIcon?: import('./appIcons').AppIconPreference
   profiles: Profile[]
   activeProfileId: string
   /** Per-repository profile binding, keyed by repo path. When a repo with a
@@ -2872,6 +2873,9 @@ export interface AppSettings {
   fileListSort: 'git' | 'alpha'
   /** Show the enclosing code git finds for each hunk (`@@ … @@ if x`) after its line ranges. */
   diffHunkContext: boolean
+  /** Global wheel gesture for moving between files. */
+  elasticFileNavigation?: boolean
+  elasticFileNavigationFeel?: 'fast' | 'quick' | 'balanced' | 'deliberate'
   /** Folders shown before a file name in headers and flat lists: all, or only the last N. */
   pathDepth: 'all' | 0 | 1 | 2 | 3
   /** Show the start of each commit's description after its title in the graph. */
@@ -3318,6 +3322,8 @@ export function defaultSettings(): AppSettings {
     fileListView: 'path',
     fileListSort: 'git',
     diffHunkContext: true,
+    elasticFileNavigation: true,
+    elasticFileNavigationFeel: 'balanced',
     pathDepth: 'all',
     graphShowBody: false,
     groupBranches: true,

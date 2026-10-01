@@ -192,6 +192,7 @@ export function StashDetails({ repo, sha }: { repo: RepoData; sha: string }): Re
         </div>
         <div ref={listWrapRef}>
         <FileListView
+          navigationContext={{ repoPath: repo.path, source: { type: 'stash', sha, untracked: false } }}
           files={files}
           current={currentFile}
           selected={selected}

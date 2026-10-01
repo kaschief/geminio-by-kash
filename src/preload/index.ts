@@ -3,6 +3,9 @@ import type { CliOpenPayload } from '../shared/cli'
 
 const api = {
   platform: process.platform,
+  appIcon: {
+    prepareGithub: (url: string): Promise<string> => ipcRenderer.invoke('appIcon:prepareGithub', url)
+  },
 
   // True when launched with `--shot` (forwarded by the main process via
   // webPreferences.additionalArguments). Gates the screenshot-automation bridge.
