@@ -4,6 +4,19 @@ import type { UpdateState, UpdateInfo } from '../shared/types'
 import { isNewerVersion } from '../shared/version'
 
 const REPO = 'MyAppDesk/gitcito'
+
+/**
+ * This is a personal fork: the build carries local changes on top of upstream.
+ * Updates are still checked against upstream, so a new upstream release is
+ * announced, but never downloaded or installed — installing upstream's build
+ * would replace this one and silently drop every local change. The notice
+ * opens the release notes instead; taking the update means merging upstream
+ * into the fork and rebuilding.
+ *
+ * Upstream builds self-install when packaged; flip this to `app.isPackaged`
+ * to get that back.
+ */
+const SELF_INSTALL = false
 const releaseUrl = (version: string): string =>
   `https://github.com/${REPO}/releases/tag/v${version.replace(/^v/, '')}`
 
@@ -13,7 +26,7 @@ const state: UpdateState = {
   info: null,
   progress: null,
   error: null,
-  supported: app.isPackaged,
+  supported: SELF_INSTALL,
   staged: null
 }
 
@@ -170,7 +183,7 @@ export function registerUpdaterHandlers(): void {
   // `silent` keeps the banner as it is instead of flipping to 'checking' — for
   // checks the user did not ask for, like opening the What's-new page.
   ipcMain.handle('update:check', async (_e, silent?: boolean) => {
-    if (!app.isPackaged) {
+    if (!SELF_INSTALL) {
       await checkViaGitHub()
       return
     }
@@ -186,7 +199,7 @@ export function registerUpdaterHandlers(): void {
   ipcMain.handle('update:download', async () => {
     // Unsupported (dev): open the release page; the renderer also handles this,
     // but guard here in case it calls through anyway.
-    if (!app.isPackaged) {
+    if (!SELF_INSTALL) {
       if (state.info?.url) await shell.openExternal(state.info.url)
       return
     }
@@ -206,7 +219,7 @@ export function registerUpdaterHandlers(): void {
 
   // Quit and install the downloaded update. Fire-and-forget (the app exits).
   ipcMain.on('update:install', () => {
-    if (state.status !== 'downloaded') return
+    if (!SELF_INSTALL || state.status !== 'downloaded') return
     setImmediate(() => autoUpdater.quitAndInstall())
   })
 }
@@ -214,6 +227,15 @@ export function registerUpdaterHandlers(): void {
 /** Kick a silent check shortly after launch (packaged builds only). */
 export function checkForUpdatesOnLaunch(): void {
   if (!app.isPackaged) return
+  if (!SELF_INSTALL) {
+    // The renderer checks once at startup; keep re-checking upstream so a
+    // window left open for days still hears about a new release.
+    if (!recheckTimer) {
+      recheckTimer = setInterval(() => void checkViaGitHub(), RECHECK_MS)
+      recheckTimer.unref?.()
+    }
+    return
+  }
   wireAutoUpdater()
   scheduleRechecks()
   setTimeout(() => {

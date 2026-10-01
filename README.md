@@ -1,3 +1,10 @@
+> **About this fork.** This is a personal build of
+> [MyAppDesk/gitcito](https://github.com/MyAppDesk/gitcito) with local changes on top.
+> The app still checks upstream for new releases and announces them, but never
+> installs one: installing upstream's build would replace this one and drop the
+> local changes. To take an update, merge `upstream/main` into `main` and rebuild.
+> Pushing to `upstream` is disabled in this clone.
+
 <div align="center">
 
 <img src="docs/gitcito-mark.png" alt="Gitcito" width="120" />
