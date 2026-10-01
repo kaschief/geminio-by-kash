@@ -364,6 +364,7 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
     settings.commitAvatars = settings.commitAvatars ?? sd.commitAvatars
     settings.avatarMotion = settings.avatarMotion ?? sd.avatarMotion
     settings.fileListView = settings.fileListView ?? sd.fileListView
+    settings.fileListSort = settings.fileListSort ?? sd.fileListSort
     settings.groupBranches = settings.groupBranches ?? sd.groupBranches
     settings.graphColumns = { ...sd.graphColumns, ...(settings.graphColumns ?? {}) }
     settings.graphStyle = { ...defaultGraphStyle(), ...(settings.graphStyle ?? {}) }

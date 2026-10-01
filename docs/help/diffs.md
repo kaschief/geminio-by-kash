@@ -10,6 +10,12 @@ keywords: diff split side-by-side word level whitespace image diff preview markd
 
 ## Reading a diff
 
+In the file viewer the toggles sit in its header, as a row of icons next to
+**File View · Diff View · Blame · History**. Hover one for its name. In
+comparison dialogs, which have no header of their own, they float over the
+top of the diff with their labels. A toggle that does not apply to the current
+view stays in place but greyed out, so the row never shifts under the pointer.
+
 | Toggle | What it does |
 |---|---|
 | **Unified ↔ split** | Side-by-side when you want to compare, stacked when you want to read |
@@ -17,7 +23,7 @@ keywords: diff split side-by-side word level whitespace image diff preview markd
 | **Ignore whitespace** | Hides reindentation so the real change surfaces |
 | **Wrap** (split only) | Folds long lines inside their column instead of scrolling them |
 | **Linked** (split, wrap off) | Scrolls both halves together, vertically and sideways — off, each column scrolls on its own |
-| <kbd>⌘F</kbd> | Find inside the diff, with next/previous stepping |
+| **Find** / <kbd>⌘F</kbd> | Find inside the diff, with next/previous stepping; <kbd>Esc</kbd> closes it |
 
 Wrap is off by default, so one line stays on one row and the two sides remain
 comparable row for row; each half carries its own sideways scrollbar. Turn

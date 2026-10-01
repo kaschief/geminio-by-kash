@@ -4,14 +4,14 @@ import type { BlameLine, BlobSpec, FileHistoryEntry, NumberedLine } from '../../
 import { gitApi, aiApi, shellApi } from '../infrastructure/api'
 import { useSettingsStore } from '../stores/settings'
 import { useUIStore, type FileViewMode, type FileViewState } from '../stores/ui'
-import { useRepoStore } from '../stores/repo'
+import { useRepoStore, repoActions, type HunkActionKind } from '../stores/repo'
 import { canonicalRepoPath } from '../lib/repoAlias'
 import { filePermalink } from '../lib/autolink'
 import { revealLineWhenReady } from '../lib/reveal'
 import { editorLineMenuItems } from '../lib/editorOpen'
 import { useT, interp, type TranslationKey } from '../i18n'
 import { useHoverExplain } from './HoverExplain'
-import { DiffViewer } from './DiffViewer'
+import { DiffViewer, type HunkAction } from './DiffViewer'
 import { SemanticSummary } from './SemanticSummary'
 import { buildQueryRegExp, highlightHtml, type HighlightLayer } from './FileSearchBar'
 import { fileExt, guessLanguage, highlightLine } from '../lib/highlight'
@@ -113,6 +113,8 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
 
   // ─── In-file find (Ctrl/Cmd+F) — layers on top of the right-panel filter ───
   const [findOpen, setFindOpen] = useState(false)
+  // The diff's display toggles portal into this header slot (see DiffViewer).
+  const [diffToolsHost, setDiffToolsHost] = useState<HTMLDivElement | null>(null)
   const [find, setFind] = useState({ query: '', caseSensitive: false, wholeWord: false, regex: false })
   const [hitCount, setHitCount] = useState(0)
   const [activeHit, setActiveHit] = useState(0)
@@ -604,6 +606,73 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
     return () => cancelAnimationFrame(id)
   }, [searchRe, content, mode, file, findOpen])
 
+  // Which edge(s) of the control strip hide something, for the fade. Measured on
+  // scroll and on resize — the window, the panel beside it, or the mode changing
+  // which controls exist.
+  const controlsRef = useRef<HTMLDivElement>(null)
+  const [controlsClip, setControlsClip] = useState<'start' | 'end' | 'both' | undefined>(undefined)
+  const measureControls = (): void => {
+    const el = controlsRef.current
+    if (!el) return
+    const hiddenStart = el.scrollLeft > 1
+    const hiddenEnd = el.scrollLeft + el.clientWidth < el.scrollWidth - 1
+    setControlsClip(hiddenStart && hiddenEnd ? 'both' : hiddenStart ? 'start' : hiddenEnd ? 'end' : undefined)
+  }
+  useEffect(() => {
+    const el = controlsRef.current
+    if (!el) return
+    const ro = new ResizeObserver(measureControls)
+    ro.observe(el)
+    // The diff toggles portal in after this runs, and a button appearing widens
+    // the content without resizing the strip itself — watch the children too.
+    const mo = new MutationObserver(measureControls)
+    mo.observe(el, { childList: true, subtree: true })
+    measureControls()
+    return () => {
+      ro.disconnect()
+      mo.disconnect()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode, editing, explaining, diffToolsHost])
+
+  // Which hunk actions fit the diff on screen. With whitespace ignored they still
+  // work: the patch is applied matching whitespace loosely (see applyHunkPatch),
+  // so they do what the visible diff shows. None for an untracked working file
+  // (no index version to stage against hunk by hunk — stage the file), and none
+  // for a conflicted file, whose combined diff (`diff --cc`) `git apply` cannot
+  // read — resolve it in the conflict view instead.
+  const isCombinedDiff = !!content && /^diff --cc /m.test(content)
+  const hunkActions = useMemo<HunkAction[]>(() => {
+    if (isCombinedDiff) return []
+    const action = (kind: HunkActionKind, hunkKey: TranslationKey, linesKey: TranslationKey): HunkAction => ({
+      id: kind,
+      hunkLabel: t(hunkKey),
+      linesLabel: (n) => interp(t(linesKey), { n }),
+      reverse: kind !== 'stage' && kind !== 'apply',
+      danger: kind === 'discard',
+      run: (patch) =>
+        void repoActions.applyHunk(repoPath, patch, kind, ignoreWs).then(() => setRefreshKey((k) => k + 1))
+    })
+    if (source.type === 'wip' && !source.untracked) {
+      return source.staged
+        ? [action('unstage', 'hunk.unstage', 'hunk.unstageLines')]
+        : [action('stage', 'diff.stageHunk', 'hunk.stageLines'), action('discard', 'hunk.discard', 'hunk.discardLines')]
+    }
+    if (source.type === 'commit') return [action('revert', 'hunk.revert', 'hunk.revertLines')]
+    // A stash's untracked files diff as new files; applying creates the file.
+    if (source.type === 'stash') return [action('apply', 'hunk.apply', 'hunk.applyLines')]
+    return []
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ignoreWs, isCombinedDiff, source, repoPath, t])
+
+  // A plain mouse wheel only scrolls vertically; on the sideways-only control
+  // strip, turn it into horizontal scrolling so the hidden end stays reachable.
+  const scrollSideways = (e: React.WheelEvent<HTMLDivElement>): void => {
+    const el = e.currentTarget
+    if (el.scrollWidth <= el.clientWidth || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return
+    el.scrollLeft += e.deltaY
+  }
+
   const sourceChip =
     source.type === 'commit' ? (
       <span className="fv-chip commit">{source.hash.slice(0, 7)}</span>
@@ -623,6 +692,9 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
           <strong>{file.split('/').pop()}</strong>
         </span>
         {sourceChip}
+        {/* Everything but the close button lives in one strip that scrolls
+            sideways when the window is too narrow for it; close stays pinned. */}
+        <div className="fv-controls" ref={controlsRef} data-clip={controlsClip} onWheel={scrollSideways} onScroll={measureControls}>
         <div className="fv-modes">
           {modes.map((m) => (
             <button
@@ -634,6 +706,7 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
             </button>
           ))}
         </div>
+        {mode === 'diff' && imgDiff === null && <div className="fv-diff-tools" ref={setDiffToolsHost} />}
         {fileIsSecret && maskSecretsSetting && (
           <button
             className="btn ghost small"
@@ -680,6 +753,7 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
             {saving ? <Loader2 size={13} className="spin" /> : <Save size={13} />} {t('common.save')}
           </button>
         )}
+        </div>
         <button className="icon-btn" title={t('fileViewer.close')} onClick={requestClose}>
           <X size={15} />
         </button>
@@ -782,18 +856,9 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
             maskValues={maskOn}
             ignoreWs={ignoreWs}
             onToggleIgnoreWs={() => setIgnoreWs((v) => !v)}
-            onStageHunk={
-              source.type === 'wip' && !source.staged && !source.untracked
-                ? async (patch) => {
-                    try {
-                      await gitApi.stagePatch(repoPath, patch)
-                      setRefreshKey((k) => k + 1)
-                    } catch (err) {
-                      toast('error', err instanceof Error ? err.message : String(err))
-                    }
-                  }
-                : undefined
-            }
+            toolbarHost={diffToolsHost}
+            externalFind={{ open: findOpen, toggle: findOpen ? closeFind : openFind }}
+            hunkActions={hunkActions}
           />
         )}
 

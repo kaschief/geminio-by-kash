@@ -53,7 +53,8 @@ import {
   Lock,
   MessageSquare,
   Users,
-  FlaskConical
+  FlaskConical,
+  X
 } from 'lucide-react'
 import type { MenuItem } from '../stores/ui'
 import { useRepoStore, repoActions, type RepoData } from '../stores/repo'
@@ -99,6 +100,9 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
   const { undo, redo } = useRepoStore()
   const { openContextMenu, openModal, toggleTerminal, toggleSidebar, graphFilter, setGraphFilter, busy } = useUIStore()
   const terminalOpen = useUIStore((s) => !!s.terminalOpenByRepo[repo.path])
+  // The search filters the commit graph. A file viewer covers the graph, so the
+  // field would filter something out of sight — greyed out, like GitKraken does.
+  const fileViewOpen = useUIStore((s) => !!s.fileView)
   const sidebarCollapsed = useUIStore((s) => s.sidebarCollapsed)
   const busyOp = useUIStore((s) => s.busyOp)
   const chatAvailable = useSettingsStore((s) => repoChatAvailable(s.activeProfile().ai))
@@ -443,6 +447,26 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
   // width is measured while it is on the bar and cached, so a later resize can
   // decide how many still fit without rendering them first.
   const centerRef = useRef<HTMLDivElement>(null)
+
+  // ⌘F / Ctrl+F lands in the commit search unless something closer claims it:
+  // an open file viewer has its own find, and a dialog owns the keyboard.
+  const searchRef = useRef<HTMLInputElement>(null)
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent): void => {
+      if (!(e.metaKey || e.ctrlKey) || e.shiftKey || e.altKey || e.key.toLowerCase() !== 'f') return
+      if (e.defaultPrevented) return
+      const ui = useUIStore.getState()
+      if (ui.modal || ui.fileView) return
+      const input = searchRef.current
+      // Background repo tabs keep their toolbar mounted but hidden.
+      if (!input || input.offsetParent === null) return
+      e.preventDefault()
+      input.focus()
+      input.select()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
   const nodes = useRef(new Map<string, HTMLElement>())
   const widths = useRef(new Map<string, number>())
   const [shown, setShown] = useState(items.length)
@@ -617,13 +641,42 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
             <Loader2 size={13} className="spin" /> {busy}
           </span>
         )}
-        <div className="graph-search">
-          <Search size={13} />
+        <div
+          className={`graph-search${fileViewOpen ? ' is-disabled' : ''}`}
+          data-tip={fileViewOpen ? t('toolbar.searchFileViewTitle') : undefined}
+        >
+          <Search size={13} aria-hidden="true" />
           <input
+            ref={searchRef}
+            disabled={fileViewOpen}
             placeholder={t('toolbar.searchPlaceholder')}
+            aria-label={t('toolbar.searchPlaceholder')}
+            aria-keyshortcuts="Meta+F Control+F"
             value={graphFilter}
             onChange={(e) => setGraphFilter(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key !== 'Escape') return
+              // First Escape clears the query, the next one leaves the field —
+              // so a mistyped search is one key from gone without losing focus.
+              e.stopPropagation()
+              if (graphFilter) setGraphFilter('')
+              else e.currentTarget.blur()
+            }}
           />
+          {graphFilter && !fileViewOpen && (
+            <button
+              type="button"
+              className="graph-search-clear"
+              data-tip={t('toolbar.searchClear')}
+              aria-label={t('toolbar.searchClear')}
+              onClick={() => {
+                setGraphFilter('')
+                searchRef.current?.focus()
+              }}
+            >
+              <X size={12} />
+            </button>
+          )}
         </div>
         <button
           className="tool-btn icon-only"

@@ -14,7 +14,7 @@ Stashing in Gitcito is not all-or-nothing.
 |---|---|
 | **Stash** | Everything, including untracked files if you want, with a message |
 | **Partial stash** | Tick just the files you want; optionally `--keep-index` |
-| **Apply / Pop** | Whole stash, or **just some of its files** |
+| **Apply / Pop** | Whole stash, **just some of its files**, or — from the stash's diff — [a single hunk or a few lines](staging.md#hunk-and-line-actions) |
 | **Stash → branch** | `git stash branch` — the escape hatch when a stash will not apply cleanly |
 
 Selecting a stash shows its files and diffs, exactly like a commit. The header
@@ -30,6 +30,18 @@ files* button) restores just the selection.
 
 If applying a stash would clobber untracked files, git stops. Gitcito offers to
 overwrite them and retry, rather than leaving you to work out the incantation.
+
+If files the stash touches have uncommitted edits, git refuses too. Often those
+edits *are* the stash: a pull that set your changes aside and put them back
+leaves the stash in the list as well. Gitcito checks for that. When your working
+directory already holds exactly what the stash would restore, it says the
+stash is already applied and offers to drop it. Your changes stay where they
+are. Otherwise it names the files in the way, so you can commit or stash them
+first.
+
+The check compares file contents, so it cannot tell a stash you applied apart
+from one whose edits you happened to retype exactly. Either way, nothing would
+change by applying it.
 
 If the tree has moved too far, **stash → branch** recreates the branch the stash
 was taken from, applies it there cleanly, and drops the stash.

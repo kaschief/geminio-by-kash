@@ -2858,6 +2858,8 @@ export interface AppSettings {
    *  follows the working tree either way; this only stops it moving. */
   avatarMotion: boolean
   fileListView: 'path' | 'tree'
+  /** Order of the flat (path) file list. The tree view always sorts by name. */
+  fileListSort: 'git' | 'alpha'
   /** Group local branches into collapsible folders by their `/`-separated
    *  prefix (feature/*, release/*, …). A prefix with a single branch stays flat. */
   groupBranches: boolean
@@ -3296,6 +3298,7 @@ export function defaultSettings(): AppSettings {
     commitAvatars: true,
     avatarMotion: true,
     fileListView: 'path',
+    fileListSort: 'git',
     groupBranches: true,
     graphColumns: defaultGraphColumns(),
     graphColumnOrder: defaultGraphColumnOrder(),

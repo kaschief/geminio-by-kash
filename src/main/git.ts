@@ -2,7 +2,7 @@ import { ipcMain, shell } from 'electron'
 import { simpleGit, SimpleGit, type StatusResult } from 'simple-git'
 import { basename, dirname, join, resolve as resolvePath, sep } from 'path'
 import { pathToFileURL } from 'url'
-import { readFile, writeFile, unlink, stat, chmod, mkdir, readdir, rename, cp, open } from 'fs/promises'
+import { readFile, writeFile, unlink, stat, chmod, mkdir, readdir, rename, cp, open, mkdtemp, rm } from 'fs/promises'
 import { tmpdir, homedir } from 'os'
 import { existsSync, accessSync, constants as fsConstants } from 'fs'
 import { spawn, spawnSync, execFile } from 'child_process'
@@ -935,6 +935,88 @@ async function listSnapshotRefs(repoPath: string): Promise<{ ref: string; sha: s
  * about to be destroyed stays recoverable. Never blocks the operation: every
  * failure here is swallowed — the guard is a parachute, not a gate.
  */
+/**
+ * The three-way fallback behind `applyHunkPatch` for the working tree.
+ *
+ * The patch's `index <old>..<new>` line names the exact file it was cut from.
+ * That version is the merge base; the same version with the patch applied is
+ * "theirs"; the working copy is "ours". `git merge-file` then keeps both sets
+ * of changes: lines that do not overlap merge cleanly, lines that do get
+ * conflict markers in the file — the same outcome a cherry-pick or revert of a
+ * whole commit would have, scoped to one hunk.
+ *
+ * Returns null when the fallback cannot run (a blob git no longer has, a new
+ * or deleted file, a patch that does not even fit its own base), so the caller
+ * reports the original `git apply` error instead.
+ */
+async function mergeHunkIntoFile(
+  repoPath: string,
+  patch: string,
+  patchFile: string,
+  reverse: boolean,
+  ignoreWhitespace: boolean
+): Promise<{ conflicts: number } | null> {
+  const file = /^\+\+\+ b\/(.+)$/m.exec(patch)?.[1]
+  const blobs = /^index ([0-9a-f]+)\.\.([0-9a-f]+)/m.exec(patch)
+  if (!file || !blobs) return null
+  // Reversed, the patch is undone from its new side; forwards, applied to its old.
+  const baseBlob = reverse ? blobs[2] : blobs[1]
+  if (/^0+$/.test(baseBlob)) return null
+  const oursPath = join(repoPath, file)
+  if (!existsSync(oursPath)) return null
+
+  const dir = await mkdtemp(join(tmpdir(), 'gitcito-merge-'))
+  try {
+    const base = await runGit(repoPath, ['cat-file', 'blob', baseBlob]).catch(() => null)
+    if (base === null) return null
+    // Outside a repository `git apply` patches plain files relative to cwd —
+    // here, a scratch copy of the base at the patch's own path.
+    const theirsPath = join(dir, file)
+    await mkdir(dirname(theirsPath), { recursive: true })
+    await writeFile(theirsPath, base, 'utf-8')
+    const applyArgs = [
+      'apply',
+      '--whitespace=nowarn',
+      ...(reverse ? ['--reverse'] : []),
+      ...(ignoreWhitespace ? ['--ignore-whitespace'] : []),
+      patchFile
+    ]
+    const applied = await pexecFile('git', applyArgs, {
+      cwd: dir,
+      env: noPromptEnv()
+    }).then(
+      () => true,
+      () => false
+    )
+    if (!applied) return null
+    const basePath = join(dir, '.gitcito-merge-base')
+    await writeFile(basePath, base, 'utf-8')
+
+    // merge-file exits with the number of conflicts, so a non-zero exit with
+    // output is a result, not a failure. Labels are what the conflict markers say.
+    const result = await pexecFile(
+      'git',
+      ['merge-file', '-p', '-L', 'working copy', '-L', 'base', '-L', 'hunk', oursPath, basePath, theirsPath],
+      { env: noPromptEnv(), maxBuffer: 64 * 1024 * 1024 }
+    ).then(
+      ({ stdout }) => ({ stdout, conflicts: 0 }),
+      (err: { stdout?: string; code?: number }) =>
+        typeof err.code === 'number' && err.code > 0 && err.code < 128 && typeof err.stdout === 'string'
+          ? { stdout: err.stdout, conflicts: err.code }
+          : null
+    )
+    if (!result) return null
+    // Nothing moved — the hunk is already undone (or applied) in the working
+    // copy, e.g. a second click. Reporting success would claim a change that
+    // never happened; returning null surfaces git's own "does not apply".
+    if (result.stdout === (await readFile(oursPath, 'utf-8'))) return null
+    await writeFile(oursPath, result.stdout, 'utf-8')
+    return { conflicts: result.conflicts }
+  } finally {
+    await rm(dir, { recursive: true, force: true }).catch(() => {})
+  }
+}
+
 async function guardSnapshot(repoPath: string): Promise<void> {
   try {
     const settings = await readSettings()
@@ -3253,6 +3335,40 @@ export const gitService = {
 
   async stashDrop(repoPath: string, index = 0): Promise<void> {
     await gitFor(repoPath).stash(['drop', `stash@{${index}}`])
+  },
+
+  /**
+   * Whether the working tree already holds exactly what a stash would restore.
+   * That is the usual state after a pull whose autostash was put back but never
+   * dropped: git then refuses the apply because the stash's files "have local
+   * changes", and those changes are the stash itself. Saying so lets the user
+   * drop it instead of hunting for a conflict that does not exist.
+   */
+  async stashAlreadyApplied(repoPath: string, index = 0): Promise<boolean> {
+    const git = gitFor(repoPath)
+    const ref = `stash@{${index}}`
+    const tracked = (await git.raw(['diff', '--name-only', '-z', `${ref}^1`, ref])).split('\0').filter(Boolean)
+    // `git diff <commit> -- paths` compares that commit's tree with the working
+    // tree, so no output means every tracked file the stash touched matches.
+    if (tracked.length && (await git.raw(['diff', '--name-only', ref, '--', ...tracked])).trim()) return false
+
+    // The untracked part (`^3`, only for `stash -u`) is not in the index, so diff
+    // cannot see it. Compare blob hashes against the files on disk instead.
+    const untrackedListing = await git.raw(['ls-tree', '-r', '-z', `${ref}^3`]).catch(() => '')
+    const untracked = untrackedListing
+      .split('\0')
+      .filter(Boolean)
+      .map((entry) => {
+        const tab = entry.indexOf('\t')
+        return { sha: entry.slice(0, tab).split(' ')[2], path: entry.slice(tab + 1) }
+      })
+    if (!tracked.length && !untracked.length) return false
+    if (untracked.some((u) => !existsSync(join(repoPath, u.path)))) return false
+    if (untracked.length) {
+      const onDisk = (await git.raw(['hash-object', '--', ...untracked.map((u) => u.path)])).trim().split('\n')
+      if (untracked.some((u, i) => onDisk[i] !== u.sha)) return false
+    }
+    return true
   },
 
   /**
@@ -6598,6 +6714,61 @@ export const gitService = {
     }
   },
 
+  /**
+   * Apply a hunk (or a line selection shaped as one) from a diff the user is
+   * looking at, to the index or the working tree, forwards or reversed. Every
+   * hunk action is one of these:
+   *
+   *   stage   — unstaged diff,   forwards, index
+   *   unstage — staged diff,     reversed, index
+   *   discard — unstaged diff,   reversed, working tree
+   *   revert  — a commit's diff, reversed, working tree
+   *   apply   — a stash's diff,  forwards, working tree
+   *
+   * Plain `git apply` first. For the working tree it then falls back to a
+   * three-way merge (see `mergeHunkIntoFile`): revert and apply cut their patch
+   * from history, and the file has often moved on since — a later commit, or
+   * edits not yet committed. `git apply --3way` cannot help there, since it
+   * refuses any file whose working copy differs from the index.
+   *
+   * `ignoreWhitespace` is for a patch cut from a diff shown with whitespace
+   * ignored (`git diff -w`). Its changed lines are exact, but its context lines
+   * may differ from the file in whitespace only, so they are matched loosely
+   * (`--ignore-whitespace`). The whitespace-only changes hidden from that view
+   * stay where they are — the action does what the visible diff shows.
+   *
+   * Anything touching the working tree is snapshotted first, so even a change
+   * the undo stack has lost track of stays recoverable.
+   */
+  async applyHunkPatch(
+    repoPath: string,
+    patch: string,
+    target: 'index' | 'worktree',
+    reverse: boolean,
+    ignoreWhitespace = false
+  ): Promise<{ conflicts: number }> {
+    if (target === 'worktree') await guardSnapshot(repoPath)
+    const tmpPatch = join(tmpdir(), `gitcito-hunk-${Date.now()}-${Math.random().toString(36).slice(2)}.patch`)
+    await writeFile(tmpPatch, patch, 'utf-8')
+    try {
+      const args = ['apply', '--whitespace=nowarn']
+      if (target === 'index') args.push('--cached')
+      if (reverse) args.push('--reverse')
+      if (ignoreWhitespace) args.push('--ignore-whitespace')
+      try {
+        await runGit(repoPath, [...args, tmpPatch])
+        return { conflicts: 0 }
+      } catch (err) {
+        if (target !== 'worktree') throw err
+        const merged = await mergeHunkIntoFile(repoPath, patch, tmpPatch, reverse, ignoreWhitespace)
+        if (!merged) throw err
+        return merged
+      }
+    } finally {
+      await unlink(tmpPatch).catch(() => {})
+    }
+  },
+
   // ─── Reflog (recovery) ─────────────────────────────────────────────────────
 
   /**
@@ -7388,6 +7559,7 @@ const READ_METHODS = new Set<string>([
   'branches',
   'status',
   'stashes',
+  'stashAlreadyApplied',
   'remotes',
   'stackInfo',
   'stackLeaves',

@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from 'react'
 import { ChevronDown, ChevronRight, FolderOpen, Folder, Pencil } from 'lucide-react'
 import type { CodeSearchHit, FileEntry } from '../../../shared/types'
 import { useSettingsStore } from '../stores/settings'
-import { stepPath, visiblePaths } from '../lib/fileNav'
+import { sortFilesForList, stepPath, visiblePaths } from '../lib/fileNav'
 import { bucketOf } from '../lib/fileStats'
 import { MatchRows } from './SearchMatches'
 import { t, type TranslationKey } from '../i18n'
@@ -298,6 +298,8 @@ const PLAIN_CLICK = {
 
 export function FileListView(props: FileListProps): React.JSX.Element {
   const view = useSettingsStore((s) => s.settings.fileListView ?? 'path')
+  const sort = useSettingsStore((s) => s.settings.fileListSort ?? 'git')
+  const flatFiles = useMemo(() => sortFilesForList(props.files, sort), [props.files, sort])
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set())
   const tree = useMemo(() => (view === 'tree' ? buildTree(props.files) : []), [view, props.files])
   const listRef = useRef<HTMLDivElement>(null)
@@ -315,7 +317,7 @@ export function FileListView(props: FileListProps): React.JSX.Element {
 
   // Up/Down (and j/k) walk the list like the commit graph does.
   const step = (dir: 1 | -1): void => {
-    const order = view === 'tree' ? visiblePaths(tree, collapsed) : props.files.map((f) => f.path)
+    const order = view === 'tree' ? visiblePaths(tree, collapsed) : flatFiles.map((f) => f.path)
     const anchor = order.includes(props.current ?? '') ? props.current : cursor.current
     const next = stepPath(order, anchor, dir)
     const file = next ? props.files.find((f) => f.path === next) : null
@@ -357,7 +359,7 @@ export function FileListView(props: FileListProps): React.JSX.Element {
       {view === 'tree' ? (
         <TreeLevel nodes={tree} depth={0} collapsed={collapsed} toggle={toggle} props={rowProps} />
       ) : (
-        props.files.map((f) => <FileRowInner key={f.path} file={f} label={f.path} depth={0} props={rowProps} />)
+        flatFiles.map((f) => <FileRowInner key={f.path} file={f} label={f.path} depth={0} props={rowProps} />)
       )}
     </div>
   )

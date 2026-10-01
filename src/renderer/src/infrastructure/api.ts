@@ -278,6 +278,7 @@ export const gitApi = {
   stashApplyOverwrite: (path: string, index?: number, pop?: boolean) =>
     call<void>('stashApplyOverwrite', path, index, pop),
   stashDrop: (path: string, index?: number) => call<void>('stashDrop', path, index),
+  stashAlreadyApplied: (path: string, index?: number) => call<boolean>('stashAlreadyApplied', path, index),
   renameStash: (path: string, index: number, message: string) => call<void>('renameStash', path, index, message),
   stashApplyFiles: (path: string, sha: string, tracked: string[], untracked: string[]) =>
     call<void>('stashApplyFiles', path, sha, tracked, untracked),
@@ -596,6 +597,13 @@ export const gitApi = {
   runInteractiveRebase: (path: string, base: string, steps: RebaseStep[]) =>
     call<void>('runInteractiveRebase', path, base, steps),
   stagePatch: (path: string, patch: string) => call<void>('stagePatch', path, patch),
+  applyHunkPatch: (
+    path: string,
+    patch: string,
+    target: 'index' | 'worktree',
+    reverse: boolean,
+    ignoreWhitespace?: boolean
+  ) => call<{ conflicts: number }>('applyHunkPatch', path, patch, target, reverse, ignoreWhitespace),
   compareBranches: (path: string, a: string, b: string) =>
     call<BranchCompareResult>('compareBranches', path, a, b),
   mergePreview: (path: string, base: string, refs: string[]) =>

@@ -28,3 +28,20 @@ export function stepPath(order: string[], anchor: string | null | undefined, dir
   const path = order[next]
   return path && path !== anchor ? path : null
 }
+
+/** How the flat path list is ordered: as git reported it, or by path A→Z. */
+export type FileListSort = 'git' | 'alpha'
+
+/** Collator shared by every sort: case-insensitive, and `file2` before `file10`. */
+const PATH_COLLATOR = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' })
+
+/**
+ * Files in the order the flat list shows them. Git's own order is kept for
+ * 'git' — it is already path-sorted by byte value, which puts `Z` before `a`
+ * and `file10` before `file2`; 'alpha' is the order a person would expect.
+ * Returns the input array untouched for 'git' so memoised consumers keep identity.
+ */
+export function sortFilesForList<T extends { path: string }>(files: T[], sort: FileListSort): T[] {
+  if (sort === 'git') return files
+  return [...files].sort((a, b) => PATH_COLLATOR.compare(a.path, b.path))
+}

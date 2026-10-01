@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sparkles, Loader2, Trash2, AlignLeft, FolderTree, GitMerge, ChevronDown, CheckCheck, Users, Plus, Minus } from 'lucide-react'
+import { Sparkles, Loader2, Trash2, AlignLeft, FolderTree, ArrowDownAZ, GitMerge, ChevronDown, CheckCheck, Users, Plus, Minus } from 'lucide-react'
 import { MYAPPDESK_COAUTHOR, type CodeSearchHit, type FileEntry, type CommitStyle } from '../../../shared/types'
 import { gitApi, aiApi, shellApi, diffToolApi } from '../infrastructure/api'
 import { repoActions, useRepoStore, type RepoData } from '../stores/repo'
@@ -54,24 +54,42 @@ function fmtBytes(n: number): string {
 export function ViewToggle(): React.JSX.Element {
   const t = useT()
   const fileListView = useSettingsStore((s) => s.settings.fileListView ?? 'path')
+  const fileListSort = useSettingsStore((s) => s.settings.fileListSort ?? 'git')
   const update = useSettingsStore((s) => s.update)
   const setFileListView = (v: 'path' | 'tree'): void => update((s) => ({ ...s, fileListView: v }))
+  const alpha = fileListSort === 'alpha'
+  // The tree is always sorted by name, so the toggle only has work in path view;
+  // it stays in place (disabled) there rather than jumping in and out.
+  const treeView = fileListView === 'tree'
   return (
-    <div className="view-toggle">
+    <div className="view-controls">
       <button
-        className={fileListView === 'path' ? 'active' : ''}
-        onClick={() => setFileListView('path')}
-        title={t('composer.pathViewTitle')}
+        type="button"
+        className={`view-sort${alpha && !treeView ? ' active' : ''}`}
+        aria-pressed={alpha && !treeView}
+        aria-label={t('composer.sortAlpha')}
+        aria-disabled={treeView || undefined}
+        data-tip={treeView ? t('composer.sortTreeTitle') : alpha ? t('composer.sortAlphaOnTitle') : t('composer.sortAlphaOffTitle')}
+        onClick={treeView ? undefined : () => update((s) => ({ ...s, fileListSort: alpha ? 'git' : 'alpha' }))}
       >
-        <AlignLeft size={12} /> {t('composer.pathView')}
+        <ArrowDownAZ size={13} />
       </button>
-      <button
-        className={fileListView === 'tree' ? 'active' : ''}
-        onClick={() => setFileListView('tree')}
-        title={t('composer.treeViewTitle')}
-      >
-        <FolderTree size={12} /> {t('composer.treeView')}
-      </button>
+      <div className="view-toggle">
+        <button
+          className={fileListView === 'path' ? 'active' : ''}
+          onClick={() => setFileListView('path')}
+          title={t('composer.pathViewTitle')}
+        >
+          <AlignLeft size={12} /> {t('composer.pathView')}
+        </button>
+        <button
+          className={fileListView === 'tree' ? 'active' : ''}
+          onClick={() => setFileListView('tree')}
+          title={t('composer.treeViewTitle')}
+        >
+          <FolderTree size={12} /> {t('composer.treeView')}
+        </button>
+      </div>
     </div>
   )
 }

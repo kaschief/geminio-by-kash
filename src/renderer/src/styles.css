@@ -1345,6 +1345,16 @@ textarea:focus {
 .graph-search:focus-within {
   border-color: var(--accent);
 }
+.graph-search.is-disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.graph-search.is-disabled input {
+  cursor: default;
+  /* A disabled input swallows pointer events without dispatching them, so the
+     wrapper's tip would never show over it. Let them fall through. */
+  pointer-events: none;
+}
 .graph-search input {
   border: none;
   background: transparent;
@@ -1352,6 +1362,29 @@ textarea:focus {
   min-width: 0;
   padding: 0;
   box-shadow: none !important;
+}
+.graph-search-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-inline-end: -4px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
+}
+.graph-search-clear:hover {
+  color: var(--text-0);
+  background: var(--bg-3);
+}
+.graph-search-clear:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
 }
 
 /* ─── Sidebar ───────────────────────────────────────────────────────────── */
@@ -5133,6 +5166,15 @@ body.col-resizing .node-ava {
   opacity: 0.6;
   transition: background 0.08s, opacity 0.08s, color 0.08s;
 }
+.status-changes-btn {
+  /* Same colour as an unstaged file's chip: it means the same thing. */
+  color: var(--warn, #d29922);
+  opacity: 0.9;
+}
+.status-changes-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
 .status-issue-btn:hover {
   background: var(--bg-2);
   color: var(--text-0);
@@ -7022,6 +7064,11 @@ body.col-resizing .node-ava {
   padding: 8px 12px;
   border-bottom: 1px solid var(--border);
 }
+/* In a narrow panel the summary on the left gives way; the view controls keep
+   their size, since a squeezed button is harder to hit than a clipped count. */
+.panel-toolbar > :first-child {
+  min-width: 0;
+}
 .panel-title {
   font-size: 11px;
   color: var(--text-2);
@@ -7060,6 +7107,42 @@ body.col-resizing .node-ava {
 }
 .view-toggle button:hover:not(.active) {
   color: var(--text-1);
+}
+.view-controls {
+  display: flex;
+  align-items: center;
+  /* A clear gap: the sort button is its own control, not a third segment of
+     the Path / Tree pair beside it. */
+  gap: 12px;
+  flex-shrink: 0;
+}
+.view-sort {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 5px;
+  color: var(--text-2);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.view-sort:hover:not([aria-disabled='true']):not(.active) {
+  color: var(--text-1);
+}
+.view-sort.active {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+.view-sort[aria-disabled='true'] {
+  opacity: 0.35;
+  cursor: default;
+}
+.view-sort:focus-visible,
+.view-toggle button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
 }
 
 .tree-folder {
@@ -7175,7 +7258,37 @@ body.col-resizing .node-ava {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  /* Shrinks before the controls do, but never to nothing. */
+  flex: 0 1 auto;
+  min-width: 72px;
+}
+.fv-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 auto;
   min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* No bar, same as the tab strip: a scrollbar on a 30px control row covers the
+     controls. A fade on the clipped edge says there is more instead. */
+  scrollbar-width: none;
+}
+.fv-controls::-webkit-scrollbar {
+  display: none;
+}
+.fv-controls[data-clip='start'] {
+  mask-image: linear-gradient(to right, transparent, #000 24px);
+}
+.fv-controls[data-clip='end'] {
+  mask-image: linear-gradient(to left, transparent, #000 24px);
+}
+.fv-controls[data-clip='both'] {
+  mask-image: linear-gradient(to right, transparent, #000 24px, #000 calc(100% - 24px), transparent);
+}
+.fv-controls > * {
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 .fv-dir {
   color: var(--text-2);
@@ -7239,6 +7352,50 @@ body.col-resizing .node-ava {
 }
 .fv-mode:hover:not(.active) {
   color: var(--text-1);
+}
+/* The diff's display toggles, portalled in from DiffViewer. Same segmented
+   shape as .fv-modes beside it, icon-only, so the header reads as one row of
+   controls instead of a second toolbar floating over the code. */
+.fv-diff-tools {
+  display: contents;
+}
+.diff-tools {
+  display: flex;
+  background: var(--bg-0);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.diff-tool {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* Matches .fv-mode's height (11px text + 4px padding) so the two groups align. */
+  padding: 4px 8px;
+  color: var(--text-2);
+  background: transparent;
+  border: none;
+  border-inline-end: 1px solid var(--border);
+  cursor: pointer;
+}
+.diff-tool:last-child {
+  border-inline-end: none;
+}
+.diff-tool:hover:not([aria-disabled='true']):not(.on) {
+  color: var(--text-1);
+}
+.diff-tool.on {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.diff-tool[aria-disabled='true'] {
+  opacity: 0.35;
+  cursor: default;
+}
+.diff-tool:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
 }
 .fv-body {
   flex: 1;
@@ -11636,25 +11793,44 @@ input[type='range']:focus-visible {
 .sb-item.pr > .sb-pr-open:nth-child(3) { margin-inline-start: auto; }
 
 /* ── Hunk staging button (feature 11) ── */
-.diff-line.hunk { position: relative; }
-.diff-stage-hunk {
-  position: absolute;
+/* A hunk can carry several actions (Stage Hunk + Discard Hunk), so the
+   wrapper is what sits on the bar and the buttons line up inside it.
+   Sticky, not absolute: the diff is as wide as its longest line, so a button
+   anchored to the end of the bar sat off-screen whenever a line ran long. Sticky
+   keeps it against the visible edge. The negative block margin stops the
+   buttons from making the bar taller than a code line. */
+.diff-hunk-actions {
+  position: sticky;
   inset-inline-end: 6px;
-  top: 50%;
-  transform: translateY(-50%);
+  margin-inline-start: auto;
+  margin-block: -3px;
+  padding-inline-start: 12px;
+  align-self: center;
+  display: inline-flex;
+  gap: 6px;
+  z-index: 1;
+}
+.diff-stage-hunk {
   font-size: 10.5px;
   padding: 1px 7px;
   white-space: nowrap;
 }
+.diff-stage-hunk.danger:hover {
+  color: var(--red, #e5484d);
+  border-color: var(--red, #e5484d);
+}
 
 /* ── Line-level staging ── */
-.diff-line.selectable {
+.diff-line.selectable,
+.diff-split-cell.selectable {
   cursor: pointer;
 }
-.diff-line.selectable:hover {
+.diff-line.selectable:hover,
+.diff-split-cell.selectable:hover {
   filter: brightness(1.12);
 }
-.diff-line.line-selected {
+.diff-line.line-selected,
+.diff-split-cell.line-selected {
   box-shadow: inset 3px 0 0 var(--accent);
   background: color-mix(in srgb, var(--accent) 14%, transparent);
 }
@@ -15240,9 +15416,6 @@ mark.diff-find-hit.current { background: #ff9632; color: #10121a; }
 .diff-split { display: flex; flex-direction: column; clear: both; min-width: 0; }
 .diff-split-hunk {
   display: flex; align-items: center; gap: 8px;
-  /* `.diff-stage-hunk` is absolutely positioned; without this it anchors to the
-     scroll container and floats mid-diff instead of sitting on the hunk bar. */
-  position: relative;
   background: var(--bg-2); color: var(--code-comment, var(--text-2));
   padding: 1px 8px; border-top: 1px solid var(--border-soft); border-bottom: 1px solid var(--border-soft);
 }
@@ -15284,12 +15457,6 @@ mark.diff-find-hit.current { background: #ff9632; color: #10121a; }
    button would sit off-screen until you scrolled to it. Sticky keeps it against
    the visible edge of its own column instead. */
 .is-nowrap .diff-stage-hunk {
-  position: sticky;
-  inset-inline-end: 6px;
-  top: auto;
-  transform: none;
-  margin-inline-start: auto;
-  align-self: center;
   /* Has to fit inside a one-line row without stretching it. */
   padding: 0 7px;
   font-size: 10px;
@@ -16876,3 +17043,55 @@ mark.diff-find-hit.current { background: #ff9632; color: #10121a; }
 .ws-plan-name { font-weight: 600; color: var(--text-0); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ws-plan-count { font-size: 11.5px; color: var(--text-2); white-space: nowrap; }
 .ws-plan-note { font-size: 11px; color: var(--text-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ─── Fast tooltip (components/FastTooltip.tsx) ─────────────────────────── */
+.fast-tooltip {
+  position: fixed;
+  z-index: 1100;
+  max-width: 280px;
+  padding: 4px 8px;
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--text-0);
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+  white-space: normal;
+  animation: fast-tooltip-in 0.12s ease-out;
+}
+@keyframes fast-tooltip-in {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fast-tooltip {
+    animation: none;
+  }
+}
+
+/* ─── Uncommitted-changes banner (components/WorkingChangesBanner.tsx) ──── */
+.wip-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  font-size: 11.5px;
+  color: var(--warn, #d29922);
+  background: color-mix(in srgb, var(--warn, #d29922) 10%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--warn, #d29922) 25%, transparent);
+  flex-shrink: 0;
+}
+.wip-banner-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.wip-banner-btn {
+  flex-shrink: 0;
+}

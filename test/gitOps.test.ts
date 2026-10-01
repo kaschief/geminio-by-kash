@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os'
 import { gitMethodIsRead, gitService } from '../src/main/git'
 import { prepareRepoFileActions } from '../src/main/repoFileActions'
 import { cloneFixture, cleanupFixtures } from './fixtures'
+import { overwrittenLocalChanges, readableGitError } from '../src/renderer/src/lib/gitErrors'
 import { mergePbxproj, parsePbxproj } from '../src/shared/pbxproj'
 import { convertFile } from '../src/main/textconv'
 import { execFileSync } from 'node:child_process'
@@ -198,6 +199,42 @@ describe('stash apply with colliding untracked files', () => {
     expect(existsSync(join(R, 'delta-untracked.txt'))).toBe(true)
     // pop removes the stash once it applies cleanly.
     expect((await gitService.stashes(R)).length).toBe(0)
+  })
+})
+
+describe('stash already applied', () => {
+  it('is false on a clean tree, true once applied without dropping, false again after an edit', async () => {
+    const R = cloneFixture('stash-picking')
+    expect(await gitService.stashAlreadyApplied(R, 0)).toBe(false)
+
+    // The state a pull's autostash leaves when it restores but does not drop.
+    await gitService.stashApply(R, 0)
+    expect(await gitService.stashAlreadyApplied(R, 0)).toBe(true)
+
+    writeFileSync(join(R, 'alpha.txt'), 'edited after applying\n')
+    expect(await gitService.stashAlreadyApplied(R, 0)).toBe(false)
+  })
+
+  it('checks the untracked part of a -u stash too', async () => {
+    const R = cloneFixture('stash-picking')
+    await gitService.stashApply(R, 0)
+    writeFileSync(join(R, 'delta-untracked.txt'), 'not what the stash holds\n')
+    expect(await gitService.stashAlreadyApplied(R, 0)).toBe(false)
+  })
+
+  it('re-applying fails with an error the renderer can read the blocking files from', async () => {
+    const R = cloneFixture('stash-picking')
+    await gitService.stashApply(R, 0)
+    const err = await gitService.stashApply(R, 0).then(
+      () => null,
+      (e: unknown) => (e instanceof Error ? e.message : String(e))
+    )
+    expect(err).not.toBeNull()
+    const files = overwrittenLocalChanges(err as string)
+    expect(files).not.toBeNull()
+    expect(files).toContain('alpha.txt')
+    // The toast must open on git's verdict, not on the `git status` git prints first.
+    expect(readableGitError(err as string).split('\n')[0]).toMatch(/would be overwritten/)
   })
 })
 

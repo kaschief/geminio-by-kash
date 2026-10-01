@@ -22,7 +22,7 @@ listed next to their commands in the [menu bar](menu-bar.md).
 | <kbd>⌘⇧V</kbd> | [Vault](vault.md) |
 | <kbd>⌘O</kbd> / <kbd>Ctrl+O</kbd> | Open a repository |
 | <kbd>⌘,</kbd> / <kbd>Ctrl+,</kbd> | Open Settings |
-| <kbd>⌘F</kbd> | Find inside the file or diff you are reading |
+| <kbd>⌘F</kbd> | Find inside the file or diff you are reading — anywhere else, jump to the commit search. <kbd>Esc</kbd> clears it, a second <kbd>Esc</kbd> leaves it |
 | <kbd>⌘T</kbd> / <kbd>Ctrl+T</kbd> | Open the new-tab repository or group picker |
 | <kbd>⌘W</kbd> / <kbd>Ctrl+W</kbd> | Close the active tab — or the window, once no tab is left |
 | <kbd>⌘1</kbd>–<kbd>⌘9</kbd> / <kbd>Ctrl+1</kbd>–<kbd>Ctrl+9</kbd> | Switch to a tab by its position |

@@ -1,6 +1,8 @@
+import { WorkingChangesBanner } from './components/WorkingChangesBanner'
+import { workingChangeCount } from './lib/workingChanges'
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { GitMerge, FolderOpen, Download, ArrowDownToLine, Bug, LifeBuoy, MessageSquare, X, CheckSquare, Stethoscope, CircleX, TriangleAlert, Info, ListTodo } from 'lucide-react'
+import { GitMerge, FolderOpen, Download, ArrowDownToLine, Bug, LifeBuoy, MessageSquare, X, CheckSquare, Stethoscope, CircleX, TriangleAlert, Info, ListTodo, Pencil } from 'lucide-react'
 import { takeAccountsNotice, useSettingsStore } from './stores/settings'
 import { useRepoStore, repoActions, type RepoData } from './stores/repo'
 import { useUIStore } from './stores/ui'
@@ -30,6 +32,7 @@ import { ContextMenu } from './components/ContextMenu'
 import { ModalHost } from './components/ModalHost'
 import { CommandPalette } from './components/CommandPalette'
 import { Toasts } from './components/Toasts'
+import { FastTooltip } from './components/FastTooltip'
 import { UpdateBanner } from './components/UpdateBanner'
 import { RepoCosmos } from './components/cosmos/RepoCosmos'
 import { useUpdatesStore, hasPendingUpdate } from './stores/updates'
@@ -373,6 +376,34 @@ function TodoStatusChip({ path }: { path: string }): React.JSX.Element | null {
  * Only shown for a repo that actually asks for an analyzer — a counter reading
  * three zeroes on a repo with no toolchain says nothing and takes up room.
  */
+/**
+ * Uncommitted changes, at a glance, from anywhere — a file viewer covers the
+ * graph's WIP row, which is otherwise the only place that says the tree is
+ * dirty. Quiet on purpose: absent when clean, one small count when not. A click
+ * closes whatever covers the graph and opens those changes.
+ */
+function WorkingChangesChip({ path }: { path: string }): React.JSX.Element | null {
+  const t = useT()
+  const count = useRepoStore((s) => workingChangeCount(s.repos[path]?.status))
+  if (count === 0) return null
+  const label = interp(t('status.workingChanges'), { n: count })
+  return (
+    <button
+      type="button"
+      className="status-issue-btn status-changes-btn"
+      aria-label={label}
+      data-tip={t('status.workingChangesTip')}
+      onClick={() => {
+        useUIStore.getState().setFileView(null)
+        useRepoStore.getState().select(path, { type: 'wip' })
+      }}
+    >
+      <Pencil size={11} aria-hidden="true" />
+      <span>{count}</span>
+    </button>
+  )
+}
+
 function ProblemsStatusChip({ path }: { path: string }): React.JSX.Element | null {
   const t = useT()
   const available = useProblemsStore((s) => s.availableByRepo[path])
@@ -1121,6 +1152,11 @@ export default function App(): React.JSX.Element {
                     tabIndex={-1}
                     style={{ width: layout.panelWidth }}
                   >
+                    {!(activeRightPanelTab === 'chat' && chatAvailable) &&
+                      !forceConflictPanel &&
+                      (repo.selected?.type === 'commit' || repo.selected?.type === 'stash') && (
+                        <WorkingChangesBanner path={repo.path} />
+                      )}
                     {activeRightPanelTab === 'chat' && chatAvailable ? (
                       <RepoChatPanel key={repo.path} repoPath={repo.path} repoName={repo.name} />
                     ) : forceConflictPanel ? (
@@ -1244,6 +1280,7 @@ export default function App(): React.JSX.Element {
               <ProblemsStatusChip path={repo.path} />
               <CodeTodosStatusChip path={repo.path} />
               <span className="status-sep" />
+              <WorkingChangesChip path={repo.path} />
               <button
                 className="status-branch-profile status-branch-btn"
                 title={t('app.switchBranch')}
@@ -1309,6 +1346,7 @@ export default function App(): React.JSX.Element {
       <ModalHost />
       <CommandPalette />
       <Toasts />
+      <FastTooltip />
       <UpdateBanner />
       <RepoCosmos />
     </div>
