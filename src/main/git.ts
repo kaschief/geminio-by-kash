@@ -6880,6 +6880,19 @@ export const gitService = {
     return { branch, head, branchLog }
   },
 
+  /**
+   * Commits on a local branch that no remote-tracking ref contains — what a
+   * push would publish. Empty when there are no remotes: "unpushed" would then
+   * be every commit, which marks nothing. Capped, because a long-lived
+   * never-pushed branch only needs its top marked.
+   */
+  async unpushedCommits(repoPath: string, max = 1000): Promise<string[]> {
+    const remotes = await runGit(repoPath, ['remote']).catch(() => '')
+    if (!remotes.trim()) return []
+    const out = await runGit(repoPath, ['rev-list', `--max-count=${max}`, '--branches', '--not', '--remotes']).catch(() => '')
+    return out.split('\n').map((l) => l.trim()).filter(Boolean)
+  },
+
   // ─── Bisect ────────────────────────────────────────────────────────────────
 
   /** Current bisect state (used when (re)opening the UI mid-session). */
@@ -7674,6 +7687,7 @@ const READ_METHODS = new Set<string>([
   'commitTemplate',
   'reflog',
   'recentRefMoves',
+  'unpushedCommits',
   'bisectStatus',
   'getRemoteTags',
   'remoteBranches',

@@ -1,4 +1,4 @@
-import type { AppTheme, CodeTheme, ThemeMode, AppThemeColors, CodeThemeColors } from '../../../shared/types'
+import type { AppTheme, CodeTheme, ThemeMode, AppThemeColors, CodeThemeColors, StatusDotColors } from '../../../shared/types'
 
 // ─── Built-in app themes ─────────────────────────────────────────────────────
 // Every built-in theme ships a light and a dark palette. The active palette is
@@ -762,6 +762,20 @@ export function applyAppTheme(theme: AppTheme, mode: ThemeMode): void {
   r.style.setProperty('--red', c.red)
   r.style.setProperty('--yellow', c.yellow)
   r.style.setProperty('--purple', c.purple)
+}
+
+/** Tab status dot overrides; clearing a colour hands it back to the stylesheet. */
+export function applyStatusDotColors(colors: StatusDotColors | undefined): void {
+  const r = document.documentElement.style
+  if (colors?.changes) {
+    r.setProperty('--status-dot-changes', colors.changes)
+    r.setProperty('--status-dot-changes-opacity', '1')
+  } else {
+    r.removeProperty('--status-dot-changes')
+    r.removeProperty('--status-dot-changes-opacity')
+  }
+  if (colors?.conflict) r.setProperty('--status-dot-conflict', colors.conflict)
+  else r.removeProperty('--status-dot-conflict')
 }
 
 export function applyCodeTheme(theme: CodeTheme, mode: ThemeMode, fontSize: number): void {

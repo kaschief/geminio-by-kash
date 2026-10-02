@@ -1,4 +1,5 @@
 import { searchSettings } from '../lib/settingsSearch'
+import { GraphRowAccentControls, StatusDotControls } from './GraphAccentSettings'
 import { AppIconPicker } from './AppIconPicker'
 import { setGitHubAccount } from '../stores/githubAccount'
 import { useAiReady } from './useAiReady'
@@ -89,11 +90,11 @@ import type { DetectedEditor, EditorSetting } from '../../../shared/editors'
 import type { SshKey, SshStatus, SshTest } from '../../../shared/sshKeys'
 import type { DiffToolConfig, DiffToolInfo } from '../../../shared/diffTools'
 import type { RerereStatus } from '../../../shared/types'
-import { AI_PROVIDERS, emptyAnalytics, defaultGraphStyle, type AIProvider, type Analytics, type AIUsageStat, type ActivityEvent, type RepoStats, type AppSettings, type BranchNamingStyle, type CommitStyle, type ConflictStyle, type ExplainStyle, type Profile, type SigningConfig, type SettingsBundle, type GraphStyle, type GraphPalette, type GraphEdgeStyle, type GraphDensity, type GraphLineWidth, type GraphNodeStyle, type GraphTopology, type GraphFocus, type GraphCommit, type ConnectedAccount } from '../../../shared/types'
+import { AI_PROVIDERS, emptyAnalytics, defaultGraphStyle, type AIProvider, type Analytics, type AIUsageStat, type ActivityEvent, type RepoStats, type AppSettings, type BranchNamingStyle, type CommitStyle, type ConflictStyle, type ExplainStyle, type Profile, type SigningConfig, type SettingsBundle, type GraphStyle, type GraphPalette, type GraphEdgeStyle, type GraphDensity, type GraphLineWidth, type GraphNodeStyle, type GraphTopology, type GraphFocus, type GraphRowAccent, type GraphCommit, type ConnectedAccount } from '../../../shared/types'
 import { hasSettingsSecrets, stripSettingsSecrets } from '../../../shared/secrets'
 import { tabActiveRepoPath } from '../../../shared/types'
 import type { HoverModifier, KeychainConsent } from '../../../shared/types'
-import { allGraphPalettes, findGraphPalette, colorForPalette, edgePath, spurPath, DENSITY_ROW_H, LINE_WIDTH_PX, GRAPH_PALETTES } from '../graph/style'
+import { allGraphPalettes, findGraphPalette, colorForPalette, edgePath, spurPath, DENSITY_ROW_H, LINE_WIDTH_PX, GRAPH_PALETTES, normalizeRowAccent, rowAccentParts, withAlpha, ROW_HAZE_ALPHA, ROW_BAR_PX } from '../graph/style'
 import { GRAPH_FOCUS_MODES, focusedHashes, type FocusInput } from '../lib/graphFocus'
 import { layoutGraph } from '../graph/layout'
 import type {
@@ -120,7 +121,7 @@ import { LanguagePicker } from './LanguagePicker'
 import { ShortcutEditor } from './CheatsheetModal'
 import madLogo from '../assets/mad-high.png'
 import { RepoSettingsModal } from './RepoSettingsModal'
-import { FolderGit2 } from 'lucide-react'
+import { ArrowUp, FolderGit2 } from 'lucide-react'
 
 type SettingsPage =
   | 'repository'
@@ -1170,7 +1171,8 @@ function GraphMiniPreview({
   lineW,
   nodeStyle,
   topology,
-  focus
+  focus,
+  accent
 }: {
   colors: string[]
   edgeStyle: GraphEdgeStyle
@@ -1179,6 +1181,7 @@ function GraphMiniPreview({
   nodeStyle: GraphNodeStyle
   topology: GraphTopology
   focus: GraphFocus
+  accent: GraphRowAccent
 }): React.JSX.Element {
   const laneW = 22
   const leftPad = 16
@@ -1200,7 +1203,13 @@ function GraphMiniPreview({
   const x = (lane: number): number => leftPad + lane * laneW
   const y = (row: number): number => row * rowH + rowH / 2
   const height = commits.length * rowH
-  const width = leftPad + (layout.laneCount + 0.5) * laneW + 18
+  const graphW = leftPad + (layout.laneCount + 0.5) * laneW + 6
+  // A stub of each row's message, so ring / haze / bar settings show here live.
+  const width = graphW + 46
+  const parts = rowAccentParts(accent.style)
+  const accentOf = (lane: number): string => accent.color ?? cf(lane)
+  // The newest two commits play "not pushed yet".
+  const unpushed = new Set(accent.unpushed === 'off' ? [] : commits.filter((c) => !PREVIEW_SPURS.has(c.hash)).slice(0, 2).map((c) => c.hash))
   const avaSize = 17
   // Deeper rails first so the trunk sits on top of the branches it spawns.
   const edges = [...layout.edges].sort(
@@ -1209,6 +1218,27 @@ function GraphMiniPreview({
   let avaIdx = 0
   return (
     <div className="graph-mini-wrap" style={{ position: 'relative', width, height }}>
+      {commits.map((c) => {
+        const n = layout.nodes.get(c.hash)
+        if (!n || PREVIEW_SPURS.has(c.hash)) return null
+        const col = accentOf(n.color)
+        const cy = y(n.row)
+        const local = unpushed.has(c.hash)
+        return (
+          <div key={`row-${c.hash}`} aria-hidden="true">
+            {accent.unpushedRow && local && (
+              <div className="graph-mini-rowtint" style={{ top: cy - rowH / 2 + 2, height: rowH - 4, background: `linear-gradient(90deg, ${withAlpha(col, 0.11)}, transparent)` }} />
+            )}
+            {parts.haze && (
+              <div style={{ position: 'absolute', left: x(n.lane), width: Math.max(0, graphW - x(n.lane)), top: cy - rowH / 2 + 4, height: rowH - 8, background: `linear-gradient(90deg, transparent, ${withAlpha(col, ROW_HAZE_ALPHA)})` }} />
+            )}
+            {(parts.bar || local) && (
+              <div style={{ position: 'absolute', left: graphW, width: ROW_BAR_PX, top: cy - rowH / 2 + 4, height: rowH - 8, borderRadius: 1, background: local ? `repeating-linear-gradient(to bottom, ${col} 0 3px, transparent 3px 6px)` : col }} />
+            )}
+            <div className="graph-mini-stub" style={{ left: graphW + 8, top: cy - 2 }} />
+          </div>
+        )
+      })}
       <svg className="graph-mini-svg" width={width} height={height}>
         {edges.map((e, i) => {
           const isSpur = e.kind === 'spur'
@@ -1263,15 +1293,21 @@ function GraphMiniPreview({
           if (!n) return null
           const cx = x(n.lane)
           const cy = y(n.row)
-          const col = cf(n.color)
+          const col = accentOf(n.color)
           const email = PREVIEW_EMAILS[avaIdx++ % PREVIEW_EMAILS.length]
+          const local = unpushed.has(c.hash)
           return (
             <div
               key={i}
-              className="node-ava"
-              style={{ left: cx, top: cy, boxShadow: `0 0 0 2px ${col}` }}
+              className={`node-ava ${local ? 'unpushed' : ''}`}
+              style={{ left: cx, top: cy, boxShadow: parts.ring && !local ? `0 0 0 2px ${col}` : 'none', '--ring-c': col } as React.CSSProperties}
             >
               <Avatar email={email} size={avaSize} />
+              {local && accent.unpushed === 'dashed-arrow' && (
+                <span className="node-ava-pip">
+                  <ArrowUp size={7} strokeWidth={3.5} />
+                </span>
+              )}
             </div>
           )
         })}
@@ -1495,12 +1531,14 @@ function GraphStyleTab(): React.JSX.Element {
               </button>
             ))}
           </div>
+
+          <GraphRowAccentControls />
         </div>
 
         <div className="graph-style-preview">
           <div className="code-preview-head">{t('settings.graphPreview')}</div>
           <div className="graph-mini-stage">
-            <GraphMiniPreview colors={current.colors} edgeStyle={style.edgeStyle} rowH={rowH} lineW={lineW} nodeStyle={style.nodeStyle} topology={style.topology ?? 'full'} focus={style.focus ?? 'all'} />
+            <GraphMiniPreview colors={current.colors} edgeStyle={style.edgeStyle} rowH={rowH} lineW={lineW} nodeStyle={style.nodeStyle} topology={style.topology ?? 'full'} focus={style.focus ?? 'all'} accent={normalizeRowAccent(style.rowAccent)} />
           </div>
         </div>
       </div>
@@ -1551,7 +1589,7 @@ function GraphStyleTab(): React.JSX.Element {
               ))}
             </div>
             <div className="graph-mini-stage" style={{ marginTop: 12 }}>
-              <GraphMiniPreview colors={draft} edgeStyle={style.edgeStyle} rowH={rowH} lineW={lineW} nodeStyle={style.nodeStyle} topology={style.topology ?? 'full'} focus={style.focus ?? 'all'} />
+              <GraphMiniPreview colors={draft} edgeStyle={style.edgeStyle} rowH={rowH} lineW={lineW} nodeStyle={style.nodeStyle} topology={style.topology ?? 'full'} focus={style.focus ?? 'all'} accent={normalizeRowAccent(style.rowAccent)} />
             </div>
             <div className="theme-editor-actions">
               <button className="btn primary small" onClick={savePalette}>
@@ -2001,6 +2039,7 @@ function ThemesPage({ initialTab, searchTab }: { initialTab?: 'theme' | 'graph';
           </div>
         </ThemeDialog>
       )}
+      <StatusDotControls />
       </>
       )}
     </>

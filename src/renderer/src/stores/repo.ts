@@ -142,6 +142,8 @@ export interface RepoData {
   doctor: DoctorCheck[]
   /** The newest change made outside the app that undo can walk back, from the reflog. */
   externalUndo: ExternalUndoPlan | null
+  /** Commits on a local branch that no remote has yet — the graph marks them. */
+  unpushed: string[]
 }
 
 const emptyRepo = (path: string): RepoData => ({
@@ -182,7 +184,8 @@ const emptyRepo = (path: string): RepoData => ({
   localCiVerdicts: {},
   config: null,
   doctor: [],
-  externalUndo: null
+  externalUndo: null,
+  unpushed: []
 })
 
 interface RepoStoreState {
@@ -573,6 +576,11 @@ function mergePending(path: string, req: PendingRefresh): void {
 // Re-read only the requested slices of repo state. Slices left out keep their
 // previous value AND array identity, so excluding 'log'/'stashes' means the
 // graph's `commits`/`stashes` memos never invalidate → no relayout.
+/** Keep an unchanged list's identity, so the graph's memo of it holds. */
+function sameList(a: string[] | undefined, b: string[]): boolean {
+  return !!a && a.length === b.length && a.every((x, i) => x === b[i])
+}
+
 async function doRefresh(path: string, slices: RefreshSlice[]): Promise<void> {
   const store = useRepoStore.getState()
   const repo = store.repos[path]
@@ -598,7 +606,8 @@ async function doRefresh(path: string, slices: RefreshSlice[]): Promise<void> {
       notedShas,
       lastFetchAt,
       config,
-      externalUndo
+      externalUndo,
+      unpushed
     ] = await Promise.all([
         keep(repo?.commits, want.has('log'), () => gitApi.log(path, maxCount), []),
         keep(repo?.branches, want.has('branches'), () => gitApi.branches(path), {
@@ -642,6 +651,13 @@ async function doRefresh(path: string, slices: RefreshSlice[]): Promise<void> {
               .then((moves) => planExternalUndo(moves, skipFor(path)))
               .catch(() => null),
           null
+        ),
+        // A commit, a push and a fetch each change the answer; one rev-list covers all three.
+        keep(
+          repo?.unpushed,
+          want.has('branches') || want.has('remotes') || want.has('log'),
+          () => gitApi.unpushedCommits(path).catch(() => []),
+          []
         )
       ])
     store.patch(path, {
@@ -659,6 +675,7 @@ async function doRefresh(path: string, slices: RefreshSlice[]): Promise<void> {
       lastFetchAt,
       config,
       externalUndo,
+      unpushed: sameList(repo?.unpushed, unpushed) ? (repo?.unpushed ?? unpushed) : unpushed,
       loading: false,
       notGit: false,
       missingFolder: false,

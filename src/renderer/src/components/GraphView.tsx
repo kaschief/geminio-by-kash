@@ -2,13 +2,13 @@ import { formatAbsoluteDate } from '../lib/commitDate'
 import { fitBranchAndGraph } from '../lib/graphColumnFit'
 import { useLayoutEffect, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { Archive, GitCommitHorizontal, Tag, Laptop, Cloud, Check, Star, Settings2, Pencil, Plus, Minus, CheckCircle2, XCircle, Clock, MinusCircle, StickyNote, FlaskConical } from 'lucide-react'
+import { Archive, GitCommitHorizontal, Tag, Laptop, Cloud, Check, Star, Settings2, Pencil, Plus, Minus, CheckCircle2, XCircle, Clock, MinusCircle, StickyNote, FlaskConical, ArrowUp } from 'lucide-react'
 import { ciIcon, CI_STATE_KEY } from './CiIcon'
 import type { CiState, CiStatus, GraphCommit, StashInfo, GraphColumnId, GraphFlowColumnId, GraphColumns, FileEntry, CommitMenuProbe, GraphFocus } from '../../../shared/types'
 import { defaultGraphColumns, defaultGraphColumnOrder, defaultGraphStyle } from '../../../shared/types'
 import { GraphHeaderFilter, type FilterOption } from './GraphHeaderFilter'
 import { layoutGraph } from '../graph/layout'
-import { edgePath, spurPath, colorForPalette, findGraphPalette, DENSITY_ROW_H, LINE_WIDTH_PX } from '../graph/style'
+import { edgePath, spurPath, colorForPalette, findGraphPalette, DENSITY_ROW_H, LINE_WIDTH_PX, ROW_RING_PX, ROW_BAR_PX, ROW_HAZE_ALPHA, rowAccentParts, normalizeRowAccent, withAlpha } from '../graph/style'
 import { useRepoStore, repoActions, type RepoData } from '../stores/repo'
 import { useUIStore, type MenuItem } from '../stores/ui'
 import { useSettingsStore } from '../stores/settings'
@@ -644,6 +644,12 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
     () => colorForPalette(findGraphPalette(graphStyle.paletteId, customGraphPalettes).colors),
     [graphStyle.paletteId, customGraphPalettes]
   )
+  // Ring, haze and bar: the lane colour unless the user picked one colour for all.
+  const accent = useMemo(() => normalizeRowAccent(graphStyle.rowAccent), [graphStyle.rowAccent])
+  const accentFor = (lane: number): string => accent.color ?? colorFor(lane)
+  const unpushedSet = useMemo(() => new Set(repo.unpushed ?? []), [repo.unpushed])
+  const parts = rowAccentParts(accent.style)
+  const markUnpushed = (hash: string): boolean => accent.unpushed !== 'off' && unpushedSet.has(hash)
   // Which slice of history is drawn. Lives in settings so the graph gear menu
   // and Settings → Themes → Graph edit exactly the same value.
   const focus = graphStyle.focus ?? 'all'
@@ -2065,17 +2071,30 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
             // The overlay's overflow:hidden takes care of the spill.
             const x = branchCol + Math.min(LEFT_PAD + n.lane * LANE_W, graphCol - NODE_R - 1)
             const y = n.row * ROW_H + ROW_H / 2
-            const color = colorFor(n.color)
+            const color = accentFor(n.color)
             const ghost = preview != null && !preview.hashes.has(c.hash)
+            const local = markUnpushed(c.hash)
             return (
               <div key={c.hash} className={ghost ? 'node-ghost' : undefined}>
                 {!isMerge && (
                   <div
-                    className="node-ava"
-                    style={{ left: x, top: y, boxShadow: `0 0 0 2.5px ${color}` }}
+                    className={`node-ava ${local ? 'unpushed' : ''}`}
+                    style={{
+                      left: x,
+                      top: y,
+                      // An unpushed commit trades the solid ring for a dashed
+                      // outline (CSS), drawn even when rings are off: it is the mark.
+                      boxShadow: parts.ring && !local ? `0 0 0 ${ROW_RING_PX}px ${color}` : 'none',
+                      '--ring-c': color
+                    } as React.CSSProperties}
                     title={[c.author, ...(c.coAuthors?.map((a) => `+ ${a.name}`) ?? [])].join('\n')}
                   >
                     <Avatar email={c.email} name={c.author} size={AVA} />
+                    {local && accent.unpushed === 'dashed-arrow' && (
+                      <span className="node-ava-pip" aria-label={t('graph.unpushed')}>
+                        <ArrowUp size={7} strokeWidth={3.5} />
+                      </span>
+                    )}
                   </div>
                 )}
               </div>
@@ -2116,8 +2135,8 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
               aria-setsize={displayCommits.length}
               aria-posinset={row + 1}
               aria-label={`${c.subject} — ${c.author}`}
-              className={`graph-row ${selected ? 'selected' : ''} ${multi.has(c.hash) ? 'multi-selected' : ''} ${newSet.has(c.hash) ? 'row-new' : ''} ${fetchedOnlySet.has(c.hash) ? 'row-fetched-only' : ''} ${dimmed ? 'dimmed' : ''} ${matches ? 'matched' : ''} ${ghosted ? 'ghosted' : ''}`}
-              style={{ top: row * ROW_H, height: ROW_H, paddingLeft: branchCol + graphCol }}
+              className={`graph-row ${selected ? 'selected' : ''} ${multi.has(c.hash) ? 'multi-selected' : ''} ${newSet.has(c.hash) ? 'row-new' : ''} ${fetchedOnlySet.has(c.hash) ? 'row-fetched-only' : ''} ${accent.unpushedRow && markUnpushed(c.hash) ? 'row-unpushed' : ''} ${dimmed ? 'dimmed' : ''} ${matches ? 'matched' : ''} ${ghosted ? 'ghosted' : ''}`}
+              style={{ top: row * ROW_H, height: ROW_H, paddingLeft: branchCol + graphCol, '--row-accent': accentFor(layout.nodes.get(c.hash)?.color ?? 0) } as React.CSSProperties}
               // Real commits can be dragged onto repository chat as context.
               // WIP and stash rows have no commit hash to pin.
               draggable={!isWip && !stash}
@@ -2140,38 +2159,47 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
               {columns.graph.visible && (() => {
                 const n = layout.nodes.get(c.hash)
                 if (!n) return null
-                const col = colorFor(n.color)
+                const col = accentFor(n.color)
                 // Start the lead-in at this node's own x (its lane), so the
                 // gradient visually "comes out" of each commit / stash.
                 const nodeX = branchCol + Math.min(LEFT_PAD + n.lane * LANE_W, graphCol - NODE_R - 1)
                 const barX = branchCol + graphCol + 3
+                const local = markUnpushed(c.hash)
                 return (
                   <>
-                    {/* Soft lead-in: transparent at the node → lane colour @0.25
-                        at the solid bar. */}
-                    <div
-                      style={{
-                        position: 'absolute',
-                        left: nodeX,
-                        width: Math.max(0, barX - nodeX),
-                        top: 4,
-                        bottom: 4,
-                        background: `linear-gradient(90deg, transparent, ${col}40)`,
-                        pointerEvents: 'none',
-                      }}
-                    />
-                    <div
-                      style={{
-                        position: 'absolute',
-                        left: barX,
-                        top: 4,
-                        bottom: 4,
-                        width: 2,
-                        borderRadius: 1,
-                        background: col,
-                        pointerEvents: 'none',
-                      }}
-                    />
+                    {/* Soft lead-in: transparent at the node → the accent at
+                        the bar, as strong as the haze setting says. */}
+                    {parts.haze && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          left: nodeX,
+                          width: Math.max(0, barX - nodeX),
+                          top: 4,
+                          bottom: 4,
+                          background: `linear-gradient(90deg, transparent, ${withAlpha(col, ROW_HAZE_ALPHA)})`,
+                          pointerEvents: 'none',
+                        }}
+                      />
+                    )}
+                    {(parts.bar || local) && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          left: barX,
+                          top: 4,
+                          bottom: 4,
+                          width: ROW_BAR_PX,
+                          borderRadius: 1,
+                          // Dotted for "only here": the bar is the one mark you
+                          // can read down a column without hovering anything.
+                          background: local
+                            ? `repeating-linear-gradient(to bottom, ${col} 0 3px, transparent 3px 6px)`
+                            : col,
+                          pointerEvents: 'none',
+                        }}
+                      />
+                    )}
                   </>
                 )
               })()}

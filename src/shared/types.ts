@@ -2917,6 +2917,8 @@ export interface AppSettings {
   graphStyle: GraphStyle
   /** User-defined graph palettes, shown alongside the built-in ones. */
   customGraphPalettes: GraphPalette[]
+  /** Repository-tab status dot colours. Optional: older settings predate it. */
+  statusDotColors?: StatusDotColors
   /** Repository-specific branch pins and folder expansion; old layouts are migrated. */
   repoLayouts: Record<string, RepoLayout>
   sharedLayoutVersion?: 1
@@ -3115,6 +3117,35 @@ export interface GraphStyle {
   topology: GraphTopology
   /** Which commits the graph keeps. See GraphFocus. */
   focus: GraphFocus
+  /** Ring, haze and bar on each commit row. Optional: older settings predate it. */
+  rowAccent?: GraphRowAccent
+}
+
+/** How much of the ring / haze / bar decoration a commit row carries. */
+export type GraphRowStyle = 'off' | 'ring' | 'ring-bar' | 'full'
+
+/** How commits no remote has yet stand out: a still dashed ring and dotted
+ *  bar, optionally with a small arrow badge on the avatar. */
+export type GraphUnpushedMark = 'off' | 'dashed' | 'dashed-arrow'
+
+/** The decoration that ties a commit row to its lane. */
+export interface GraphRowAccent {
+  /** One colour for every row, or null to follow each commit's lane colour. */
+  color: string | null
+  style: GraphRowStyle
+  unpushed: GraphUnpushedMark
+  /** Also tint the whole row of an unpushed commit. */
+  unpushedRow: boolean
+}
+
+export function defaultGraphRowAccent(): GraphRowAccent {
+  return { color: null, style: 'full', unpushed: 'dashed', unpushedRow: false }
+}
+
+/** Colours of the repository-tab status dots; null keeps the theme's own. */
+export interface StatusDotColors {
+  changes: string | null
+  conflict: string | null
 }
 
 export function defaultGraphStyle(): GraphStyle {

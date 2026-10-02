@@ -1,5 +1,7 @@
+import { defaultGraphRowAccent, type GraphRowAccent } from '../../../shared/types'
 import type {
   GraphPalette,
+  GraphRowStyle,
   GraphEdgeStyle,
   GraphDensity,
   GraphLineWidth
@@ -69,6 +71,45 @@ export function findGraphPalette(id: string, custom: GraphPalette[]): GraphPalet
 export function colorForPalette(colors: string[]): (index: number) => string {
   const safe = colors.length > 0 ? colors : GRAPH_COLORS
   return (index: number) => safe[((index % safe.length) + safe.length) % safe.length]
+}
+
+// ─── Row accent: avatar ring, haze, bar ─────────────────────────────────────
+
+/** Ring width and haze strength are the graph's long-standing look; the style
+ *  setting only chooses which of the three pieces are drawn. */
+export const ROW_RING_PX = 2.5
+export const ROW_BAR_PX = 2
+export const ROW_HAZE_ALPHA = 0.25
+
+const ROW_STYLES: readonly GraphRowStyle[] = ['off', 'ring', 'ring-bar', 'full']
+const UNPUSHED_MARKS: readonly GraphRowAccent['unpushed'][] = ['off', 'dashed', 'dashed-arrow']
+
+/** Settings are user data that outlive their schema: anything unknown falls back to the default. */
+export function normalizeRowAccent(raw: unknown): GraphRowAccent {
+  const d = defaultGraphRowAccent()
+  if (!raw || typeof raw !== 'object') return d
+  const r = raw as Record<string, unknown>
+  return {
+    color: typeof r.color === 'string' && /^#[0-9a-f]{6}$/i.test(r.color) ? r.color : null,
+    style: ROW_STYLES.includes(r.style as GraphRowStyle) ? (r.style as GraphRowStyle) : d.style,
+    unpushed: UNPUSHED_MARKS.includes(r.unpushed as GraphRowAccent['unpushed'])
+      ? (r.unpushed as GraphRowAccent['unpushed'])
+      : d.unpushed,
+    unpushedRow: typeof r.unpushedRow === 'boolean' ? r.unpushedRow : d.unpushedRow
+  }
+}
+
+export function rowAccentParts(style: GraphRowStyle): { ring: boolean; bar: boolean; haze: boolean } {
+  return { ring: style !== 'off', bar: style === 'ring-bar' || style === 'full', haze: style === 'full' }
+}
+
+/** `#rgb` / `#rrggbb` at an alpha, as rgba(); anything unparseable passes through. */
+export function withAlpha(color: string, alpha: number): string {
+  const h = color.replace('#', '')
+  const full = h.length === 3 ? h.split('').map((x) => x + x).join('') : h.slice(0, 6)
+  if (!/^[0-9a-f]{6}$/i.test(full)) return color
+  const n = parseInt(full, 16)
+  return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`
 }
 
 // ─── Geometry knobs ──────────────────────────────────────────────────────────

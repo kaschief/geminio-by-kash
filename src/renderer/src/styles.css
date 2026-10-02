@@ -263,24 +263,26 @@ textarea:focus {
   margin-inline-start: 1px;
 }
 
+/* Both colours can be overridden in Settings → Themes; a picked colour shows
+   at full strength, the theme's muted grey keeps its old softness. */
 .tab-status-wip {
-  background: var(--text-2);
-  opacity: 0.55;
+  background: var(--status-dot-changes, var(--text-2));
+  opacity: var(--status-dot-changes-opacity, 0.55);
 }
 
 .tab-status-conflict {
-  background: #e5a23d;
-  box-shadow: 0 0 0 0 rgba(229, 162, 61, 0.5);
+  background: var(--status-dot-conflict, #e5a23d);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--status-dot-conflict, #e5a23d) 50%, transparent);
   animation: tab-status-pulse 1.8s ease-in-out infinite;
 }
 
 @keyframes tab-status-pulse {
   0%,
   100% {
-    box-shadow: 0 0 0 0 rgba(229, 162, 61, 0.45);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--status-dot-conflict, #e5a23d) 45%, transparent);
   }
   50% {
-    box-shadow: 0 0 0 3px rgba(229, 162, 61, 0);
+    box-shadow: 0 0 0 3px transparent;
   }
 }
 
@@ -2205,6 +2207,40 @@ body.col-resizing .node-ava {
 
 .graph-row.row-new:not(.selected) {
   box-shadow: inset 2px 0 0 var(--geminio-mint);
+}
+
+/* Not pushed yet: a still, dashed outline where the solid ring was, an
+   optional arrow badge, and (optionally) a faint wash along the row. */
+.node-ava.unpushed::after {
+  content: '';
+  position: absolute;
+  inset: -3.5px;
+  border-radius: 50%;
+  border: 1.5px dashed var(--ring-c, var(--accent));
+  pointer-events: none;
+}
+.node-ava-pip {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--ring-c, var(--accent));
+  color: #fff;
+  box-shadow: 0 0 0 2px var(--bg-1);
+  z-index: 1;
+}
+.graph-row.row-unpushed:where(:not(.selected):not(.multi-selected)) {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--row-accent, var(--accent)) 11%, transparent),
+    color-mix(in srgb, var(--row-accent, var(--accent)) 3%, transparent) 55%,
+    transparent
+  );
 }
 
 /* Branch preview: commits outside the hovered branch's history fade back. */
@@ -9326,7 +9362,7 @@ body.col-resizing .node-ava {
   position: sticky;
   top: 0;
   flex-shrink: 0;
-  width: 160px;
+  min-width: 160px;
 }
 .graph-mini-stage {
   display: flex;
@@ -17368,6 +17404,17 @@ mark.diff-find-hit.current { background: #ff9632; color: #10121a; }
 .repo-accent-preview i { display: block; width: 38px; max-width: 100%; height: 4px; background: var(--text-2); border-radius: 3px; opacity: .4; }
 .repo-accent-preview-inactive { width: 32%; background: transparent; border-color: transparent; opacity: .5; }
 .settings-form label.repo-accent-custom-color { grid-column: 3; flex-direction: row; align-items: center; gap: 9px; margin: 0; color: var(--text-2); }
-.repo-accent-custom-color input[type='color'] { flex-shrink: 0; appearance: none; width: 26px; height: 26px; padding: 0; border: 1px solid var(--border); border-radius: 50%; overflow: hidden; background: none; cursor: pointer; }
-.repo-accent-custom-color input[type='color']::-webkit-color-swatch-wrapper { padding: 2px; }
-.repo-accent-custom-color input[type='color']::-webkit-color-swatch { border: 0; border-radius: 50%; }
+.repo-accent-custom-color input[type='color'], .swatch-input { flex-shrink: 0; appearance: none; width: 26px; height: 26px; padding: 0; border: 1px solid var(--border); border-radius: 50%; overflow: hidden; background: none; cursor: pointer; }
+.repo-accent-custom-color input[type='color']::-webkit-color-swatch-wrapper, .swatch-input::-webkit-color-swatch-wrapper { padding: 2px; }
+.repo-accent-custom-color input[type='color']::-webkit-color-swatch, .swatch-input::-webkit-color-swatch { border: 0; border-radius: 50%; }
+
+/* Round swatches beside a switch (row color) or a label (tab dots), sharing
+   the active-repository picker's look so every color input reads the same. */
+.swatch-line { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin-top: 10px; }
+.swatch-line .theme-mode-switch { margin-top: 0; }
+.swatch-field { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-1); }
+.swatch-input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.swatch-toggle { margin-top: 10px; }
+.status-dot-settings { margin-top: 22px; }
+.graph-mini-stub { position: absolute; width: 30px; height: 4px; border-radius: 3px; background: var(--text-2); opacity: .35; }
+.graph-mini-rowtint { position: absolute; left: 0; right: 0; border-radius: 4px; }

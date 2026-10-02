@@ -3,7 +3,7 @@ title: Themes & appearance
 category: Make it yours
 order: 100
 summary: Built-in themes, light and dark, plus custom and AI-generated ones.
-keywords: theme themes dark light appearance colors font size graph palette
+keywords: theme themes dark light appearance colors font size graph palette ring halo glow haze bar avatar row color unpushed local not pushed arrow dashed status dot changes conflict
 ---
 
 # Themes & appearance
@@ -17,9 +17,36 @@ Midnight, Contrast and Daltonic — each with a light and a dark variant.
 - **Custom themes**, and **AI-generated** ones from a prompt.
 - Adjustable **code font size**.
 - A separate **graph style**: lane palette, corner style, row density and line
-  thickness, with a live mini-graph preview.
+  thickness, plus the ring, haze and bar on each commit row and how unpushed
+  commits stand out, all with a live mini-graph preview.
 
 ![Theme settings](../screenshots/settings-themes.webp)
+
+## Commit rows
+
+Every commit row is tied to its lane three ways: a **ring** around the avatar,
+a **haze** running from the avatar to the message, and a **bar** beside the
+message. All three take the lane's colour, which is why a one-branch
+repository is all purple: that is lane 1 of the Classic palette. The preview
+in **Settings → Themes → Graph** shows each change as you make it.
+
+| Setting | Choices |
+|---------|---------|
+| Commit rows | **Off**, **Ring**, **Ring + bar**, or **Full** (ring, bar and haze) |
+| Row color | **Lane** (each row follows its lane) or **Custom** (one color for every row) |
+| Unpushed commits | **Off**, **Dashed** (dashed ring, dotted bar), or **Dashed + arrow** (adds a small ↑ badge on the avatar) |
+| Tint the row | Also washes the whole row of an unpushed commit |
+
+"Unpushed" means no remote-tracking branch contains the commit, as of your
+last fetch. A commit someone else already pushed still looks unpushed until you
+fetch. A repository with no remote marks nothing, since every commit would
+qualify.
+
+## Tab status dots
+
+A repository tab shows a dot when it has uncommitted changes (muted grey) or a
+conflict (pulsing amber). **Settings → Themes → Theme → Tab status dots** picks
+a color for each. The reset button next to a dot hands it back to the theme.
 
 ## Active repository
 

@@ -15,7 +15,7 @@ import { applyDirection } from './i18n/direction'
 import { todoSummary } from './lib/todos'
 import { doctorSummary } from './lib/repoConfig'
 import { canonicalRepoPath } from './lib/repoAlias'
-import { applyAppTheme, applyCodeTheme, findAppTheme, findCodeTheme } from './theme/themes'
+import { applyAppTheme, applyCodeTheme, applyStatusDotColors, findAppTheme, findCodeTheme } from './theme/themes'
 import { TitleBar, requestCloseTab } from './components/TitleBar'
 import { Toolbar } from './components/Toolbar'
 import { Sidebar } from './components/Sidebar'
@@ -726,6 +726,10 @@ export default function App(): React.JSX.Element {
   useEffect(() => {
     applyDirection(settings.language ?? 'en')
   }, [settings.language])
+
+  useEffect(() => {
+    applyStatusDotColors(settings.statusDotColors)
+  }, [settings.statusDotColors])
 
   // Apply selected app + code themes whenever they change. When the appearance
   // mode is "auto" we also react to live OS light/dark changes.
