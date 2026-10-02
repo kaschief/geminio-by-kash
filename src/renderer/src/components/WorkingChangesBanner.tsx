@@ -24,7 +24,7 @@ export function WorkingChangesBanner({ path }: { path: string }): React.JSX.Elem
         type="button"
         className="btn ghost tiny wip-banner-btn"
         onClick={() => {
-          useUIStore.getState().setFileView(null)
+          useUIStore.getState().setFileView(null, path)
           useRepoStore.getState().select(path, { type: 'wip' })
         }}
       >

@@ -199,7 +199,7 @@ async function launch(shot, theme) {
   const app = await electron.launch({
     // --disable-gpu forces software (CPU) rasterization so pixel output is
     // identical across runs, eliminating GPU/subpixel-antialiasing drift.
-    args: [MAIN, '--shot', `--user-data-dir=${userDataDir}`, '--disable-gpu'],
+    args: [MAIN, '--shot', '--background-test', `--user-data-dir=${userDataDir}`, '--disable-gpu'],
     // `shot.env` lets an entry redirect something machine-specific at a
     // throwaway copy — the SSH key list, say, which must never photograph the
     // real one. Honoured by the app only under --shot.

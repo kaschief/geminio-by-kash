@@ -6,6 +6,10 @@
  * Keep entries grouped by feature; add new copy only here in this fork.
  */
 export const en = {
+  'editor.openWorkingFile': 'Open working copy in {editor}',
+  'settings.search': 'Search settings…',
+  'settings.searchClear': 'Clear settings search',
+  'settings.searchEmpty': 'No matching settings. Try a different word.',
   // Sidebar sections
   'sidebar.files': 'Files',
   'sidebar.tabGit': 'Git',
@@ -1473,7 +1477,7 @@ export const en = {
   'settings.largeFileWarn': 'Warn before committing files larger than (MB)',
   'settings.largeFileWarnHint': 'Catches oversized or binary blobs before they bloat history. Set to 0 to disable.',
   'settings.protectedBranches': 'Protected branches',
-  'settings.protectedBranchesMoved': 'Protected branches are now per-repo — set them from the repo settings (gear icon next to the toolbar tools).',
+  'settings.protectedBranchesMoved': 'Set protected branches in Settings → Repository → General.',
   'changelog.title': 'What’s New',
   'changelog.checking': 'Checking for updates…',
   'changelog.live': 'Latest from GitHub',
@@ -1534,6 +1538,12 @@ export const en = {
 
   // Settings — themes page
   'settings.appearance': 'Appearance',
+  'settings.activeRepoAccent': 'Active repository',
+  'settings.activeRepoAccentSubtle': 'Subtle',
+  'settings.activeRepoAccentPick': 'Choose Accent Color',
+  'settings.activeRepoAccentHint': 'Choose how the selected repository tab stands out.',
+  'settings.activeRepoAccentTheme': 'Theme Accent',
+  'settings.activeRepoAccentCustom': 'Custom Color',
   'settings.appearanceHint': 'Light, dark, or follow the operating system.',
   'settings.modeLight': 'Light',
   'settings.modeDark': 'Dark',
@@ -3777,6 +3787,8 @@ export const en = {
   'repos.forgetConfirm': 'Remove {name} from the list? The folder on disk is not touched.',
   'repos.forgetAction': 'Forget',
   'repos.missing': 'Missing',
+  'repos.missingTitle': 'Repository folder not found',
+  'repos.missingBody': 'This saved repository may have moved, been removed, or be on a disconnected drive. Locate its folder to reconnect, or retry once it is available.',
   'repos.locate': 'Locate…',
   'repos.locateTitle': 'Where is {name}?',
   'repos.wip': 'WIP summary',

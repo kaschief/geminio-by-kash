@@ -1,3 +1,4 @@
+import { searchSettings } from '../lib/settingsSearch'
 import { AppIconPicker } from './AppIconPicker'
 import { setGitHubAccount } from '../stores/githubAccount'
 import { useAiReady } from './useAiReady'
@@ -8,9 +9,10 @@ import { formatAbsoluteDate } from '../lib/commitDate'
 const SAMPLE_DATE = Date.UTC(2026, 8, 15, 15, 22) / 1000
 const SAMPLE_PATH = 'src/app/ui/panels/Button.tsx'
 import { NumberField } from './NumberField'
-import { useCallback, useEffect, useId, useMemo, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import {
+  Search,
   Plus,
   Copy,
   Terminal,
@@ -410,15 +412,21 @@ const INTEGRATIONS = [
 export function IntegrationsPage({
   profile,
   edit,
-  onGoToSecurity
+  onGoToSecurity,
+  searchQuery
 }: {
   profile: Profile
   edit: (p: Partial<Profile>) => void
   /** Jump to the Security page, where SSH keys live. */
   onGoToSecurity?: () => void
+  searchQuery?: string
 }): React.JSX.Element {
   const t = useT()
   const [tab, setTab] = useState<(typeof INTEGRATIONS)[number]['id']>('github')
+  useEffect(() => {
+    const q = searchQuery?.trim().toLowerCase()
+    if (q) { const match = INTEGRATIONS.find((i) => q.includes(i.id)); if (match) setTab(match.id) }
+  }, [searchQuery])
   const active = INTEGRATIONS.find((i) => i.id === tab) ?? INTEGRATIONS[0]
   const ActiveIcon = active.icon
   const token = profile[active.field]
@@ -1560,7 +1568,7 @@ function GraphStyleTab(): React.JSX.Element {
   )
 }
 
-function ThemesPage({ initialTab }: { initialTab?: 'theme' | 'graph' } = {}): React.JSX.Element {
+function ThemesPage({ initialTab, searchTab }: { initialTab?: 'theme' | 'graph'; searchTab?: 'theme' | 'graph' } = {}): React.JSX.Element {
   const settings = useSettingsStore((s) => s.settings)
   const activeProfile = useSettingsStore((s) => s.activeProfile())
   const update = useSettingsStore((s) => s.update)
@@ -1593,6 +1601,7 @@ function ThemesPage({ initialTab }: { initialTab?: 'theme' | 'graph' } = {}): Re
   const [codeAIPrompt, setCodeAIPrompt] = useState('')
   const [generatingCode, setGeneratingCode] = useState(false)
   const [tab, setTab] = useState<'theme' | 'graph'>(initialTab ?? 'theme')
+  useEffect(() => { if (searchTab) setTab(searchTab) }, [searchTab])
 
   const generateAppThemeAI = async (): Promise<void> => {
     if (!appAIPrompt.trim()) return
@@ -1831,6 +1840,50 @@ function ThemesPage({ initialTab }: { initialTab?: 'theme' | 'graph' } = {}): Re
           </div>
         </ThemeDialog>
       )}
+
+      <section className="active-repo-accent-settings">
+        <h4>{t('settings.activeRepoAccent')}</h4>
+        <p className="settings-hint">{t('settings.activeRepoAccentHint')}</p>
+        <div className="theme-grid repo-accent-choices" role="group" aria-label={t('settings.activeRepoAccent')}>
+          {(['subtle', 'theme', 'custom'] as const).map((choice) => {
+            const selected = settings.activeRepoAccent?.enabled === false
+              ? choice === 'subtle'
+              : choice === (settings.activeRepoAccent?.color ? 'custom' : 'theme')
+            const color = settings.activeRepoAccent?.color || resolveAppColors(currentApp, mode).accent
+            return (
+              <button
+                key={choice}
+                type="button"
+                className={`theme-card ${selected ? 'selected' : ''}`}
+                aria-pressed={selected}
+                onClick={() => update((s) => ({ ...s, activeRepoAccent: {
+                  enabled: choice !== 'subtle',
+                  ...(choice === 'custom' ? { color } : {})
+                } }))}
+              >
+                <span className={`repo-accent-preview ${choice}`} style={{ '--preview-accent': choice === 'custom' ? color : 'var(--accent)' } as React.CSSProperties} aria-hidden="true">
+                  <span className="repo-accent-preview-tab"><GitBranch size={13} /><i /></span>
+                  <span className="repo-accent-preview-inactive"><i /></span>
+                </span>
+                <span className="theme-card-label">
+                  <span>{t(choice === 'subtle' ? 'settings.activeRepoAccentSubtle' : choice === 'theme' ? 'settings.activeRepoAccentTheme' : 'settings.activeRepoAccentCustom')}</span>
+                  {selected && <Check size={13} className="theme-check" />}
+                </span>
+              </button>
+            )
+          })}
+          {settings.activeRepoAccent?.enabled !== false && settings.activeRepoAccent?.color && (
+            <label className="repo-accent-custom-color">
+              <input
+                type="color"
+                value={settings.activeRepoAccent.color}
+                onChange={(e) => update((s) => ({ ...s, activeRepoAccent: { enabled: true, color: e.target.value } }))}
+              />
+              <span>{t('settings.activeRepoAccentPick')}</span>
+            </label>
+          )}
+        </div>
+      </section>
 
       <div className="theme-section-header" style={{ marginTop: 22 }}>
         <h4><Palette size={14} /> {t('settings.codeTheme')}</h4>
@@ -3975,6 +4028,10 @@ export function SettingsPanel({ initialPage, initialThemeTab, repoPath, initialR
   const [selectedId, setSelectedId] = useState(settings.activeProfileId)
   const [page, setPage] = useState<SettingsPage>(initialPage ?? readLastPage())
   const [version, setVersion] = useState('')
+  const [query, setQuery] = useState('')
+  const formRef = useRef<HTMLDivElement>(null)
+  const sideScrollRef = useRef<HTMLDivElement>(null)
+  const searchRef = useRef<HTMLInputElement>(null)
   const updateStatus = useUpdatesStore((s) => s.status)
   const updateInfo = useUpdatesStore((s) => s.info)
   const revealUpdate = useUpdatesStore((s) => s.reveal)
@@ -3984,6 +4041,74 @@ export function SettingsPanel({ initialPage, initialThemeTab, repoPath, initialR
   )
   const t = useT()
   const repository = repoPath ?? useSettingsStore.getState().activeRepo()?.path
+
+  const matches = useMemo(() => searchSettings(query, t).filter((m) => repository || m.page !== 'repository'), [query, t, repository])
+  const searching = !!query.trim()
+  const destination = matches.find((m) => m.page === page)
+  const isDimmed = (id: string): boolean => searching && !matches.some((m) => m.page === id)
+  const changeQuery = (value: string): void => {
+    setQuery(value)
+    const results = searchSettings(value, t).filter((m) => repository || m.page !== 'repository')
+    // Follow the best result when the current section no longer matches.
+    if (results.length && !results.some((m) => m.page === page)) setPage(results[0].page as SettingsPage)
+  }
+
+  // A bottom fade replaces scrollbars, and only appears while more content remains.
+  useLayoutEffect(() => {
+    const cleanups = [formRef.current, sideScrollRef.current].filter((el) => el !== null).map((el) => {
+      let frame = 0
+      const measure = (): void => {
+        const more = el.scrollHeight - el.clientHeight - el.scrollTop > 1
+        el.dataset.moreBelow = String(more)
+      }
+      const schedule = (): void => {
+        cancelAnimationFrame(frame)
+        frame = requestAnimationFrame(measure)
+      }
+      const resize = new ResizeObserver(schedule)
+      const observeSizes = (): void => {
+        resize.disconnect()
+        resize.observe(el)
+        for (const child of el.children) resize.observe(child)
+      }
+      const content = new MutationObserver(() => { observeSizes(); schedule() })
+      content.observe(el, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['open', 'hidden', 'style'] })
+      observeSizes()
+      measure()
+      el.addEventListener('scroll', measure, { passive: true })
+      return () => {
+        cancelAnimationFrame(frame)
+        resize.disconnect()
+        content.disconnect()
+        el.removeEventListener('scroll', measure)
+      }
+    })
+    return () => cleanups.forEach((cleanup) => cleanup())
+  }, [])
+
+  useEffect(() => {
+    const root = formRef.current
+    if (!root) return
+    let scrolled = false
+    const highlight = (): void => {
+      root.querySelectorAll('.settings-search-hit').forEach((el) => el.classList.remove('settings-search-hit'))
+      const q = query.trim().toLocaleLowerCase()
+      if (!q) return
+      const candidates = [...root.querySelectorAll<HTMLElement>('label, strong, h4, p, summary, button, .settings-hint, .settings-field-label')]
+        .filter((el) => el.offsetHeight && el.textContent?.toLocaleLowerCase().includes(q))
+      const leaves = candidates.filter((el) => !candidates.some((child) => child !== el && el.contains(child)))
+      for (const el of leaves) el.classList.add('settings-search-hit')
+      if (!scrolled && leaves[0]) { leaves[0].scrollIntoView({ block: 'center' }); scrolled = true }
+    }
+    const frame = requestAnimationFrame(highlight)
+    const observer = new MutationObserver(highlight)
+    observer.observe(root, { childList: true, subtree: true, characterData: true })
+    return () => {
+      cancelAnimationFrame(frame)
+      observer.disconnect()
+      root.querySelectorAll('.settings-search-hit').forEach((el) => el.classList.remove('settings-search-hit'))
+    }
+  }, [query, page, destination?.tab])
 
   useEffect(() => {
     localStorage.setItem(LAST_PAGE_KEY, page)
@@ -4022,10 +4147,20 @@ export function SettingsPanel({ initialPage, initialThemeTab, repoPath, initialR
 
   return (
     <div className="settings">
-      <h3>{t('settings.title')}</h3>
+      <div className="settings-heading">
+        <h3>{t('settings.title')}</h3>
+        <div className="settings-search">
+          <Search size={15} aria-hidden="true" />
+          <input ref={searchRef} type="search" value={query} placeholder={t('settings.search')} aria-label={t('settings.search')}
+            onChange={(e) => changeQuery(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Escape' && query) { e.preventDefault(); e.stopPropagation(); changeQuery('') } }} />
+          {query && <button className="icon-btn" aria-label={t('settings.searchClear')} onClick={() => { changeQuery(''); searchRef.current?.focus() }}><X size={13} /></button>}
+        </div>
+      </div>
+      {searching && !matches.length && <p className="settings-search-empty" role="status">{t('settings.searchEmpty')}</p>}
       <div className="settings-body">
         <aside className="settings-profiles">
-          <div className="settings-side-scroll">
+          <div className="settings-side-scroll" ref={sideScrollRef}>
             <div className="settings-side-header">
               <span>{t('settings.profilesHeader')}</span>
               <button
@@ -4070,7 +4205,7 @@ export function SettingsPanel({ initialPage, initialThemeTab, repoPath, initialR
             {PAGES.map((p) => (
               <button
                 key={p.id}
-                className={`profile-item ${page === p.id ? 'selected' : ''}`}
+                className={`profile-item ${page === p.id ? 'selected' : ''}${isDimmed(p.id) ? ' settings-search-dim' : ''}`} data-settings-page={p.id}
                 onClick={() => setPage(p.id)}
               >
                 {p.icon}
@@ -4078,7 +4213,7 @@ export function SettingsPanel({ initialPage, initialThemeTab, repoPath, initialR
               </button>
             ))}
             {repository && (
-              <button className={`profile-item ${page === 'repository' ? 'selected' : ''}`} onClick={() => setPage('repository')}>
+              <button className={`profile-item ${page === 'repository' ? 'selected' : ''}${isDimmed('repository') ? ' settings-search-dim' : ''}`} data-settings-page="repository" onClick={() => setPage('repository')}>
                 <FolderGit2 size={13} />
                 <span>{t('settings.repository')}</span>
               </button>
@@ -4131,15 +4266,15 @@ export function SettingsPanel({ initialPage, initialThemeTab, repoPath, initialR
           </div>
         </aside>
 
-        <div className="settings-form">
-          {page === 'repository' && repository && <RepoSettingsModal key={repository} repoPath={repository} initialTab={initialRepoTab} />}
+        <div className="settings-form" ref={formRef}>
+          {page === 'repository' && repository && <RepoSettingsModal key={repository} repoPath={repository} initialTab={initialRepoTab} searchTab={destination?.tab as React.ComponentProps<typeof RepoSettingsModal>['initialTab']} />}
           {page === 'profile' && <ProfilePage profile={profile} edit={edit} />}
           {page === 'workspaces' && <WorkspacesPage />}
           {page === 'integrations' && (
-            <IntegrationsPage profile={profile} edit={edit} onGoToSecurity={() => setPage('security')} />
+            <IntegrationsPage profile={profile} edit={edit} onGoToSecurity={() => setPage('security')} searchQuery={query} />
           )}
           {page === 'ai' && <AIPage profile={profile} edit={edit} />}
-          {page === 'themes' && <ThemesPage initialTab={initialThemeTab} />}
+          {page === 'themes' && <ThemesPage initialTab={initialThemeTab} searchTab={destination?.tab as 'theme' | 'graph' | undefined} />}
           {page === 'general' && <GeneralPage />}
           {page === 'graph' && <GraphPage />}
           {page === 'files' && <FilesPage />}

@@ -8,6 +8,19 @@ keywords: command palette search grep code search pickaxe find fuzzy jump
 
 # Command palette & search
 
+## Finding a setting
+
+Use the centered search field at the top of **Settings**. It searches setting
+labels and descriptions across sections, dims unrelated sections, and opens a
+matching section when the current one has no results. Matching text is
+highlighted and scrolled into view. Appearance and Repository searches also
+open the matching tab. Every section remains clickable.
+
+Clear the field or press Escape once to remove the filter. Your settings are
+unchanged by searching.
+
+![Searching Settings for the minimap](../screenshots/settings-search.webp)
+
 ## The palette — <kbd>⌘K</kbd>
 
 Fuzzy-jump to a **branch** (checks it out), a **commit** (scrolls the graph to

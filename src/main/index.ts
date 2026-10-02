@@ -136,6 +136,8 @@ export function isLoopbackUrl(raw: string): boolean {
   }
 }
 
+const backgroundTest = !app.isPackaged && process.argv.includes('--shot') && process.argv.includes('--background-test')
+
 function createWindow(): void {
   const win = new BrowserWindow({
     width: 1540,
@@ -151,6 +153,7 @@ function createWindow(): void {
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false,
+      ...(backgroundTest ? { backgroundThrottling: false } : {}),
       // Enables Chromium's built-in PDF viewer for the file previewer.
       plugins: true,
       // The DevTools page embeds a <webview>. It is locked to loopback URLs by
@@ -163,7 +166,11 @@ function createWindow(): void {
     }
   })
 
-  win.once('ready-to-show', () => showMainWindow(win))
+  const reportFullscreen = (): void => win.webContents.send('window:fullscreen', win.isFullScreen())
+  win.on('enter-full-screen', reportFullscreen)
+  win.on('leave-full-screen', reportFullscreen)
+
+  win.once('ready-to-show', () => { if (!backgroundTest) showMainWindow(win) })
   win.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
     return { action: 'deny' }
@@ -189,6 +196,7 @@ function createWindow(): void {
 
 app.whenReady().then(async () => {
   app.setName(app.isPackaged ? 'Geminio' : 'Geminio Dev')
+  if (backgroundTest && process.platform === 'darwin') app.dock?.hide()
 
   // The embedded DevTools panel stays on loopback: a link inside it opens in
   // the real browser, and a redirect off the machine is refused outright.
@@ -413,6 +421,7 @@ app.whenReady().then(async () => {
     }
   )
 
+  ipcMain.handle('window:is-fullscreen', (e) => BrowserWindow.fromWebContents(e.sender)?.isFullScreen() ?? false)
   ipcMain.on('window:minimize', (e) => BrowserWindow.fromWebContents(e.sender)?.minimize())
   ipcMain.on('window:maximize', (e) => {
     const w = BrowserWindow.fromWebContents(e.sender)

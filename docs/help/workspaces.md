@@ -30,6 +30,30 @@ confirms only when the tab is clean — when there are uncommitted changes or
 conflicts the warning deliberately makes you reach for the button, so a stray
 keypress after <kbd>⌘W</kbd> cannot close work you were still holding.
 
+## Working in several repositories
+
+Each repository keeps its own selected commit, open file and viewer mode while
+Geminio is running. Switch tabs or repository chips in a group, then return
+to resume that repo's view. Closing a file in one repo leaves other repos' files
+open. Graph search and filters, sidebar tab, and the details/chat tab also stay
+with their repository.
+
+The file reader remembers its scroll position, find query and unsaved editor
+text when you switch away. Switching never writes those edits to disk; use
+**Save** when ready. These working views are kept for the current app session.
+Column arrangements, panel sizes, appearance and other layout preferences
+remain shared across repositories.
+
+## Moved or unavailable folders
+
+A restored tab whose folder no longer exists shows **Repository folder not
+found**, including its saved path. Background tabs do not show startup error
+toasts for missing folders. Choose **Locate…** to reconnect the tab to the
+folder's new location, or **Retry** after reconnecting its drive. Your saved
+tab is kept until you reconnect or close it.
+
+![Reconnect a missing repository](../screenshots/repository-missing.webp)
+
 ## Fetch and pull
 
 The repository toolbar has one **Pull** button with a dropdown. Choose its
@@ -84,8 +108,11 @@ opens as a tab of its own instead — opening something always opens something.
 A workspace is a **whole saved tab strip**. Switching swaps every tab at once:
 `Work` and `Personal` stop stepping on each other.
 
-The workspace name sits top-left, next to the Geminio mark. Click it to switch,
-create, rename, reorder or delete. Next to it is the gauge that opens
-[Mission control](mission-control.md) for the workspace you are in.
+Workspace management lives in **Settings → Workspaces**, where you can switch,
+create, rename, reorder or delete workspaces. The title bar stays compact: its
+small dashboard icon opens [Mission control](mission-control.md).
+In macOS fullscreen, the padding for the window buttons disappears.
+
+![Compact title bar](../screenshots/titlebar-compact.webp)
 
 **See also:** [Mission control](mission-control.md) · [The command line](cli.md)

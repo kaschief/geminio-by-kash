@@ -268,6 +268,8 @@ interface PreloadApi {
     onCommand(cb: (id: string) => void): () => void
   }
   window: {
+    isFullscreen(): Promise<boolean>
+    onFullscreen(cb: (fullscreen: boolean) => void): () => void
     minimize(): void
     maximize(): void
     close(): void

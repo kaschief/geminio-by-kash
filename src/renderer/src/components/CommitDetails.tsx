@@ -157,9 +157,9 @@ export function CommitDetails({ repo, hash }: { repo: RepoData; hash: string }):
         wholeWord: filter.wholeWord,
         regex: filter.regex
       })
-    } else setFileSearch(null)
+    } else setFileSearch(null, repo.path)
   }, [query, filter.mode, filter.caseSensitive, filter.wholeWord, filter.regex])
-  useEffect(() => () => useUIStore.getState().setFileSearch(null), [])
+  useEffect(() => () => useUIStore.getState().setFileSearch(null, repo.path), [repo.path])
 
   const hitsByFile = useMemo(() => (hits ? matchesByFile(hits) : null), [hits])
   const contentRe = useMemo(
@@ -517,7 +517,7 @@ export function CommitDetails({ repo, hash }: { repo: RepoData; hash: string }):
               },
               { separator: true },
               { label: shellApi.revealLabel, onClick: () => void shellApi.revealInFolder(`${repo.path}/${f.path}`) },
-              { label: t('commitPanel.openDefaultApp'), onClick: () => void shellApi.openPath(`${repo.path}/${f.path}`) },
+              ...(!editor?.command ? [{ label: t('commitPanel.openDefaultApp'), onClick: () => void shellApi.openPath(`${repo.path}/${f.path}`) }] : []),
               ...openWithMenuItems(
                 `${repo.path}/${f.path}`,
                 defaultOpenApp,
@@ -525,7 +525,8 @@ export function CommitDetails({ repo, hash }: { repo: RepoData; hash: string }):
                   openWithDefault: (name) => interp(t('fileTree.openWithApp'), { name }),
                   openWith: t('fileTree.openWith')
                 },
-                editor
+                editor,
+                { repo: repo.path }
               ),
               { label: t('common.copyFilePath'), onClick: () => void navigator.clipboard.writeText(`${repo.path}/${f.path}`) },
               // The commit that deleted a file is exactly where someone realises
@@ -542,7 +543,7 @@ export function CommitDetails({ repo, hash }: { repo: RepoData; hash: string }):
             e.preventDefault()
             useUIStore.getState().openContextMenu(e.clientX, e.clientY, [
               { label: shellApi.revealLabel, onClick: () => void shellApi.revealInFolder(`${repo.path}/${folderPath}`) },
-              { label: t('commitPanel.openDefaultApp'), onClick: () => void shellApi.openPath(`${repo.path}/${folderPath}`) },
+              ...(!editor?.command ? [{ label: t('commitPanel.openDefaultApp'), onClick: () => void shellApi.openPath(`${repo.path}/${folderPath}`) }] : []),
               ...openWithMenuItems(
                 `${repo.path}/${folderPath}`,
                 defaultOpenApp,

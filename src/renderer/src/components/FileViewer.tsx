@@ -1,14 +1,15 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { ExternalLink } from 'lucide-react'
+import { useLayoutEffect, useEffect, useMemo, useRef, useState } from 'react'
 import { X, GitCommitHorizontal, Loader2, Search, ChevronUp, ChevronDown, Save } from 'lucide-react'
 import type { BlameLine, BlobSpec, FileHistoryEntry, NumberedLine } from '../../../shared/types'
 import { gitApi, shellApi } from '../infrastructure/api'
 import { useSettingsStore } from '../stores/settings'
-import { useUIStore, type FileViewMode, type FileViewState } from '../stores/ui'
+import { useUIStore, fileViewKey, type FileReaderSession, type FileViewMode, type FileViewState } from '../stores/ui'
 import { useRepoStore, repoActions, type HunkActionKind } from '../stores/repo'
 import { canonicalRepoPath } from '../lib/repoAlias'
 import { filePermalink } from '../lib/autolink'
 import { revealLineWhenReady } from '../lib/reveal'
-import { editorLineMenuItems } from '../lib/editorOpen'
+import { openInEditor, editorLineMenuItems } from '../lib/editorOpen'
 import { useT, interp, type TranslationKey } from '../i18n'
 import { useHoverExplain } from './HoverExplain'
 import { DiffViewer, type HunkAction } from './DiffViewer'
@@ -109,17 +110,28 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
   const toast = useUIStore((s) => s.toast)
   const fileSearch = useUIStore((s) => s.fileSearch)
   const searchRe = useMemo(() => (fileSearch ? buildQueryRegExp(fileSearch, true) : null), [fileSearch])
+  const readerKey = fileViewKey(view)
+  const restoredReader = useRef((() => {
+    const saved = useUIStore.getState().fileReaders[view.repoPath]
+    return saved?.key === readerKey ? saved : undefined
+  })()).current
+  const cachedContent = restoredReader?.mode === view.mode && (view.mode === 'diff' || view.mode === 'file') && !isImage(view.file)
+    ? restoredReader.content ?? null : null
+  const contentIdentity = useRef(cachedContent !== null
+    ? JSON.stringify([readerKey, view.mode, restoredReader?.ignoreWs ?? false, restoredReader?.editing ?? false, null, false]) : null)
+  const restoringDraft = useRef(restoredReader?.editing ? restoredReader.draft : null)
+  const restoringScroll = useRef(restoredReader)
   const bodyRef = useRef<HTMLDivElement>(null)
   const editorRef = useRef<HTMLTextAreaElement>(null)
   const preRef = useRef<HTMLPreElement>(null)
 
   // ─── In-file find (Ctrl/Cmd+F) — layers on top of the right-panel filter ───
-  const [findOpen, setFindOpen] = useState(false)
+  const [findOpen, setFindOpen] = useState(restoredReader?.findOpen ?? false)
   // The diff's display toggles portal into this header slot (see DiffViewer).
   const [diffToolsHost, setDiffToolsHost] = useState<HTMLDivElement | null>(null)
   // The floating layer over the content (find bar, line-selection actions).
   const [overlayHost, setOverlayHost] = useState<HTMLDivElement | null>(null)
-  const [find, setFind] = useState({ query: '', caseSensitive: false, wholeWord: false, regex: false })
+  const [find, setFind] = useState(restoredReader?.find ?? { query: '', caseSensitive: false, wholeWord: false, regex: false })
   const [hitCount, setHitCount] = useState(0)
   const [activeHit, setActiveHit] = useState(0)
   const findInputRef = useRef<HTMLInputElement>(null)
@@ -171,7 +183,7 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
   const aiEnabled = useAiReady('explain')
   const hoverExplainOn = useSettingsStore((s) => s.activeProfile().ai.hoverExplain !== false)
   const hoverExplainKey = useSettingsStore((s) => s.activeProfile().ai.hoverExplainKey ?? 'shift')
-  const [content, setContent] = useState<string | null>(null)
+  const [content, setContent] = useState<string | null>(cachedContent)
   // Size-cap refusal from main (byte count) + the user's explicit override.
   const [tooLarge, setTooLarge] = useState<number | null>(null)
   const [forceLoad, setForceLoad] = useState(false)
@@ -185,14 +197,44 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
   const [history, setHistory] = useState<FileHistoryEntry[]>([])
 
   const [refreshKey, setRefreshKey] = useState(0)
-  const [ignoreWs, setIgnoreWs] = useState(false)
+  const [ignoreWs, setIgnoreWs] = useState(restoredReader?.ignoreWs ?? false)
 
   // ─── In-app editing (project-tree files only) ───
-  const [editing, setEditing] = useState(false)
-  const [draft, setDraft] = useState('')
+  const [editing, setEditing] = useState(restoredReader?.editing ?? false)
+  const [draft, setDraft] = useState(restoredReader?.draft ?? '')
   const [saving, setSaving] = useState(false)
 
   const { repoPath, file, mode, source } = view
+
+  // Park only the open reader for this repo. Layout cleanup runs before its
+  // DOM is removed; late cleanup may never overwrite a newer file selection.
+  const readerSession = useRef<FileReaderSession>({ key: readerKey, mode, editing, draft, findOpen, find, ignoreWs, content, semantic: restoredReader?.semantic, scroll: [] })
+  readerSession.current = { ...readerSession.current, key: readerKey, mode, editing, draft, findOpen, find, ignoreWs, content }
+  useLayoutEffect(() => {
+    const body = bodyRef.current
+    if (!body) return
+    return () => {
+      const scrollers = [body, ...body.querySelectorAll<HTMLElement>('.diff-split-col, textarea')]
+      useUIStore.getState().rememberFileReader(view, {
+        ...readerSession.current,
+        scroll: scrollers.map((el) => ({ top: el.scrollTop, left: el.scrollLeft }))
+      })
+    }
+  }, [readerKey])
+  useLayoutEffect(() => {
+    const saved = restoringScroll.current
+    if (!saved || saved.mode !== mode || content === null) return
+    // Restore in the layout phase: deferring this to the next animation frame
+    // paints the file at the top once before jumping to the saved position.
+    const body = bodyRef.current
+    if (!body) return
+    const scrollers = [body, ...body.querySelectorAll<HTMLElement>('.diff-split-col, textarea')]
+    scrollers.forEach((el, i) => {
+      const position = saved.scroll[i]
+      if (position) { el.scrollTop = position.top; el.scrollLeft = position.left }
+    })
+    restoringScroll.current = undefined
+  }, [content, mode])
 
   // Clear any blame "rewind" when switching files/repos.
   useEffect(() => setBlameOverrideRef(null), [file, repoPath])
@@ -346,12 +388,9 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
   // Mirror the dirty flag to the store so navigation guards can see it; leaving
   // the viewer (or the file) always clears it.
   useEffect(() => {
-    setEditorDirty(dirty)
-  }, [dirty, setEditorDirty])
-  useEffect(() => {
-    setEditing(false)
-  }, [file, repoPath])
-  useEffect(() => () => setEditorDirty(false), [setEditorDirty])
+    setEditorDirty(dirty, repoPath)
+  }, [dirty, setEditorDirty, repoPath])
+  useEffect(() => () => setEditorDirty(false, repoPath), [setEditorDirty, repoPath])
 
   const saveDraft = async (): Promise<void> => {
     if (!dirty || saving) return
@@ -359,7 +398,7 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
     try {
       await shellApi.writeFiles(repoPath, [{ path: file, content: draft }])
       setContent(draft)
-      setEditorDirty(false)
+      setEditorDirty(false, repoPath)
       toast('success', `Saved ${file.split('/').pop()}`)
     } catch (err) {
       toast('error', err instanceof Error ? err.message : String(err))
@@ -397,12 +436,12 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
         danger: true,
         confirmLabel: t('fileViewer.discard'),
         onConfirm: () => {
-          setEditorDirty(false)
-          setFileView(null)
+          setEditorDirty(false, repoPath)
+          setFileView(null, repoPath)
         }
       })
     } else {
-      setFileView(null)
+      setFileView(null, repoPath)
     }
   }
 
@@ -472,16 +511,24 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
 
   useEffect(() => {
     let cancelled = false
-    setContent(null)
-    setImageUrl(null)
-    setImgDiff(null)
+    const identity = JSON.stringify([readerKey, mode, ignoreWs, editing, blameOverrideRef, forceLoad])
+    const resumed = contentIdentity.current === identity
+    const acceptContent = (text: string): void => { contentIdentity.current = identity; setContent(text) }
+    // A returning reader paints its previous text immediately. Re-read disk in
+    // the background so edits made while this repository was away still arrive.
+    if (!resumed) {
+      contentIdentity.current = null
+      setContent(null)
+      setImageUrl(null)
+      setImgDiff(null)
+    }
     setError(null)
     setTooLarge(null)
     const load = async (): Promise<void> => {
       try {
         if (mode === 'preview') {
           // PreviewPane fetches its own content; just clear the loading spinner.
-          if (!cancelled) setContent('')
+          if (!cancelled) acceptContent('')
           return
         }
         if (fileIsImage && mode === 'diff') {
@@ -489,7 +536,7 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
           const result = await gitApi.imageDiff(repoPath, file, refs.before, refs.after)
           if (!cancelled) {
             setImgDiff(result)
-            setContent('')
+            acceptContent('')
           }
           return
         }
@@ -497,7 +544,7 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
           const url = await gitApi.fileDataUrl(repoPath, file, sourceRef(view), forceLoad)
           if (!cancelled) {
             setImageUrl(url)
-            setContent('')
+            acceptContent('')
           }
           return
         }
@@ -510,30 +557,34 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
                 : source.type === 'wip'
                   ? await gitApi.diffFile(repoPath, file, source.staged, source.untracked, ignoreWs)
                   : ''
-          if (!cancelled) setContent(text)
+          if (!cancelled) acceptContent(text)
         } else if (mode === 'file') {
           // While editing, always read the on-disk working copy (ignore the
           // staged ':0' ref) so edits and saves target the real file.
           const ref = editing && onDiskFile ? undefined : sourceRef(view)
           const text = await gitApi.fileContent(repoPath, file, ref, forceLoad)
           if (!cancelled) {
-            setContent(text)
+            acceptContent(text)
             // Seed the editor buffer from this authoritative load (entering edit
             // or switching file/mode). User keystrokes never trigger a reload, so
             // this can't clobber unsaved typing.
-            if (editing) setDraft(text)
+            if (editing) {
+              const savedDraft = restoringDraft.current
+              setDraft((current) => resumed ? current : savedDraft ?? text)
+              restoringDraft.current = null
+            }
           }
         } else if (mode === 'blame') {
           const lines = await gitApi.blameFile(repoPath, file, blameOverrideRef ?? blameRef(view))
           if (!cancelled) {
             setBlame(lines)
-            setContent('')
+            acceptContent('')
           }
         } else {
           const entries = await gitApi.fileHistory(repoPath, file)
           if (!cancelled) {
             setHistory(entries)
-            setContent('')
+            acceptContent('')
           }
         }
       } catch (err) {
@@ -746,6 +797,13 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
           </button>
         )}
         </div>
+        {editorSetting?.command && (
+          <button className="icon-btn fv-open-editor" aria-label={interp(t('editor.openIn'), { app: editorSetting.name })}
+            title={interp(t('editor.openWorkingFile'), { editor: editorSetting.name })}
+            onClick={() => void openInEditor(editorSetting, { path: `${repoPath}/${file}`, repo: repoPath })}>
+            <ExternalLink size={15} />
+          </button>
+        )}
         <button className="icon-btn" title={t('fileViewer.close')} onClick={requestClose}>
           <X size={15} />
         </button>
@@ -854,6 +912,9 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
               file={file}
               oldSide={semanticSides.oldSide}
               newSide={semanticSides.newSide}
+              revision={content}
+              snapshot={readerSession.current.semantic}
+              onSnapshot={(snapshot) => { readerSession.current.semantic = snapshot }}
             />
           )}
 

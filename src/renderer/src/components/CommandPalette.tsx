@@ -347,7 +347,7 @@ export function CommandPalette(): React.JSX.Element {
         keywords: c.hash,
         icon: <GitCommit size={15} />,
         run: act(() => {
-          useUIStore.getState().setFileView(null)
+          useUIStore.getState().setFileView(null, path)
           useRepoStore.getState().select(path, { type: 'commit', hash: c.hash })
           useUIStore.getState().requestScrollTo(c.hash)
         })

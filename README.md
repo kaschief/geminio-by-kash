@@ -36,6 +36,8 @@ competing places to configure the app.
 - **A graph you can arrange directly.** Right-click any column header to choose
   visible columns; drag to rearrange or resize them, and double-click a divider
   to fit the loaded history. [Commit graph](docs/help/graph.md)
+- **Separate working views.** Each repository keeps its open commit/file, viewer mode,
+  scroll position and unsaved file edits when switching tabs. [Workspaces](docs/help/workspaces.md#working-in-several-repositories)
 - **Pull between files.** An adjustable elastic pull at the end or beginning of a diff
   previews the adjacent file, then switches when you release past the threshold.
   [Reading changes](docs/help/diffs.md#pull-between-files)
@@ -43,6 +45,8 @@ competing places to configure the app.
   [App icons](docs/help/themes.md#app-icon)
 - **Room for the message.** Drag the divider above the commit composer to give
   the description more space. The height is remembered. [Committing](docs/help/committing.md)
+- **A quieter title bar.** A compact monochrome mark, workspace management in Settings,
+  and no window-button gap in macOS fullscreen. Missing saved folders have a reconnect view. [Tabs](docs/help/workspaces.md)
 - **A smaller toolbar.** Compact repository and branch selectors, plus one
   Pull/Fetch button whose dropdown chooses the default operation. [Navigation](docs/help/repo-menu.md)
 - **Predictable menus.** Click outside a menu to close it. Repository editors

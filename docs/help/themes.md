@@ -21,6 +21,18 @@ Midnight, Contrast and Daltonic — each with a light and a dark variant.
 
 ![Theme settings](../screenshots/settings-themes.webp)
 
+## Active repository
+
+**Settings → Appearance → Active repository** adds a thin accent outline around
+the selected repository tab. It follows the theme by default. Pick a **Custom Color**
+for a fixed outline color, or choose **Theme Accent** to follow the theme again.
+Choose **Subtle** to return to the understated border.
+This preference applies across repositories, including repositories inside groups.
+
+![Active repository outline](../screenshots/active-repo-accent.webp)
+
+![Repository tab appearance choices](../screenshots/repo-accent-choices.webp)
+
 ## App icon
 
 On macOS, **Settings → Appearance → App Icon** offers the original Classic

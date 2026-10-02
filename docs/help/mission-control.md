@@ -49,7 +49,7 @@ waiting to be pushed and which files are dirty.
 
 ## It is a view, not a tab
 
-The gauge next to the workspace name toggles it; clicking any tab returns you to
+The small dashboard icon at the left of the title bar toggles it; clicking any tab returns you to
 your work. It never adds a tab of its own, and it belongs to the workspace you
 are in — switch workspace and you get that workspace's dashboard.
 

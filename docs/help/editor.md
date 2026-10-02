@@ -35,6 +35,23 @@ Recognised out of the box:
 | JetBrains IDEs | `idea`, `webstorm`, `pycharm`, `rustrover`, `goland`, `clion`, `rider`, `phpstorm` |
 | Xcode | `xed` |
 
+The file viewer's small editor button sits beside **Close**, so it stays visible
+in narrow panes. It opens the working copy even when you are reading an old
+commit; files absent from the working folder report an error instead of creating
+an empty file.
+
+![Open the current file in the configured editor](../screenshots/editor-shortcut.webp)
+
+With an editor configured, file context menus use **Open in your editor** as the
+primary action; **Open With…** remains available for another app. Without an
+editor configured, **Open with Default App** follows the operating system's
+file association.
+
+VS Code, Cursor and Windsurf receive the repository folder alongside the file.
+This supplies the workspace context. VS Code still controls Workspace Trust;
+a folder you have not trusted can still ask for trust. Geminio does not change
+that setting. Saved macOS bundle choices use their bundled CLI when available.
+
 ## The limit worth knowing
 
 **Jumping to a line needs the editor's command, not its icon.** A macOS `.app`
@@ -53,6 +70,7 @@ scripts*. Once the command exists, pick the editor again and the line jump works
 | Repo tab, sidebar repo, status bar | The repository folder |
 | File tree, commit files, stash files, the commit composer | That file |
 | The row-end icon in the file tree | That file, in one click |
+| The editor icon beside Close in the file viewer | The working copy of the current file |
 | Right-click a line in the **file** view | The file, at that line |
 | Right-click a line in the **blame** view | The file, at that line |
 | An `.xcodeproj` or other package in the file tree | The package, in the app that owns it |

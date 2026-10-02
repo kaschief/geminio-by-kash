@@ -66,7 +66,7 @@ export function CodeSearchModal({ repoPath, query: initial }: { repoPath: string
   }
 
   const openHistHit = (hit: HistorySearchHit): void => {
-    setFileView(null)
+    setFileView(null, repoPath)
     useRepoStore.getState().select(repoPath, { type: 'commit', hash: hit.hash })
     requestScrollTo(hit.hash)
     closeModal()

@@ -132,11 +132,12 @@ function GeneralTab({ repoPath }: { repoPath: string }): React.JSX.Element {
   )
 }
 
-export function RepoSettingsModal({ repoPath, initialTab }: { repoPath: string; initialTab?: Tab }): React.JSX.Element {
+export function RepoSettingsModal({ repoPath, initialTab, searchTab }: { repoPath: string; initialTab?: Tab; searchTab?: Tab }): React.JSX.Element {
   const repo = useRepoStore((s) => s.repos[repoPath])
   const aiEnabled = useAiReady('chat')
   const t = useT()
   const [tab, setTab] = useState<Tab>(initialTab ?? 'general')
+  useEffect(() => { if (searchTab) setTab(searchTab) }, [searchTab])
   // Easter egg: five title clicks inside 1.5s open the cosmos view. Deliberately
   // undocumented — finding it is the point, so it stays out of docs/help and the
   // screenshot manifest.

@@ -319,6 +319,38 @@ detail. Summary:
   A separate existing edit to `.geminio.json` removed the push checklist;
   it remains outside this feature commit.
 
+### Independent repository working views (2026-10-02)
+
+- Repository switches now park and restore the UI's file/conflict view, graph
+  filters, sidebar tab and right-panel tab. Settings load/update synchronizes
+  the active repo before notifying tab consumers; page tabs park the view too.
+- Viewer component identity includes repository, file and source revision.
+  File reader sessions retain scroll positions, find query, whitespace toggle
+  and unsaved editor text in memory. Closing/replacing a file drops its parked
+  reader; late callbacks target their originating repo.
+- Graph positions are parked per repo. Layout/column preferences remain global.
+- Native regression: `node examples/screenshots/verify-repo-views.cjs` after
+  building. Covers identical filenames in two real repos, independent commit
+  selections/modes, scroll restoration, close/filter isolation, unsaved editor
+  text without disk writes, and group switching.
+- Validation passed: 1,653 tests, typecheck, i18n/docs checks and build.
+  Native repo switching (including split diffs and unsaved drafts) and existing
+  gesture/icon interaction checks passed. These changes are not committed.
+
+### Startup recovery and compact title bar (2026-10-02)
+
+- The saved `/Users/kaschief/Code/kash-apps` tab points to a missing folder.
+  Refresh now checks directory availability before Git reads; missing tabs
+  remain saved and show Locate/Retry instead of background startup toasts.
+  Locate uses the existing registry and settings repath workflow.
+- The title-bar name, mascot, workspace dropdown and separate gauge are
+  replaced by one small dashboard icon opening Mission Control. Workspace
+  management remains in Settings → Workspaces.
+- Native fullscreen events plus an initial-state IPC query remove macOS window
+  control padding in fullscreen, restoring it when exiting.
+- Native regression script: `examples/screenshots/verify-titlebar-startup.cjs`.
+  Changes are uncommitted alongside the earlier repo-state fix.
+
 ## 7. Where things live (new modules)
 
 | Path | What |
@@ -339,3 +371,26 @@ detail. Summary:
 Main-process additions in `src/main/git.ts`: `applyHunkPatch`,
 `mergeHunkIntoFile`, `stashAlreadyApplied`, `previewBody`; `ai:ready` in
 `src/main/ai.ts`. New read methods are registered in `READ_METHODS`.
+
+## Live demo and Settings search follow-up
+
+- User wants the live Electron demo kept open while iterating, before packaging the installed app. `npm run dev` uses separate `geminio-dev` settings; renderer edits hot-reload.
+- Settings search indexes actual component copy with `scripts/settings-search-index.mjs` (runs before dev/build), dims unrelated sections, highlights visible matches, and navigates nested tabs.
+- Titlebar now uses a dashboard icon for Mission Control; the K mark was rejected. Settings search is compact, centered, and has one focus border.
+- Current-file editor button sits beside Close. VS Code-family launches include the repository folder, preserve Workspace Trust, and reject missing working files. File menus prefer the configured editor over a duplicate default-app entry.
+- Native verification: `ELECTRON_RENDERER_URL=http://localhost:5173 node examples/screenshots/verify-settings-search.cjs`.
+
+- Keep validation windows hidden with `--shot --background-test`; screenshot capture and Settings verification now do so. Do not activate the demo after checks. The user works while it updates and explicitly objected to repeated focus stealing.
+
+- Repository-switch polish: right-panel presence is scoped to the repository with initial animation disabled, preventing the 0→420px reopening spring on return. File scroll restores synchronously in the layout effect before paint. Hidden `verify-repo-layout.cjs` samples every frame under 4x CPU slowdown; `TEST_FILE_MODE=diff` checks working diffs as well as file view.
+
+- Follow-up: geometry-only tests missed a blank loading frame. The last text/diff and semantic summary now live in the existing per-repo reader session and paint synchronously on return. Same-view refresh keeps content visible, revalidates disk, and preserves edits during the request. StrictMode effect replay is handled by content identity rather than a one-shot flag.
+- `verify-repo-layout.cjs` now rejects blank content/summary frames and verifies external edits still arrive. Optional `LAYOUT_REPOS` + `LAYOUT_FILE` inspect existing repositories read-only; `LAYOUT_RECORD_DIR` records timestamped CDP frames. Tested the exact Geminio FileTree.tsx → indicators-by-kash → Geminio sequence.
+
+- Active repository tabs now have a 1px top/side accent outline without changing geometry. Settings → Appearance → Active repository offers enabled/theme/custom color; preference is global and persists. Hidden native verification covered light/dark theme changes, custom/off, grouped tabs, search, reload persistence, and unchanged tab dimensions. Live demo updated; installed app not rebuilt or relaunched.
+
+- Accent settings polish: removed the mismatched checkbox/button row. Appearance now presents Subtle, Theme accent, and Custom color as existing-style theme cards with miniature tab previews, below the app theme grid. Custom color picker appears only for Custom color. Hidden light/dark screenshots and native selection/persistence checks passed.
+
+- Corrected tab color inversion caused by an old `.tab-repo` rule: inactive repository tabs inherit muted text, selected repository text/icon use the accent, and the outline is now 1px.
+
+- Settings now hides both content/sidebar scrollbars and uses a bottom-only 28px fade while more content remains. The hint tracks scrolling, content/section changes, and resizing; it clears at the end or when content fits. Hidden native checks verified wheel scrolling, search navigation, light/dark, and no top fade.

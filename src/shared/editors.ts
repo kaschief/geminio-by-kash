@@ -175,7 +175,7 @@ export interface EditorTarget {
   line?: number
   col?: number
   isDir?: boolean
-  /** Repository root, for a custom template that wants the workspace too. */
+  /** Repository root, so supported editors open the file in its workspace. */
   repo?: string
 }
 
@@ -232,16 +232,18 @@ export function editorLaunch(
   const fileArgs = setting.id === 'custom' ? setting.fileArgs || '{path}' : (preset?.fileArgs ?? '{path}')
   const folderArgs = setting.id === 'custom' ? setting.folderArgs || '{path}' : (preset?.folderArgs ?? '{path}')
   const template = target.isDir ? folderArgs : fileArgs
-  return {
-    command: setting.command,
-    args: editorArgs(template, {
-      path: target.path,
-      line: supportsLine(setting) ? target.line : undefined,
-      col: target.col,
-      repo: target.repo
-    }),
-    source: setting.source
+  const args = editorArgs(template, {
+    path: target.path,
+    line: supportsLine(setting) ? target.line : undefined,
+    col: target.col,
+    repo: target.repo
+  })
+  // VS Code and its derivatives accept a folder alongside --goto. This supplies
+  // workspace context; the editor still owns the folder trust decision.
+  if (!target.isDir && target.repo && ['vscode', 'cursor', 'windsurf'].includes(setting.id)) {
+    args.unshift(target.repo)
   }
+  return { command: setting.command, args, source: setting.source }
 }
 
 /** Keep one launch action when the preferred app is the configured editor. */

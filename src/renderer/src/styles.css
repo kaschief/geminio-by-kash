@@ -145,23 +145,27 @@ textarea:focus {
   padding-inline-end: 8px;
 }
 
-.titlebar.mac {
+.titlebar.mac:not(.fullscreen) {
   padding-inline-start: 78px;
 }
 
-.titlebar-logo {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  align-self: flex-end;
-  height: 32px;
-  font-size: 12.5px;
-  font-weight: 700;
-  letter-spacing: 0.4px;
-  color: var(--text-1);
-  padding: 0 14px 0 10px;
-  white-space: nowrap;
+.titlebar.mac.fullscreen { padding-inline-start: 6px; }
+.app-home-mark {
+  -webkit-app-region: no-drag;
+  display: grid;
+  place-items: center;
+  flex: 0 0 30px;
+  height: 30px;
+  margin: 0 5px 0 4px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
 }
+.app-home-mark:hover, .app-home-mark.active { background: var(--bg-3); color: var(--text-1); }
+.app-home-mark:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 
 .logo-mark {
   width: 19px;
@@ -226,6 +230,23 @@ textarea:focus {
   height: 2px;
   background: var(--bg-2);
 }
+
+/* Paint inside the existing bounds so selection never changes tab geometry. */
+.repo-accent-enabled .tab-repo.active::before {
+  content: '';
+  position: absolute;
+  inset: -1px -1px 0;
+  border: 1px solid var(--active-repo-accent);
+  border-bottom: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.repo-accent-enabled .tab-repo.in-group.active {
+  border-top-color: transparent;
+  border-inline-color: transparent;
+}
+.repo-accent-enabled .tab-repo.in-group.active::before { inset: -2px -2px 0; }
+
 
 .tab-name {
   max-width: 150px;
@@ -770,109 +791,7 @@ textarea:focus {
 }
 
 /* Workspace selector — same shell as the profile switcher, reuses its menu. */
-.workspace-switcher {
-  -webkit-app-region: no-drag;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  align-self: flex-end;
-  height: 32px;
-  max-width: 180px;
-  padding: 0 8px;
-  border-radius: 7px;
-  color: var(--text-1);
-  transition: background 0.15s, color 0.15s;
-}
-.workspace-switcher:hover,
-.workspace-switcher.open {
-  background: var(--bg-3);
-  color: var(--text-0);
-}
 
-/* Logo doubles as the workspace switcher: brand mark + active workspace name. */
-.titlebar-logo.workspace-switcher {
-  margin-inline-start: 4px;
-  padding: 0 8px 0 10px;
-  max-width: 220px;
-}
-.workspace-switcher-name {
-  font-size: 12.5px;
-  font-weight: 700;
-  letter-spacing: 0.4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Menu row: switch button fills the row; rename/delete reveal on hover. */
-.workspace-switcher-row {
-  display: flex;
-  align-items: center;
-  position: relative;
-}
-/* Drag & drop reorder: grip on hover, insertion line on the hovered edge. */
-.workspace-row-grip {
-  display: flex;
-  align-items: center;
-  padding-inline-start: 2px;
-  margin-inline-end: -4px;
-  color: var(--text-2);
-  opacity: 0;
-  cursor: grab;
-  transition: opacity 0.1s;
-}
-.workspace-switcher-row:hover .workspace-row-grip {
-  opacity: 1;
-}
-.workspace-switcher-row.dragging {
-  opacity: 0.45;
-}
-.workspace-switcher-row.drop-before::before,
-.workspace-switcher-row.drop-after::after {
-  content: '';
-  position: absolute;
-  inset-inline-start: 4px;
-  inset-inline-end: 4px;
-  height: 2px;
-  border-radius: 1px;
-  background: var(--accent);
-  pointer-events: none;
-}
-.workspace-switcher-row.drop-before::before {
-  top: -1px;
-}
-.workspace-switcher-row.drop-after::after {
-  bottom: -1px;
-}
-.workspace-switcher-row .profile-switcher-item {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-.workspace-row-actions {
-  display: flex;
-  align-items: center;
-  gap: 1px;
-  opacity: 0;
-  transition: opacity 0.1s;
-}
-.workspace-switcher-row:hover .workspace-row-actions {
-  opacity: 1;
-}
-.workspace-row-btn {
-  display: flex;
-  padding: 4px;
-  border-radius: 5px;
-  color: var(--text-2);
-  transition: background 0.1s, color 0.1s;
-}
-.workspace-row-btn:hover {
-  background: var(--bg-4);
-  color: var(--text-0);
-}
-.workspace-row-btn.danger:hover {
-  background: rgba(229, 72, 77, 0.16);
-  color: #e5484d;
-}
 
 .profile-switcher-menu {
   position: fixed;
@@ -8212,10 +8131,9 @@ body.col-resizing .node-ava {
   flex-shrink: 0;
 }
 
-/* Group tab active repo */
-.tab-repo {
-  color: var(--accent);
-  font-weight: 500;
+/* Only the selected repository receives the accent; other tabs inherit muted text. */
+.titlebar .tab-repo.active {
+  color: var(--active-repo-accent);
 }
 
 /* Settings select + textarea */
@@ -10949,28 +10867,6 @@ input[type='range']:focus-visible {
 .bc-diff-section { display: flex; flex-direction: column; flex: 1; min-height: 0; }
 .bc-diff-title { font-size: 11.5px; color: var(--text-2); margin-bottom: 4px; }
 .bc-diff-scroll { flex: 1; overflow: auto; background: var(--bg-2); border-radius: 6px; }
-
-/* Mission control shortcut, always sitting next to the workspace name. */
-.workspace-switcher-wrap { display: flex; align-items: center; }
-.workspace-mission {
-  -webkit-app-region: no-drag;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  align-self: flex-end;
-  height: 32px;
-  width: 26px;
-  padding: 0;
-  border: 0;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--text-2);
-  cursor: pointer;
-  transition: background 0.12s, color 0.12s;
-}
-.workspace-mission:hover { background: var(--bg-4); color: var(--accent); }
-.workspace-mission.active { background: var(--bg-4); color: var(--accent); }
-
 
 /* ── In-app handbook ── */
 .help-root { display: flex; height: 100%; min-height: 0; }
@@ -17395,3 +17291,67 @@ mark.diff-find-hit.current { background: #ff9632; color: #10121a; }
 .app-icon-choice.github-photo img { width: min(calc(100% - 18px), 72px); border-radius: 22%; margin: 9px; }
 .app-icon-choice:disabled { cursor: default; opacity: .5; }
 @media (prefers-reduced-motion: reduce) { .fv-file-pull.is-opening .fv-pull-meter { transform: none; transition: none; } }
+
+.missing-repository .welcome-card { max-width: 560px; }
+.missing-repository .welcome-card > svg { color: var(--text-2); }
+.missing-repository-path { display: block; color: var(--text-2); overflow-wrap: anywhere; font-size: 12px; margin: 16px 0; }
+.missing-repository-actions { display: flex; justify-content: center; gap: 10px; }
+
+/* Search keeps every section available, with matching copy highlighted in place. */
+.settings-heading { display: grid; grid-template-columns: 1fr minmax(0, 280px) 1fr; align-items: center; gap: 12px; margin-bottom: 20px; }
+.settings .settings-heading h3 { margin: 0; }
+.settings-search { display: flex; align-items: center; gap: 8px; grid-column: 2; width: 100%; height: 32px; box-sizing: border-box; padding: 0 9px; border: 1px solid var(--border); border-radius: 8px; color: var(--text-2); background: var(--bg-0); }
+.settings-search:focus-within { border-color: var(--accent); }
+.settings .settings-search input, .settings .settings-search input:focus { width: 100%; min-width: 0; min-height: 0; height: 26px; padding: 0; margin: 0; border: 0; border-radius: 0; outline: none; box-shadow: none; background: transparent; color: var(--text-0); font: inherit; }
+.settings-search input::-webkit-search-cancel-button { display: none; }
+.settings-search-dim { opacity: .3; }
+.settings-search-dim:hover, .settings-search-dim:focus-visible { opacity: .75; }
+.settings-form .settings-search-hit { background: color-mix(in srgb, var(--accent) 17%, transparent); border-radius: 3px; box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 17%, transparent); }
+.settings-search-empty { color: var(--text-2); margin: 0 0 12px; }
+
+.modal:has(.settings) { overflow: hidden; }
+.settings { display: flex; flex-direction: column; max-height: calc(100vh - 126px); }
+.settings > .settings-heading { flex-shrink: 0; }
+.settings > .settings-body { min-height: 0; }
+.settings > .settings-body > .settings-form { overflow-y: auto; padding: 3px 5px; }
+.settings-form, .settings-side-scroll { scrollbar-width: none; }
+.settings-form::-webkit-scrollbar, .settings-side-scroll::-webkit-scrollbar { display: none; }
+.settings-form[data-more-below='true'], .settings-side-scroll[data-more-below='true'] {
+  mask-image: linear-gradient(to bottom, #000 0, #000 calc(100% - 28px), transparent 100%);
+}
+
+
+/* Repository accent choices reuse the appearance page's theme cards. */
+.active-repo-accent-settings { margin-top: 22px; }
+.repo-accent-choices { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.repo-accent-choices .theme-card { padding: 0; text-align: start; font: inherit; }
+.repo-accent-preview {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 64px;
+  padding: 12px 12px 0;
+  background: var(--bg-0);
+  border-bottom: 8px solid var(--bg-2);
+  overflow: hidden;
+}
+.repo-accent-preview-tab, .repo-accent-preview-inactive {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 68%;
+  height: 29px;
+  padding: 0 10px;
+  border: 1px solid var(--preview-accent);
+  border-bottom: 0;
+  border-radius: 7px 7px 0 0;
+  background: var(--bg-2);
+  color: var(--preview-accent);
+}
+.repo-accent-preview.subtle .repo-accent-preview-tab { border-color: var(--border-soft); border-width: 1px; }
+.repo-accent-preview i { display: block; width: 38px; max-width: 100%; height: 4px; background: var(--text-2); border-radius: 3px; opacity: .4; }
+.repo-accent-preview-inactive { width: 32%; background: transparent; border-color: transparent; opacity: .5; }
+.settings-form label.repo-accent-custom-color { grid-column: 3; flex-direction: row; align-items: center; gap: 9px; margin: 0; color: var(--text-2); }
+.repo-accent-custom-color input[type='color'] { flex-shrink: 0; appearance: none; width: 26px; height: 26px; padding: 0; border: 1px solid var(--border); border-radius: 50%; overflow: hidden; background: none; cursor: pointer; }
+.repo-accent-custom-color input[type='color']::-webkit-color-swatch-wrapper { padding: 2px; }
+.repo-accent-custom-color input[type='color']::-webkit-color-swatch { border: 0; border-radius: 50%; }

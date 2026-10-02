@@ -170,7 +170,7 @@ export function ConflictResolver({ view }: { view: ConflictViewState }): React.J
         toast('error', error)
       } else {
         toast('success', interp(t('difftool.merged'), { file }))
-        setConflictView(null)
+        setConflictView(null, repoPath)
         await refresh(repoPath)
       }
     } finally {
@@ -279,7 +279,7 @@ export function ConflictResolver({ view }: { view: ConflictViewState }): React.J
   useEffect(() => {
     const onKey = (e: KeyboardEvent): void => {
       if (e.key === 'Escape' && !e.defaultPrevented && !useUIStore.getState().modal) {
-        setConflictView(null)
+        setConflictView(null, repoPath)
         return
       }
       // Alt+↑/↓ jumps between conflicts, except while editing the output.
@@ -399,7 +399,7 @@ export function ConflictResolver({ view }: { view: ConflictViewState }): React.J
     try {
       await gitApi.resolveConflict(repoPath, file, editOutput)
       toast('success', `Resolved ${file}`)
-      setConflictView(null)
+      setConflictView(null, repoPath)
       await refresh(repoPath)
     } catch (err) {
       toast('error', err instanceof Error ? err.message : String(err))
@@ -412,7 +412,7 @@ export function ConflictResolver({ view }: { view: ConflictViewState }): React.J
     setSaving(true)
     try {
       await repoActions.conflictTakeSide(repoPath, file, side)
-      setConflictView(null)
+      setConflictView(null, repoPath)
       await refresh(repoPath)
     } finally {
       setSaving(false)
@@ -432,7 +432,7 @@ export function ConflictResolver({ view }: { view: ConflictViewState }): React.J
       <div className="file-viewer conflict-resolver">
         <div className="fv-header">
           {header}
-          <button className="icon-btn" title={t('common.close')} onClick={() => setConflictView(null)}>
+          <button className="icon-btn" title={t('common.close')} onClick={() => setConflictView(null, repoPath)}>
             <X size={15} />
           </button>
         </div>
@@ -449,7 +449,7 @@ export function ConflictResolver({ view }: { view: ConflictViewState }): React.J
       <div className="file-viewer conflict-resolver">
         <div className="fv-header">
           {header}
-          <button className="icon-btn" title={t('common.close')} onClick={() => setConflictView(null)}>
+          <button className="icon-btn" title={t('common.close')} onClick={() => setConflictView(null, repoPath)}>
             <X size={15} />
           </button>
         </div>
@@ -546,7 +546,7 @@ export function ConflictResolver({ view }: { view: ConflictViewState }): React.J
             <Check size={13} /> {t('conflict.saveResolution')}
           </button>
         </div>
-        <button className="icon-btn" title={t('common.close')} onClick={() => setConflictView(null)}>
+        <button className="icon-btn" title={t('common.close')} onClick={() => setConflictView(null, repoPath)}>
           <X size={15} />
         </button>
       </div>

@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { migrateSharedLayout, updateSharedLayout } from '../../../shared/sharedLayout'
 import { migrateAIConfig, needsAccountsNotice, resolveAI } from '../../../shared/aiAccounts'
 import {
+  tabActiveRepoPath,
   defaultProfile,
   defaultSettings,
   defaultGraphStyle,
@@ -31,7 +32,7 @@ import {
   updateFolder
 } from '../lib/repoFolders'
 import { reposApi, settingsApi } from '../infrastructure/api'
-import { repathRepoSettings } from '../lib/repoRepath'
+import { repathRepoSettings, repathRepoTabs } from '../lib/repoRepath'
 import type { WorkspaceCandidate } from '../lib/workspacePlan'
 import { useUIStore } from './ui'
 import { applyRepoAlias, canonicalRepoPath, migrateRepoAliases, repoDisplayName } from '../lib/repoAlias'
@@ -443,12 +444,16 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
     settings.workspaces = settings.workspaces.map((w) => ({ ...w, tabs: normalizeTabs(w.tabs ?? []) }))
     settings.tabs = normalizeTabs(settings.tabs)
     const migrated = migrateRepoAliases(migrateSharedLayout(settings))
+    const tab = migrated.tabs.find((t) => t.id === migrated.activeTabId)
+    useUIStore.getState().activateRepoView(tab ? tabActiveRepoPath(tab) : null)
     set({ settings: migrated, loaded: true })
     if (settings.sharedLayoutVersion !== 1) persist(migrated)
   },
 
   update: (mut) => {
     const settings = syncActiveWorkspace(mut(get().settings))
+    const tab = settings.tabs.find((t) => t.id === settings.activeTabId)
+    useUIStore.getState().activateRepoView(tab ? tabActiveRepoPath(tab) : null)
     set({ settings })
     persist(settings)
   },
@@ -759,6 +764,8 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
   repathRepo: (oldPath, newPath) =>
     get().update((s) => ({
       ...s,
+      tabs: repathRepoTabs(s.tabs, oldPath, newPath),
+      workspaces: s.workspaces.map((w) => ({ ...w, tabs: repathRepoTabs(w.tabs, oldPath, newPath) })),
       ...repathRepoSettings(
         { repoAliases: s.repoAliases, repoProfiles: s.repoProfiles, favouriteRepos: s.favouriteRepos ?? [] },
         oldPath,

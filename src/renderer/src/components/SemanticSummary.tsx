@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import {
   ArrowRight,
   Braces,
@@ -15,6 +15,8 @@ import type { BlobSpec, SemanticChange, SemanticDiff } from '../../../shared/typ
 import { gitApi } from '../infrastructure/api'
 import { revealLine } from '../lib/reveal'
 import { useT, interp } from '../i18n'
+
+export interface SemanticSummarySnapshot { key: string; result: SemanticDiff | null; open: boolean }
 
 const ICON: Record<SemanticChange['kind'], typeof Plus> = {
   renamed: Tags,
@@ -35,31 +37,44 @@ export function SemanticSummary({
   repoPath,
   file,
   oldSide,
-  newSide
+  newSide,
+  revision,
+  snapshot,
+  onSnapshot
 }: {
   repoPath: string
   file: string
   oldSide: BlobSpec
   newSide: BlobSpec
+  revision?: string
+  snapshot?: SemanticSummarySnapshot
+  onSnapshot?: (snapshot: SemanticSummarySnapshot) => void
 }): React.JSX.Element | null {
-  const [result, setResult] = useState<SemanticDiff | null>(null)
-  const [open, setOpen] = useState(false)
+  const key = JSON.stringify([repoPath, file, oldSide, newSide, revision])
+  const saved = snapshot?.key === key ? snapshot : undefined
+  const [state, setState] = useState<SemanticSummarySnapshot>(() => saved ?? { key, result: null, open: false })
+  const current = state.key === key ? state : saved
+  const result = current?.result ?? null
+  const open = current?.open ?? false
+  const setOpen = (next: (value: boolean) => boolean): void => setState({ key, result, open: next(open) })
+  const report = useRef(onSnapshot)
+  report.current = onSnapshot
+  useLayoutEffect(() => { report.current?.({ key, result, open }) }, [key, result, open])
   const t = useT()
 
   const oldKey = JSON.stringify(oldSide)
   const newKey = JSON.stringify(newSide)
   useEffect(() => {
     let cancelled = false
-    setResult(null)
     gitApi
       .semanticDiff(repoPath, file, oldSide, newSide)
-      .then((r) => !cancelled && setResult(r))
-      .catch(() => !cancelled && setResult(null))
+      .then((r) => { if (!cancelled) setState((previous) => ({ key, result: r, open: previous.key === key ? previous.open : false })) })
+      .catch(() => { if (!cancelled) setState({ key, result: null, open: false }) })
     return () => {
       cancelled = true
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [repoPath, file, oldKey, newKey])
+  }, [repoPath, file, oldKey, newKey, key])
 
   if (!result?.language || result.changes.length === 0) return null
 

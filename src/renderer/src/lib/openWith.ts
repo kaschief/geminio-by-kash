@@ -15,9 +15,9 @@ export function openWithMenuItems(
   defaultApp: DefaultOpenApp,
   labels: { openWithDefault: (name: string) => string; openWith: string },
   editor?: EditorSetting,
-  opts?: { isDir?: boolean }
+  opts?: { isDir?: boolean; repo?: string }
 ): MenuItem[] {
-  const items: MenuItem[] = editorMenuItems(editor, { path, isDir: opts?.isDir })
+  const items: MenuItem[] = editorMenuItems(editor, { path, isDir: opts?.isDir, repo: opts?.repo })
   if (defaultApp?.path && !isEditorApp(editor, defaultApp.path)) {
     items.push({
       label: labels.openWithDefault(defaultApp.name),

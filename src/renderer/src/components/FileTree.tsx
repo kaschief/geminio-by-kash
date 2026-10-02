@@ -69,7 +69,7 @@ export function FileTree({
   const openWithSmart = (rel: string): void => {
     const target = abs(path, rel)
     const action = editor?.command
-      ? editorApi.open(editor, { path: target })
+      ? editorApi.open(editor, { path: target, repo: path })
       : defaultOpenApp?.path
         ? shellApi.openWithApp(target, defaultOpenApp.path)
         : shellApi.openWithPicker(target)
@@ -489,7 +489,7 @@ export function FileTree({
     { label: t('fileTree.filterGraph'), onClick: () => useUIStore.getState().setPathFilter(node.path) },
     { separator: true },
     { label: shellApi.revealLabel, onClick: () => void shellApi.revealInFolder(abs(path, node.path)) },
-    { label: t('fileTree.openDefaultApp'), onClick: () => void shellApi.openPath(abs(path, node.path)) },
+    ...(!editor?.command ? [{ label: t('fileTree.openDefaultApp'), onClick: () => void shellApi.openPath(abs(path, node.path)) }] : []),
     ...openWithMenuItems(
       abs(path, node.path),
       defaultOpenApp,
@@ -498,7 +498,7 @@ export function FileTree({
         openWith: t('fileTree.openWith')
       },
       editor,
-      { isDir: node.dir }
+      { isDir: node.dir, repo: path }
     ),
     { label: t('fileTree.copyPath'), onClick: () => void navigator.clipboard.writeText(node.path) },
     ...(node.dir

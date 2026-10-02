@@ -97,6 +97,13 @@ export function detectEditors(): DetectedEditor[] {
  * throwing, since "my editor did not open" is a nuisance, not an error state.
  */
 export function openInEditor(setting: EditorSetting, target: EditorTarget): Promise<string> {
+  if (!existsSync(target.path)) return Promise.resolve('The file is not present in the working folder.')
+  // Also support saved bundle-based choices: use the bundled CLI when present.
+  if (process.platform === 'darwin' && setting.source === 'app' && ['vscode', 'cursor', 'windsurf'].includes(setting.id)) {
+    const bin = EDITOR_PRESETS.find((p) => p.id === setting.id)?.bins[0]
+    const cli = bin && join(setting.command, 'Contents', 'Resources', 'app', 'bin', bin)
+    if (cli && isExecutable(cli)) setting = { ...setting, source: 'cli', command: cli }
+  }
   const plan = editorLaunch(setting, target)
   if (!plan) return Promise.resolve('No editor is configured.')
 
@@ -104,14 +111,13 @@ export function openInEditor(setting: EditorSetting, target: EditorTarget): Prom
     // A macOS bundle is not an executable; `open -a` is the supported way in,
     // and it takes the path only — hence no line jumping for bundles.
     if (plan.source === 'app') {
-      execFile('open', ['-a', plan.command, target.path], (err) => resolve(err ? err.message : ''))
+      execFile('open', ['-a', plan.command, ...(!target.isDir && target.repo && ['vscode', 'cursor', 'windsurf'].includes(setting.id) ? [target.repo] : []), target.path], (err) => resolve(err ? err.message : ''))
       return
     }
     const child = spawn(plan.command, plan.args, { detached: true, stdio: 'ignore' })
     child.once('error', (err) => resolve(err.message))
     // Detached and unref'd so quitting Geminio never takes the editor with it.
-    child.unref()
-    resolve('')
+    child.once('spawn', () => { child.unref(); resolve('') })
   })
 }
 

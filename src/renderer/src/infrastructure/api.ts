@@ -175,6 +175,7 @@ import type { CliOpenPayload } from '../../../shared/cli'
 const call = <T>(method: string, ...args: unknown[]): Promise<T> => window.api.git(method, ...args) as Promise<T>
 
 export const gitApi = {
+  directoryExists: (path: string) => call<boolean>('directoryExists', path),
   open: (path: string) => call<RepoSummary>('open', path),
   log: (path: string, max?: number, skip?: number) => call<GraphCommit[]>('log', path, max, skip),
   branches: (path: string) => call<BranchesPayload>('branches', path),
@@ -809,6 +810,11 @@ export const infoApi = {
     window.api.info.reorder(repoPath, ids) as Promise<InfoEntry[]>,
   exportAll: () => window.api.info.exportAll() as Promise<InfoExport>,
   importAll: (data: InfoExport) => window.api.info.importAll(data) as Promise<void>
+}
+
+export const windowApi = {
+  isFullscreen: () => window.api.window.isFullscreen(),
+  onFullscreen: (cb: (fullscreen: boolean) => void) => window.api.window.onFullscreen(cb)
 }
 
 export const shellApi = {

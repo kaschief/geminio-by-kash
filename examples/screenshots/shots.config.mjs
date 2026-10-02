@@ -107,6 +107,27 @@ async function seedTodos(page, repoPath) {
 /** @type {Shot[]} */
 export const shots = [
   {
+    out: 'repo-accent-choices',
+    repos: ['line-staging'],
+    clipTo: '.active-repo-accent-settings',
+    drive: async (page) => {
+      await page.evaluate(() => {
+        window.__shot.settings.getState().update(s => ({ ...s, activeRepoAccent: { enabled: true, color: '#8050d6' } }))
+        window.__shot.ui.getState().openModal({ kind: 'settings', page: 'themes' })
+      })
+      await page.locator('.active-repo-accent-settings').scrollIntoViewIfNeeded()
+    }
+  },
+  {
+    out: 'active-repo-accent',
+    repos: ['line-staging', 'merge-conflict'],
+    clipTo: '.titlebar',
+    drive: async (page) => {
+      await page.evaluate(() => window.__shot.settings.getState().update(s => ({ ...s, appThemeId: 'solarized', themeMode: 'light', activeRepoAccent: { enabled: true } })))
+      await page.locator('.repo-accent-enabled .tab-repo.active').waitFor()
+    }
+  },
+  {
     out: 'app-icon-picker',
     repos: ['line-staging'],
     clipTo: '.app-icon-picker',
@@ -117,6 +138,50 @@ export const shots = [
       await page.getByRole('button', { name: 'Ocean', exact: true }).filter({ has: page.locator('svg') }).waitFor()
     }
   },
+  {
+    out: 'settings-search',
+    repos: ['line-staging'],
+    clipTo: '.settings',
+    drive: async (page) => {
+      await page.evaluate(() => window.__shot.ui.getState().openModal({ kind: 'settings', page: 'general' }))
+      await page.getByRole('searchbox', { name: 'Search settings…' }).fill('minimap')
+      await page.locator('.settings-search-hit').first().waitFor()
+    }
+  },
+  {
+    out: 'editor-shortcut',
+    repos: ['line-staging'],
+    clipTo: '.fv-header',
+    drive: async (page, paths) => {
+      await page.evaluate((p) => {
+        window.__shot.settings.getState().update(s => ({ ...s, editor: { id: 'vscode', name: 'Visual Studio Code', command: '/usr/local/bin/code', source: 'cli' } }))
+        const repo = window.__shot.repo.getState().repos[p]
+        window.__shot.repo.getState().select(p, { type: 'commit', hash: repo.commits[0].hash })
+      }, paths['line-staging'])
+      await page.locator('.file-list [data-file-path="README.md"]').click()
+      await page.locator('.fv-open-editor').waitFor()
+    }
+  },
+  {
+    out: 'titlebar-compact',
+    repos: ['line-staging'],
+    clipTo: '.titlebar',
+    drive: async (page) => { await page.locator('.app-home-mark').waitFor() }
+  },
+  {
+    out: 'repository-missing',
+    repos: ['line-staging'],
+    clipTo: '.missing-repository .welcome-card',
+    drive: async (page) => {
+      await page.evaluate(() => window.__shot.settings.getState().update((s) => ({
+        ...s,
+        tabs: [{ id: 'missing', kind: 'repo', name: 'Moved Project', repos: [{ path: '/workspace/moved-project', name: 'Moved Project' }], activeRepoPath: '/workspace/moved-project' }],
+        activeTabId: 'missing'
+      })))
+      await page.locator('.missing-repository').waitFor()
+    }
+  },
+
   {
     out: 'file-view-controls-light',
     repos: ['line-staging'],

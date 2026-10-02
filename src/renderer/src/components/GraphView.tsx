@@ -1,6 +1,6 @@
 import { formatAbsoluteDate } from '../lib/commitDate'
 import { fitBranchAndGraph } from '../lib/graphColumnFit'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useLayoutEffect, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Archive, GitCommitHorizontal, Tag, Laptop, Cloud, Check, Star, Settings2, Pencil, Plus, Minus, CheckCircle2, XCircle, Clock, MinusCircle, StickyNote, FlaskConical } from 'lucide-react'
 import { ciIcon, CI_STATE_KEY } from './CiIcon'
@@ -825,7 +825,19 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
   // mount only the slice intersecting the viewport. The canvas keeps its full
   // height, so the scrollbar and scroll-to-commit (which scrolls by `idx*ROW_H`)
   // stay correct regardless of which rows are in the DOM.
-  const [scrollTop, setScrollTop] = useState(0)
+  const parkedScroll = useRef(useUIStore.getState().graphScrollByRepo[repo.path])
+  const [scrollTop, setScrollTop] = useState(parkedScroll.current?.top ?? 0)
+  useLayoutEffect(() => {
+    const el = scrollRef.current
+    if (!el) return
+    if (parkedScroll.current) {
+      el.scrollTop = parkedScroll.current.top
+      el.scrollLeft = parkedScroll.current.left
+      const header = el.parentElement?.querySelector<HTMLElement>(':scope > .graph-header')
+      if (header) header.scrollLeft = el.scrollLeft
+    }
+    return () => useUIStore.getState().rememberGraphScroll(repo.path, { top: el.scrollTop, left: el.scrollLeft })
+  }, [repo.path])
   const [viewportH, setViewportH] = useState(0)
   // The width the rows have to fill, so branch and graph can give way before
   // the message does (see fitBranchAndGraph).

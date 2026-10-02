@@ -2817,6 +2817,8 @@ export interface Workspace {
 
 export interface AppSettings {
   appIcon?: import('./appIcons').AppIconPreference
+  /** Global active repository outline. Enabled by default; absent color follows the theme. */
+  activeRepoAccent?: { enabled: boolean; color?: string }
   profiles: Profile[]
   activeProfileId: string
   /** Per-repository profile binding, keyed by repo path. When a repo with a

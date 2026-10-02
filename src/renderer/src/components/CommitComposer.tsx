@@ -317,10 +317,10 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
         regex: filter.regex
       })
     } else {
-      setFileSearch(null)
+      setFileSearch(null, path)
     }
   }, [query, filter.mode, filter.caseSensitive, filter.wholeWord, filter.regex, setFileSearch])
-  useEffect(() => () => useUIStore.getState().setFileSearch(null), [])
+  useEffect(() => () => useUIStore.getState().setFileSearch(null, path), [path])
 
   // Hits grouped per file for the expandable match rows, plus the flat set of
   // matching paths the filter below works with.
@@ -624,7 +624,7 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
       { separator: true },
       ...copyPathItems(targetFiles.map((f) => f.path)),
       { label: shellApi.revealLabel, onClick: () => void shellApi.revealInFolder(`${path}/${file.path}`) },
-      { label: t('composer.openDefaultApp'), onClick: () => void shellApi.openPath(`${path}/${file.path}`) },
+      ...(!editor?.command ? [{ label: t('composer.openDefaultApp'), onClick: () => void shellApi.openPath(`${path}/${file.path}`) }] : []),
       ...openWithMenuItems(
         `${path}/${file.path}`,
         defaultOpenApp,
@@ -632,7 +632,8 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
           openWithDefault: (name) => interp(t('fileTree.openWithApp'), { name }),
           openWith: t('fileTree.openWith')
         },
-        editor
+        editor,
+        { repo: path }
       ),
       ...(diffTool
         ? [
@@ -809,7 +810,7 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
       setSummary('')
       setDescription('')
       setAmend(false)
-      setFileView(null)
+      setFileView(null, path)
     }
   }
 
@@ -1011,7 +1012,7 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
                     { separator: true },
                     ...copyPathItems([f.path]),
                     { label: shellApi.revealLabel, onClick: () => void shellApi.revealInFolder(`${path}/${f.path}`) },
-                    { label: t('composer.openDefaultApp'), onClick: () => void shellApi.openPath(`${path}/${f.path}`) },
+                    ...(!editor?.command ? [{ label: t('composer.openDefaultApp'), onClick: () => void shellApi.openPath(`${path}/${f.path}`) }] : []),
                     ...openWithMenuItems(
                       `${path}/${f.path}`,
                       defaultOpenApp,
@@ -1019,7 +1020,8 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
                         openWithDefault: (name) => interp(t('fileTree.openWithApp'), { name }),
                         openWith: t('fileTree.openWith')
                       },
-                      editor
+                      editor,
+        { repo: path }
                     )
                   ])
                 }}

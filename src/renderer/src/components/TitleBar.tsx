@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Plus, FolderGit2, X, Minus, Square, Settings, Sparkles, LifeBuoy, FileText, Bell, BarChart3, BookOpen, ScrollText, CircleDot, Flag, Tag, Download, ArrowDownToLine, KeyRound, LayoutGrid, Folder, FolderOpen, FolderPlus, FolderTree, Trash2, Scale, Wrench } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useSettingsStore } from '../stores/settings'
@@ -16,7 +16,8 @@ import {
   subtreePaths
 } from '../lib/repoFolders'
 import { ProfileSwitcher } from './ProfileSwitcher'
-import { WorkspaceSwitcher } from './WorkspaceSwitcher'
+import { AppHomeButton } from './AppHomeButton'
+import { windowApi } from '../infrastructure/api'
 import { tabLabel, pageTabLabel } from '../lib/tabLabel'
 import { pagesForRepo } from '../lib/tabPages'
 import { repoCloseStatus, tabCloseStatus, type TabStatus } from '../lib/tabClose'
@@ -108,6 +109,14 @@ export function TitleBar(): React.JSX.Element {
   const hasGithubToken = useSettingsStore((s) => !!s.activeProfile().githubToken)
   const repos = useRepoStore((s) => s.repos)
   const isMac = window.api.platform === 'darwin'
+  const [fullscreen, setFullscreen] = useState(false)
+  useEffect(() => {
+    let changed = false
+    let alive = true
+    const off = windowApi.onFullscreen((value) => { changed = true; setFullscreen(value) })
+    void windowApi.isFullscreen().then((value) => { if (alive && !changed) setFullscreen(value) })
+    return () => { alive = false; off() }
+  }, [])
 
   // ── drag state ──────────────────────────────────────────────────────────
   const dragItem = useRef<DragItem | null>(null)
@@ -861,7 +870,7 @@ export function TitleBar(): React.JSX.Element {
       <motion.div
         key={repo.path}
         layout
-        className={`tab in-group ${isActiveRepo ? 'active' : ''} ${repoDc}`}
+        className={`tab tab-repo in-group ${isActiveRepo ? 'active' : ''} ${repoDc}`}
         draggable
         onDragStart={onDragStart({ kind: 'repo', tabId: tab.id, repoPath: repo.path }) as any}
         onDragEnd={onDragEnd as any}
@@ -992,8 +1001,11 @@ export function TitleBar(): React.JSX.Element {
 
   // ── render ───────────────────────────────────────────────────────────────
   return (
-    <div className={`titlebar ${isMac ? 'mac' : ''}`}>
-      <WorkspaceSwitcher />
+    <div
+      className={`titlebar ${isMac ? 'mac' : ''} ${fullscreen ? 'fullscreen' : ''} ${settings.activeRepoAccent?.enabled !== false ? 'repo-accent-enabled' : ''}`}
+      style={{ '--active-repo-accent': settings.activeRepoAccent?.color || 'var(--accent)' } as React.CSSProperties}
+    >
+      <AppHomeButton />
       <div
         className="tabs"
         ref={tabsRef}
@@ -1025,7 +1037,7 @@ export function TitleBar(): React.JSX.Element {
               <motion.div
                 key={tab.id}
                 layout
-                className={`tab ${tab.id === settings.activeTabId ? 'active' : ''} ${dc}`}
+                className={`tab tab-repo ${tab.id === settings.activeTabId ? 'active' : ''} ${dc}`}
                 role="tab"
                 aria-selected={tab.id === settings.activeTabId}
                 tabIndex={0}

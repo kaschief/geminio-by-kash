@@ -207,7 +207,7 @@ export function StashDetails({ repo, sha }: { repo: RepoData; sha: string }): Re
               },
               { separator: true },
               { label: shellApi.revealLabel, onClick: () => void shellApi.revealInFolder(`${repo.path}/${f.path}`) },
-              { label: t('stashPanel.openDefaultApp'), onClick: () => void shellApi.openPath(`${repo.path}/${f.path}`) },
+              ...(!editor?.command ? [{ label: t('stashPanel.openDefaultApp'), onClick: () => void shellApi.openPath(`${repo.path}/${f.path}`) }] : []),
               ...openWithMenuItems(
                 `${repo.path}/${f.path}`,
                 defaultOpenApp,
@@ -215,7 +215,8 @@ export function StashDetails({ repo, sha }: { repo: RepoData; sha: string }): Re
                   openWithDefault: (name) => interp(t('fileTree.openWithApp'), { name }),
                   openWith: t('fileTree.openWith')
                 },
-                editor
+                editor,
+                { repo: repo.path }
               ),
               { label: t('common.copyFilePath'), onClick: () => void navigator.clipboard.writeText(`${repo.path}/${f.path}`) }
             ])
@@ -224,7 +225,7 @@ export function StashDetails({ repo, sha }: { repo: RepoData; sha: string }): Re
             e.preventDefault()
             useUIStore.getState().openContextMenu(e.clientX, e.clientY, [
               { label: shellApi.revealLabel, onClick: () => void shellApi.revealInFolder(`${repo.path}/${folderPath}`) },
-              { label: t('stashPanel.openDefaultApp'), onClick: () => void shellApi.openPath(`${repo.path}/${folderPath}`) },
+              ...(!editor?.command ? [{ label: t('stashPanel.openDefaultApp'), onClick: () => void shellApi.openPath(`${repo.path}/${folderPath}`) }] : []),
               ...openWithMenuItems(
                 `${repo.path}/${folderPath}`,
                 defaultOpenApp,

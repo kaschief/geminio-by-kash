@@ -1,3 +1,4 @@
+import { MissingRepository } from './components/MissingRepository'
 import { useGitHubConnection } from './stores/githubAccount'
 import { useAiReady } from './components/useAiReady'
 import { WorkingChangesBanner } from './components/WorkingChangesBanner'
@@ -7,7 +8,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { GitMerge, FolderOpen, Download, ArrowDownToLine, Bug, LifeBuoy, MessageSquare, CheckSquare, Stethoscope, CircleX, TriangleAlert, Info, ListTodo, Pencil } from 'lucide-react'
 import { takeAccountsNotice, useSettingsStore } from './stores/settings'
 import { useRepoStore, repoActions, type RepoData } from './stores/repo'
-import { useUIStore } from './stores/ui'
+import { useUIStore, fileViewKey } from './stores/ui'
 import { tabActiveRepoPath, tabRepos, type ConflictOpKind, type GroupTab, type PageTab, type PageContent } from '../../shared/types'
 import { useT, t as tr, interp } from './i18n'
 import { applyDirection } from './i18n/direction'
@@ -104,16 +105,16 @@ async function runCliAction(path: string, action: CliAction): Promise<void> {
         ui.toast('error', interp(tr('cli.noSuchRef'), { ref: action.ref }))
         return
       }
-      ui.setFileView(null)
+      ui.setFileView(null, path)
       useRepoStore.getState().select(path, { type: 'commit', hash })
       return
     }
     case 'wip':
-      ui.setFileView(null)
+      ui.setFileView(null, path)
       useRepoStore.getState().select(path, { type: 'wip' })
       return
     case 'graph':
-      ui.setFileView(null)
+      ui.setFileView(null, path)
       return
     case 'terminal':
       ui.setTerminalOpen(path, true)
@@ -396,7 +397,7 @@ function WorkingChangesChip({ path }: { path: string }): React.JSX.Element | nul
       aria-label={label}
       data-tip={t('status.workingChangesTip')}
       onClick={() => {
-        useUIStore.getState().setFileView(null)
+        useUIStore.getState().setFileView(null, path)
         useRepoStore.getState().select(path, { type: 'wip' })
       }}
     >
@@ -861,7 +862,9 @@ export default function App(): React.JSX.Element {
     const minutes = settings.autoFetchMinutes ?? 0
     if (!activeRepoPath || minutes <= 0) return
     const interval = setInterval(
-      () => void repoActions.fetchAll(activeRepoPath, { skipEmpty: true }),
+      () => {
+        if (!useRepoStore.getState().repos[activeRepoPath]?.missingFolder) void repoActions.fetchAll(activeRepoPath, { skipEmpty: true })
+      },
       minutes * 60_000
     )
     return () => clearInterval(interval)
@@ -952,7 +955,7 @@ export default function App(): React.JSX.Element {
   const sbSide = settings.sidebarSide
   const rpFull = settings.rightPanelFullHeight
   const workspaceBody =
-    repo && !repo.notGit
+    repo && !repo.notGit && !repo.missingFolder
       ? ((): React.JSX.Element => {
           const termOpen = !!terminalOpenByRepo[repo.path]
           const termIsSide = placement === 'right'
@@ -1053,11 +1056,11 @@ export default function App(): React.JSX.Element {
                 <ConflictBanner repo={repo} />
                 <DebugToolbar repoPath={repo.path} />
                 {conflictView && conflictView.repoPath === repo.path ? (
-                  <ConflictResolver key={conflictView.file} view={conflictView} />
+                  <ConflictResolver key={`${conflictView.repoPath}:${conflictView.file}`} view={conflictView} />
                 ) : fileView && fileView.repoPath === repo.path ? (
-                  <FileViewer key={`${fileView.file}`} view={fileView} />
+                  <FileViewer key={fileViewKey(fileView)} view={fileView} />
                 ) : (
-                  <GraphView repo={repo} />
+                  <GraphView key={repo.path} repo={repo} />
                 )}
               </main>
               {problemsNode}
@@ -1077,8 +1080,10 @@ export default function App(): React.JSX.Element {
               : detailsAvailable
                 ? 'details'
                 : 'chat'
+          // A repo switch restores its panel at full size. Keep the spring for
+          // opening/closing details within the same repo, not for restoring it.
           const rightPanelNode = (
-            <AnimatePresence>
+            <AnimatePresence key={repo.path} initial={false}>
               {(selectedDetailsAvailable || chatOpen) && (
                 <motion.section
                   className="right-panel"
@@ -1149,9 +1154,9 @@ export default function App(): React.JSX.Element {
                     ) : repo.selected?.type === 'wip' ? (
                       <CommitComposer key={repo.path} repo={repo} />
                     ) : repo.selected?.type === 'stash' ? (
-                      <StashDetails repo={repo} sha={repo.selected.sha} />
+                      <StashDetails key={`${repo.path}:${repo.selected.sha}`} repo={repo} sha={repo.selected.sha} />
                     ) : repo.selected?.type === 'commit' ? (
-                      <CommitDetails repo={repo} hash={repo.selected.hash} />
+                      <CommitDetails key={`${repo.path}:${repo.selected.hash}`} repo={repo} hash={repo.selected.hash} />
                     ) : (
                       <div className="panel-empty">{t('app.selectRow')}</div>
                     )}
@@ -1215,7 +1220,7 @@ export default function App(): React.JSX.Element {
           title-bar button is its "tab", so the strip stays untouched. */}
       {/* display:contents keeps the flex layout while giving non-repo views a
           main landmark; skipped for the repo workspace, which has its own <main>. */}
-      {!(!missionOpen && activeTab && repo && !repo.notGit && !repoPage) && (
+      {!(!missionOpen && activeTab && repo && !repo.notGit && !repo.missingFolder && !repoPage) && (
         <main style={{ display: 'contents' }}>
           {missionOpen && <MissionControlPage />}
 
@@ -1224,13 +1229,14 @@ export default function App(): React.JSX.Element {
           {!missionOpen && activeTab && activeTab.kind === 'page' && <PageView tab={activeTab} />}
           {/* A page riding on a repo tab: the repository's own view steps aside
               for it, and the tab's icon is how you get back. */}
-          {!missionOpen && repoPage && <PageBody page={repoPage} />}
+          {!missionOpen && repoPage && !repo?.missingFolder && <PageBody page={repoPage} />}
 
-          {!missionOpen && activeTab && repo && repo.notGit && <InitRepo path={repo.path} />}
+          {!missionOpen && activeTab && repo?.missingFolder && <MissingRepository key={repo.path} path={repo.path} />}
+          {!missionOpen && activeTab && repo && !repo.missingFolder && repo.notGit && <InitRepo path={repo.path} />}
         </main>
       )}
 
-      {!missionOpen && activeTab && repo && !repo.notGit && !repoPage && (
+      {!missionOpen && activeTab && repo && !repo.notGit && !repo.missingFolder && !repoPage && (
         <>
           <Toolbar repo={repo} />
           {workspaceBody}

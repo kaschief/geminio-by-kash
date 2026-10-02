@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import type { ReactNode } from 'react'
-import type { CiState, DivergedStrategy, KeychainReason, ResetStrategy } from '../../../shared/types'
+import type { CiState, DivergedStrategy, KeychainReason, ResetStrategy, SemanticDiff } from '../../../shared/types'
 import type { WorkspaceCandidate } from '../lib/workspacePlan'
 
 export type CiFilter = 'all' | CiState
@@ -218,6 +218,50 @@ export interface FileViewState {
   initialScroll?: 'start' | 'end'
 }
 
+/** Identity includes the repository and revision, not just the basename. */
+export function fileViewKey(view: FileViewState): string {
+  return JSON.stringify([view.repoPath, view.file, view.source])
+}
+
+export interface FileReaderSession {
+  /** Last painted text, shown immediately while the working copy revalidates. */
+  content?: string | null
+  semantic?: { key: string; result: SemanticDiff | null; open: boolean }
+  key: string
+  mode: FileViewMode
+  editing: boolean
+  draft: string
+  findOpen: boolean
+  find: FileSearchState
+  ignoreWs: boolean
+  scroll: { top: number; left: number }[]
+}
+
+interface RepoViewState {
+  fileView: FileViewState | null
+  conflictView: ConflictViewState | null
+  conflictWhy: string | null
+  graphFilter: string
+  ciFilter: CiFilter
+  authorFilter: string | null
+  pathFilter: string | null
+  sidebarTab: 'git' | 'files'
+  chatPanelOpen: boolean
+  rightPanelTab: 'details' | 'chat'
+  scrollToHash: string | null
+}
+const emptyRepoView = (): RepoViewState => ({
+  fileView: null, conflictView: null, conflictWhy: null,
+  graphFilter: '', ciFilter: 'all', authorFilter: null, pathFilter: null,
+  sidebarTab: 'git', chatPanelOpen: false, rightPanelTab: 'details', scrollToHash: null
+})
+function repoViewSnapshot(s: RepoViewState): RepoViewState {
+  const { fileView, conflictView, conflictWhy, graphFilter, ciFilter, authorFilter,
+    pathFilter, sidebarTab, chatPanelOpen, rightPanelTab, scrollToHash } = s
+  return { fileView, conflictView, conflictWhy, graphFilter, ciFilter, authorFilter,
+    pathFilter, sidebarTab, chatPanelOpen, rightPanelTab, scrollToHash }
+}
+
 export interface ConflictViewState {
   repoPath: string
   file: string
@@ -330,6 +374,14 @@ interface UIState {
   inflight: number
   /** Prefill the commit composer (amend from HEAD, or restore after undo). */
   composerIntent: { path: string; summary: string; description: string; amend: boolean } | null
+  activeRepoPath: string | null
+  repoViews: Record<string, RepoViewState>
+  fileReaders: Record<string, FileReaderSession>
+  graphScrollByRepo: Record<string, { top: number; left: number }>
+  activateRepoView(repoPath: string | null): void
+  patchRepoView(repoPath: string | null, patch: Partial<RepoViewState>): void
+  rememberFileReader(view: FileViewState, session: FileReaderSession): void
+  rememberGraphScroll(repoPath: string, scroll: { top: number; left: number }): void
   fileView: FileViewState | null
   conflictView: ConflictViewState | null
   /** File whose "why this conflicts" strip is open. Lives here rather than in
@@ -367,7 +419,7 @@ interface UIState {
   openChatPanelWith(repoPath: string, text: string): void
   consumeChatPrompt(): void
   closeChatPanel(): void
-  showDetailsPanel(): void
+  showDetailsPanel(repoPath?: string): void
   setGraphFilter(filter: string): void
   setCiFilter(filter: CiFilter): void
   setAuthorFilter(author: string | null): void
@@ -377,11 +429,11 @@ interface UIState {
   endInflight(): void
   requestComposerIntent(intent: { path: string; summary: string; description: string; amend: boolean }): void
   consumeComposerIntent(): void
-  setFileView(view: FileViewState | null): void
-  setEditorDirty(dirty: boolean): void
-  setConflictView(view: ConflictViewState | null): void
+  setFileView(view: FileViewState | null, repoPath?: string): void
+  setEditorDirty(dirty: boolean, repoPath?: string): void
+  setConflictView(view: ConflictViewState | null, repoPath?: string): void
   setConflictWhy(file: string | null): void
-  setFileSearch(search: FileSearchState | null): void
+  setFileSearch(search: FileSearchState | null, repoPath?: string): void
   requestScrollTo(hash: string | null): void
   setLayout(partial: Partial<PanelLayout>): void
   /** Reset all persisted panel sizes (widths/heights/collapse) to defaults. */
@@ -394,6 +446,35 @@ let toastId = 0
 let revealSeq = 0
 
 export const useUIStore = create<UIState>((set, get) => ({
+  activeRepoPath: null,
+  repoViews: {},
+  fileReaders: {},
+  graphScrollByRepo: {},
+  activateRepoView: (activeRepoPath) => set((s) => {
+    if (s.activeRepoPath === activeRepoPath) return s
+    const repoViews = { ...s.repoViews }
+    if (s.activeRepoPath) repoViews[s.activeRepoPath] = repoViewSnapshot(s)
+    const next = { ...(activeRepoPath ? repoViews[activeRepoPath] ?? emptyRepoView() : emptyRepoView()) }
+    if (next.fileView) {
+      next.fileView = { ...next.fileView }
+      // Entry gestures and line reveals are one-shot actions, not return state.
+      delete next.fileView.initialScroll
+      delete next.fileView.line
+    }
+    return { ...next, activeRepoPath, repoViews, fileSearch: null, editorDirty: false, contextMenu: null }
+  }),
+  patchRepoView: (repoPath, patch) => set((s) => {
+    if (repoPath === s.activeRepoPath) return patch
+    if (!repoPath) return s
+    return { repoViews: { ...s.repoViews, [repoPath]: { ...(s.repoViews[repoPath] ?? emptyRepoView()), ...patch } } }
+  }),
+  rememberFileReader: (view, session) => set((s) => {
+    const current = view.repoPath === s.activeRepoPath ? s.fileView : s.repoViews[view.repoPath]?.fileView
+    // An old component can unmount after a new file opened or was closed.
+    if (!current || fileViewKey(current) !== session.key) return s
+    return { fileReaders: { ...s.fileReaders, [view.repoPath]: session } }
+  }),
+  rememberGraphScroll: (repoPath, scroll) => set((s) => ({ graphScrollByRepo: { ...s.graphScrollByRepo, [repoPath]: scroll } })),
   contextMenu: null,
   modal: null,
   toasts: [],
@@ -471,7 +552,7 @@ export const useUIStore = create<UIState>((set, get) => ({
     set({ chatPanelOpen: true, rightPanelTab: 'chat', chatPrompt: { repoPath, text } }),
   consumeChatPrompt: () => set({ chatPrompt: null }),
   closeChatPanel: () => set({ chatPanelOpen: false, rightPanelTab: 'details' }),
-  showDetailsPanel: () => set({ rightPanelTab: 'details' }),
+  showDetailsPanel: (repoPath) => get().patchRepoView(repoPath ?? get().activeRepoPath, { rightPanelTab: 'details' }),
   setGraphFilter: (graphFilter) => set({ graphFilter }),
   setCiFilter: (ciFilter) => set({ ciFilter }),
   setAuthorFilter: (authorFilter) => set({ authorFilter }),
@@ -481,16 +562,29 @@ export const useUIStore = create<UIState>((set, get) => ({
   endInflight: () => set((s) => ({ inflight: Math.max(0, s.inflight - 1) })),
   requestComposerIntent: (composerIntent) => set({ composerIntent }),
   consumeComposerIntent: () => set({ composerIntent: null }),
-  setFileView: (fileView) =>
-    set({
-      // Stamp each line-targeted open so clicking the same search hit twice
-      // scrolls again instead of being deduped away by identical state.
+  setFileView: (fileView, repoPath) => {
+    const path = fileView?.repoPath ?? repoPath ?? get().activeRepoPath
+    const current = path === get().activeRepoPath ? get().fileView : path ? get().repoViews[path]?.fileView : null
+    if (path && (!fileView || !current || fileViewKey(current) !== fileViewKey(fileView))) {
+      set((s) => {
+        const fileReaders = { ...s.fileReaders }
+        delete fileReaders[path]
+        return { fileReaders }
+      })
+    }
+    get().patchRepoView(path, {
+      // Each line-targeted open must reveal even the same search hit again.
       fileView: fileView?.line != null ? { ...fileView, revealSeq: ++revealSeq } : fileView
-    }),
-  setEditorDirty: (editorDirty) => set({ editorDirty }),
-  setConflictView: (conflictView) => set({ conflictView }),
+    })
+  },
+  setEditorDirty: (editorDirty, repoPath) => {
+    if (!repoPath || repoPath === get().activeRepoPath) set({ editorDirty })
+  },
+  setConflictView: (conflictView, repoPath) => get().patchRepoView(conflictView?.repoPath ?? repoPath ?? get().activeRepoPath, { conflictView }),
   setConflictWhy: (conflictWhy) => set({ conflictWhy }),
-  setFileSearch: (fileSearch) => set({ fileSearch }),
+  setFileSearch: (fileSearch, repoPath) => {
+    if (!repoPath || repoPath === get().activeRepoPath) set({ fileSearch })
+  },
   requestScrollTo: (scrollToHash) => set({ scrollToHash }),
   setLayout: (partial) => {
     const layout = { ...get().layout, ...partial }
