@@ -274,6 +274,31 @@ textarea:focus {
   margin-inline-start: 1px;
 }
 
+/* Commits waiting to push: a solid count, with the changes dot behind it
+   when files changed too. The accent unless a Push colour was picked. */
+.tab-status-marks {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+}
+.tab-push-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 15px;
+  height: 15px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--status-dot-push, var(--accent));
+  /* Readable on any fill: set from the picked colour, or from the theme accent. */
+  color: var(--status-dot-push-text, var(--accent-contrast, #fff));
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
 /* Both colours can be overridden in Settings → Themes; a picked colour shows
    at full strength, the theme's muted grey keeps its old softness. */
 .tab-status-wip {

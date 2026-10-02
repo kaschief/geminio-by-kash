@@ -22,6 +22,7 @@ import { tabLabel, pageTabLabel } from '../lib/tabLabel'
 import { pagesForRepo } from '../lib/tabPages'
 import { repoCloseStatus, tabCloseStatus, type TabStatus } from '../lib/tabClose'
 import { repoDisplayName } from '../lib/repoAlias'
+import { TabStatusMark } from './TabStatusMark'
 import { confirmRemoveRepoFromGroup, repositoryMenuItems, requestCloseTab } from '../lib/repositoryMenuItems'
 import { useT, interp } from '../i18n'
 
@@ -553,6 +554,12 @@ export function TitleBar(): React.JSX.Element {
     tab.kind === 'page' ? null : tabCloseStatus(tab.repos, repos)
 
   const repoStatus = (path: string): TabStatus => repoCloseStatus(repos[path])
+  // Commits no remote has yet, across the repos a tab, folder or chip stands for.
+  const unpushedIn = (paths: Iterable<string>): number => {
+    let n = 0
+    for (const p of paths) n += repos[p]?.unpushed?.length ?? 0
+    return n
+  }
 
   // Aggregate ahead/behind + dirty repo count across a whole group, for the
   // chip badge + tooltip so the group's sync state is visible without opening
@@ -904,12 +911,7 @@ export function TitleBar(): React.JSX.Element {
         {/* Only on the selected repository: the icons belong to it, and every
             chip carrying its own row of them would drown the group. */}
         {isActiveRepo && renderPageChips(tab.id, tab.pages, tab.activePage, repo.path)}
-        {rs && (
-          <span
-            className={`tab-status tab-status-${rs}`}
-            title={rs === 'conflict' ? t('titlebar.conflictsInProgress') : t('titlebar.uncommittedChangesShort')}
-          />
-        )}
+        <TabStatusMark status={rs} unpushed={unpushedIn([repo.path])} />
         <button
           className="tab-close"
           aria-label={interp(t('a11y.closeTab'), { name: repoDisplayName(repo.path, settings.repoAliases, repo.name) })}
@@ -982,12 +984,7 @@ export function TitleBar(): React.JSX.Element {
           {folder.collapsed ? <Folder size={12} /> : <FolderOpen size={12} />}
           <span className="tab-folder-name">{folder.name}</span>
           <span className="tab-folder-count">{count}</span>
-          {st && (
-            <span
-              className={`tab-status tab-status-${st}`}
-              title={st === 'conflict' ? t('titlebar.conflictsInProgress') : t('titlebar.uncommittedChangesShort')}
-            />
-          )}
+          <TabStatusMark status={st} unpushed={unpushedIn(subtreePaths(folder))} />
         </div>
         {!folder.collapsed && (
           <>
@@ -1075,12 +1072,7 @@ export function TitleBar(): React.JSX.Element {
                   {tab.name}
                 </span>
                 {renderPageChips(tab.id, tab.pages, tab.activePage, tab.repos[0]?.path ?? '')}
-                {status && (
-                  <span
-                    className={`tab-status tab-status-${status}`}
-                    title={status === 'conflict' ? t('titlebar.conflictsInProgress') : t('titlebar.uncommittedChangesShort')}
-                  />
-                )}
+                <TabStatusMark status={status} unpushed={unpushedIn(tab.repos.map((r) => r.path))} />
                 <button
                   className="tab-close"
                   aria-label={interp(t('a11y.closeTab'), { name: tab.name })}

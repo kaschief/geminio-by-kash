@@ -3,7 +3,7 @@ title: Themes & appearance
 category: Make it yours
 order: 100
 summary: Built-in themes, light and dark, plus custom and AI-generated ones.
-keywords: scrollbar scrollbars scroll fade theme themes dark light appearance colors font size graph palette ring halo glow haze bar avatar row color unpushed local not pushed arrow dashed status dot changes conflict
+keywords: scrollbar scrollbars scroll fade theme themes dark light appearance colors font size graph palette ring halo glow haze bar avatar row color unpushed local not pushed arrow dashed status dot changes conflict push badge unpushed count tab
 ---
 
 # Themes & appearance
@@ -46,9 +46,20 @@ qualify.
 
 ## Tab status dots
 
-A repository tab shows a dot when it has uncommitted changes (muted grey) or a
-conflict (pulsing amber). **Settings → Themes → Theme → Tab status dots** picks
-a color for each. The reset button next to a dot hands it back to the theme.
+A repository tab says what is waiting in it, most urgent first:
+
+| Mark | Means |
+|------|-------|
+| Pulsing amber dot | A conflict is in progress. It replaces the other marks |
+| Solid number | Commits no remote has yet, so they exist only on this machine. A new branch you have never pushed counts too |
+| Muted grey dot | Uncommitted changes. Sits behind the number when there are both |
+
+A folder of tabs adds up the commits of everything inside it. A group chip
+keeps its own `↑` / `↓` counts.
+
+**Settings → Themes → Theme → Tab status dots** picks a color for **Changes**,
+**Conflict** and **Push**. The reset button next to each hands it back to the
+theme.
 
 ## Active repository
 

@@ -134,6 +134,7 @@
       "settings.savedTheme",
       "settings.statusDotChanges",
       "settings.statusDotConflict",
+      "settings.statusDotPush",
       "settings.statusDots",
       "settings.tabGraph",
       "settings.tabTheme",

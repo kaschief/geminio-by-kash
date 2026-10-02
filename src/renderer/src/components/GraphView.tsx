@@ -8,6 +8,7 @@ import type { CiState, CiStatus, GraphCommit, StashInfo, GraphColumnId, GraphFlo
 import { defaultGraphColumns, defaultGraphColumnOrder, defaultGraphStyle } from '../../../shared/types'
 import { GraphHeaderFilter, type FilterOption } from './GraphHeaderFilter'
 import { layoutGraph } from '../graph/layout'
+import { contrastText } from '../lib/contrast'
 import { edgePath, spurPath, colorForPalette, findGraphPalette, DENSITY_ROW_H, LINE_WIDTH_PX, ringWidthPx, ROW_BAR_PX, ROW_HAZE_ALPHA, rowAccentParts, normalizeRowAccent, withAlpha } from '../graph/style'
 import { useRepoStore, repoActions, type RepoData } from '../stores/repo'
 import { useUIStore, type MenuItem } from '../stores/ui'
@@ -175,17 +176,6 @@ function buildRefGroups(refs: string[], remoteNames: Set<string>): RefGroup[] {
   return [...groups, ...tags]
 }
 
-
-/** Black or white text, whichever contrasts better with a hex lane color. */
-function contrastText(hex: string): string {
-  const h = hex.replace('#', '')
-  const r = parseInt(h.slice(0, 2), 16)
-  const g = parseInt(h.slice(2, 4), 16)
-  const b = parseInt(h.slice(4, 6), 16)
-  // Perceived luminance (sRGB weights). Bright lanes → dark text.
-  const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255
-  return lum > 0.6 ? '#10121a' : '#fff'
-}
 
 function timeAgo(unixSeconds: number): string {
   const diff = Date.now() / 1000 - unixSeconds

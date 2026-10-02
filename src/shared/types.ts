@@ -3150,6 +3150,8 @@ export function defaultGraphRowAccent(): GraphRowAccent {
 export interface StatusDotColors {
   changes: string | null
   conflict: string | null
+  /** The commits-to-push badge. Optional: older settings predate it. */
+  push?: string | null
 }
 
 export function defaultGraphStyle(): GraphStyle {

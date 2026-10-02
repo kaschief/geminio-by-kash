@@ -1,3 +1,4 @@
+import { contrastText } from '../lib/contrast'
 import type { AppTheme, CodeTheme, ThemeMode, AppThemeColors, CodeThemeColors, StatusDotColors } from '../../../shared/types'
 
 // ─── Built-in app themes ─────────────────────────────────────────────────────
@@ -758,6 +759,8 @@ export function applyAppTheme(theme: AppTheme, mode: ThemeMode): void {
   r.style.setProperty('--text-2', c.text2)
   r.style.setProperty('--accent', c.accent)
   r.style.setProperty('--accent-soft', hexToRgba(c.accent, 0.14))
+  // Text on a solid accent fill (badges): a light accent needs dark text.
+  r.style.setProperty('--accent-contrast', contrastText(c.accent))
   r.style.setProperty('--green', c.green)
   r.style.setProperty('--red', c.red)
   r.style.setProperty('--yellow', c.yellow)
@@ -776,6 +779,13 @@ export function applyStatusDotColors(colors: StatusDotColors | undefined): void 
   }
   if (colors?.conflict) r.setProperty('--status-dot-conflict', colors.conflict)
   else r.removeProperty('--status-dot-conflict')
+  if (colors?.push) {
+    r.setProperty('--status-dot-push', colors.push)
+    r.setProperty('--status-dot-push-text', contrastText(colors.push))
+  } else {
+    r.removeProperty('--status-dot-push')
+    r.removeProperty('--status-dot-push-text')
+  }
 }
 
 export function applyCodeTheme(theme: CodeTheme, mode: ThemeMode, fontSize: number): void {

@@ -25,7 +25,7 @@ const UNPUSHED: { id: GraphUnpushedMark; labelKey: TranslationKey }[] = [
 ]
 
 /** The theme's own dot colours, offered as the starting point of a custom pick. */
-const DOT_DEFAULTS = { changes: '#8b8fa3', conflict: '#e5a23d' } as const satisfies Record<keyof StatusDotColors, string>
+const DOT_DEFAULTS = { changes: '#8b8fa3', conflict: '#e5a23d', push: GRAPH_COLORS[0] } as const satisfies Record<keyof StatusDotColors, string>
 
 function Switch<T extends string>({
   options,
@@ -151,6 +151,7 @@ export function StatusDotControls(): React.JSX.Element {
       <div className="swatch-line">
         {dot('changes', 'settings.statusDotChanges')}
         {dot('conflict', 'settings.statusDotConflict')}
+        {dot('push', 'settings.statusDotPush')}
       </div>
     </section>
   )
