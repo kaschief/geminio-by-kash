@@ -49,6 +49,7 @@ import { isLockErrorMessage, lockRepairPlan } from '../lib/gitLocks'
 import { overwrittenLocalChanges, readableGitError, summarizePaths } from '../lib/gitErrors'
 import { parseRouteConflict } from '../lib/stackOrder'
 import { timeAgo } from '../lib/timeAgo'
+import { workingChangeCount } from '../lib/workingChanges'
 import { splitCommitMessage } from '../lib/commitMenuCapabilities'
 import { t, interp, type TranslationKey } from '../i18n'
 
@@ -651,8 +652,14 @@ export const useRepoStore = create<RepoStoreState>((set, get) => ({
   // Deliberately a no-op for unknown paths: only `ensure` creates entries.
   // Otherwise an in-flight refresh resolving after a tab closes would
   // resurrect the just-evicted repo with a full commit payload.
-  patch: (path, partial) =>
-    set((s) => (s.repos[path] ? { repos: { ...s.repos, [path]: { ...s.repos[path], ...partial } } } : s)),
+  patch: (path, partial) => set((s) => {
+    if (!s.repos[path]) return s
+    const repo = { ...s.repos[path], ...partial }
+    if (repo.selected?.type === 'wip' && repo.status && !repo.mergeState && workingChangeCount(repo.status) === 0) {
+      repo.selected = null
+    }
+    return { repos: { ...s.repos, [path]: repo } }
+  }),
 
   setDraft: (path, value) => set((s) => ({ drafts: { ...s.drafts, [path]: value } })),
 
@@ -722,7 +729,7 @@ export const useRepoStore = create<RepoStoreState>((set, get) => ({
         ? repo.commits.some((c) => c.hash === parked.hash)
         : parked?.type === 'stash'
           ? repo.stashes.some((s) => s.sha === parked.sha)
-          : parked?.type === 'wip'
+          : parked?.type === 'wip' && (workingChangeCount(repo.status) > 0 || !!repo.mergeState)
     const dirty = !!repo.status && repo.status.staged.length + repo.status.unstaged.length + repo.status.conflicted.length > 0
     const fallback: Selection | null = dirty
       ? { type: 'wip' }
@@ -735,7 +742,7 @@ export const useRepoStore = create<RepoStoreState>((set, get) => ({
 
   select: (path, selected) => {
     get().patch(path, { selected })
-    if (selected) useUIStore.getState().showDetailsPanel(path)
+    if (get().repos[path]?.selected) useUIStore.getState().showDetailsPanel(path)
   },
 
   loadMore: async (path) => {
