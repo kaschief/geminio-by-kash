@@ -7,7 +7,7 @@ on:
   release:
     types: [published]
   push:
-    branches: [main]
+    branches: [geminio-home]
     paths:
       - 'docs/**'
       - 'scripts/build-site.mjs'
