@@ -401,6 +401,7 @@ redaction logic in production code.
 | `scripts/build-site.mjs` | The GitHub Pages site (`npm run site`) |
 | `examples/screenshots/` | Playwright screenshot + clip automation (`npm run screenshots`) |
 | `examples/monster-repo.sh` | Builds a 140k-commit / 92k-file repo for perf work (`npm run playground:monster`). Not part of the playground — it lives in gitignored `examples/monster/` and nothing wipes it |
+| `scripts/install-local-mac.sh` | `npm run install:mac` — builds arm64 only and replaces `/Applications/Geminio.app`, keeping the user's custom app icon and leaving one registered copy. The only way to update the installed app; never copy a bundle by hand. Run only when the user asks |
 | `examples/repo-stats.sh` | Times the git commands a refresh spawns, against any repo (`npm run repo:stats [path]`) |
 | `test/perf.bench.test.ts` | Times the gitService reads a refresh performs — skipped unless `GITCITO_BENCH_REPO` points at a repo |
 | `ROADMAP.md` | What might come next, and what is deliberately out |

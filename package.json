@@ -10,6 +10,7 @@
     "dev": "node scripts/settings-search-index.mjs && electron-vite dev",
     "build": "node scripts/settings-search-index.mjs && node scripts/sync-grammars.mjs && node scripts/gen-licenses.mjs && electron-vite build",
     "dist:mac": "electron-builder --mac",
+    "install:mac": "bash scripts/install-local-mac.sh",
     "dist:win": "electron-builder --win",
     "dist:linux": "electron-builder --linux",
     "release": "npm run build && electron-builder --publish always",
