@@ -60,6 +60,7 @@ import { useRepoStore, repoActions, type RepoData } from '../stores/repo'
 import { useUIStore } from '../stores/ui'
 import { useSettingsStore } from '../stores/settings'
 import { repoChatAvailable } from '../lib/repoChatUI'
+import { externalUndoFirst, externalUndoLabel } from '../lib/externalUndo'
 import { useT, interp } from '../i18n'
 import { timeAgo, isStale } from '../lib/timeAgo'
 import { BranchStatusPicker } from './BranchStatusPicker'
@@ -351,20 +352,31 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
     ]
   }
 
+  // The tooltip is the preview: it names what Undo / Redo would do next, and
+  // says when the undo comes from the reflog rather than the app's own history.
+  const appUndo = repo.undoStack[repo.undoStack.length - 1]
+  const reflogUndo = externalUndoFirst(repo.externalUndo, appUndo?.at) ? repo.externalUndo : null
+  const reflogLabel = reflogUndo ? externalUndoLabel(reflogUndo) : null
+  const undoTitle = reflogLabel
+    ? interp(t('toolbar.undoNextReflog'), { label: interp(t(reflogLabel.key), reflogLabel.vars) })
+    : appUndo
+      ? interp(t('toolbar.undoNext'), { label: appUndo.label })
+      : t('toolbar.undoTitle')
+  const nextRedo = repo.redoStack[repo.redoStack.length - 1]
   const items: BarItem[] = [
     {
       id: 'undo',
       label: t('toolbar.undo'),
-      title: t('toolbar.undoTitle'),
+      title: undoTitle,
       icon: <Undo2 size={17} />,
       menuIcon: <Undo2 size={15} />,
-      disabled: repo.undoStack.length === 0 || inflight,
+      disabled: (!appUndo && !reflogUndo) || inflight,
       run: () => void undo(path)
     },
     {
       id: 'redo',
       label: t('toolbar.redo'),
-      title: t('toolbar.redo'),
+      title: nextRedo ? interp(t('toolbar.redoNext'), { label: nextRedo.label }) : t('toolbar.redo'),
       icon: <Redo2 size={17} />,
       menuIcon: <Redo2 size={15} />,
       disabled: repo.redoStack.length === 0 || inflight,

@@ -3,7 +3,7 @@ title: Recovery & the reflog
 category: Recovery & safety
 order: 60
 summary: The undo net: reflog, WIP snapshots and bisect.
-keywords: reflog recovery undo lost commits snapshots wip guard untracked discard clean bisect bisect run automated script exit code restore hard reset lock index.lock file exists cannot lock ref stale unable to create another git process
+keywords: reflog recovery undo redo uncommit external terminal outside changes lost commits snapshots wip guard untracked discard clean bisect bisect run automated script exit code restore hard reset lock index.lock file exists cannot lock ref stale unable to create another git process
 ---
 
 # Recovery & the reflog
@@ -121,6 +121,47 @@ to another repository, and are cleared by opening it.
 ## Undo / redo
 
 Most operations push an entry onto an undo stack, so <kbd>⌘Z</kbd> reverses the
-last one where git allows it.
+last one where git allows it. Hover **Undo** or **Redo** in the toolbar to see
+what it would do before you click: the tooltip names the next step.
+
+### Changes made outside Geminio
+
+A commit from the terminal, a reset from your editor, a checkout by a coding
+agent. None of them are in Geminio's undo stack, but git wrote every one into
+the reflog along with where the branch was before. So **Undo** reaches those
+too: whichever change happened last, inside the app or outside it, is the one
+that gets undone.
+
+Because the change came from somewhere you may not have been watching, it is
+never undone silently. A preview names it, says when it happened and who git
+recorded, and says what the undo will do. If the commit has already been pushed,
+the preview says so too. A toast confirms the result, or reports git's refusal.
+
+| Last change | What Undo does | What Redo does |
+|-------------|----------------|----------------|
+| Commit | `reset --soft` to the parent. The commit is gone and its changes stay staged | Restores the commit |
+| Amend | `reset --soft` to the commit before the amend. What the amend added stays staged | Restores the amended commit |
+| Reset | Moves the branch back to where it was. `--keep` on a clean tree, `--mixed` on a dirty one, so local changes survive either way | Moves it forward again |
+| Merge, pull, rebase, cherry-pick, revert | `reset --keep` to where the branch was before. Git refuses if your local changes would be overwritten | Moves it forward again |
+| Checkout / switch | Checks the previous branch out again | Checks the later one out |
+
+Press Undo again to keep walking back through earlier changes made outside
+the app.
+
+**What it cannot do.** The reflog only records *ref moves*. Staging, stashing,
+editing files, creating or deleting branches and tags all leave HEAD where it
+was, so Undo cannot reverse them when they happen outside Geminio.
+Uncommitted work that an outside `reset --hard` threw away was never in the
+reflog, and nothing can bring it back. Your first commit on a new branch has no
+earlier position, so it cannot be uncommitted this way. Git records the same
+name for everything on one machine, so "by" tells you the identity, not which
+tool. And the walk stops at the first change Geminio made itself, because
+reaching past it would undo things out of order. After a restart the app no
+longer knows which changes it made, so its own earlier commits become
+undoable this way too.
+
+Before acting, Undo checks that HEAD is still where the preview said it was.
+If something moved it in the meantime, nothing happens and a toast tells you
+why.
 
 **See also:** [What changed since](range-diff.md) · [Stashes](stashes.md)

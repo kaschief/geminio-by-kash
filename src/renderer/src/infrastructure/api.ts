@@ -105,6 +105,7 @@ import type {
   LogEntry,
   RepoStats,
   ReflogEntry,
+  RecentRefMoves,
   BisectStatus,
   SigningConfig,
   HooksInfo,
@@ -456,6 +457,7 @@ export const gitApi = {
   restoreUndoneCommit: (path: string, previousSha: string) =>
     call<void>('restoreUndoneCommit', path, previousSha),
   reflog: (path: string, ref?: string, max?: number) => call<ReflogEntry[]>('reflog', path, ref, max),
+  recentRefMoves: (path: string, max?: number) => call<RecentRefMoves>('recentRefMoves', path, max),
   bisectStatus: (path: string) => call<BisectStatus>('bisectStatus', path),
   bisectStart: (path: string) => call<BisectStatus>('bisectStart', path),
   bisectMark: (path: string, term: 'good' | 'bad' | 'skip', rev?: string) =>

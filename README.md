@@ -62,8 +62,8 @@ competing places to configure the app.
 | [Changes](docs/help/staging.md) | Stage whole files, hunks or individual lines; unified and split diffs |
 | [Branches](docs/help/branching.md) | Branch management, merge, rebase, stacked branches and remote operations |
 | [Conflicts](docs/help/conflicts.md) | Three-pane conflict resolution and external merge-tool support |
-| [Recovery](docs/help/recovery.md) | Reflog, undoable operations and working-tree snapshots |
-| [GitHub](docs/help/hosting.md) | Pull requests, reviews, issues and CI information |
+| [Recovery](docs/help/recovery.md) | Reflog, undo and redo (including commits and resets made outside the app) and working-tree snapshots |
+| [GitHub](docs/help/hosting.md) | Pull requests, reviews, issues, CI information, and links from any commit hash or branch to its page |
 | [Repositories](docs/help/repositories.md) | Tabs, groups, workspaces, repository search and favorites |
 | [Tools](docs/help/editor.md) | Open in an editor, integrated terminal, code search and file previews |
 | [AI](docs/help/ai.md) | Optional commit assistance, explanations and repository chat using configured providers |

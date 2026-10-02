@@ -29,6 +29,14 @@ with a hundred.
 - Right-click a commit for **Amend**, **Undo**, **Reset to Commit…** and
   **View on GitHub**, plus checkout, cherry-pick, revert, branch, tag and
   copy. Unsafe actions stay visible and disable.
+- **On GitHub.** In the details panel the short hash under the author is a
+  link to the commit on GitHub, and the GitHub button beside **Copy** opens the
+  same page. Right-click a branch badge in the graph, a branch in the sidebar,
+  or the branch picker in the toolbar for **View on GitHub**. A local branch
+  goes through its upstream. All of these stay disabled, with the reason on
+  hover, until the commit or branch has been pushed. GitHub has no page for
+  something that only exists on your machine. Links use `origin` when it is on
+  GitHub, otherwise the first GitHub remote. Other hosts are not linked.
 
 ## Making it show what you want
 

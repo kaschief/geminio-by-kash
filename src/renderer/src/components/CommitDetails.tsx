@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { ExternalLink, Laptop, Tag, Cloud, Copy, StickyNote, Pencil, Trash2, FilePenLine } from 'lucide-react'
+import { ExternalLink, Laptop, Tag, Cloud, Copy, StickyNote, Pencil, Trash2, FilePenLine, Github } from 'lucide-react'
 import type { CodeSearchHit, CommitBranchInfo, FileEntry, GraphCommit, RemoteInfo } from '../../../shared/types'
 import { autolink, remoteWebUrl } from '../lib/autolink'
+import { githubCommitUrl } from '../lib/hosting'
 import { gitApi, shellApi } from '../infrastructure/api'
 import { useUIStore } from '../stores/ui'
 import { useSettingsStore } from '../stores/settings'
@@ -206,6 +207,11 @@ export function CommitDetails({ repo, hash }: { repo: RepoData; hash: string }):
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keyToken])
 
+  // GitHub 404s on a commit that only exists here, so link only once some
+  // remote-tracking branch contains it.
+  const published = branches.some((b) => b.remotes.length > 0)
+  const githubUrl = published ? githubCommitUrl(repo.remotes, hash) : null
+
   if (!commit) return <div className="panel-empty">{t('commitPanel.notFound')}</div>
 
   const currentFile =
@@ -305,7 +311,18 @@ export function CommitDetails({ repo, hash }: { repo: RepoData; hash: string }):
               </span>
             )}
             <div className="commit-meta-row">
-              <code>{commit.hash.slice(0, 10)}</code>
+              {githubUrl ? (
+                <button
+                  type="button"
+                  className="commit-hash-link"
+                  onClick={() => void shellApi.openExternal(githubUrl)}
+                  title={t('commitMenu.viewOnGitHub')}
+                >
+                  <code>{commit.hash.slice(0, 10)}</code>
+                </button>
+              ) : (
+                <code>{commit.hash.slice(0, 10)}</code>
+              )}
               <button
                 className="icon-btn commit-edit-btn"
                 type="button"
@@ -316,6 +333,16 @@ export function CommitDetails({ repo, hash }: { repo: RepoData; hash: string }):
                 title={t('commit.copySha')}
               >
                 <Copy size={12} />
+              </button>
+              <button
+                className="icon-btn commit-edit-btn"
+                type="button"
+                disabled={!githubUrl}
+                onClick={() => githubUrl && void shellApi.openExternal(githubUrl)}
+                title={githubUrl ? t('commitMenu.viewOnGitHub') : t('commitMenu.disabled.notOnGitHub')}
+                aria-label={t('commitMenu.viewOnGitHub')}
+              >
+                <Github size={12} />
               </button>
             </div>
           </div>

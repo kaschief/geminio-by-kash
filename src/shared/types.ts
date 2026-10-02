@@ -2571,6 +2571,32 @@ export interface ReflogEntry {
   date: number // unix seconds
 }
 
+/**
+ * One ref movement read straight from a reflog file. Unlike `ReflogEntry` it
+ * carries the *old* position too, which is what an undo needs: the reflog is
+ * the only record of what a terminal, an IDE or an agent did to the repo.
+ */
+export interface RefMove {
+  old: string
+  new: string
+  /** The identity git recorded — usually the same person for every tool on one machine. */
+  actor: string
+  /** Unix seconds. */
+  date: number
+  /** Reflog subject, e.g. `commit: Fix typo` or `checkout: moving from main to dev`. */
+  message: string
+  /** Written while Geminio itself held this repo's write lock, during this run of the app. */
+  byApp: boolean
+}
+
+/** The tail of the HEAD reflog and of the checked-out branch's reflog, newest first. */
+export interface RecentRefMoves {
+  /** Checked-out branch, or null when HEAD is detached. */
+  branch: string | null
+  head: RefMove[]
+  branchLog: RefMove[]
+}
+
 /** Snapshot of an in-progress (or just-finished) `git bisect` session. */
 export interface BisectStatus {
   inProgress: boolean

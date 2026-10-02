@@ -60,3 +60,34 @@ export function repoSupportsPrReview(remotes: RemoteInfo[]): boolean {
   const origin = remotes.find((r) => r.name === 'origin') ?? remotes[0]
   return isReviewableRemote(origin?.url)
 }
+
+/**
+ * github.com page for a branch on one remote, or null when that remote is not
+ * GitHub. Slashes in a branch name are path separators on GitHub, so each
+ * segment is encoded on its own.
+ */
+export function githubBranchUrl(remotes: RemoteInfo[], remoteName: string, branch: string): string | null {
+  const parsed = parseGitHubRemote(remotes.find((r) => r.name === remoteName)?.url)
+  if (!parsed || !branch) return null
+  const path = branch.split('/').map(encodeURIComponent).join('/')
+  return `https://github.com/${parsed.owner}/${parsed.repo}/tree/${path}`
+}
+
+/**
+ * Split an upstream like `origin/feature/x` into remote and branch. Remote
+ * names may contain slashes too, so the longest known remote name wins.
+ */
+export function splitUpstream(remotes: RemoteInfo[], upstream: string | undefined | null): { remote: string; branch: string } | null {
+  if (!upstream) return null
+  const remote = remotes
+    .map((r) => r.name)
+    .filter((name) => upstream.startsWith(`${name}/`))
+    .sort((a, b) => b.length - a.length)[0]
+  return remote ? { remote, branch: upstream.slice(remote.length + 1) } : null
+}
+
+/** GitHub page for a local branch, via its upstream — null until it is pushed to GitHub. */
+export function githubLocalBranchUrl(remotes: RemoteInfo[], upstream: string | undefined | null): string | null {
+  const up = splitUpstream(remotes, upstream)
+  return up ? githubBranchUrl(remotes, up.remote, up.branch) : null
+}

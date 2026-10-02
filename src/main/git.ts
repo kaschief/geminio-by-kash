@@ -47,6 +47,8 @@ import type {
   RebaseStep,
   RepoStats,
   ReflogEntry,
+  RecentRefMoves,
+  RefMove,
   BisectStatus,
   CommitSignature,
   SigningConfig,
@@ -157,6 +159,8 @@ import { prRefCandidates } from '../shared/prRefs'
 import { parseMergeTreeSingle, parseMergeTreeStdin, type MergeTreeRecord } from '../shared/mergeTree'
 import { parseRangeDiff } from '../shared/rangeDiff'
 import { parseForcedUpdates } from '../shared/fetchPorcelain'
+import { parseReflog } from '../shared/refMoves'
+import { noteAppWrite, wasAppWrite } from './appWrites'
 import { buildPatch, parsePatch, touchedOldLines } from '../shared/patchHunks'
 import { semanticCompare } from './semantic'
 import { recordEvent } from './analytics'
@@ -870,6 +874,38 @@ export function redactCredentials(msg: string): string {
  * it does not need the guard — and it is exactly the *clean* repo, where the
  * reads return nothing, that pays the 50ms per call otherwise.
  */
+/** Per-worktree git dir and shared common dir, which never change for a path. */
+const reflogDirCache = new Map<string, Promise<[string, string]>>()
+
+function reflogDirs(repoPath: string): Promise<[string, string]> {
+  let hit = reflogDirCache.get(repoPath)
+  if (!hit) {
+    hit = runGit(repoPath, ['rev-parse', '--absolute-git-dir', '--git-common-dir']).then((out) => {
+      const [gitDir, common] = out.split('\n').map((l) => l.trim())
+      return [gitDir, resolvePath(repoPath, common || gitDir)] as [string, string]
+    })
+    // A failed lookup (not a repo yet) must not stick: `git init` can follow.
+    hit.catch(() => reflogDirCache.delete(repoPath))
+    reflogDirCache.set(repoPath, hit)
+  }
+  return hit
+}
+
+/** The last `bytes` of a file as text, or '' when it does not exist. */
+async function readTail(file: string, bytes = 64 * 1024): Promise<string> {
+  const fh = await open(file, 'r').catch(() => null)
+  if (!fh) return ''
+  try {
+    const { size } = await fh.stat()
+    const start = Math.max(0, size - bytes)
+    const buf = Buffer.alloc(size - start)
+    await fh.read(buf, 0, buf.length, start)
+    return buf.toString('utf-8')
+  } finally {
+    await fh.close()
+  }
+}
+
 async function runGit(
   repoPath: string,
   args: string[],
@@ -6822,6 +6858,28 @@ export const gitService = {
       })
   },
 
+  /**
+   * The newest moves of HEAD and of the checked-out branch, old *and* new sha,
+   * read from the reflog files. This backs undo for changes made outside the
+   * app, so it runs on every branch refresh: the files are tailed rather than
+   * read whole (a years-old HEAD log is megabytes), and `byApp` marks lines
+   * written while this app held the repo's write lock.
+   */
+  async recentRefMoves(repoPath: string, max = 20): Promise<RecentRefMoves> {
+    const [gitDir, commonDir] = await reflogDirs(repoPath)
+    const headFile = await readFile(join(gitDir, 'HEAD'), 'utf-8').catch(() => '')
+    const branch = /^ref: refs\/heads\/(.+)$/m.exec(headFile)?.[1]?.trim() ?? null
+    const mark = (moves: Omit<RefMove, 'byApp'>[]): RefMove[] =>
+      moves.map((m) => ({ ...m, byApp: wasAppWrite(repoPath, m.date) }))
+    const [head, branchLog] = await Promise.all([
+      readTail(join(gitDir, 'logs', 'HEAD')).then((t) => mark(parseReflog(t, max))),
+      branch
+        ? readTail(join(commonDir, 'logs', 'refs', 'heads', ...branch.split('/'))).then((t) => mark(parseReflog(t, max)))
+        : Promise.resolve([])
+    ])
+    return { branch, head, branchLog }
+  },
+
   // ─── Bisect ────────────────────────────────────────────────────────────────
 
   /** Current bisect state (used when (re)opening the UI mid-session). */
@@ -7615,6 +7673,7 @@ const READ_METHODS = new Set<string>([
   'resolveRev',
   'commitTemplate',
   'reflog',
+  'recentRefMoves',
   'bisectStatus',
   'getRemoteTags',
   'remoteBranches',
@@ -7737,6 +7796,7 @@ export function registerGitHandlers(): void {
     const lockKey = repoScoped ? (args[0] as string) : null
     const isWrite = !gitMethodIsRead(method)
     const release = lockKey ? await lockFor(lockKey).acquire(isWrite) : null
+    const startedAt = Date.now()
 
     try {
       const result = await withLockRetry(() => (fn as (...a: unknown[]) => Promise<unknown>)(...args))
@@ -7753,6 +7813,8 @@ export function registerGitHandlers(): void {
       if (event) void recordLog({ event, repoPath, ok: false, error: message })
       throw err instanceof Error ? Object.assign(err, { message }) : new Error(message)
     } finally {
+      // Stamped even on failure: a failed rebase can still have moved HEAD.
+      if (isWrite && lockKey) noteAppWrite(lockKey, startedAt, Date.now())
       release?.()
     }
   })

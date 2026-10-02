@@ -8,12 +8,15 @@ import {
   GitBranch,
   GitBranchPlus,
   GitMerge,
+  Github,
   Pencil,
   Trash2
 } from 'lucide-react'
 import type { BranchInfo, RemoteBranchInfo } from '../../../shared/types'
 import { branchContextActionIds, branchMergeWouldChange, branchWorktreePlan } from '../lib/branchMenu'
+import { githubBranchUrl, githubLocalBranchUrl, githubRemote } from '../lib/hosting'
 import { interp, useT } from '../i18n'
+import { shellApi } from '../infrastructure/api'
 import { repoActions, type RepoData } from '../stores/repo'
 import { useSettingsStore } from '../stores/settings'
 import { useUIStore, type MenuItem } from '../stores/ui'
@@ -122,6 +125,22 @@ export function BranchStatusPicker({ repo }: { repo: RepoData }): React.JSX.Elem
               void navigator.clipboard.writeText(copyName)
             }
           })
+          if (githubRemote(repo.remotes)) {
+            const url =
+              target.kind === 'local'
+                ? githubLocalBranchUrl(repo.remotes, target.branch.upstream)
+                : githubBranchUrl(repo.remotes, target.branch.remote, target.branch.name)
+            items.push({
+              label: t('branch.viewOnGitHub'),
+              icon: <Github size={14} />,
+              disabled: !url,
+              title: url ? undefined : t('branch.viewOnGitHubUnpushed'),
+              onClick: () => {
+                close()
+                if (url) void shellApi.openExternal(url)
+              }
+            })
+          }
           break
         case 'worktree':
           items.push({

@@ -57,7 +57,7 @@ import { gitApi, shellApi } from '../infrastructure/api'
 import { groupPrStacks, stackRowStates, type StackRowState } from '../lib/prStacks'
 import { ciIcon, CI_STATE_KEY } from './CiIcon'
 import { useT, interp, type TranslationKey } from '../i18n'
-import { repoIsGitHub, repoSupportsPrReview } from '../lib/hosting'
+import { githubBranchUrl, githubLocalBranchUrl, githubRemote, repoIsGitHub, repoSupportsPrReview } from '../lib/hosting'
 import { folderOpenMenuItems } from '../lib/openWith'
 import { togglePin, selectPinned } from '../lib/pinnedBranches'
 import { branchDropActions, encodeDropRef, BRANCH_DND_TYPE, type DropRef } from '../lib/branchDrop'
@@ -948,6 +948,20 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
   const openWorktreeTab = (w: WorktreeInfo): void =>
     useSettingsStore.getState().openRepoTab({ path: w.path, name: worktreeTabName(path, w) })
 
+  // Shown whenever the repo lives on GitHub, disabled with a reason when this
+  // branch has not been pushed — a missing row reads as "not supported".
+  const githubBranchItem = (url: string | null): MenuItem[] =>
+    githubRemote(repo.remotes)
+      ? [
+          {
+            label: t('branch.viewOnGitHub'),
+            disabled: !url,
+            title: url ? undefined : t('branch.viewOnGitHubUnpushed'),
+            onClick: () => url && void shellApi.openExternal(url)
+          }
+        ]
+      : []
+
   const localMenu = (b: BranchInfo): MenuItem[] => [
     ...(worktreeForBranch(repo.worktrees, b.name)
       ? [{ label: interp(t('sidebar.goToWorktree'), { branch: b.name }), onClick: () => void repoActions.checkout(path, b.name) }]
@@ -1020,6 +1034,7 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
       onClick: () => togglePinBranch(b.name)
     },
     { label: t('sidebar.copyBranchName'), onClick: () => void navigator.clipboard.writeText(b.name) },
+    ...githubBranchItem(githubLocalBranchUrl(repo.remotes, b.upstream)),
     {
       label: t('sidebar.deleteBranch'),
       danger: true,
@@ -1050,6 +1065,7 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
     },
     { separator: true },
     { label: t('sidebar.copyBranchName'), onClick: () => void navigator.clipboard.writeText(b.fullName) },
+    ...githubBranchItem(githubBranchUrl(repo.remotes, b.remote, b.name)),
     {
       label: t('sidebar.deleteRemoteBranch'),
       danger: true,

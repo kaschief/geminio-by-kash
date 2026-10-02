@@ -38,7 +38,8 @@ export function useAppMenu(): void {
   })
   const canUndo = useRepoStore((s) => {
     const repo = repoPath ? s.repos[repoPath] : null
-    return !!repo && repo.undoStack.length > 0
+    // The reflog can offer an undo even when the app's own history is empty.
+    return !!repo && (repo.undoStack.length > 0 || !!repo.externalUndo)
   })
 
   useEffect(() => {

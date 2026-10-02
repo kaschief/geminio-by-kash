@@ -17,7 +17,7 @@ import { Avatar } from './Avatar'
 import { RemoteIcon } from './RemoteIcon'
 import { SignatureBadge } from './SignatureBadge'
 import { gitApi, localCiApi, shellApi } from '../infrastructure/api'
-import { repoIsGitHub, githubCommitUrl } from '../lib/hosting'
+import { repoIsGitHub, githubCommitUrl, githubBranchUrl, githubLocalBranchUrl, githubRemote } from '../lib/hosting'
 import {
   commitMenuCapabilities,
   commitMenuDisabledKey,
@@ -1647,6 +1647,21 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
     items.push({ separator: true })
     items.push({ label: t('branch.copyBranchName'), onClick: () => void navigator.clipboard.writeText(g.label) })
     items.push({ label: t('branch.copySha'), onClick: () => void navigator.clipboard.writeText(c.hash) })
+    if (githubRemote(repo.remotes)) {
+      // A local badge goes through its upstream; a remote-only one names its remote.
+      const local = g.isLocal ? repo.branches.locals.find((b) => b.name === g.label) : undefined
+      const url = g.isLocal
+        ? githubLocalBranchUrl(repo.remotes, local?.upstream)
+        : g.remotes.length
+          ? githubBranchUrl(repo.remotes, g.remotes[0], g.label)
+          : null
+      items.push({
+        label: t('branch.viewOnGitHub'),
+        disabled: !url,
+        title: url ? undefined : t('branch.viewOnGitHubUnpushed'),
+        onClick: () => url && void shellApi.openExternal(url)
+      })
+    }
     // Any local branch, not only the checked-out one — a branch you can see in
     // the graph is a branch you can publish or catch up.
     if (g.isLocal) {
