@@ -51,8 +51,13 @@ xattr -dr com.apple.quarantine "$APP" 2>/dev/null || true
 mv "$BUILT" "$HOME/.Trash/Geminio-build-$STAMP.app"
 rmdir "$ROOT/dist/mac-arm64" 2>/dev/null || true
 
-# 3. One registered copy only. Paths come from the registry itself: the Trash
-#    cannot be listed without Full Disk Access.
+# 3. One registered copy only. The two copies just trashed are unregistered by
+#    name: Launch Services picks up a moved bundle a moment later, so they may
+#    not be in the dump yet. Everything else comes from the registry itself —
+#    the Trash cannot be listed without Full Disk Access.
+"$LSREG" -u "$HOME/.Trash/Geminio-previous-$STAMP.app" 2>/dev/null || true
+"$LSREG" -u "$HOME/.Trash/Geminio-build-$STAMP.app" 2>/dev/null || true
+sleep 2 # let the registry catch up with the moves before the sweep below
 "$LSREG" -dump 2>/dev/null \
   | sed -nE 's/^path: +(.*Geminio[^/]*\.app) \(0x[0-9a-f]+\)$/\1/p' \
   | sort -u \
