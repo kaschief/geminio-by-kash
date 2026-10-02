@@ -8,7 +8,7 @@ import type { CiState, CiStatus, GraphCommit, StashInfo, GraphColumnId, GraphFlo
 import { defaultGraphColumns, defaultGraphColumnOrder, defaultGraphStyle } from '../../../shared/types'
 import { GraphHeaderFilter, type FilterOption } from './GraphHeaderFilter'
 import { layoutGraph } from '../graph/layout'
-import { edgePath, spurPath, colorForPalette, findGraphPalette, DENSITY_ROW_H, LINE_WIDTH_PX, ROW_RING_PX, ROW_BAR_PX, ROW_HAZE_ALPHA, rowAccentParts, normalizeRowAccent, withAlpha } from '../graph/style'
+import { edgePath, spurPath, colorForPalette, findGraphPalette, DENSITY_ROW_H, LINE_WIDTH_PX, ringWidthPx, ROW_BAR_PX, ROW_HAZE_ALPHA, rowAccentParts, normalizeRowAccent, withAlpha } from '../graph/style'
 import { useRepoStore, repoActions, type RepoData } from '../stores/repo'
 import { useUIStore, type MenuItem } from '../stores/ui'
 import { useSettingsStore } from '../stores/settings'
@@ -649,6 +649,7 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
   const accentFor = (lane: number): string => accent.color ?? colorFor(lane)
   const unpushedSet = useMemo(() => new Set(repo.unpushed ?? []), [repo.unpushed])
   const parts = rowAccentParts(accent.style)
+  const ringPx = ringWidthPx(graphStyle.ringWidth)
   const markUnpushed = (hash: string): boolean => accent.unpushed !== 'off' && unpushedSet.has(hash)
   // Which slice of history is drawn. Lives in settings so the graph gear menu
   // and Settings → Themes → Graph edit exactly the same value.
@@ -2008,9 +2009,11 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
                       cy={cy}
                       r={NODE_R + 3}
                       fill="var(--bg-1)"
-                      stroke={colorFor(n.color)}
-                      strokeWidth={lineW}
-                      strokeDasharray="2.5 2.5"
+                      // The WIP ring stands where an avatar will be, so it takes
+                      // the avatar ring's width and colour, not the rails'.
+                      stroke={accentFor(n.color)}
+                      strokeWidth={ringPx}
+                      strokeDasharray={`${ringPx + 1} ${ringPx + 1}`}
                       className="graph-node"
                     />
                   )
@@ -2084,7 +2087,7 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
                       top: y,
                       // An unpushed commit trades the solid ring for a dashed
                       // outline (CSS), drawn even when rings are off: it is the mark.
-                      boxShadow: parts.ring && !local ? `0 0 0 ${ROW_RING_PX}px ${color}` : 'none',
+                      boxShadow: parts.ring && !local ? `0 0 0 ${ringPx}px ${color}` : 'none',
                       '--ring-c': color
                     } as React.CSSProperties}
                     title={[c.author, ...(c.coAuthors?.map((a) => `+ ${a.name}`) ?? [])].join('\n')}

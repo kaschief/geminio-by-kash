@@ -598,6 +598,7 @@
       "settings.graphNodeStyle",
       "settings.graphPalette",
       "settings.graphPreview",
+      "settings.graphRingWidth",
       "settings.graphRowColor",
       "settings.graphRowColorCustom",
       "settings.graphRowColorLane",

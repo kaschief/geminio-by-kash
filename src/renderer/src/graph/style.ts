@@ -1,6 +1,7 @@
 import { defaultGraphRowAccent, type GraphRowAccent } from '../../../shared/types'
 import type {
   GraphPalette,
+  GraphRingWidth,
   GraphRowStyle,
   GraphEdgeStyle,
   GraphDensity,
@@ -75,9 +76,15 @@ export function colorForPalette(colors: string[]): (index: number) => string {
 
 // ─── Row accent: avatar ring, haze, bar ─────────────────────────────────────
 
-/** Ring width and haze strength are the graph's long-standing look; the style
- *  setting only chooses which of the three pieces are drawn. */
-export const ROW_RING_PX = 2.5
+/** `normal` is the ring the graph always drew; thin is the default now. */
+export const RING_WIDTH_PX = { thin: 1.5, normal: 2.5, thick: 3.5 } as const satisfies Record<GraphRingWidth, number>
+
+export function ringWidthPx(width: unknown): number {
+  return width === 'normal' || width === 'thick' ? RING_WIDTH_PX[width] : RING_WIDTH_PX.thin
+}
+
+/** Bar width and haze strength are the graph's long-standing look; the row
+ *  style only chooses which pieces are drawn. */
 export const ROW_BAR_PX = 2
 export const ROW_HAZE_ALPHA = 0.25
 

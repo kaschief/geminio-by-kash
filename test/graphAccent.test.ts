@@ -4,7 +4,7 @@ import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { execFileSync } from 'node:child_process'
 import { gitMethodIsRead, gitService } from '../src/main/git'
-import { ROW_HAZE_ALPHA, normalizeRowAccent, rowAccentParts, withAlpha } from '../src/renderer/src/graph/style'
+import { ROW_HAZE_ALPHA, normalizeRowAccent, ringWidthPx, rowAccentParts, withAlpha } from '../src/renderer/src/graph/style'
 import { defaultGraphRowAccent } from '../src/shared/types'
 
 describe('row accent helpers', () => {
@@ -20,6 +20,13 @@ describe('row accent helpers', () => {
     expect(defaultGraphRowAccent()).toEqual({ color: null, style: 'full', unpushed: 'dashed', unpushedRow: false })
     expect(rowAccentParts('full')).toEqual({ ring: true, bar: true, haze: true })
     expect(rowAccentParts('ring')).toEqual({ ring: true, bar: false, haze: false })
+  })
+
+  it('draws a thin avatar ring unless a thicker one was chosen', () => {
+    expect(ringWidthPx(undefined)).toBe(1.5)
+    expect(ringWidthPx('normal')).toBe(2.5)
+    expect(ringWidthPx('thick')).toBe(3.5)
+    expect(ringWidthPx('huge')).toBe(1.5)
   })
 
   it('repairs stored settings from older shapes instead of trusting them', () => {

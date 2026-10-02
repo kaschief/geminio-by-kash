@@ -1819,6 +1819,7 @@ export const en = {
   'commitMenu.viewOnGitHub': 'View on GitHub',
   'branch.viewOnGitHub': 'View on GitHub',
   'graph.unpushed': 'Not pushed yet',
+  'settings.graphRingWidth': 'Avatar ring',
   'settings.graphRows': 'Commit rows',
   'settings.graphRowOff': 'Off',
   'settings.graphRowRing': 'Ring',

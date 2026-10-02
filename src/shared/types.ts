@@ -3119,7 +3119,11 @@ export interface GraphStyle {
   focus: GraphFocus
   /** Ring, haze and bar on each commit row. Optional: older settings predate it. */
   rowAccent?: GraphRowAccent
+  /** Thickness of the ring around each avatar. Optional; absent means thin. */
+  ringWidth?: GraphRingWidth
 }
+
+export type GraphRingWidth = 'thin' | 'normal' | 'thick'
 
 /** How much of the ring / haze / bar decoration a commit row carries. */
 export type GraphRowStyle = 'off' | 'ring' | 'ring-bar' | 'full'

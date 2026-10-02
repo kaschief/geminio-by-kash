@@ -61,6 +61,7 @@ import {
   AppWindow,
   ArrowDownUp,
   Circle,
+  CircleDashed,
   GitCompareArrows,
   GitMerge,
   MessageSquare,
@@ -90,11 +91,11 @@ import type { DetectedEditor, EditorSetting } from '../../../shared/editors'
 import type { SshKey, SshStatus, SshTest } from '../../../shared/sshKeys'
 import type { DiffToolConfig, DiffToolInfo } from '../../../shared/diffTools'
 import type { RerereStatus } from '../../../shared/types'
-import { AI_PROVIDERS, emptyAnalytics, defaultGraphStyle, type AIProvider, type Analytics, type AIUsageStat, type ActivityEvent, type RepoStats, type AppSettings, type BranchNamingStyle, type CommitStyle, type ConflictStyle, type ExplainStyle, type Profile, type SigningConfig, type SettingsBundle, type GraphStyle, type GraphPalette, type GraphEdgeStyle, type GraphDensity, type GraphLineWidth, type GraphNodeStyle, type GraphTopology, type GraphFocus, type GraphRowAccent, type GraphCommit, type ConnectedAccount } from '../../../shared/types'
+import { AI_PROVIDERS, emptyAnalytics, defaultGraphStyle, type AIProvider, type Analytics, type AIUsageStat, type ActivityEvent, type RepoStats, type AppSettings, type BranchNamingStyle, type CommitStyle, type ConflictStyle, type ExplainStyle, type Profile, type SigningConfig, type SettingsBundle, type GraphStyle, type GraphPalette, type GraphEdgeStyle, type GraphDensity, type GraphLineWidth, type GraphNodeStyle, type GraphTopology, type GraphFocus, type GraphRowAccent, type GraphRingWidth, type GraphCommit, type ConnectedAccount } from '../../../shared/types'
 import { hasSettingsSecrets, stripSettingsSecrets } from '../../../shared/secrets'
 import { tabActiveRepoPath } from '../../../shared/types'
 import type { HoverModifier, KeychainConsent } from '../../../shared/types'
-import { allGraphPalettes, findGraphPalette, colorForPalette, edgePath, spurPath, DENSITY_ROW_H, LINE_WIDTH_PX, GRAPH_PALETTES, normalizeRowAccent, rowAccentParts, withAlpha, ROW_HAZE_ALPHA, ROW_BAR_PX } from '../graph/style'
+import { allGraphPalettes, findGraphPalette, colorForPalette, edgePath, spurPath, DENSITY_ROW_H, LINE_WIDTH_PX, GRAPH_PALETTES, normalizeRowAccent, ringWidthPx, rowAccentParts, withAlpha, ROW_HAZE_ALPHA, ROW_BAR_PX } from '../graph/style'
 import { GRAPH_FOCUS_MODES, focusedHashes, type FocusInput } from '../lib/graphFocus'
 import { layoutGraph } from '../graph/layout'
 import type {
@@ -1064,6 +1065,11 @@ const LINE_WIDTHS: { id: GraphLineWidth; labelKey: TranslationKey }[] = [
   { id: 'normal', labelKey: 'graphWidth.normal' },
   { id: 'thick', labelKey: 'graphWidth.thick' }
 ]
+const RING_WIDTHS: { id: GraphRingWidth; labelKey: TranslationKey }[] = [
+  { id: 'thin', labelKey: 'graphWidth.thin' },
+  { id: 'normal', labelKey: 'graphWidth.normal' },
+  { id: 'thick', labelKey: 'graphWidth.thick' }
+]
 const NODE_STYLES: { id: GraphNodeStyle; key: TranslationKey }[] = [
   { id: 'normal', key: 'graphNodeStyle.normal' },
   { id: 'compact', key: 'graphNodeStyle.compact' }
@@ -1172,7 +1178,8 @@ function GraphMiniPreview({
   nodeStyle,
   topology,
   focus,
-  accent
+  accent,
+  ringPx
 }: {
   colors: string[]
   edgeStyle: GraphEdgeStyle
@@ -1182,6 +1189,7 @@ function GraphMiniPreview({
   topology: GraphTopology
   focus: GraphFocus
   accent: GraphRowAccent
+  ringPx: number
 }): React.JSX.Element {
   const laneW = 22
   const leftPad = 16
@@ -1300,7 +1308,7 @@ function GraphMiniPreview({
             <div
               key={i}
               className={`node-ava ${local ? 'unpushed' : ''}`}
-              style={{ left: cx, top: cy, boxShadow: parts.ring && !local ? `0 0 0 2px ${col}` : 'none', '--ring-c': col } as React.CSSProperties}
+              style={{ left: cx, top: cy, boxShadow: parts.ring && !local ? `0 0 0 ${ringPx}px ${col}` : 'none', '--ring-c': col } as React.CSSProperties}
             >
               <Avatar email={email} size={avaSize} />
               {local && accent.unpushed === 'dashed-arrow' && (
@@ -1489,6 +1497,20 @@ function GraphStyleTab(): React.JSX.Element {
             ))}
           </div>
 
+          <h4 style={{ marginTop: 18 }}><CircleDashed size={14} /> {t('settings.graphRingWidth')}</h4>
+          <div className="theme-mode-switch">
+            {RING_WIDTHS.map((w) => (
+              <button
+                key={w.id}
+                type="button"
+                className={`theme-mode-btn ${(style.ringWidth ?? 'thin') === w.id ? 'active' : ''}`}
+                onClick={() => setStyle({ ringWidth: w.id })}
+              >
+                <span>{t(w.labelKey)}</span>
+              </button>
+            ))}
+          </div>
+
           <h4 style={{ marginTop: 18 }}><Filter size={14} /> {t('settings.graphFocus')}</h4>
           <select
             className="theme-select"
@@ -1538,7 +1560,7 @@ function GraphStyleTab(): React.JSX.Element {
         <div className="graph-style-preview">
           <div className="code-preview-head">{t('settings.graphPreview')}</div>
           <div className="graph-mini-stage">
-            <GraphMiniPreview colors={current.colors} edgeStyle={style.edgeStyle} rowH={rowH} lineW={lineW} nodeStyle={style.nodeStyle} topology={style.topology ?? 'full'} focus={style.focus ?? 'all'} accent={normalizeRowAccent(style.rowAccent)} />
+            <GraphMiniPreview colors={current.colors} edgeStyle={style.edgeStyle} rowH={rowH} lineW={lineW} nodeStyle={style.nodeStyle} topology={style.topology ?? 'full'} focus={style.focus ?? 'all'} accent={normalizeRowAccent(style.rowAccent)} ringPx={ringWidthPx(style.ringWidth)} />
           </div>
         </div>
       </div>
@@ -1589,7 +1611,7 @@ function GraphStyleTab(): React.JSX.Element {
               ))}
             </div>
             <div className="graph-mini-stage" style={{ marginTop: 12 }}>
-              <GraphMiniPreview colors={draft} edgeStyle={style.edgeStyle} rowH={rowH} lineW={lineW} nodeStyle={style.nodeStyle} topology={style.topology ?? 'full'} focus={style.focus ?? 'all'} accent={normalizeRowAccent(style.rowAccent)} />
+              <GraphMiniPreview colors={draft} edgeStyle={style.edgeStyle} rowH={rowH} lineW={lineW} nodeStyle={style.nodeStyle} topology={style.topology ?? 'full'} focus={style.focus ?? 'all'} accent={normalizeRowAccent(style.rowAccent)} ringPx={ringWidthPx(style.ringWidth)} />
             </div>
             <div className="theme-editor-actions">
               <button className="btn primary small" onClick={savePalette}>
