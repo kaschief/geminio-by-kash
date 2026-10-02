@@ -38,9 +38,10 @@ This preference applies across repositories, including repositories inside group
 On macOS, **Settings → Appearance → App Icon** offers the original Classic
 mascot, your connected **GitHub Photo**, and dimensional Monogram, Branch and Orbit styles. Each new style has six colors:
 Violet, Ocean, Mint, Sunset, Rose and Graphite. The selection changes the Dock
-icon immediately and is restored when Geminio launches. The GitHub photo is
-cached locally so it also works offline after the first selection. The Finder bundle
-icon remains the original icon. Choose **Classic** to return to the mascot.
+icon immediately. In the installed app, it also updates the Finder icon and
+stays selected in the Dock after quitting. The GitHub photo is
+cached locally so it also works offline after the first selection. Choose **Classic** to restore the original icon. The development demo changes
+only its running Dock icon, keeping the shared Electron runtime unchanged.
 
 ![App icon styles and colors](../screenshots/app-icon-picker.webp)
 

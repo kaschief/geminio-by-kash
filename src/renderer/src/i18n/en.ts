@@ -3144,7 +3144,7 @@ export const en = {
   'act.autosquashed': 'Autosquashed fixups',
   'act.pulledMode': 'Pulled ({mode})',
   'appIcon.title': 'App Icon',
-  'appIcon.hint': 'Choose your Dock icon. Your choice is remembered across launches.',
+  'appIcon.hint': 'Choose your app icon. In the installed app, it stays in the Dock and Finder after quitting.',
   'appIcon.color': 'Icon Color',
   'appIcon.style.classic': 'Classic',
   'appIcon.style.monogram': 'Monogram',

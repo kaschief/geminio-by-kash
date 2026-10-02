@@ -7,7 +7,7 @@ import icon from '../../resources/icon.png?asset'
 import type { AppRelease } from '../shared/types'
 import { registerGitHandlers } from './git'
 import { registerAppIconHandlers } from './githubAppIcon'
-import { applyAppIcon } from './appIcon'
+import { applyAppIcon, hasPendingAppIcon, finishAppIconUpdates } from './appIcon'
 import { readSettings, registerSettingsHandlers } from './settings'
 import { registerAiHandlers } from './ai'
 import { registerRepoChatHandlers } from './repoChat'
@@ -136,7 +136,7 @@ export function isLoopbackUrl(raw: string): boolean {
   }
 }
 
-const backgroundTest = !app.isPackaged && process.argv.includes('--shot') && process.argv.includes('--background-test')
+const backgroundTest = process.argv.includes('--shot') && process.argv.includes('--background-test')
 
 function createWindow(): void {
   const win = new BrowserWindow({
@@ -211,7 +211,7 @@ app.whenReady().then(async () => {
     })
   })
 
-  applyAppIcon((await readSettings()).appIcon)
+  void applyAppIcon((await readSettings()).appIcon).catch((error) => console.warn('Could not restore app icon', error))
 
   ipcMain.handle('dialog:selectDirectory', async (_e, title?: string) => {
     const res = await dialog.showOpenDialog({
@@ -476,7 +476,12 @@ app.whenReady().then(async () => {
 
 // Quitting mid-edit must not leave a `git commit` waiting on a sentinel that
 // will never be deleted.
-app.on('before-quit', () => {
+app.on('before-quit', (event) => {
+  if (hasPendingAppIcon()) {
+    event.preventDefault()
+    void finishAppIconUpdates().then(() => app.quit())
+    return
+  }
   void releaseAllWaits()
 })
 

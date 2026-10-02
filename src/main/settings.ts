@@ -13,7 +13,7 @@ import {
   type SecretStore
 } from '../shared/secrets'
 import { accountFor, migrateAIConfig } from '../shared/aiAccounts'
-import { applyAppIcon } from './appIcon'
+import { saveWithAppIcon } from './appIcon'
 import { adoptExistingConsent, canUseKeychain, ensureKeychain } from './keychain'
 
 const settingsPath = (): string => join(app.getPath('userData'), 'gitcito-settings.json')
@@ -269,8 +269,7 @@ export function registerSettingsHandlers(): void {
   })
   ipcMain.handle('settings:set', async (_e, settings: AppSettings) => {
     if (settings.onboardingCompleted) forceOnboarding = false
-    await writeSettings(settings)
-    applyAppIcon(settings.appIcon)
+    await saveWithAppIcon(settings.appIcon, () => writeSettings(settings))
   })
   // Called when the user opens Settings: that is an explicit "show me my
   // credentials", so it is a fair moment to decrypt (and to ask, if needed).
