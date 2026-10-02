@@ -96,22 +96,33 @@ textarea:focus {
   box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
+/* No scrollbars anywhere. Inside the details panel and Settings a scroller
+   with more below fades out at its bottom edge instead (`useScrollFades`). */
+* {
+  scrollbar-width: none;
+}
 ::-webkit-scrollbar {
-  width: 9px;
-  height: 9px;
+  display: none;
 }
-::-webkit-scrollbar-thumb {
-  background: var(--bg-4);
-  border-radius: 6px;
-  border: 2px solid transparent;
-  background-clip: content-box;
+[data-fade-look='plain'][data-more-below='true'] {
+  mask-image: linear-gradient(to bottom, #000 0, #000 calc(100% - 28px), transparent 100%);
 }
-::-webkit-scrollbar-thumb:hover {
-  background: #2f3548;
-  background-clip: content-box;
+[data-fade-look='frost'][data-more-below='true'] {
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 56px), transparent 100%);
 }
-::-webkit-scrollbar-corner {
-  background: transparent;
+/* A light frost under the fade, pinned to the bottom of the visible area. Its
+   negative margin cancels its height, so it never adds scroll length. */
+[data-scroll-frost][data-more-below='true']::after {
+  content: '';
+  position: sticky;
+  bottom: 0;
+  display: block;
+  flex-shrink: 0;
+  height: 56px;
+  margin-top: -56px;
+  pointer-events: none;
+  backdrop-filter: blur(1.5px);
+  mask-image: linear-gradient(to bottom, transparent, #000);
 }
 
 /* ─── Layout shell ──────────────────────────────────────────────────────── */
@@ -1942,6 +1953,10 @@ input.is-invalid {
   overflow: hidden;
   border-inline-end: 1px solid var(--border);
 }
+/* With the left sidebar closed the graph meets the window edge. Give its first
+   column the same 10px gap the sidebar's filter box keeps. */
+.center-col.edge-exposed .ghc[data-col='branch'] { padding-inline-start: 10px; }
+.center-col.edge-exposed .graph-refs { padding-inline-start: 10px; }
 .ghc-flex {
   flex: 1 1 auto;
   min-width: 80px;
@@ -17366,11 +17381,6 @@ mark.diff-find-hit.current { background: #ff9632; color: #10121a; }
 .settings > .settings-heading { flex-shrink: 0; }
 .settings > .settings-body { min-height: 0; }
 .settings > .settings-body > .settings-form { overflow-y: auto; padding: 3px 5px; }
-.settings-form, .settings-side-scroll { scrollbar-width: none; }
-.settings-form::-webkit-scrollbar, .settings-side-scroll::-webkit-scrollbar { display: none; }
-.settings-form[data-more-below='true'], .settings-side-scroll[data-more-below='true'] {
-  mask-image: linear-gradient(to bottom, #000 0, #000 calc(100% - 28px), transparent 100%);
-}
 
 
 /* Repository accent choices reuse the appearance page's theme cards. */

@@ -15,6 +15,7 @@ import { applyDirection } from './i18n/direction'
 import { todoSummary } from './lib/todos'
 import { doctorSummary } from './lib/repoConfig'
 import { canonicalRepoPath } from './lib/repoAlias'
+import { useScrollFades } from './components/useScrollFades'
 import { applyAppTheme, applyCodeTheme, applyStatusDotColors, findAppTheme, findCodeTheme } from './theme/themes'
 import { TitleBar, requestCloseTab } from './components/TitleBar'
 import { Toolbar } from './components/Toolbar'
@@ -527,6 +528,7 @@ export default function App(): React.JSX.Element {
   const layout = useUIStore((s) => s.layout)
   const setLayout = useUIStore((s) => s.setLayout)
   const sidebarCollapsed = useUIStore((s) => s.sidebarCollapsed)
+  useScrollFades()
   const chatPanelOpen = useUIStore((s) => s.chatPanelOpen)
   const rightPanelTab = useUIStore((s) => s.rightPanelTab)
   const openChatPanel = useUIStore((s) => s.openChatPanel)
@@ -1055,7 +1057,7 @@ export default function App(): React.JSX.Element {
           )
 
           const centerCol = (
-            <div className="center-col">
+            <div className={`center-col ${sidebarCollapsed && sbSide === 'left' ? 'edge-exposed' : ''}`}>
               <main className="graph-pane">
                 <ConflictBanner repo={repo} />
                 <DebugToolbar repoPath={repo.path} />
@@ -1091,6 +1093,7 @@ export default function App(): React.JSX.Element {
               {(selectedDetailsAvailable || chatOpen) && (
                 <motion.section
                   className="right-panel"
+                  data-scroll-fade="frost"
                   aria-label={t('chat.panelTabs')}
                   initial={{ width: 0, opacity: 0 }}
                   animate={{ width: layout.panelWidth, opacity: 1 }}

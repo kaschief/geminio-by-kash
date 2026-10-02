@@ -10,7 +10,7 @@ import { formatAbsoluteDate } from '../lib/commitDate'
 const SAMPLE_DATE = Date.UTC(2026, 8, 15, 15, 22) / 1000
 const SAMPLE_PATH = 'src/app/ui/panels/Button.tsx'
 import { NumberField } from './NumberField'
-import { useCallback, useEffect, useLayoutEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import {
   Search,
@@ -4069,7 +4069,6 @@ export function SettingsPanel({ initialPage, initialThemeTab, repoPath, initialR
   const [version, setVersion] = useState('')
   const [query, setQuery] = useState('')
   const formRef = useRef<HTMLDivElement>(null)
-  const sideScrollRef = useRef<HTMLDivElement>(null)
   const searchRef = useRef<HTMLInputElement>(null)
   const updateStatus = useUpdatesStore((s) => s.status)
   const updateInfo = useUpdatesStore((s) => s.info)
@@ -4091,39 +4090,6 @@ export function SettingsPanel({ initialPage, initialThemeTab, repoPath, initialR
     // Follow the best result when the current section no longer matches.
     if (results.length && !results.some((m) => m.page === page)) setPage(results[0].page as SettingsPage)
   }
-
-  // A bottom fade replaces scrollbars, and only appears while more content remains.
-  useLayoutEffect(() => {
-    const cleanups = [formRef.current, sideScrollRef.current].filter((el) => el !== null).map((el) => {
-      let frame = 0
-      const measure = (): void => {
-        const more = el.scrollHeight - el.clientHeight - el.scrollTop > 1
-        el.dataset.moreBelow = String(more)
-      }
-      const schedule = (): void => {
-        cancelAnimationFrame(frame)
-        frame = requestAnimationFrame(measure)
-      }
-      const resize = new ResizeObserver(schedule)
-      const observeSizes = (): void => {
-        resize.disconnect()
-        resize.observe(el)
-        for (const child of el.children) resize.observe(child)
-      }
-      const content = new MutationObserver(() => { observeSizes(); schedule() })
-      content.observe(el, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['open', 'hidden', 'style'] })
-      observeSizes()
-      measure()
-      el.addEventListener('scroll', measure, { passive: true })
-      return () => {
-        cancelAnimationFrame(frame)
-        resize.disconnect()
-        content.disconnect()
-        el.removeEventListener('scroll', measure)
-      }
-    })
-    return () => cleanups.forEach((cleanup) => cleanup())
-  }, [])
 
   useEffect(() => {
     const root = formRef.current
@@ -4185,7 +4151,7 @@ export function SettingsPanel({ initialPage, initialThemeTab, repoPath, initialR
     })
 
   return (
-    <div className="settings">
+    <div className="settings" data-scroll-fade="plain">
       <div className="settings-heading">
         <h3>{t('settings.title')}</h3>
         <div className="settings-search">
@@ -4199,7 +4165,7 @@ export function SettingsPanel({ initialPage, initialThemeTab, repoPath, initialR
       {searching && !matches.length && <p className="settings-search-empty" role="status">{t('settings.searchEmpty')}</p>}
       <div className="settings-body">
         <aside className="settings-profiles">
-          <div className="settings-side-scroll" ref={sideScrollRef}>
+          <div className="settings-side-scroll">
             <div className="settings-side-header">
               <span>{t('settings.profilesHeader')}</span>
               <button

@@ -3,7 +3,7 @@ title: Themes & appearance
 category: Make it yours
 order: 100
 summary: Built-in themes, light and dark, plus custom and AI-generated ones.
-keywords: theme themes dark light appearance colors font size graph palette ring halo glow haze bar avatar row color unpushed local not pushed arrow dashed status dot changes conflict
+keywords: scrollbar scrollbars scroll fade theme themes dark light appearance colors font size graph palette ring halo glow haze bar avatar row color unpushed local not pushed arrow dashed status dot changes conflict
 ---
 
 # Themes & appearance
@@ -16,6 +16,7 @@ Midnight, Contrast and Daltonic — each with a light and a dark variant.
 - **Light, dark, or follow the OS**, switched live.
 - **Custom themes**, and **AI-generated** ones from a prompt.
 - Adjustable **code font size**.
+- **No scrollbars.** Trackpad, wheel and keyboard scrolling work as usual. In the details panel and in Settings, a list with more below fades out at its bottom edge, and the fade goes away once you reach the end.
 - A separate **graph style**: lane palette, corner style, row density and line
   thickness, plus the ring, haze and bar on each commit row and how unpushed
   commits stand out, all with a live mini-graph preview.
