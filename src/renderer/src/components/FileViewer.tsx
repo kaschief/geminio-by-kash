@@ -198,7 +198,12 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
   const [history, setHistory] = useState<FileHistoryEntry[]>([])
 
   const [refreshKey, setRefreshKey] = useState(0)
-  const [ignoreWs, setIgnoreWs] = useState(restoredReader?.ignoreWs ?? false)
+  // Ignore whitespace is a reading preference like the diff's other toggles:
+  // remembered across files and sessions, unless this reader saved its own.
+  const [ignoreWs, setIgnoreWs] = useState(
+    () => restoredReader?.ignoreWs ?? localStorage.getItem('gitcito-diff-ignore-ws') === 'on'
+  )
+  useEffect(() => localStorage.setItem('gitcito-diff-ignore-ws', ignoreWs ? 'on' : 'off'), [ignoreWs])
 
   // ─── In-app editing (project-tree files only) ───
   const [editing, setEditing] = useState(restoredReader?.editing ?? false)

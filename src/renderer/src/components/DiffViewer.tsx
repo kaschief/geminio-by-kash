@@ -3,6 +3,9 @@ import { createPortal } from 'react-dom'
 import {
   Highlighter,
   Columns2,
+  Rows2,
+  Strikethrough,
+  MoveVertical,
   Pilcrow,
   Search,
   ChevronUp,
@@ -15,7 +18,7 @@ import {
 import { highlightHtml, buildQueryRegExp, type HighlightLayer } from './FileSearchBar'
 import { highlightLine } from '../lib/highlight'
 import { maskSecretLine } from '../lib/secrets'
-import { useT, interp } from '../i18n'
+import { useT, interp, type TranslationKey } from '../i18n'
 import { buildLinePatch, extractHunks, singleHunkPatch } from '../lib/hunkPatch'
 import { useAiReady } from './useAiReady'
 import { useSettingsStore } from '../stores/settings'
@@ -31,6 +34,16 @@ import {
   type SplitCell,
   type SplitRow
 } from '../lib/diff'
+import { findMovedLines, type MovedMark } from '../lib/movedLines'
+import {
+  buildInlinePairs,
+  inlineText,
+  readDiffLayout,
+  DIFF_LAYOUT_KEY,
+  LEGACY_SPLIT_KEY,
+  type DiffLayout,
+  type InlinePair
+} from '../lib/inlineDiff'
 
 /**
  * Wrap the given decoded-character ranges in <mark class> within an HTML string
@@ -96,6 +109,7 @@ function DiffToggle({
   hosted,
   on,
   disabled = false,
+  radio = false,
   label,
   title,
   onClick,
@@ -104,6 +118,8 @@ function DiffToggle({
   hosted: boolean
   on: boolean
   disabled?: boolean
+  /** One option of a single choice (the layout): announced as a radio. */
+  radio?: boolean
   label: string
   title: string
   onClick: () => void
@@ -113,7 +129,9 @@ function DiffToggle({
     <button
       type="button"
       className={`${hosted ? 'diff-tool' : 'diff-word-toggle'} ${on ? 'on' : ''}`}
-      aria-pressed={on}
+      role={radio ? 'radio' : undefined}
+      aria-checked={radio ? on : undefined}
+      aria-pressed={radio ? undefined : on}
       aria-label={hosted ? label : undefined}
       // aria-disabled, not disabled: a disabled button gets no pointer events, so
       // the tip explaining *why* it is off could never appear.
@@ -127,6 +145,18 @@ function DiffToggle({
     </button>
   )
 }
+
+/** The layout choice, in toolbar order. Keys, not strings: a module constant
+ *  would freeze the language active on first import. */
+const LAYOUTS: { id: DiffLayout; labelKey: TranslationKey; titleKey: TranslationKey; Icon: typeof Rows2 }[] = [
+  { id: 'unified', labelKey: 'diff.unified', titleKey: 'diff.unifiedTitle', Icon: Rows2 },
+  { id: 'split', labelKey: 'diff.split', titleKey: 'diff.splitTitle', Icon: Columns2 },
+  { id: 'inline', labelKey: 'diff.inline', titleKey: 'diff.inlineTitle', Icon: Strikethrough }
+]
+
+const MOVE_ARROW: Record<MovedMark['dir'], string> = { up: '↑', down: '↓' }
+const NO_MOVES = new Map<number, MovedMark>()
+const NO_PAIRS = new Map<number, InlinePair>()
 
 export function DiffViewer({
   diff,
@@ -224,8 +254,18 @@ export function DiffViewer({
   const [wordDiffOn, setWordDiffOn] = useState(() => localStorage.getItem('gitcito-word-diff') !== 'off')
   useEffect(() => localStorage.setItem('gitcito-word-diff', wordDiffOn ? 'on' : 'off'), [wordDiffOn])
 
-  const [splitView, setSplitView] = useState(() => localStorage.getItem('gitcito-split-diff') === 'on')
-  useEffect(() => localStorage.setItem('gitcito-split-diff', splitView ? 'on' : 'off'), [splitView])
+  // One layout of three. The old split flag still decides the first read, so
+  // someone who left split view on keeps it.
+  const [layout, setLayout] = useState<DiffLayout>(() =>
+    readDiffLayout(localStorage.getItem(DIFF_LAYOUT_KEY), localStorage.getItem(LEGACY_SPLIT_KEY))
+  )
+  useEffect(() => localStorage.setItem(DIFF_LAYOUT_KEY, layout), [layout])
+  const splitView = layout === 'split'
+
+  // Moved code is marked by default: a block that only changed place is the
+  // most common thing a reader mistakes for a rewrite.
+  const [movedOn, setMovedOn] = useState(() => localStorage.getItem('gitcito-diff-moved') !== 'off')
+  useEffect(() => localStorage.setItem('gitcito-diff-moved', movedOn ? 'on' : 'off'), [movedOn])
 
   // Line wrapping, for both views. Off by default: one line per row keeps split
   // view's two sides row-for-row comparable. On, long lines fold inside their
@@ -245,6 +285,26 @@ export function DiffViewer({
 
   // Side-by-side rows (ctx mirrored, del-runs zipped with following add-runs).
   const splitRows = useMemo(() => buildSplitRows(lines), [lines])
+
+  const allMoved = useMemo(() => findMovedLines(lines), [lines])
+  const moved = movedOn ? allMoved : NO_MOVES
+  // Inline pairs never include moved lines — their partner is elsewhere — and a
+  // masked secret file stays in plain −/+ form, which masks line by line.
+  const inlinePairs = useMemo(
+    () => (layout === 'inline' && !maskValues ? buildInlinePairs(lines, new Set(moved.keys())) : NO_PAIRS),
+    [layout, maskValues, lines, moved]
+  )
+  const inlineAdds = useMemo(() => new Set([...inlinePairs.values()].map((p) => p.add)), [inlinePairs])
+
+  // The gutter arrow's tip names the other end of the move by its line number.
+  const movedTitle = (m: MovedMark): string =>
+    m.role === 'out'
+      ? interp(t('diff.movedTo'), { line: lines[m.peer].newNo ?? '' })
+      : interp(t('diff.movedFrom'), { line: lines[m.peer].oldNo ?? '' })
+  const movedClass = (idx: number): string => {
+    const m = moved.get(idx)
+    return m ? ` moved${m.block % 2 ? ' moved-alt' : ''}` : ''
+  }
 
   // ── In-diff find (⌘F) ──
   const viewerRef = useRef<HTMLDivElement>(null)
@@ -268,7 +328,9 @@ export function DiffViewer({
   const cellHtml = (text: string, idx: number, kind: 'add' | 'del' | 'ctx'): string => {
     const t = maskValues ? maskSecretLine(text) : text
     let html = highlightHtml(highlightLine(t, lang), layers)
-    const wr = !maskValues && wordDiffOn && kind !== 'ctx' ? wordRanges.get(idx) : undefined
+    // A moved line's word marks would compare it with whatever line happened to
+    // sit opposite, which is not what it moved from.
+    const wr = !maskValues && wordDiffOn && kind !== 'ctx' && !moved.has(idx) ? wordRanges.get(idx) : undefined
     if (wr) html = markRanges(html, wr, kind === 'add' ? 'word-add' : 'word-del')
     return html || '&nbsp;'
   }
@@ -303,11 +365,21 @@ export function DiffViewer({
       key={key}
       className={`diff-split-cell ${c ? c.kind : 'empty'} ${selectable ? 'selectable' : ''} ${
         c && selected.has(c.idx) ? 'line-selected' : ''
-      }`}
+      }${c ? movedClass(c.idx) : ''}`}
       onClick={selectable && c ? () => toggleLine(c.idx) : undefined}
       title={selectable ? t('diff.selectLineTitle') : undefined}
     >
-      <span className="diff-gutter">{c?.no ?? ''}</span>
+      {c && moved.has(c.idx) ? (
+        <span
+          className="diff-gutter"
+          data-move={MOVE_ARROW[moved.get(c.idx)!.dir]}
+          title={movedTitle(moved.get(c.idx)!)}
+        >
+          {c.no ?? ''}
+        </span>
+      ) : (
+        <span className="diff-gutter">{c?.no ?? ''}</span>
+      )}
       {c ? (
         <span className="diff-text" dangerouslySetInnerHTML={{ __html: cellHtml(c.text, c.idx, c.kind) }} />
       ) : (
@@ -354,6 +426,18 @@ export function DiffViewer({
       else next.add(i)
       return next
     })
+  // An inline line is its − and its + at once: selecting it selects both, so a
+  // line action stages (or discards) the whole edit the line shows.
+  const togglePair = (p: InlinePair): void =>
+    setSelected((prev) => {
+      const next = new Set(prev)
+      const on = next.has(p.del) && next.has(p.add)
+      for (const i of [p.del, p.add]) {
+        if (on) next.delete(i)
+        else next.add(i)
+      }
+      return next
+    })
 
   const runOnSelection = (action: HunkAction): void => {
     if (!hunkData || selected.size === 0) return
@@ -371,7 +455,7 @@ export function DiffViewer({
     const n = root.querySelectorAll('.diff-find-hit').length
     setMatchCount(n)
     setMatchIdx((i) => (n ? Math.min(i, n - 1) : 0))
-  }, [findRe, diff, splitView, wordDiffOn, maskValues])
+  }, [findRe, diff, layout, wordDiffOn, movedOn, maskValues])
 
   // Highlight + scroll the active match into view.
   useEffect(() => {
@@ -410,6 +494,7 @@ export function DiffViewer({
   if (!diff.trim()) return <div className="diff-empty">{t('diff.noChanges')}</div>
 
   const hasWordDiffs = wordRanges.size > 0
+  const hasMoves = allMoved.size > 0
   const selectBar = (
         <div className={`diff-select-bar${overlayHost === undefined ? '' : ' is-floating'}`} role="status">
           <span>{interp(t('diff.linesSelected'), { n: selected.size, s: selected.size === 1 ? '' : 's' })}</span>
@@ -433,11 +518,26 @@ export function DiffViewer({
   // Every toggle is always present, disabled when it does not apply, so the row
   // never reflows under the pointer: Linked only means anything in split view
   // while each column scrolls on its own (wrap off).
-  const toggles = (
+  const layoutChoice = (
+    <div className={hosted ? 'diff-tools' : 'diff-layout-choice'} role="radiogroup" aria-label={t('diff.layoutLabel')}>
+      {LAYOUTS.map(({ id, labelKey, titleKey, Icon }) => (
+        <DiffToggle
+          key={id}
+          hosted={hosted}
+          radio
+          on={layout === id}
+          label={t(labelKey)}
+          title={t(titleKey)}
+          onClick={() => setLayout(id)}
+        >
+          <Icon size={hosted ? 13 : 12} />
+        </DiffToggle>
+      ))}
+    </div>
+  )
+  const options = (
     <div className={hosted ? 'diff-tools' : 'diff-toggles'} role="toolbar" aria-label={t('diff.toolsLabel')}>
-      <DiffToggle hosted={hosted} on={splitView} label={t('diff.split')} title={t('diff.splitTitle')} onClick={() => setSplitView((v) => !v)}>
-        <Columns2 size={hosted ? 13 : 12} />
-      </DiffToggle>
+      {!hosted && layoutChoice}
       <DiffToggle
         hosted={hosted}
         on={wrapOn}
@@ -474,6 +574,16 @@ export function DiffViewer({
       </DiffToggle>
       <DiffToggle
         hosted={hosted}
+        on={hasMoves && movedOn}
+        disabled={!hasMoves}
+        label={t('diff.moved')}
+        title={hasMoves ? t('diff.movedTitle') : t('diff.movedNoneTitle')}
+        onClick={() => setMovedOn((v) => !v)}
+      >
+        <MoveVertical size={hosted ? 13 : 12} />
+      </DiffToggle>
+      <DiffToggle
+        hosted={hosted}
         on={externalFind ? externalFind.open : findOpen}
         label={t('diff.find')}
         title={t('diff.findTitle')}
@@ -483,10 +593,20 @@ export function DiffViewer({
       </DiffToggle>
     </div>
   )
+  // In a host toolbar the layout is its own segmented group beside the
+  // toggles, like the file viewer's modes; floating, it leads the one row.
+  const toggles = hosted ? (
+    <>
+      {layoutChoice}
+      {options}
+    </>
+  ) : (
+    options
+  )
 
   return (
     <div
-      className={`diff-viewer hljs ${splitView ? 'is-split' : ''} ${splitView && !wrapOn ? 'is-nowrap' : ''} ${
+      className={`diff-viewer hljs ${splitView ? 'is-split' : ''} ${layout === 'inline' ? 'is-inline' : ''} ${splitView && !wrapOn ? 'is-nowrap' : ''} ${
         !splitView && wrapOn ? 'is-wrap' : ''
       } ${
         lines.length > HUGE_LINES ? 'is-huge' : ''
@@ -577,7 +697,29 @@ export function DiffViewer({
       ) : (
         <>
       {lines.map((l, i) => {
-        if (l.kind === 'meta') return null
+        if (l.kind === 'meta' || inlineAdds.has(i)) return null
+        const pair = inlinePairs.get(i)
+        if (pair) {
+          const { text, del, add } = inlineText(pair.segments)
+          let html = highlightHtml(highlightLine(text, lang), layers)
+          html = markRanges(markRanges(html, del, 'inl-del'), add, 'inl-add')
+          const pairSelected = selected.has(pair.del) || selected.has(pair.add)
+          return (
+            <div
+              key={i}
+              className={`diff-line inline ${hasHunkActions ? 'selectable' : ''} ${pairSelected ? 'line-selected' : ''}`}
+              onClick={hasHunkActions ? () => togglePair(pair) : undefined}
+              title={hasHunkActions ? t('diff.selectLineTitle') : undefined}
+            >
+              <span className="diff-gutter">{l.oldNo ?? ''}</span>
+              <span className="diff-gutter">{lines[pair.add].newNo ?? ''}</span>
+              <span className="diff-sign" role="img" aria-label={t('diff.inlineSign')}>
+                ~
+              </span>
+              <span className="diff-text" dangerouslySetInnerHTML={{ __html: html || '&nbsp;' }} />
+            </div>
+          )
+        }
         if (l.kind === 'hunk') {
           return (
             <div key={i} className="diff-line hunk">
@@ -592,13 +734,19 @@ export function DiffViewer({
         return (
           <div
             key={i}
-            className={`diff-line ${l.kind} ${selectable ? 'selectable' : ''} ${selected.has(i) ? 'line-selected' : ''}`}
+            className={`diff-line ${l.kind} ${selectable ? 'selectable' : ''} ${selected.has(i) ? 'line-selected' : ''}${movedClass(i)}`}
             onClick={selectable ? () => toggleLine(i) : undefined}
             title={selectable ? t('diff.selectLineTitle') : undefined}
           >
             <span className="diff-gutter">{l.oldNo ?? ''}</span>
             <span className="diff-gutter">{l.newNo ?? ''}</span>
-            <span className="diff-sign">{l.kind === 'add' ? '+' : l.kind === 'del' ? '-' : ' '}</span>
+            {moved.has(i) ? (
+              <span className="diff-sign diff-move-sign" title={movedTitle(moved.get(i)!)}>
+                {MOVE_ARROW[moved.get(i)!.dir]}
+              </span>
+            ) : (
+              <span className="diff-sign">{l.kind === 'add' ? '+' : l.kind === 'del' ? '-' : ' '}</span>
+            )}
             <span
               className="diff-text"
               dangerouslySetInnerHTML={{ __html: cellHtml(l.text, i, l.kind as 'add' | 'del' | 'ctx') }}

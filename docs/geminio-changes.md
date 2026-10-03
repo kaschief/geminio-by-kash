@@ -186,6 +186,21 @@ cannot hide them. *Limits:* new untracked files have no hunks, and conflicted
 files' combined diffs take no hunk actions.
 ([Hunk and line actions](help/staging.md#hunk-and-line-actions))
 
+**Inline diffs, moved code, and whitespace that stays ignored.** The diff
+layout is one choice of three — Unified, Split, or the new **Inline**, which
+shows a small edit as one line with removed words struck through and added
+words lit. Pairs that would not read well inline (over half the line changed,
+whitespace-only, runs that do not pair one to one) stay as −/+. Selecting an
+inline line for a line action selects both halves; copying it copies the new
+text. **Moved code**, on by default, tints blocks that were only moved within
+the file in blue, with arrows toward the other end, in every layout. **Ignore
+whitespace** is now remembered across files and sessions, and hunk actions
+keep working with it on, leaving the hidden whitespace changes in place.
+*Limits:* moves are found within one file only, blocks under 20 letters and
+digits are ignored (as git does), and a block moved and edited is not marked.
+The old split setting carries over as the Split layout.
+([Diffs](help/diffs.md#inline-layout))
+
 **Filter by kind of change.** The counts above a file list — working
 changes, a commit, a stash (modified, added, deleted, renamed) — are also its
 filter:

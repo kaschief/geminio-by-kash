@@ -15052,6 +15052,54 @@ button.insights-row:hover { background: var(--bg-2); }
   --word-add-bg: rgba(0, 180, 135, 0.26);
 }
 
+/* ─── Inline diff layout ───────────────────────────────────────────────── */
+/* One row for a small edit: neutral, since it is neither only old nor only
+   new; the words carry the colour. The struck-through old words cannot be
+   selected, so copying an inline line copies the new text alone. */
+.diff-line.inline:not(.line-selected) {
+  background: color-mix(in srgb, var(--diff-add-bg, rgba(63, 208, 164, 0.09)) 50%, var(--diff-del-bg, rgba(231, 89, 108, 0.09)));
+}
+.diff-line.inline .diff-sign { color: var(--text-2); }
+.diff-text mark.inl-del {
+  background: var(--word-del-bg, rgba(229, 72, 77, 0.32));
+  color: var(--diff-del-fg, #f1a0ac);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  border-radius: 2px;
+  user-select: none;
+}
+.diff-text mark.inl-add {
+  background: var(--word-add-bg, rgba(46, 160, 67, 0.34));
+  color: var(--diff-add-fg, #9ee8cd);
+  border-radius: 2px;
+}
+.diff-layout-choice { display: contents; }
+
+/* ─── Moved code ───────────────────────────────────────────────────────── */
+/* Blue, like git's --color-moved, and in two shades so neighbouring blocks
+   read as separate moves. The arrow points at the block's other end. */
+:root {
+  --diff-moved-bg: rgba(84, 148, 255, 0.13);
+  --diff-moved-alt-bg: rgba(84, 148, 255, 0.22);
+  --diff-moved-fg: #8fb8ff;
+}
+:root[data-mode='light'] {
+  --diff-moved-bg: rgba(40, 110, 230, 0.1);
+  --diff-moved-alt-bg: rgba(40, 110, 230, 0.18);
+  --diff-moved-fg: #1d4fa8;
+}
+:is(.diff-line, .diff-split-cell).moved:not(.line-selected) { background: var(--diff-moved-bg); }
+:is(.diff-line, .diff-split-cell).moved.moved-alt:not(.line-selected) { background: var(--diff-moved-alt-bg); }
+.diff-move-sign { color: var(--diff-moved-fg); font-weight: 600; }
+.diff-split-cell.moved .diff-gutter { position: relative; }
+.diff-split-cell.moved .diff-gutter::after {
+  content: attr(data-move);
+  position: absolute;
+  inset-inline-end: 0;
+  color: var(--diff-moved-fg);
+  font-weight: 600;
+}
+
 /* ─── WIP snapshots ────────────────────────────────────────────────────── */
 .snapshots { display: flex; flex-direction: column; min-height: 0; }
 .snapshots-toolbar { display: flex; align-items: center; gap: 12px; margin: 12px 0; flex-wrap: wrap; }

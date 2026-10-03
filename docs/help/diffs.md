@@ -2,8 +2,8 @@
 title: Diffs & previews
 category: Reading changes
 order: 20
-summary: Split view, word-level highlighting, image diffs and file previews.
-keywords: diff split side-by-side word level whitespace image diff preview markdown docx pdf change gutter minimap
+summary: Unified, split and inline layouts, word-level highlighting, moved code, image diffs and file previews.
+keywords: diff split side-by-side unified inline word level whitespace ignore whitespace moved code color-moved image diff preview markdown docx pdf change gutter minimap
 ---
 
 # Diffs & previews
@@ -16,11 +16,21 @@ comparison dialogs, which have no header of their own, they float over the
 top of the diff with their labels. A toggle that does not apply to the current
 view stays in place but greyed out, so the row never shifts under the pointer.
 
+The first group picks the **layout** — one of three:
+
+| Layout | What it shows | Use it when |
+|---|---|---|
+| **Unified** (default) | Old lines above new ones, in one column | Reading a change top to bottom |
+| **Split** | Old on the left, new on the right | Comparing two versions of a block side by side |
+| **Inline** | A small edit as a single line: removed words struck through in red, added words lit in green, a `~` in the margin | Reviewing many one-word fixes — renames, constants, typos — without reading every line twice |
+
+The second group holds the toggles, which apply to any layout:
+
 | Toggle | What it does |
 |---|---|
-| **Unified ↔ split** | Side-by-side when you want to compare, stacked when you want to read |
-| **Word-level** | Highlights just the changed tokens inside an edited line — red on the old, green on the new |
 | **Ignore whitespace** | Hides reindentation so the real change surfaces |
+| **Word-level** | Highlights just the changed tokens inside an edited line — red on the old, green on the new |
+| **Moved code** (on by default) | Tints blocks that were only moved, not changed, in blue |
 | **Wrap** | Folds long lines inside their row (or column, in split view) instead of scrolling the diff sideways |
 | **Linked** (split, wrap off) | Scrolls both halves together, vertically and sideways — off, each column scrolls on its own |
 | **Find** / <kbd>⌘F</kbd> | Find inside the diff, with next/previous stepping; <kbd>Esc</kbd> closes it |
@@ -38,6 +48,57 @@ above column 90 on the right. Unlink them when the sides have drifted apart —
 an indented block against an unindented one, a rename that shifted every line —
 or when you want to compare two distant regions of the same file, and park each
 half where its own content is.
+
+### Inline layout
+
+Inline merges a removed line and the added line that replaced it only when
+the result is easier to read than the two lines were. A pair stays as an
+ordinary − line over a + line when:
+
+- more than about half of its characters changed — the strike-throughs
+  would swamp what is left;
+- the change is whitespace only, which has nothing visible to strike through;
+- the removed and added lines do not pair one to one (three lines replaced by
+  five): which old line became which new one would be a guess;
+- either line is part of a moved block, or the file's secret values are masked.
+
+So an inline diff is usually a mix: one-line edits merged, rewrites left as
+they were. Selecting an inline line for a [line action](staging.md#hunk-and-line-actions)
+selects both its old and its new half, so **Stage lines**, **Discard lines**
+and the rest act on the whole edit the line shows. Copying text from an inline
+line copies the new text only — the struck-through words cannot be selected.
+Find matches the old words too, since they are on screen.
+
+![Inline layout: removed words struck through, added words lit](../screenshots/inline-diff.webp)
+
+### Moved code
+
+A block that was cut from one place and pasted in another shows up in a diff
+as a deletion and an unrelated-looking addition. **Moved code** recognises
+the pair, after git's own `--color-moved`: a run of deleted lines that
+reappears, line for line, as a run of added lines elsewhere in the same file's
+diff. Both ends get a blue tint, and the margin shows an arrow pointing at the
+other end — hover it for the line number. Neighbouring moved blocks alternate
+between two shades of blue so you can tell where one ends.
+
+Lines are compared without their leading and trailing whitespace, so a block
+moved into a deeper indent still counts. Limits: like git, a block needs at
+least 20 letters and digits to count, so a shuffled `}` or `return` is not
+flagged; it only looks within one file, so code moved to another file is a
+deletion here and an addition there; and a block that was moved *and* edited
+is not marked — only the unchanged lines around the edit are, if there are
+enough of them. Re-indenting lines in place is not a move.
+
+### Ignoring whitespace
+
+**Ignore whitespace** re-reads the diff with `git diff -w`, so a reformat or a
+change of indentation drops out and the lines whose content changed remain.
+Hunk and line actions keep working while it is on: the patch they apply
+matches the file's whitespace loosely, so they change exactly what the
+visible diff shows, and the whitespace-only changes hidden from view stay
+where they are — still unstaged, still in the working copy. To stage or
+discard the whitespace changes too, turn the toggle off first. The toggle is
+remembered across files and sessions, like the others.
 
 In Geminio light mode, unselected header controls use a softer grey; the
 selected mode and enabled toggles retain their purple highlight.

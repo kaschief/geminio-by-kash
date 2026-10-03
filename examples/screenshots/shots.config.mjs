@@ -1521,8 +1521,25 @@ export const shots = [
       await page.waitForTimeout(500)
       // By label, not by position: the first toggle is Whitespace, and this shot
       // spent a while photographing a unified diff because of it.
-      await page.getByRole('button', { name: 'Split', exact: true }).click()
+      await page.getByRole('radio', { name: 'Split', exact: true }).click()
       await page.locator('.diff-viewer.is-split').waitFor()
+      await page.waitForTimeout(500)
+    }
+  },
+  {
+    // The inline layout: small edits read as one line, removed words struck
+    // through and added words lit — on the same modified file as the split shot.
+    out: 'inline-diff',
+    repos: ['word-diff'],
+    themes: ['dark'],
+    drive: async (page, repoPaths) => {
+      const repo = repoPaths['word-diff']
+      await page.evaluate((p) => {
+        window.__shot.ui.getState().setFileView({ repoPath: p, file: 'config.ts', source: { type: 'wip', staged: false, untracked: false }, mode: 'diff' })
+      }, repo)
+      await page.waitForTimeout(500)
+      await page.getByRole('radio', { name: 'Inline', exact: true }).click()
+      await page.locator('.diff-viewer.is-inline').waitFor()
       await page.waitForTimeout(500)
     }
   },

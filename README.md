@@ -55,6 +55,7 @@ solves and where its limits are — and it is updated with each change.
 **Changes and diffs**
 
 - **Hunk and line actions everywhere.** Stage, discard, unstage, revert from a commit, apply from a stash — each undoable, with a three-way fallback. [Hunk and line actions](docs/help/staging.md#hunk-and-line-actions)
+- **Inline diffs and moved code.** Small edits on one line with old words struck through, moved blocks tinted blue, whitespace ignored on request. [Diffs](docs/help/diffs.md#inline-layout)
 - **Pull between files.** Pull past the end of a diff to open the next file. [Pull between files](docs/help/diffs.md#pull-between-files)
 - **A steadier file viewer.** Header toggles that never jump, floating find, and path actions on right-click. [Diffs](docs/help/diffs.md)
 - **File lists you can shape.** View as and Sort by on any right-click, path depth, and names that never truncate. [Staging](docs/help/staging.md#path-tree-and-order)

@@ -6,6 +6,7 @@ import { gitService, previewBody } from '../src/main/git'
 import { cloneFixture, cleanupFixtures } from './fixtures'
 import { parseDiff } from '../src/renderer/src/lib/diff'
 import { buildLinePatch, extractHunks, singleHunkPatch } from '../src/renderer/src/lib/hunkPatch'
+import { buildInlinePairs } from '../src/renderer/src/lib/inlineDiff'
 
 // The hunk actions run real `git apply` against the line-staging fixture, whose
 // one unstaged hunk in config.js changes `host` and adds `debug` and `tls`.
@@ -130,6 +131,38 @@ describe('hunk actions', () => {
     expect(staged).not.toContain('+    port: 3000,')
     // The re-indent is still in the working copy, unstaged.
     expect(git(R, 'diff')).toContain('+    port: 3000,')
+  })
+
+  it('discards a hunk cut from a whitespace-ignoring diff, keeping the hidden re-indent', async () => {
+    const R = cloneFixture('line-staging')
+    git(R, 'checkout', '-q', '--', 'config.js')
+    writeFileSync(join(R, 'config.js'), config(R).replace('  port: 3000,', '    port: 3000,').replace('  retries: 3,', '  retries: 5,'))
+    const diff = await gitService.diffFile(R, 'config.js', false, false, true)
+
+    await gitService.applyHunkPatch(R, singleHunkPatch(extractHunks(diff), 0), 'worktree', true, true)
+
+    expect(config(R)).toContain('  retries: 3,')
+    expect(config(R)).toContain('    port: 3000,')
+  })
+
+  it('stages an inline line as both its old and new halves', async () => {
+    const R = cloneFixture('line-staging')
+    git(R, 'checkout', '-q', '--', 'config.js')
+    writeFileSync(join(R, 'config.js'), config(R).replace('  retries: 3,', '  retries: 5,').replace('  timeout: 1000,', '  timeout: 2000,'))
+    const diff = await gitService.diffFile(R, 'config.js', false, false)
+    const lines = parseDiff(diff)
+    const pair = [...buildInlinePairs(lines).values()].find((p) => lines[p.add].text.includes('retries'))
+    expect(pair).toBeDefined()
+
+    // Selecting the merged line selects its − and its +, as the viewer does.
+    const patch = buildLinePatch(lines, extractHunks(diff).header, new Set([pair!.del, pair!.add]), 'forward')
+    await gitService.applyHunkPatch(R, patch, 'index', false)
+
+    const staged = git(R, 'diff', '--cached')
+    expect(staged).toContain('-  retries: 3,')
+    expect(staged).toContain('+  retries: 5,')
+    expect(staged).not.toContain('+  timeout: 2000,')
+    expect(git(R, 'diff')).toContain('+  timeout: 2000,')
   })
 
   it('fails without touching the file when the hunk no longer matches', async () => {

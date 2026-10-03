@@ -16,11 +16,18 @@ export function tokenize(s: string): string[] {
   return s.match(/\s+|[A-Za-z0-9_]+|[^\sA-Za-z0-9_]/g) ?? []
 }
 
+/** One token of a two-line comparison: kept on both sides, or only on one. */
+export interface TokenOp {
+  op: 'same' | 'del' | 'add'
+  text: string
+}
+
 /**
- * Word-level diff of two lines via an LCS over tokens. Returns the changed
- * character ranges on each side (delRanges over `a`, addRanges over `b`).
+ * The token-level edit script turning `a` into `b`, via an LCS over
+ * {@link tokenize}. Ties prefer the deletion first, so a replaced word reads
+ * old-then-new — the order the inline layout shows it in.
  */
-export function wordDiff(a: string, b: string): { del: Range[]; add: Range[] } {
+export function tokenOps(a: string, b: string): TokenOp[] {
   const ta = tokenize(a)
   const tb = tokenize(b)
   const n = ta.length
@@ -31,10 +38,31 @@ export function wordDiff(a: string, b: string): { del: Range[]; add: Range[] } {
       dp[i][j] = ta[i] === tb[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1])
     }
   }
-  const del: Range[] = []
-  const add: Range[] = []
+  const ops: TokenOp[] = []
   let i = 0
   let j = 0
+  while (i < n && j < m) {
+    if (ta[i] === tb[j]) {
+      ops.push({ op: 'same', text: ta[i++] })
+      j++
+    } else if (dp[i + 1][j] >= dp[i][j + 1]) {
+      ops.push({ op: 'del', text: ta[i++] })
+    } else {
+      ops.push({ op: 'add', text: tb[j++] })
+    }
+  }
+  while (i < n) ops.push({ op: 'del', text: ta[i++] })
+  while (j < m) ops.push({ op: 'add', text: tb[j++] })
+  return ops
+}
+
+/**
+ * Word-level diff of two lines via an LCS over tokens. Returns the changed
+ * character ranges on each side (delRanges over `a`, addRanges over `b`).
+ */
+export function wordDiff(a: string, b: string): { del: Range[]; add: Range[] } {
+  const del: Range[] = []
+  const add: Range[] = []
   let aPos = 0
   let bPos = 0
   const push = (arr: Range[], start: number, end: number): void => {
@@ -42,31 +70,17 @@ export function wordDiff(a: string, b: string): { del: Range[]; add: Range[] } {
     if (last && last[1] === start) last[1] = end
     else arr.push([start, end])
   }
-  while (i < n && j < m) {
-    if (ta[i] === tb[j]) {
-      aPos += ta[i].length
-      bPos += tb[j].length
-      i++
-      j++
-    } else if (dp[i + 1][j] >= dp[i][j + 1]) {
-      push(del, aPos, aPos + ta[i].length)
-      aPos += ta[i].length
-      i++
+  for (const { op, text } of tokenOps(a, b)) {
+    if (op === 'same') {
+      aPos += text.length
+      bPos += text.length
+    } else if (op === 'del') {
+      push(del, aPos, aPos + text.length)
+      aPos += text.length
     } else {
-      push(add, bPos, bPos + tb[j].length)
-      bPos += tb[j].length
-      j++
+      push(add, bPos, bPos + text.length)
+      bPos += text.length
     }
-  }
-  while (i < n) {
-    push(del, aPos, aPos + ta[i].length)
-    aPos += ta[i].length
-    i++
-  }
-  while (j < m) {
-    push(add, bPos, bPos + tb[j].length)
-    bPos += tb[j].length
-    j++
   }
   return { del, add }
 }
