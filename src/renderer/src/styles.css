@@ -17652,3 +17652,23 @@ mark.diff-find-hit.current { background: #ff9632; color: #10121a; }
   .codesearch-opt.on, .diff-word-toggle.on, .change-summary.filterable .change-chip.on):hover:not(:disabled):not([aria-disabled='true']) {
   background: var(--accent-soft-hover);
 }
+
+/* The editor shortcut and Close are different kinds of action — leave the
+   file vs. open it elsewhere — so they never sit shoulder to shoulder: a
+   hairline and a gap keep a quick click on one from landing on the other. */
+.fv-open-editor {
+  margin-inline-end: 6px;
+}
+.fv-open-editor + .fv-close {
+  position: relative;
+  margin-inline-start: 6px;
+}
+.fv-open-editor + .fv-close::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: -7px;
+  top: 25%;
+  bottom: 25%;
+  width: 1px;
+  background: var(--border);
+}

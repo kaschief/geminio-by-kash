@@ -2,9 +2,6 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import {
   Highlighter,
-  Columns2,
-  Rows2,
-  Strikethrough,
   MoveVertical,
   Pilcrow,
   Search,
@@ -15,6 +12,7 @@ import {
   Unlink2,
   X
 } from 'lucide-react'
+import { InlineGlyph, SplitGlyph, UnifiedGlyph } from './diffLayoutGlyphs'
 import { highlightHtml, buildQueryRegExp, type HighlightLayer } from './FileSearchBar'
 import { highlightLine } from '../lib/highlight'
 import { maskSecretLine } from '../lib/secrets'
@@ -148,10 +146,10 @@ function DiffToggle({
 
 /** The layout choice, in toolbar order. Keys, not strings: a module constant
  *  would freeze the language active on first import. */
-const LAYOUTS: { id: DiffLayout; labelKey: TranslationKey; titleKey: TranslationKey; Icon: typeof Rows2 }[] = [
-  { id: 'unified', labelKey: 'diff.unified', titleKey: 'diff.unifiedTitle', Icon: Rows2 },
-  { id: 'split', labelKey: 'diff.split', titleKey: 'diff.splitTitle', Icon: Columns2 },
-  { id: 'inline', labelKey: 'diff.inline', titleKey: 'diff.inlineTitle', Icon: Strikethrough }
+const LAYOUTS: { id: DiffLayout; labelKey: TranslationKey; titleKey: TranslationKey; Icon: (p: { size: number }) => React.JSX.Element }[] = [
+  { id: 'unified', labelKey: 'diff.unified', titleKey: 'diff.unifiedTitle', Icon: UnifiedGlyph },
+  { id: 'split', labelKey: 'diff.split', titleKey: 'diff.splitTitle', Icon: SplitGlyph },
+  { id: 'inline', labelKey: 'diff.inline', titleKey: 'diff.inlineTitle', Icon: InlineGlyph }
 ]
 
 const MOVE_ARROW: Record<MovedMark['dir'], string> = { up: '↑', down: '↓' }

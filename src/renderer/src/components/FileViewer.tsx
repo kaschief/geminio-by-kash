@@ -1,4 +1,3 @@
-import { ExternalLink } from 'lucide-react'
 import { useLayoutEffect, useEffect, useMemo, useRef, useState } from 'react'
 import { X, GitCommitHorizontal, Loader2, Search, ChevronUp, ChevronDown, Save } from 'lucide-react'
 import type { BlameLine, BlobSpec, FileHistoryEntry, NumberedLine } from '../../../shared/types'
@@ -10,6 +9,7 @@ import { canonicalRepoPath } from '../lib/repoAlias'
 import { filePermalink } from '../lib/autolink'
 import { revealLineWhenReady } from '../lib/reveal'
 import { openInEditor, editorLineMenuItems } from '../lib/editorOpen'
+import { editorGlyph } from './editorGlyphs'
 import { mi } from './menuIcons'
 import { useT, interp, type TranslationKey } from '../i18n'
 import { useHoverExplain } from './HoverExplain'
@@ -807,10 +807,10 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
           <button className="icon-btn fv-open-editor" aria-label={interp(t('editor.openIn'), { app: editorSetting.name })}
             title={interp(t('editor.openWorkingFile'), { editor: editorSetting.name })}
             onClick={() => void openInEditor(editorSetting, { path: `${repoPath}/${file}`, repo: repoPath })}>
-            <ExternalLink size={15} />
+            {editorGlyph(editorSetting.id)}
           </button>
         )}
-        <button className="icon-btn" title={t('fileViewer.close')} onClick={requestClose}>
+        <button className="icon-btn fv-close" title={t('fileViewer.close')} onClick={requestClose}>
           <X size={15} />
         </button>
       </div>
