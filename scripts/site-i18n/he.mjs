@@ -3,14 +3,11 @@ export const he = {
   'nav.handbook': 'המדריך',
   'nav.roadmap': 'מפת דרכים',
   'nav.github': 'GitHub',
-  'nav.sponsor': 'חסות',
   'nav.download': 'הורדה',
 
-  'foot.license': 'ברישיון MIT · נוצר עם 💜 על ידי <a href="https://myappdesk.dev">MyAppDesk</a>',
   'foot.source': 'קוד מקור',
   'foot.roadmap': 'מפת דרכים',
   'foot.reportIssue': 'דיווח על תקלה',
-  'foot.sponsor': 'חסות',
 
   'meta.title': 'Geminio — כל מה שיש ב־git, עם ממשק שמראה לכם אותו',
   'meta.description':
@@ -57,10 +54,6 @@ export const he = {
   'handbook.title': 'מדריך בן {pages} עמודים, מובנה בתוך האפליקציה',
   'handbook.sub': 'כל יכולת מוסברת — בלי חיבור לרשת בתוך האפליקציה, וגם כאן.',
 
-  'sponsor.title': 'תמכו ב־Geminio',
-  'sponsor.body':
-    'חינם, ברישיון MIT, בלי שרת אחורי, בלי טלמטריה, בלי שום דבר למכור לכם — ולכן גם אין כאן מה לקנות. התמיכה מממנת את תעודת Apple Developer שהבניות החתומות ל־macOS זקוקות לה, את המדריך ואת התרגומים. דיווח על באג שווה בדיוק אותו הדבר.',
-  'sponsor.cta': 'תמיכה דרך GitHub',
 
   'doc.titleSuffix': 'המדריך של Geminio',
   'doc.filter': 'סינון עמודים…',

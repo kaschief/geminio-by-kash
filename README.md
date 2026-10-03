@@ -8,7 +8,7 @@
 
 A desktop home for repositories, branches, changes and GitHub—shaped by daily use on macOS.
 
-[Handbook](docs/help/getting-started.md) · [Development](CONTRIBUTING.md) · [Ideas & issues](https://github.com/kaschief/geminio-by-kash/issues) · [MIT license](LICENSE)
+[Handbook](docs/help/getting-started.md) · [What Geminio changes](docs/geminio-changes.md) · [Development](CONTRIBUTING.md) · [Ideas & issues](https://github.com/kaschief/geminio-by-kash/issues) · [MIT license](LICENSE)
 
 <img src="docs/screenshots/graph-dark.webp" alt="Geminio's commit graph and repository workspace" width="820" />
 
@@ -17,40 +17,71 @@ A desktop home for repositories, branches, changes and GitHub—shaped by daily 
 ## The Geminio approach
 
 Geminio is developed and maintained by **Kash (Kaschief Johnson)**. It began
-with Gitcito and has grown into a personal Git client with its own interface,
-account integration and workflow decisions.
+as a fork of Gitcito and has grown into a personal Git client with its own
+interface, account integration and workflow decisions.
 
 The focus is a workspace that remembers how you like to work: compact controls,
 consistent layouts across repositories, direct access to GitHub, and fewer
 competing places to configure the app.
 
-- **Your GitHub account.** Reuse an existing GitHub CLI login or configure a
-  token in Settings → Integrations. Your connected photo appears in the title
-  bar, Settings and matching commit authors. [Connecting GitHub](docs/help/hosting.md#connecting-github)
-- **One Settings window.** Appearance, accounts and application preferences
-  share a window with a Repository section for the current repository's rules,
-  signing, info and other options. [Settings](docs/help/repo-settings.md)
-- **One arrangement across repositories.** Graph column order, widths and
-  visibility—and sidebar section order, visibility and expansion—carry across
-  repositories. Branch pins remain specific to their repository. [Layouts](docs/help/workspaces.md)
-- **A graph you can arrange directly.** Right-click any column header to choose
-  visible columns; drag to rearrange or resize them, and double-click a divider
-  to fit the loaded history. [Commit graph](docs/help/graph.md)
-- **Separate working views.** Each repository keeps its open commit/file, viewer mode,
-  scroll position and unsaved file edits when switching tabs. [Workspaces](docs/help/workspaces.md#working-in-several-repositories)
-- **Pull between files.** An adjustable elastic pull at the end or beginning of a diff
-  previews the adjacent file, then switches when you release past the threshold.
-  [Reading changes](docs/help/diffs.md#pull-between-files)
-- **Your app icon.** Choose a Dock icon style and color in Appearance settings.
-  [App icons](docs/help/themes.md#app-icon)
-- **Room for the message.** Drag the divider above the commit composer to give
-  the description more space. The height is remembered. [Committing](docs/help/committing.md)
-- **A quieter title bar.** A compact monochrome mark, workspace management in Settings,
-  and no window-button gap in macOS fullscreen. Missing saved folders have a reconnect view. [Tabs](docs/help/workspaces.md)
-- **A smaller toolbar.** Compact repository and branch selectors, plus one
-  Pull/Fetch button whose dropdown chooses the default operation. [Navigation](docs/help/repo-menu.md)
-- **Predictable menus.** Click outside a menu to close it. Repository editors
-  with unsaved changes stay open when you click the Settings backdrop.
+## What Geminio adds
+
+Everything Gitcito does, plus the changes below. Each line links to its
+handbook page. **[What Geminio changes](docs/geminio-changes.md)** is the
+running list behind this digest — every improvement since the fork, what it
+solves and where its limits are — and it is updated with each change.
+
+**Accounts**
+
+- **Your GitHub account, no new sign-in.** Reuses a GitHub CLI login or Git's credential helper; a profile token still wins. [Connecting GitHub](docs/help/hosting.md#connecting-github)
+- **Your photo on your commits.** The connected avatar appears in the title bar, Settings and on commits matching your account's emails. [Avatars](docs/help/avatars.md)
+- **No vendor co-author.** Upstream's default `Co-authored-by: MyAppDesk` trailer and its setting are gone. [Committing](docs/help/committing.md)
+
+**Tabs and workspace**
+
+- **Sort tabs by what needs you.** Conflicts, unpushed commits, changes, behind, name or recency — held, and re-applied without moving tabs mid-work. [Sorting tabs](docs/help/workspaces.md#sorting-tabs)
+- **Unpushed counts on tabs.** A solid number for commits only this machine has, beside the changes dot. [Tab status dots](docs/help/themes.md#tab-status-dots)
+- **Separate working views.** Each repository keeps its open commit or file, viewer mode, scroll, filters and unsaved edits across tab switches. [Workspaces](docs/help/workspaces.md#working-in-several-repositories)
+- **A quieter title bar.** One dashboard icon for Mission Control, an optional accent outline on the active tab, and no button gap in fullscreen. [Mission control](docs/help/mission-control.md)
+- **Missing folders, handled.** A moved repository shows Locate and Retry instead of startup errors. [Moved folders](docs/help/workspaces.md#moved-or-unavailable-folders)
+
+**Graph**
+
+- **Arrange it directly.** Right-click a header for columns; double-click a divider to fit them all; one layout for every repository. [Commit graph](docs/help/graph.md)
+- **Unpushed commits stand out.** Dashed ring and dotted bar, with adjustable row accents and avatar ring. [Commit rows](docs/help/themes.md#commit-rows)
+- **Dates and descriptions your way.** Relative, date & time or ISO, and an optional one-line description after each title. [Commit graph](docs/help/graph.md)
+- **Straight to GitHub.** Commit hashes and branch menus link to their pages. [Commit details](docs/help/graph.md#commit-details)
+
+**Changes and diffs**
+
+- **Hunk and line actions everywhere.** Stage, discard, unstage, revert from a commit, apply from a stash — each undoable, with a three-way fallback. [Hunk and line actions](docs/help/staging.md#hunk-and-line-actions)
+- **Pull between files.** Pull past the end of a diff to open the next file. [Pull between files](docs/help/diffs.md#pull-between-files)
+- **A steadier file viewer.** Header toggles that never jump, floating find, and path actions on right-click. [Diffs](docs/help/diffs.md)
+- **File lists you can shape.** View as and Sort by on any right-click, path depth, and names that never truncate. [Staging](docs/help/staging.md#path-tree-and-order)
+- **Filter by kind of change.** Click the modified, added or deleted count above any file list to show only those. [Commit details](docs/help/graph.md#commit-details)
+- **Room for the message.** A resizable commit composer that remembers its height. [Committing](docs/help/committing.md)
+- **Stashes that explain themselves.** An already-applied stash is offered for dropping; blocking files are named. [Stashes](docs/help/stashes.md#when-a-stash-will-not-apply)
+
+**Recovery**
+
+- **Undo what happened outside the app.** Commits, resets, merges and checkouts from a terminal or agent can be walked back, previewed first. [Recovery](docs/help/recovery.md#changes-made-outside-geminio)
+- **One reset row.** "Reset *branch* to here" with Soft, Mixed or Hard, each saying what it keeps. [Reset](docs/help/merging.md#cherry-pick-revert-reset)
+
+**Menus and feel**
+
+- **State without tick marks.** A lit dot for the chosen option, a lit icon for what is on, and the current value on submenu rows.
+- **Icons on every menu row,** one icon per meaning, and disabled rows that say why.
+- **Sentence case throughout.** Menus, buttons and titles read "Copy file path", not "Copy File Path".
+- **Menus close when you click away,** title bar included; unsaved repository editors keep Settings open. [Settings](docs/help/repo-settings.md)
+- **Less noise.** Success toasts only for what you cannot see, slower tooltips on labelled controls, no scrollbars, and AI buttons only when AI is set up.
+- **A smaller toolbar.** Compact selectors and one Pull/Fetch button that remembers its default. [Fetch and pull](docs/help/workspaces.md#fetch-and-pull)
+
+**Settings and the app**
+
+- **One searchable Settings window,** with the repository's settings as a section of it. [Finding a setting](docs/help/search.md#finding-a-setting)
+- **Your app icon.** Dock icon styles and colours, or your GitHub photo. [App icon](docs/help/themes.md#app-icon)
+- **No stacked Keychain prompts** from background polling, and no Safe Storage prompt when there is nothing to unlock.
+- **Upstream announced, never installed.** The updater shows Gitcito releases but opens their notes instead of overwriting this build.
 
 <img src="docs/screenshots/toolbar-selectors.webp" alt="Compact repository and branch selectors" width="440" />
 
@@ -84,26 +115,21 @@ npm install
 npm run dev
 ```
 
-The demo runs from this checkout. If Electron reports a missing installation,
-run `node node_modules/electron/install.js`, then try again.
+The dev app runs from this checkout with its own settings, separate from an
+installed copy. If Electron reports a missing installation, run
+`node node_modules/electron/install.js`, then try again.
 
-To build the app and a macOS installer:
-
-```sh
-npm run build
-npm run dist:mac
-```
-
-Signing and notarization depend on your build credentials. For a local unsigned
-Apple Silicon app bundle:
+To build and install the app on an Apple Silicon Mac:
 
 ```sh
-CSC_IDENTITY_AUTO_DISCOVERY=false npx electron-builder --mac dir --arm64 --publish never -c.mac.identity=null
+npm run install:mac
 ```
 
-The bundle is written to `dist/mac-arm64/Geminio.app`. Use
-[Geminio's repository](https://github.com/kaschief/geminio-by-kash) for this
-project; upstream Gitcito builds do not contain Geminio's changes.
+It builds an unsigned arm64 bundle, replaces `/Applications/Geminio.app`
+(keeping a custom app icon), and leaves one registered copy. `npm run dist:mac`
+builds the full installer instead; signing and notarisation depend on your
+build credentials. Geminio publishes no release builds yet, and upstream
+Gitcito builds do not contain Geminio's changes.
 
 ## Command line
 
@@ -144,8 +170,14 @@ npm run build
 
 Tests use real Git fixture repositories. UI screenshots come from the running
 app, with scenarios declared in `examples/screenshots/shots.config.mjs`.
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow and
-[HANDOFF.md](HANDOFF.md) for current project context.
+
+- [CONTRIBUTING.md](CONTRIBUTING.md) — setup, gotchas, taking upstream changes,
+  the handbook and the website.
+- [CLAUDE.md](CLAUDE.md) — the working agreement for people and agents:
+  architecture, the UI house style, and the checklist every change passes.
+- [What Geminio changes](docs/geminio-changes.md) — the running list; every
+  user-facing change adds or updates an entry.
+- [ROADMAP.md](ROADMAP.md) — what might come next, and what is deliberately out.
 
 ## Origins and license
 
@@ -156,4 +188,5 @@ ongoing development are maintained by Kash.
 The project remains **MIT licensed**. Original copyright and license notices
 are preserved in [LICENSE](LICENSE), alongside the dependencies' notices.
 Upstream releases may be announced, but are never automatically installed over
-Geminio. Upstream changes are reviewed and integrated into this project.
+Geminio. Upstream changes are reviewed and integrated into this project; the
+fork's own changes are listed in [What Geminio changes](docs/geminio-changes.md).

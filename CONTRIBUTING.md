@@ -3,7 +3,12 @@
 Geminio is Kash's personal Git client, developed from Gitcito. Propose changes
 against [kaschief/geminio-by-kash](https://github.com/kaschief/geminio-by-kash).
 Work in the existing checkout; do not create development worktrees or clones
-unless the owner requests them. See [HANDOFF.md](HANDOFF.md) for current decisions.
+unless the owner requests them.
+
+[`CLAUDE.md`](CLAUDE.md) is the working agreement — architecture, the UI house
+style, and the checklist every change passes — for people and agents alike.
+[What Geminio changes](docs/geminio-changes.md) is the running list of what
+the fork adds on top of Gitcito; read it to learn the app's current shape.
 
 ## Development setup
 
@@ -12,21 +17,66 @@ npm install
 npm run dev
 ```
 
+Things worth knowing before the first change:
+
+- **Electron is installed by its own script.** If `npm run dev` fails with
+  `Electron uninstall`, run `node node_modules/electron/install.js`.
+  `package.json` approves install scripts for Electron, esbuild and node-pty.
+- **Dev and installed apps keep separate data.** The dev app uses
+  `geminio-dev` under the OS app-data folder (seeded once from the installed
+  app's data); the installed app uses `Geminio`. Trying things in dev never
+  touches your real settings.
+- **Hot reload has edges.** Renderer edits hot-reload; editing a store module
+  rebuilds its state, so selection and the details panel reset — that is
+  dev-only, not a bug. Changes to `src/main` or `src/preload` need a full
+  restart, and a renderer calling a new IPC method against an old main process
+  throws, so make new IPC calls fail soft (see `useAiReady`).
+- **The build regenerates two tracked files**: `licenses.generated.json` and
+  `lib/settingsSearch.generated.json` (the Settings search index, also rebuilt
+  before `npm run dev`). Commit the search index when Settings copy changed;
+  restore the licenses file when dependencies did not.
+- **Moving the checkout breaks the test fixtures** (they store absolute remote
+  paths). Run `npm run playground:rebuild`.
+- **App icons** (the Dock styles in Settings → Appearance) are vector sources in
+  `src/shared/appIcons.ts`. Regenerate the PNGs with
+  `node_modules/.bin/electron scripts/generate-app-icons.cjs`.
+
+## Taking upstream changes
+
+Geminio follows [Gitcito](https://github.com/MyAppDesk/gitcito) as the
+`upstream` remote (fetch-only). The app announces upstream releases but never
+installs them — an upstream build would replace this one and drop the fork's
+changes. To take one:
+
+```bash
+git fetch upstream
+git log --oneline HEAD..upstream/main   # review what changed
+git merge upstream/main                 # resolve, then run the full gate
+```
+
+Upstream's edits to the translated dictionaries and handbook pages merge
+cleanly because this fork leaves those files alone. Afterwards, check
+[What Geminio changes](docs/geminio-changes.md): an entry upstream has made
+redundant should be removed.
+
 ## Commit messages
 
 This project follows [Conventional Commits](https://www.conventionalcommits.org/).
 
 ```
-type(scope): Subject
+type(scope): subject
 
-feat: Add dark mode support
-fix: Resolve crash on empty repo
-docs: Update README with new features
-chore: Upgrade electron to v32
-refactor: Extract auth logic into service
-perf: Reduce re-renders in GraphView
-test: Add unit tests for git service
+feat: add dark mode support
+fix: resolve crash on empty repo
+docs: update README with new features
+chore: upgrade electron to v32
+refactor: extract auth logic into service
+perf: reduce re-renders in GraphView
+test: add unit tests for git service
 ```
+
+commitlint uses `@commitlint/config-conventional`: the subject starts lower
+case, and body lines stay within 100 characters.
 
 | Type | When to use |
 |------|-------------|
@@ -40,7 +90,7 @@ test: Add unit tests for git service
 | `build` | Build system changes |
 | `ci` | CI/CD changes |
 
-Breaking changes: append `!` after the type — `feat!: Drop Node 18 support`
+Breaking changes: append `!` after the type — `feat!: drop Node 18 support`
 
 ## Translations
 
@@ -69,12 +119,15 @@ Strings that must read identically in every language (product names, filenames,
 git tokens) belong in `scripts/i18n-allowlist.json` or carry an inline
 `// i18n-ignore <reason>`.
 
+Removing or renaming a key in `en.ts` means removing it from every locale
+file too — the tests reject a key English no longer has.
+
 ### Adding a locale
 
-New translations are welcome. Copy `en.ts` to `<code>.ts`, export it as
-`Dict`, translate every value, then wire it into `dictionaries` and `LANGUAGES`
-in `index.ts` and add the code to `Language` in `src/shared/types.ts`. The
-tests pick the new file up automatically — no test changes needed.
+Copy `en.ts` to `<code>.ts`, export it as `Dict`, translate the values, then
+wire it into `dictionaries` and `LANGUAGES` in `index.ts` and add the code to
+`Language` in `src/shared/types.ts`. The tests pick the new file up
+automatically. `/add-locale <code>` does this for an agent.
 
 ## Documentation
 
@@ -114,7 +167,11 @@ instead of quietly producing a broken page.
    feature of its own (a generic confirm dialog, say), add it to `exempt` with
    a reason in writing.
 
-3. If it is worth a mention, add **one line** to `README.md` linking to the
+3. Add an entry to [`docs/geminio-changes.md`](docs/geminio-changes.md),
+   the running list of what the fork changes — and edit or remove any entry the
+   change makes untrue. One entry per noticeable change, not per commit.
+
+4. If it is worth a mention, add **one line** to `README.md` linking to the
    page. The README is a tour; depth belongs in the handbook.
 
 ### Writing well here
@@ -151,7 +208,8 @@ npm run playground:rebuild                             # capturing dirties the r
 
 ### The website
 
-`docs/help/` also feeds the local documentation website generated by `npm run site`.
+`docs/help/` also feeds the website,
+<https://kaschief.github.io/geminio-by-kash/>, generated by `npm run site`.
 The English handbook describes Geminio's current behavior; translated pages
 are retained from the upstream documentation.
 `scripts/build-site.mjs` renders the landing page and one HTML page per
@@ -162,14 +220,17 @@ npm run site         # → dist-site/
 npm run site:serve   # …and serve it locally
 ```
 
-CI redeploys it on every published release and on any push to `main` that
-touches `docs/`, so a documentation fix is live without anyone remembering to
-publish it. The deploy runs `docs-check` first: if the docs do not line up, the
-site is not published.
+CI redeploys it on every published release and on any push to
+`geminio-home` that touches `docs/`, so a documentation fix is live without
+anyone remembering to publish it (GitHub Pages must be enabled for the
+repository, with GitHub Actions as the source). The deploy runs `docs-check`
+first: if the docs do not line up, the site is not published.
 
 **The one thing that does not update itself.** The handbook pages come from
-Markdown, but the landing page's headline features are a hand-written
-`FEATURES` array in `scripts/build-site.mjs`. It is the only place the site's
+Markdown, but the landing page's headline features are hand-written arrays in
+`scripts/build-site.mjs` — `FEATURES` for the inherited headline features,
+`FORK_FEATURES` for what Geminio adds — with their copy in
+`scripts/site-i18n/en.mjs`. It is the only place the site's
 copy is not derived from `docs/`, and therefore the only place that can quietly
 go stale. If a change deserves a spot on the front page, add it there too — and
 point it at its handbook page, which the link test then verifies.
@@ -219,9 +280,17 @@ findable as a modal, and just as easy to ship undocumented.
 Maintainers only. Requires a clean working tree.
 
 ```bash
-npm run release:patch   # 0.9.0 → 0.9.1
-npm run release:minor   # 0.9.0 → 0.10.0
-npm run release:major   # 0.9.0 → 1.0.0
+npm run release:patch   # x.y.z → x.y.(z+1)
+npm run release:minor   # x.y.z → x.(y+1).0
+npm run release:major   # x.y.z → (x+1).0.0
 ```
 
-This bumps the version, updates `CHANGELOG.md`, commits, tags, and pushes. The GitHub Actions workflow then builds and publishes the release automatically.
+This bumps the version, updates `CHANGELOG.md`, commits, tags, and pushes. The
+release workflow then builds macOS, Windows and Linux and publishes them to this
+repository's releases. The macOS build is signed and notarised only when the
+signing secrets are configured; otherwise it ships unsigned. Geminio has not
+tagged a release of its own yet, and only the macOS build is exercised day to
+day.
+
+For the owner's own Mac, `npm run install:mac` builds Apple Silicon only and
+replaces the installed app, keeping its custom icon. Run it only when asked.

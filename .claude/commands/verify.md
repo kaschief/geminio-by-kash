@@ -16,4 +16,5 @@ Report the result as a short list — one line per step, pass or fail. For any
 failure, quote the actual error output and fix it; do not summarize a failure
 as "some tests failed". If everything passes, say so plainly in one line.
 
-Never launch the app to verify. Building and testing is the verification.
+Building and testing is the verification. Launching the app (see CLAUDE.md §1)
+is for the user to see the change, not a substitute for this gate.

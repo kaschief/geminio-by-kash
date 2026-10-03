@@ -14,7 +14,7 @@ component.
 | File | Role |
 |------|------|
 | `en.ts` | The reference locale. Exports `en`, and derives `Dict = typeof en` and `TranslationKey`. |
-| `<code>.ts` | One per additional locale (`es.ts`, …). Typed `Dict`, so it must cover exactly the reference keys. |
+| `<code>.ts` | One per additional locale (`es.ts`, …). Typed `Dict` (`Partial<typeof en>`): may lack keys, never add them. |
 | `index.ts` | The public API only: `t`, `useT`, `translate`, `interp`, `LANGUAGES`, `TranslationKey`. |
 
 Import from `'../i18n'`. The locale files are data; `index.ts` is the interface.
@@ -24,8 +24,13 @@ Import from `'../i18n'`. The locale files are data; `index.ts` is the interface.
 1. Add the key to `en.ts` only. This fork is maintained in English: other
    locales are `Partial<…>` and fall back to English for missing keys. Do not
    translate new strings and do not copy English into other locale files.
-2. Key naming: `feature.thing` in lowerCamel (`titlebar.closeTab`,
-   `act.checkedOut`). Group by feature; put a shared word under `common.`.
+   Removing or renaming a key is the exception: delete it from **every** locale
+   file, or `test/i18n.test.ts` fails on the key English no longer has. The
+   same goes for a renamed `{placeholder}`.
+2. Write the value in sentence case ("Copy file path"), keeping proper nouns
+   and acronyms (GitHub, SHA). Key naming: `feature.thing` in lowerCamel
+   (`titlebar.closeTab`, `act.checkedOut`). Group by feature; put a shared word
+   under `common.`.
 3. Render it:
 
 ```tsx

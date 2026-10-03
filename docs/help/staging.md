@@ -16,7 +16,7 @@ Each collapses, and each remembers whether you left it open.
 ## Knowing there are changes
 
 While you look at a commit or a stash, a banner at the top of the details panel
-says how many files have uncommitted changes, with **View Changes** to go to
+says how many files have uncommitted changes, with **View changes** to go to
 them. The status bar shows the same count as a small ✎ next to the branch name,
 in every view. Both are hidden when the tree is clean, and both stay visible
 with a file open over the graph, which hides the WIP row.
@@ -41,10 +41,18 @@ keeps git's own order, which is by byte value, so `Zeta.md` comes before
 there. The choice applies to every file list (staging, commit details and
 stashes) and is remembered.
 
+The same two choices are on the right-click menu of any file or folder in
+those lists, under **View as** and **Sort by**, so you can switch without
+going back to the header. Both places change the same setting.
+
+The counts in the header (modified, added, deleted…) filter the lists: click
+one to show only that kind across conflicted, unstaged and staged files, click
+it again to show everything. See [Commit details](graph.md#commit-details).
+
 Deep paths never push the file name off the row. When space runs out, folders
 give way from the left (`…/code/indicator/revelio.pine`). To keep paths short
 even when there is room, set **Folders shown in paths** in Settings →
-Files & Diffs: all of them, the last three, two or one, or none at all. A
+Files & diffs: all of them, the last three, two or one, or none at all. A
 shortened path starts with `…/`, and hovering it shows the whole path.
 
 ![Files and diff display settings](../screenshots/settings-files.webp)
@@ -67,10 +75,10 @@ are looking at:
 
 | Diff | Actions | What happens |
 |---|---|---|
-| Unstaged changes | **Stage Hunk**, **Discard Hunk** | Stage copies the change into the index. Discard puts the lines back as they are staged (or committed) |
-| Staged changes | **Unstage Hunk** | Takes the change out of the index. The file on disk is untouched |
-| A commit | **Revert Hunk** | Undoes that part of the commit in your working tree, as an uncommitted change. No commit is made |
-| A stash | **Apply Hunk** | Brings just that part of the stash into your working tree. The stash is kept |
+| Unstaged changes | **Stage hunk**, **Discard hunk** | Stage copies the change into the index. Discard puts the lines back as they are staged (or committed) |
+| Staged changes | **Unstage hunk** | Takes the change out of the index. The file on disk is untouched |
+| A commit | **Revert hunk** | Undoes that part of the commit in your working tree, as an uncommitted change. No commit is made |
+| A stash | **Apply hunk** | Brings just that part of the stash into your working tree. The stash is kept |
 
 Every one of them can be undone. Discard asks first, because the lines it throws
 away exist nowhere else; before it (and before revert and apply) Geminio also
@@ -92,7 +100,7 @@ The limits:
 - **Line selection works in both views.** Click changed lines in unified or
   split view; one selection carries across if you switch.
 - **New untracked files** have no hunks to pick from. Stage or discard the whole
-  file. (A stash's untracked files are the exception: Apply Hunk creates them.)
+  file. (A stash's untracked files are the exception: Apply hunk creates them.)
 - **Conflicted files** show git's combined diff, which hunk actions cannot
   read. Resolve them in the conflict view.
 
@@ -100,11 +108,11 @@ The limits:
 
 Discard works at the same levels, and always asks. Untracked files are deleted;
 tracked ones go back to their staged (or committed) state. The right-click
-entry names what it discards ("Discard Changes to kash-os.pine", or "… to 3
-Files" for a selection), so it never reads as discarding everything.
+entry names what it discards ("Discard changes to kash-os.pine", or "… to 3
+files" for a selection), so it never reads as discarding everything.
 
 To throw away everything at once, staged and unstaged, use the red trash
-button at the top-left of the changes panel (**Discard All Changes**). It asks
+button at the top-left of the changes panel (**Discard all changes**). It asks
 first, and the files it removes are not recoverable from git.
 
 ## Keyboard
@@ -117,8 +125,8 @@ discard everything in it at once.
 
 ## Copying paths
 
-Right-click an uncommitted file for **Copy File Path** (absolute, with the
-platform's separators) and **Copy Relative File Path** (`src/index.ts`, no
+Right-click an uncommitted file for **Copy file path** (absolute, with the
+platform's separators) and **Copy relative file path** (`src/index.ts`, no
 leading `./`). Several selected files copy one path per line, in list order.
 Deleted files stay enabled — those actions only copy text. Folders still copy
 the folder path.

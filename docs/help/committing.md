@@ -50,12 +50,12 @@ Hints, never a gate — it will not stop you committing.
 Amend rewrites the last commit with whatever is staged. Geminio shows you the
 existing message first so you are editing, not retyping.
 
-**Amend Commit…** on a graph row does the same thing for HEAD: it loads the
+**Amend commit…** on a graph row does the same thing for HEAD: it loads the
 full message, switches the composer into amend mode, and focuses it. A HEAD
 that was already pushed can still be amended, but Geminio warns that updating
 the remote will take a force push.
 
-**Undo Commit…** is the sibling for an unpushed HEAD: mixed reset to the
+**Undo commit…** is the sibling for an unpushed HEAD: mixed reset to the
 parent, working-tree changes kept, message restored to the composer. The
 initial commit has a dedicated path that leaves an unborn branch instead of
 destroying the files.

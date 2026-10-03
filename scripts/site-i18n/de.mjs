@@ -3,15 +3,11 @@ export const de = {
   'nav.handbook': 'Handbuch',
   'nav.roadmap': 'Roadmap',
   'nav.github': 'GitHub',
-  'nav.sponsor': 'Sponsern',
   'nav.download': 'Herunterladen',
 
-  'foot.license':
-    'MIT-lizenziert · Gemacht von <a href="https://myappdesk.dev">MyAppDesk</a> mit 💜',
   'foot.source': 'Quellcode',
   'foot.roadmap': 'Roadmap',
   'foot.reportIssue': 'Ein Problem melden',
-  'foot.sponsor': 'Sponsern',
 
   'meta.title': 'Geminio — das ganze git, mit einer Oberfläche, die es dir zeigt',
   'meta.description':
@@ -62,10 +58,6 @@ export const de = {
   'handbook.title': 'Ein Handbuch mit {pages} Seiten, eingebaut in die App',
   'handbook.sub': 'Jede Funktion erklärt — offline in der App und genau hier.',
 
-  'sponsor.title': 'Geminio sponsern',
-  'sponsor.body':
-    'Kostenlos, MIT, kein Backend, keine Telemetrie, nichts, was dir noch verkauft werden soll — es gibt also nichts zu kaufen. Sponsoring bezahlt das Apple-Developer-Zertifikat, das die signierten macOS-Builds brauchen, das Handbuch und die Übersetzungen. Fehlerberichte sind genauso viel wert.',
-  'sponsor.cta': 'Auf GitHub sponsern',
 
   'doc.titleSuffix': 'Geminio-Handbuch',
   'doc.filter': 'Seiten filtern…',

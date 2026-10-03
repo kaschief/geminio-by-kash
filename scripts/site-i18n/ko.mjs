@@ -3,14 +3,11 @@ export const ko = {
   'nav.handbook': '안내서',
   'nav.roadmap': '로드맵',
   'nav.github': 'GitHub',
-  'nav.sponsor': '후원',
   'nav.download': '다운로드',
 
-  'foot.license': 'MIT 라이선스 · <a href="https://myappdesk.dev">MyAppDesk</a>가 💜 를 담아 만들었어요',
   'foot.source': '소스',
   'foot.roadmap': '로드맵',
   'foot.reportIssue': '문제 신고',
-  'foot.sponsor': '후원',
 
   'meta.title': 'Geminio — git 전체를 보여 주는 UI',
   'meta.description':
@@ -57,10 +54,6 @@ export const ko = {
   'handbook.title': '앱에 들어 있는 {pages}쪽짜리 안내서',
   'handbook.sub': '모든 기능을 설명해요 — 앱에서 오프라인으로도, 그리고 바로 여기서도.',
 
-  'sponsor.title': 'Geminio 후원하기',
-  'sponsor.body':
-    '무료, MIT, 백엔드 없음, 텔레메트리 없음, 더 팔 것도 없음 — 그러니 살 것이 없어요. 후원은 서명된 macOS 빌드에 필요한 Apple Developer 인증서와 안내서, 그리고 번역에 쓰여요. 버그 신고도 그만큼 값져요.',
-  'sponsor.cta': 'GitHub에서 후원하기',
 
   'doc.titleSuffix': 'Geminio 안내서',
   'doc.filter': '페이지 필터…',

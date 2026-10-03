@@ -21,7 +21,7 @@ listed next to their commands in the [menu bar](menu-bar.md).
 | <kbd>⌘⇧F</kbd> | [Code search](search.md) across the working tree |
 | <kbd>⌘⇧V</kbd> | [Vault](vault.md) |
 | <kbd>⌘O</kbd> / <kbd>Ctrl+O</kbd> | Open a repository |
-| <kbd>⌘,</kbd> / <kbd>Ctrl+,</kbd> | Open Settings |
+| <kbd>⌘,</kbd> / <kbd>Ctrl+,</kbd> | Open settings |
 | <kbd>⌘F</kbd> | Find inside the file or diff you are reading — anywhere else, jump to the commit search. <kbd>Esc</kbd> clears it, a second <kbd>Esc</kbd> leaves it |
 | <kbd>⌘T</kbd> / <kbd>Ctrl+T</kbd> | Open the new-tab repository or group picker |
 | <kbd>⌘W</kbd> / <kbd>Ctrl+W</kbd> | Close the active tab — or the window, once no tab is left |

@@ -14,7 +14,7 @@ src/main/git.ts            gitService.<method>  — spawns git, parses output
       ↓ single 'git' IPC channel (method name + args)
 src/preload/index.ts       window.api.git(method, ...args)
 src/renderer/src/infrastructure/api.ts   gitApi.<method>  — typed adapter
-src/renderer/src/stores/repo.ts          repoActions.<action>  — toast, undo, refresh
+src/renderer/src/stores/repo.ts          repoActions.<action>  — busy label, undo, refresh
 src/renderer/src/components/*            calls the action
 ```
 
@@ -59,13 +59,13 @@ A **new channel** (streaming progress, a push from main → renderer) does need 
 
 Never call `gitApi` for a mutation straight from a component. Go through
 `useRepoStore.getState().run(...)`, which serializes the call per repo, shows a
-busy label, toasts the result, records undo, and refreshes:
+busy label, records undo, refreshes, and toasts errors:
 
 ```ts
 myOp: (path: string, ref: string) =>
   useRepoStore.getState().run(
     path,
-    interp(t('act.myOp'), { ref }),        // success toast + busy label (translated)
+    interp(t('act.myOp'), { ref }),        // busy label, and success toast if announced
     () => gitApi.myOp(path, ref),
     {                                       // optional undo entry
       label: interp(t('undoLabel.myOp'), { ref }),
@@ -74,7 +74,8 @@ myOp: (path: string, ref: string) =>
     },
     null,                                   // op: 'push' | 'pull' | 'fetch' | null
     undefined,                              // onError: return true to swallow the default toast
-    ['log', 'status']                       // refresh only these slices
+    ['log', 'status'],                      // refresh only these slices
+    false                                   // announce: success toast? default = op !== null
   ),
 ```
 
@@ -82,6 +83,9 @@ Notes that matter:
 
 - The label is user-facing → it comes from the dictionary (see the
   `translations` skill), never a raw string.
+- `announce` (last argument) controls the success toast. It defaults to on
+  only for remote work. Leave it off when the result is visible on screen;
+  errors toast regardless.
 - The **refresh slice list** is a performance contract: omitting a slice keeps
   its previous array *identity*, so the graph memo does not invalidate. Pass
   the narrowest set that reflects your change; omit the argument for a full
@@ -101,5 +105,6 @@ npm run typecheck && npm run lint:i18n && npm test
 ```
 
 Add a test in `test/` that runs the real git command against a playground
-fixture — see the `playground-fixture` skill. Never verify by launching the
-app; the user does that.
+fixture — see the `playground-fixture` skill. Launching the app is not
+verification: the gate is. (CLAUDE.md asks you to start `npm run dev` afterwards
+so the owner can look.)

@@ -3,14 +3,11 @@ export const ptBR = {
   'nav.handbook': 'Manual',
   'nav.roadmap': 'Roadmap',
   'nav.github': 'GitHub',
-  'nav.sponsor': 'Patrocinar',
   'nav.download': 'Baixar',
 
-  'foot.license': 'Licenciado sob MIT · Feito pela <a href="https://myappdesk.dev">MyAppDesk</a> com 💜',
   'foot.source': 'Código-fonte',
   'foot.roadmap': 'Roadmap',
   'foot.reportIssue': 'Relatar um problema',
-  'foot.sponsor': 'Patrocinar',
 
   'meta.title': 'Geminio — o git inteiro, com uma interface que mostra tudo isso',
   'meta.description':
@@ -58,10 +55,6 @@ export const ptBR = {
   'handbook.title': 'Um manual de {pages} páginas, dentro do app',
   'handbook.sub': 'Cada recurso explicado — offline no app, e aqui mesmo.',
 
-  'sponsor.title': 'Patrocine o Geminio',
-  'sponsor.body':
-    'Grátis, MIT, sem backend, sem telemetria, nada para te empurrar — então não há nada para comprar. O patrocínio paga o certificado da Apple Developer de que os builds assinados de macOS precisam, o manual e as traduções. Um relato de bug vale exatamente o mesmo.',
-  'sponsor.cta': 'Patrocinar no GitHub',
 
   'doc.titleSuffix': 'Manual do Geminio',
   'doc.filter': 'Filtrar páginas…',

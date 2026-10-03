@@ -25,10 +25,11 @@ const SHOTS_DIR = join(ROOT, 'docs/screenshots')
 const OUT = join(ROOT, 'dist-site')
 
 const REPO = 'kaschief/geminio-by-kash'
+// The fork's default branch. Source and edit links point here, not at `main`.
+const BRANCH = 'geminio-home'
 const SITE_URL = 'https://kaschief.github.io/geminio-by-kash'
 const RELEASES = `https://github.com/${REPO}/releases`
 const LATEST = `${RELEASES}/latest`
-const SPONSOR = 'https://github.com/sponsors/cgutierr-zgz'
 const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'))
 
 marked.setOptions({ gfm: true, breaks: false })
@@ -36,7 +37,8 @@ marked.setOptions({ gfm: true, breaks: false })
 // The README and the roadmap stay English on purpose: they duplicate what the
 // handbook already says in sixteen languages, and translated copies of them
 // would rot silently — nothing in the gate reads them.
-const ROADMAP_URL = `https://github.com/${REPO}/blob/main/ROADMAP.md`
+const ROADMAP_URL = `https://github.com/${REPO}/blob/${BRANCH}/ROADMAP.md`
+const CHANGES_URL = `https://github.com/${REPO}/blob/${BRANCH}/docs/geminio-changes.md`
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 
@@ -199,7 +201,6 @@ const nav = (depth, locale = 'en') => {
     <a href="${handbook}">${t('nav.handbook')}</a>
     <a href="${ROADMAP_URL}">${t('nav.roadmap')}</a>
     <a href="https://github.com/${REPO}">${t('nav.github')}</a>
-    <a href="${SPONSOR}">${t('nav.sponsor')}</a>
     <a class="btn small" href="${LATEST}">${t('nav.download')}</a>
   </nav>
 </header>`
@@ -209,7 +210,7 @@ const footer = (locale = 'en') => {
   const t = strings(locale)
   return `<footer class="foot">
   <span>${t('foot.license')}</span>
-  <span><a href="https://github.com/${REPO}">${t('foot.source')}</a> · <a href="${ROADMAP_URL}">${t('foot.roadmap')}</a> · <a href="https://github.com/${REPO}/issues/new">${t('foot.reportIssue')}</a> · <a href="${SPONSOR}">${t('foot.sponsor')}</a></span>
+  <span><a href="https://github.com/${REPO}">${t('foot.source')}</a> · <a href="${ROADMAP_URL}">${t('foot.roadmap')}</a> · <a href="https://github.com/${REPO}/issues/new">${t('foot.reportIssue')}</a></span>
 </footer>
 </body>
 </html>`
@@ -217,8 +218,9 @@ const footer = (locale = 'en') => {
 
 // ── Landing ─────────────────────────────────────────────────────────────────
 
-// The landing page's headline cards, in display order. Each id is a handbook
-// page; the card's title and body live in `site-i18n/` as `feature.<id>.*`.
+// The landing page's headline cards, in display order. The card's title and
+// body live in `site-i18n/` as `feature.<id>.*`; `page` is the handbook page it
+// links to (default: the id) and `shot` the screenshot (default: CARD_SHOT).
 const FEATURES = [
   { icon: '🛡️', id: 'recovery' },
   { icon: '✏️', id: 'commit-edit' },
@@ -226,8 +228,18 @@ const FEATURES = [
   { icon: '💬', id: 'repo-chat' },
   { icon: '🎛️', id: 'mission-control' },
   { icon: '⌨️', id: 'cli' },
-  { icon: '🌍', id: 'languages' },
   { icon: '🔐', id: 'security' }
+]
+
+// What the fork adds on top of Gitcito — the biggest entries of
+// docs/geminio-changes.md. Keep both in step when a headline feature lands.
+const FORK_FEATURES = [
+  { icon: '🐙', id: 'github-account', page: 'hosting' },
+  { icon: '🗂️', id: 'tab-sort', page: 'workspaces', shot: 'clip-tab-sort' },
+  { icon: '↩️', id: 'outside-undo', page: 'recovery' },
+  { icon: '✂️', id: 'hunk-actions', page: 'staging', shot: 'line-staging' },
+  { icon: '📄', id: 'file-pull', page: 'diffs', shot: 'elastic-file-navigation' },
+  { icon: '🔎', id: 'settings-search', page: 'search', shot: 'settings-search' }
 ]
 
 // The OS names are proper nouns and stay; only the note beside each is copy.
@@ -242,8 +254,8 @@ const DOWNLOADS = [
 const CARD_SHOT = { security: 'secret-masking', recovery: 'snapshots', ai: 'settings-ai', cli: 'cli-edit' }
 
 /** The card's screenshot, or null when there is none to show. */
-function cardShot(id) {
-  const name = `${CARD_SHOT[id] ?? id}.webp`
+function cardShot(f) {
+  const name = `${f.shot ?? CARD_SHOT[f.id] ?? f.page ?? f.id}.webp`
   return existsSync(join(SHOTS_DIR, name)) ? name : null
 }
 
@@ -256,18 +268,24 @@ function landing(locale = 'en') {
   const helpDir = locale === 'en' ? `${base}help/` : `${base}help/${locale}/`
   const pageList = locale === 'en' ? pages : (localeSets.get(locale) ?? pages)
 
-  const cards = FEATURES.map((f) => {
-    const shot = cardShot(f.id)
-    const title = t(`feature.${f.id}.title`)
-    const figure = shot
-      ? `\n      <a class="card-shot" href="${helpDir}${f.id}.html"><img src="${base}assets/${shot}" alt="${esc(title)}" loading="lazy" /></a>`
-      : ''
-    return `    <article class="card">${figure}
+  const cardsOf = (list) =>
+    list
+      .map((f) => {
+        const shot = cardShot(f)
+        const href = `${helpDir}${f.page ?? f.id}.html`
+        const title = t(`feature.${f.id}.title`)
+        const figure = shot
+          ? `\n      <a class="card-shot" href="${href}"><img src="${base}assets/${shot}" alt="${esc(title)}" loading="lazy" /></a>`
+          : ''
+        return `    <article class="card">${figure}
       <span class="card-icon" aria-hidden="true">${f.icon}</span>
-      <h3><a href="${helpDir}${f.id}.html">${title}</a></h3>
+      <h3><a href="${href}">${title}</a></h3>
       <p>${t(`feature.${f.id}.body`)}</p>
     </article>`
-  }).join('\n')
+      })
+      .join('\n')
+  const cards = cardsOf(FEATURES)
+  const forkCards = cardsOf(FORK_FEATURES)
 
   const downloads = DOWNLOADS.map(
     (d) => `      <a class="dl" href="${LATEST}" data-os="${d.match}">
@@ -341,6 +359,14 @@ ${cards}
   </section>
 
   <section class="section">
+    <h2>${t('fork.title')}</h2>
+    <p class="sub">${t('fork.sub', { changes: CHANGES_URL })}</p>
+    <div class="grid">
+${forkCards}
+    </div>
+  </section>
+
+  <section class="section alt">
     <h2>${t('download.title')}</h2>
     <p class="sub">${t('download.sub', { version: pkg.version })}</p>
     <div class="downloads">
@@ -349,18 +375,12 @@ ${downloads}
     <p class="sub small">${t('download.cli', { cli: `${helpDir}cli.html` })}</p>
   </section>
 
-  <section class="section alt">
+  <section class="section">
     <h2>${t('handbook.title', { pages: pages.length })}</h2>
     <p class="sub">${t('handbook.sub')}</p>
     <div class="handbook">
 ${handbook}
     </div>
-  </section>
-
-  <section class="section">
-    <h2>${t('sponsor.title')}</h2>
-    <p class="sub">${t('sponsor.body')}</p>
-    <p><a class="btn primary" href="${SPONSOR}">${t('sponsor.cta')}</a></p>
   </section>
 </main>
 ${footer(locale)}
@@ -433,7 +453,7 @@ ${sidebar}
     <article class="prose">
 ${marked.parse(siteLinks(page.body, depth))}
     </article>
-    <p class="edit"><a href="https://github.com/${REPO}/blob/main/docs/help/${source}">${edit}</a></p>
+    <p class="edit"><a href="https://github.com/${REPO}/blob/${BRANCH}/docs/help/${source}">${edit}</a></p>
   </main>
 </div>
 ${footer(locale)}

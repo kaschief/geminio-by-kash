@@ -11,7 +11,7 @@ keywords: diff split side-by-side word level whitespace image diff preview markd
 ## Reading a diff
 
 In the file viewer the toggles sit in its header, as a row of icons next to
-**File View · Diff View · Blame · History**. Hover one for its name. In
+**File view · Diff view · Blame · History**. Hover one for its name. In
 comparison dialogs, which have no header of their own, they float over the
 top of the diff with their labels. A toggle that does not apply to the current
 view stays in place but greyed out, so the row never shifts under the pointer.
@@ -63,11 +63,11 @@ gesture opens the previous file at its bottom.
 The pause separates your deliberate pull from trackpad momentum. One gesture
 moves one file, following the visible list's sort order and filters. It stops
 at the first and last file and keeps staged and unstaged files separate.
-It works in unified and split diffs, and in read-only File View. Horizontal
+It works in unified and split diffs, and in read-only File view. Horizontal
 scrolling, zooming, and editing a file do not switch files. Press **Esc** to
 cancel a pull. Scrolling inside the newly opened file works immediately.
 
-In **Settings → Files & Diffs**, turn **Pull between files** on or off and
+In **Settings → Files & diffs**, turn **Pull between files** on or off and
 choose **Fast**, **Quick**, **Balanced**, or **Deliberate** under **Pull feel**. Balanced
 is the default. Fast is a little lighter and quicker than Quick. Quick needs a shorter pull and switches faster; Deliberate
 keeps the longer stretch and slower transition. These settings apply across
@@ -85,7 +85,7 @@ shown on each side. The text after them is the code git found enclosing the
 change, usually the function or block it belongs to. Git guesses it from the
 indentation and keywords, so in some languages it is the nearest line that
 merely looks like a heading. To show only the line numbers, turn off **Code
-context in hunk headers** in Settings → Files & Diffs.
+context in hunk headers** in Settings → Files & diffs.
 
 Above every diff sits the [semantic summary](semantic-diff.md) — what changed,
 symbol by symbol, rather than line by line.
@@ -111,7 +111,7 @@ lines, with next/previous to step through every change in the file.
 The **minimap**, off by default, adds a scaled overview of the whole file at
 the right edge — click or drag it to jump around, the way a scrollbar would if
 it could also show you the shape of the file. Both are per-machine toggles
-under **Settings → Files & Diffs → File viewer**.
+under **Settings → Files & diffs → File viewer**.
 
 Neither reads history: switch to Diff, Blame or an older commit and the gutter
 disappears — those views already show every change directly.

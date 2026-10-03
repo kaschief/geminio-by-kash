@@ -17,11 +17,14 @@ interface consistency. Ideas belong in
 
 ## Near term
 
-### Windows code signing
-The release workflow already builds and publishes Windows and Linux — unsigned.
-An unsigned Windows build hits the SmartScreen wall on first run. The CI change
-is about fifteen lines; the blocker is a certificate, and the only option that
-buys immediate reputation for a project this size is Azure Trusted Signing.
+### Windows and Linux builds
+The packaging configuration and the release workflow still build Windows and
+Linux, but nothing in Geminio's macOS-first development exercises them, and
+the fork's own changes (app icons, title bar, install script) were only tested
+on a Mac. Before offering them: run each build against the playground, then
+sign the Windows one — unsigned, it hits the SmartScreen wall on first run, and
+the only option that buys immediate reputation for a project this size is Azure
+Trusted Signing.
 
 ### Issue trackers beyond GitHub
 Branch-from-issue and smart commits against Jira or Linear. Both are what teams
@@ -74,6 +77,9 @@ a device but does not behave like one is not worth shipping.
   any speed-up.
 - **A plugin system**, until the core is finished. An extension API freezes
   internals that still need to move.
+- **Translating the fork's additions.** English is the maintained language.
+  The inherited translations stay so upstream's edits to them still merge, and
+  anything Geminio adds falls back to English in them.
 
 ---
 

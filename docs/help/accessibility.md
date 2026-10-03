@@ -51,7 +51,7 @@ This page says what that means concretely — and where the edges are.
   equivalent.
 - The audit behind this page was done with VoiceOver on macOS. NVDA/JAWS on
   Windows should behave equivalently but have not been road-tested — reports
-  are welcome as [issues](https://github.com/MyAppDesk/gitcito/issues).
+  are welcome as [issues](https://github.com/kaschief/geminio-by-kash/issues).
 
 ## Related settings
 

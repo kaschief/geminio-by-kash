@@ -3,15 +3,11 @@ export const pl = {
   'nav.handbook': 'Podręcznik',
   'nav.roadmap': 'Plan rozwoju',
   'nav.github': 'GitHub',
-  'nav.sponsor': 'Wesprzyj',
   'nav.download': 'Pobierz',
 
-  'foot.license':
-    'Na licencji MIT · Zrobione przez <a href="https://myappdesk.dev">MyAppDesk</a> z 💜',
   'foot.source': 'Kod źródłowy',
   'foot.roadmap': 'Plan rozwoju',
   'foot.reportIssue': 'Zgłoś problem',
-  'foot.sponsor': 'Wesprzyj',
 
   'meta.title': 'Geminio — cały git, z interfejsem, który ci go pokazuje',
   'meta.description':
@@ -59,10 +55,6 @@ export const pl = {
   'handbook.title': 'Podręcznik na {pages} stron, wbudowany w aplikację',
   'handbook.sub': 'Każda funkcja wyjaśniona — offline w aplikacji i tutaj.',
 
-  'sponsor.title': 'Wesprzyj Geminio',
-  'sponsor.body':
-    'Za darmo, na licencji MIT, bez backendu, bez telemetrii, bez niczego do dosprzedania — więc nie ma tu czego kupować. Wsparcie opłaca certyfikat Apple Developer, którego potrzebują podpisane kompilacje dla macOS, podręcznik i tłumaczenia. Zgłoszenia błędów są warte dokładnie tyle samo.',
-  'sponsor.cta': 'Wesprzyj w serwisie GitHub',
 
   'doc.titleSuffix': 'Podręcznik Geminio',
   'doc.filter': 'Filtruj strony…',

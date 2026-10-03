@@ -3,14 +3,11 @@ export const es = {
   'nav.handbook': 'Manual',
   'nav.roadmap': 'Hoja de ruta',
   'nav.github': 'GitHub',
-  'nav.sponsor': 'Patrocinar',
   'nav.download': 'Descargar',
 
-  'foot.license': 'Licencia MIT · Hecho por <a href="https://myappdesk.dev">MyAppDesk</a> con 💜',
   'foot.source': 'Código fuente',
   'foot.roadmap': 'Hoja de ruta',
   'foot.reportIssue': 'Informar de un problema',
-  'foot.sponsor': 'Patrocinar',
 
   'meta.title': 'Geminio — todo git, con una interfaz que te lo muestra',
   'meta.description':
@@ -58,10 +55,6 @@ export const es = {
   'handbook.title': 'Un manual de {pages} páginas, dentro de la app',
   'handbook.sub': 'Cada función explicada — sin conexión en la app, y aquí mismo.',
 
-  'sponsor.title': 'Patrocina Geminio',
-  'sponsor.body':
-    'Gratis, MIT, sin backend, sin telemetría, nada que colocarte — así que no hay nada que comprar. El patrocinio paga el certificado de Apple Developer que necesitan las builds firmadas de macOS, el manual y las traducciones. Un informe de error vale exactamente lo mismo.',
-  'sponsor.cta': 'Patrocinar en GitHub',
 
   'doc.titleSuffix': 'Manual de Geminio',
   'doc.filter': 'Filtrar páginas…',

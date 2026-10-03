@@ -3,14 +3,11 @@ export const uk = {
   'nav.handbook': 'Довідник',
   'nav.roadmap': 'Дорожня карта',
   'nav.github': 'GitHub',
-  'nav.sponsor': 'Підтримати',
   'nav.download': 'Завантажити',
 
-  'foot.license': 'Ліцензія MIT · Створено <a href="https://myappdesk.dev">MyAppDesk</a> з 💜',
   'foot.source': 'Вихідний код',
   'foot.roadmap': 'Дорожня карта',
   'foot.reportIssue': 'Повідомити про проблему',
-  'foot.sponsor': 'Підтримати',
 
   'meta.title': 'Geminio — увесь git, з інтерфейсом, який його показує',
   'meta.description':
@@ -58,10 +55,6 @@ export const uk = {
   'handbook.title': 'Довідник на {pages} сторінок, вбудований у застосунок',
   'handbook.sub': 'Кожна можливість із поясненням — офлайн у застосунку і просто тут.',
 
-  'sponsor.title': 'Підтримати Geminio',
-  'sponsor.body':
-    'Безкоштовний, MIT, без бекенду, без телеметрії, без нічого на продаж — тож купувати нема чого. Спонсорство оплачує сертифікат Apple Developer, потрібний підписаним збіркам для macOS, довідник і переклади. Звіти про помилки варті рівно стільки ж.',
-  'sponsor.cta': 'Підтримати на GitHub',
 
   'doc.titleSuffix': 'Довідник Geminio',
   'doc.filter': 'Фільтрувати сторінки…',

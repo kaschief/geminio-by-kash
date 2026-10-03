@@ -3,15 +3,11 @@ export const ru = {
   'nav.handbook': 'Справочник',
   'nav.roadmap': 'Дорожная карта',
   'nav.github': 'GitHub',
-  'nav.sponsor': 'Поддержать',
   'nav.download': 'Скачать',
 
-  'foot.license':
-    'Лицензия MIT · Сделано командой <a href="https://myappdesk.dev">MyAppDesk</a> с 💜',
   'foot.source': 'Исходники',
   'foot.roadmap': 'Дорожная карта',
   'foot.reportIssue': 'Сообщить о проблеме',
-  'foot.sponsor': 'Поддержать',
 
   'meta.title': 'Geminio — весь git, с интерфейсом, который вам его показывает',
   'meta.description':
@@ -59,10 +55,6 @@ export const ru = {
   'handbook.title': 'Справочник на {pages} страниц, встроенный в приложение',
   'handbook.sub': 'Объяснение каждой возможности — офлайн в приложении и прямо здесь.',
 
-  'sponsor.title': 'Поддержать Geminio',
-  'sponsor.body':
-    'Бесплатно, MIT, без бэкенда, без телеметрии, нечего допродавать — а значит, и покупать тут нечего. Спонсорство оплачивает сертификат Apple Developer, нужный подписанным сборкам для macOS, справочник и переводы. Сообщения об ошибках стоят ровно столько же.',
-  'sponsor.cta': 'Поддержать на GitHub',
 
   'doc.titleSuffix': 'Справочник Geminio',
   'doc.filter': 'Фильтр страниц…',

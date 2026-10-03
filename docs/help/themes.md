@@ -64,8 +64,8 @@ theme.
 ## Active repository
 
 **Settings → Appearance → Active repository** adds a thin accent outline around
-the selected repository tab. It follows the theme by default. Pick a **Custom Color**
-for a fixed outline color, or choose **Theme Accent** to follow the theme again.
+the selected repository tab. It follows the theme by default. Pick a **Custom color**
+for a fixed outline color, or choose **Theme accent** to follow the theme again.
 Choose **Subtle** to return to the understated border.
 This preference applies across repositories, including repositories inside groups.
 
@@ -75,8 +75,8 @@ This preference applies across repositories, including repositories inside group
 
 ## App icon
 
-On macOS, **Settings → Appearance → App Icon** offers the original Classic
-mascot, your connected **GitHub Photo**, and dimensional Monogram, Branch and Orbit styles. Each new style has six colors:
+On macOS, **Settings → Appearance → App icon** offers the original Classic
+mascot, your connected **GitHub photo**, and dimensional Monogram, Branch and Orbit styles. Each new style has six colors:
 Violet, Ocean, Mint, Sunset, Rose and Graphite. The selection changes the Dock
 icon immediately. In the installed app, it also updates the Finder icon and
 stays selected in the Dock after quitting. The GitHub photo is

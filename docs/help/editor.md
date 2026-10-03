@@ -43,8 +43,8 @@ an empty file.
 ![Open the current file in the configured editor](../screenshots/editor-shortcut.webp)
 
 With an editor configured, file context menus use **Open in your editor** as the
-primary action; **Open With…** remains available for another app. Without an
-editor configured, **Open with Default App** follows the operating system's
+primary action; **Open with…** remains available for another app. Without an
+editor configured, **Open with default app** follows the operating system's
 file association.
 
 VS Code, Cursor and Windsurf receive the repository folder alongside the file.
@@ -140,7 +140,7 @@ system picker and remembers one app for opening *anything* — an image, a PDF, 
 folder in Finder. The editor is the more specific of the two, so where both are
 set the editor wins on the file tree's row-end icon; both stay listed in the
 right-click menu when they are different apps. If both point to the same editor,
-only **Open in <Editor>** appears; **Open With…** still lets you choose another app.
+only **Open in <Editor>** appears; **Open with…** still lets you choose another app.
 Custom commands remain separate because they may do more than open a file.
 
 Geminio never launches your editor by itself, and closing Geminio never closes

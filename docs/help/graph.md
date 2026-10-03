@@ -26,7 +26,7 @@ with a hundred.
 - Commits that arrived in your **last fetch or pull** are flagged as new. Ones
   that have not joined the checked-out branch yet stay slightly translucent
   until a pull brings them in.
-- Right-click a commit for **Amend**, **Undo**, **Reset to Commit…** and
+- Right-click a commit for **Amend**, **Undo**, **Reset to commit…** and
   **View on GitHub**, plus checkout, cherry-pick, revert, branch, tag and
   copy. Unsafe actions stay visible and disable.
 - **On GitHub.** In the details panel the short hash under the author is a
@@ -60,8 +60,9 @@ with a hundred.
 
 - **Columns**: show, hide, resize and reorder branch, message, author, date,
   SHA, signature and deployment columns. Right-click any column header to
-  open the same column menu as the icon at the right; click a check mark to
-  show or hide a column. Order, widths and visibility apply across all your
+  open the same column menu as the icon at the right. Click a column to show
+  or hide it; a shown column's icon is lit, and the menu stays open so you can
+  change several at once. Order, widths and visibility apply across all your
   repositories. **Double-click a column edge** to fit
   all columns to the widest content in the loaded history, including rows
   outside the viewport. Each fitted column uses at most 35% of the graph,
@@ -113,9 +114,16 @@ drop a stash whose parent they drop, as noted above.
 
 Selecting a commit shows its changed files (tree or flat), author, SHA,
 co-authors, and its signature. The header above the file list splits the
-count by kind, coloured like the glyphs on the rows. Hover it for the plain
-total. `#123` references and `@mentions` are autolinked
-to your host.
+count by kind, coloured like the glyphs on the rows. `#123` references and
+`@mentions` are autolinked to your host.
+
+Those counts are also the list's filter. Click one (say **+ 3**) to show only
+added files; click it again, or **Show all**, to see everything. Hold
+<kbd>⌘</kbd>/<kbd>Ctrl</kbd> while clicking to combine kinds, such as added
+and deleted. The other counts dim while a filter is on. The filter stays as
+you move between commits, and steps aside on a commit that has none of that
+kind rather than showing an empty list. Stash details and the working
+changes panel work the same way.
 
 The file list multi-selects with the usual gestures
 (<kbd>⌘</kbd>/<kbd>Ctrl</kbd>-click, <kbd>⇧</kbd>-click,

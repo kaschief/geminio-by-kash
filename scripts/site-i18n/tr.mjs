@@ -3,15 +3,11 @@ export const tr = {
   'nav.handbook': 'El kitabı',
   'nav.roadmap': 'Yol haritası',
   'nav.github': 'GitHub',
-  'nav.sponsor': 'Destek ol',
   'nav.download': 'İndir',
 
-  'foot.license':
-    'MIT lisanslı · <a href="https://myappdesk.dev">MyAppDesk</a> tarafından 💜 ile yapıldı',
   'foot.source': 'Kaynak kod',
   'foot.roadmap': 'Yol haritası',
   'foot.reportIssue': 'Sorun bildir',
-  'foot.sponsor': 'Destek ol',
 
   'meta.title': 'Geminio — git’in tamamı, onu size gösteren bir arayüzle',
   'meta.description':
@@ -58,10 +54,6 @@ export const tr = {
   'handbook.title': 'Uygulamaya gömülü, {pages} sayfalık bir el kitabı',
   'handbook.sub': 'Her özellik açıklanmış — uygulamada çevrimdışı ve tam burada.',
 
-  'sponsor.title': 'Geminio’ya destek olun',
-  'sponsor.body':
-    'Ücretsiz, MIT, arka uç yok, telemetri yok, üste satılacak bir şey yok — yani satın alınacak bir şey de yok. Sponsorluk, imzalı macOS yapılarının ihtiyaç duyduğu Apple Developer sertifikasını, el kitabını ve çevirileri karşılıyor. Hata bildirimleri de tam olarak o kadar değerli.',
-  'sponsor.cta': 'GitHub üzerinden destek olun',
 
   'doc.titleSuffix': 'Geminio el kitabı',
   'doc.filter': 'Sayfaları süz…',

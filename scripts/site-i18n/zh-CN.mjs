@@ -3,14 +3,11 @@ export const zhCN = {
   'nav.handbook': '手册',
   'nav.roadmap': '路线图',
   'nav.github': 'GitHub',
-  'nav.sponsor': '赞助',
   'nav.download': '下载',
 
-  'foot.license': 'MIT 许可 · 由 <a href="https://myappdesk.dev">MyAppDesk</a> 用 💜 打造',
   'foot.source': '源码',
   'foot.roadmap': '路线图',
   'foot.reportIssue': '报告问题',
-  'foot.sponsor': '赞助',
 
   'meta.title': 'Geminio——git 的全部，配上一个让你看得见的界面',
   'meta.description':
@@ -57,10 +54,6 @@ export const zhCN = {
   'handbook.title': '一本 {pages} 页的手册，内置在应用里',
   'handbook.sub': '每个功能都讲清楚——在应用里离线可读，这里也能读。',
 
-  'sponsor.title': '赞助 Geminio',
-  'sponsor.body':
-    '免费、MIT、没有后端、没有遥测、没有任何东西要向你追加销售——所以也没有什么可买的。赞助用来支付签名版 macOS 构建所需的 Apple Developer 证书、手册和翻译。报告缺陷的价值一样大。',
-  'sponsor.cta': '在 GitHub 上赞助',
 
   'doc.titleSuffix': 'Geminio 手册',
   'doc.filter': '筛选页面…',

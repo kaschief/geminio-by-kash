@@ -21,15 +21,20 @@ never touches the filesystem directly, never imports from `src/main`.
 ```bash
 npm run typecheck     # both tsconfigs — node (main/preload) and web (renderer)
 npm run lint:i18n     # no hardcoded user-facing strings
-npm test              # 500+ tests, real git against real fixture repos
+npm test              # real git against real fixture repos
 npm run build         # electron-vite build
 ```
 
 `/verify` runs all four and reports what failed.
 
-**Do not launch the app.** No `npm run dev`, no simulator, no "let me open it
-to check". The user runs the app. Compile-only checks — build, typecheck,
-tests — are yours.
+**Run the dev app after every change.** Once the gate is green, start
+`npm run dev` so the user can see the change. Restart it if it is already
+running. Build, typecheck and tests are still how you verify; the dev app is for
+the user to look at.
+
+**Never touch the installed app.** `/Applications/Geminio.app` is the user's
+daily app. Do not quit it, and do not run `npm run install:mac`, until the user
+has approved the change and asked for an install.
 
 **Report honestly.** If tests fail, say so and quote the output. If you skipped
 part of the scope, say which part and why. A green summary over a red tree is
@@ -79,13 +84,16 @@ skill.
 ### State and the `run()` contract
 
 Mutations go through `useRepoStore.getState().run(path, label, fn, undo?, op?,
-onError?, refetch?)`. It queues the call per repo, shows a busy label, toasts
-the result, records an undo entry, and refreshes. Never call `gitApi` for a
-mutation straight from a component.
+onError?, refetch?, announce?)`. It queues the call per repo, shows a busy
+label, records an undo entry, refreshes, and toasts errors. Never call `gitApi`
+for a mutation straight from a component.
 
-Two details carry real weight:
+Three details carry real weight:
 
 - `label` is user-facing → it comes from the dictionary, never a raw string.
+- `announce` decides the success toast. It defaults to on only for remote work
+  (`op` set). Leave it off when the result is visible where the user is
+  looking; a toast is for what they cannot see happen.
 - `refetch` is a performance contract: omitting a slice preserves its array
   *identity*, so the graph memo does not invalidate. Pass the narrowest set
   that reflects your change.
@@ -103,7 +111,7 @@ Geminio's UI copy lives in **one dictionary file per locale** under
 | File | Role |
 |------|------|
 | `en.ts` | The reference locale. Exports `en`, derives `Dict = typeof en` and `TranslationKey`. |
-| `<code>.ts` | One per additional locale. Typed `Dict`, so it must cover exactly the reference keys. |
+| `<code>.ts` | One per additional locale. Typed `Dict` (`Partial<typeof en>`): it may lack keys, never add them. |
 | `index.ts` | The public API: `t`, `useT`, `translate`, `interp`, `LANGUAGES`, `TranslationKey`. |
 
 A hardcoded string in the renderer is a bug, not a shortcut: a user on any
@@ -115,7 +123,9 @@ non-reference locale gets raw English in the middle of a translated UI.
 other locale files are kept (so upstream's changes to them still merge) but are
 typed `Partial`, and any key they lack falls back to English at runtime. Do not
 add translations for new strings, and do not copy English text into other
-locales.
+locales. The reverse does bind: **removing or renaming a key in `en.ts` means
+removing it from every locale file**, and a placeholder renamed in English must
+be renamed everywhere — `test/i18n.test.ts` rejects both.
 
 **2. Render through the hook.** `useT()` re-renders on a language switch. Call
 it at the top of the component, above any early return.
@@ -238,18 +248,63 @@ Match the file you are editing. The house style, briefly:
 - One feature per file; extract a helper into `lib/` rather than growing a
   component past readability.
 
+### UI house style
+
+The owner holds the app to "how Apple would do it". New UI follows the
+existing vocabulary rather than inventing its own:
+
+- **Sentence case** for every label — menus, buttons, titles, settings, command
+  names: "Copy file path", not "Copy File Path". Proper nouns and acronyms keep
+  their capitals (GitHub, Git, SHA, PR, LFS). The one exception is the native
+  macOS menu bar (`lib/appMenu.ts`), which is Title Case as Apple's convention
+  — it uses its own `menu.*` keys, never the app's sentence-case labels.
+- **No tick marks for state.** One choice among several: `checked` + `radio`
+  on a `MenuItem`, which draws the lit accent dot (`ChoiceDot` in
+  `components/StateMarks.tsx`, also used by in-page pickers). An on/off:
+  `checked` alone — the row's icon tile lights up. A selected card or swatch:
+  the accent ring (`.selected` on the card classes near the end of
+  `styles.css`). A submenu parent shows the current value or a dot for what is
+  inside (`lib/menuState.ts` derives it; set `detail` to override).
+- **Every menu row has an icon**, from `mi` in `components/menuIcons.tsx` — one
+  icon per meaning, reused, never a new one for an existing verb. Editors use
+  `editorGlyph()` from `components/editorGlyphs.tsx`, not app icons.
+- **A disabled row says why**, in its `title` ("Already checked out").
+- **Real plurals, and name the single item.** "Staged config.js", "Staged 3
+  files" — never "1 file(s)". Use `shortFileName` from `lib/pathDisplay.ts`.
+- **Selected controls answer hover.** A control whose "on" look is the soft
+  accent tint must deepen on hover: add its selector to the
+  `--accent-soft-hover` rule at the end of `styles.css`.
+- **No noise.** Success toasts only for what the user cannot see happen
+  (remote work, results elsewhere); errors always. No control that duplicates
+  another, and AI buttons only when AI is usable (`useAiReady`).
+- **Nothing moves under the pointer.** Toggles that do not apply are disabled,
+  not hidden; floating chrome (find bars, selection pills) overlays content
+  instead of pushing it.
+- **One tooltip.** `FastTooltip` adopts every `title`; keep tips short and
+  never repeat the visible label.
+- **Colour by intent.** Forward actions `.btn.intent-forward` (green),
+  backward or destructive `.btn.intent-backward` (red), plain for actions that
+  touch no files. In Settings, prefer option cards to a bare `<select>` for a
+  small set of choices.
+- **Narrow widths work.** Check down to an iPad in Sidecar (about 1366×1024,
+  less with panels open): rows with actions shrink, wrap or scroll sideways.
+
 ## 7. Commits and PRs
 
 [Conventional Commits](https://www.conventionalcommits.org/), enforced by
-commitlint on commit and by CI on the PR title:
+commitlint on commit (`@commitlint/config-conventional`: lower-case subject,
+body lines ≤ 100 characters) and by CI on the PR title:
 
 ```
-feat: Add range-diff comparison
-fix: Resolve crash on empty repo
-docs: Update README with mission control
+feat: add range-diff comparison
+fix: resolve crash on empty repo
+docs: update the handbook for mission control
 ```
 
-One concern per PR. Commit only when asked; if you are on `main`, branch first.
+One concern per commit. Commit only when asked, on the current branch
+(`geminio-home`, the default), in the one existing checkout — no extra
+worktrees or clones unless the owner asks. Push to `origin` only; `upstream`
+(MyAppDesk/gitcito) is fetch-only.
 
 ---
 
@@ -281,25 +336,34 @@ fails when a modal, page tab or command-palette entry has no page behind it.
    type or command id at a page id — or add it to `exempt` **with a reason**.
    "It is obvious" is not a reason; "generic confirmation dialog" is.
 
-3. **Add a line to `README.md`** if the feature is worth mentioning at all, and
-   link it to its page. The README is a tour, not a manual: one line per
-   feature, the depth lives in the handbook.
+3. **Add an entry to `docs/geminio-changes.md`** — the running list of what
+   the fork changes. Every user-facing change lands there, under its theme:
+   what changed, the problem it solves, its limits, a link to the page. When a
+   change makes an entry untrue, edit or remove that entry in the same change.
+   One entry per noticeable change, not per commit; no trivial churn.
+
+4. **Add a line to `README.md`** ("What Geminio adds") if the feature is worth
+   mentioning there, and link it to its page. The README is a tour, not a
+   manual: one line per feature, the depth lives in the handbook.
 
 ### The website
 
-The same Markdown is also <https://myappdesk.github.io/gitcito/>.
+The same Markdown is also <https://kaschief.github.io/geminio-by-kash/>.
 `scripts/build-site.mjs` renders a landing page plus one HTML page per handbook
 entry — no framework, no bundler, `marked` and nothing else. Keep it that way:
 a marketing page that needs a toolchain to fix a typo is a page nobody fixes.
 
-CI redeploys on every published release and on any docs push to `main`, so
-there is nothing to publish by hand. `npm run site:serve` previews it.
+`.github/workflows/pages.yml` redeploys on every published release and on any
+docs push to `geminio-home`, so there is nothing to publish by hand (once
+GitHub Pages is enabled for the repository). `npm run site:serve` previews it.
 
-**The trap:** the landing page's headline cards are a hand-written `FEATURES`
-array inside that script, with their copy living as `feature.<id>.*` keys in
-`scripts/site-i18n/` — the only copy on the site not derived from `docs/`, and
-so the only part that can silently go stale. A feature big enough for the front
-page has to be added in both places.
+**The trap:** the landing page's headline cards are hand-written arrays inside
+that script — `FEATURES` (inherited headline features) and `FORK_FEATURES`
+(what Geminio adds) — with their copy living as `feature.<id>.*` keys in
+`scripts/site-i18n/en.mjs`. They are the only copy on the site not derived from
+`docs/`, and so the only part that can silently go stale. A feature big enough
+for the front page has to be added in both places; site copy, like app copy, is
+added in English only.
 
 ### How to write a page
 
@@ -379,11 +443,13 @@ redaction logic in production code.
 - [ ] A **screenshot** (or a clip, for a gesture) captured via
       `npm run screenshots`, if the change added a modal, a panel, a settings
       section or a new visible state — and referenced from its handbook page
+- [ ] `docs/geminio-changes.md` updated for every user-facing change — new
+      entry added, or the entry it makes untrue edited or removed
 - [ ] `README.md` updated (one line, linked to the page) if the change adds or
-      alters a user-visible feature
-- [ ] `FEATURES` in `scripts/build-site.mjs` updated, if it belongs on the
-      website's front page
-- [ ] You did not launch the app
+      alters a headline user-visible feature
+- [ ] `FORK_FEATURES` / `FEATURES` in `scripts/build-site.mjs` updated, if it
+      belongs on the website's front page
+- [ ] You started the dev app (`npm run dev`) so the user can see the change — and left the installed app alone
 
 ## Project tooling
 
@@ -396,12 +462,14 @@ redaction logic in production code.
 | `.claude/commands/add-locale.md` | `/add-locale <code>` — scaffold a new locale |
 | `.claude/hooks/` | The i18n guard (per edit) and the verify gate (per turn) |
 | `docs/help/` | The in-app handbook — one Markdown file per page |
+| `docs/geminio-changes.md` | The running list of what the fork changes on top of Gitcito (§8) |
 | `scripts/docs-check.mjs` | The docs guard (`npm run lint:docs`) |
 | `scripts/docs-map.json` | Which page documents which modal / page tab / command |
 | `scripts/build-site.mjs` | The GitHub Pages site (`npm run site`) |
-| `examples/screenshots/` | Playwright screenshot + clip automation (`npm run screenshots`) |
+| `examples/screenshots/` | Playwright screenshot + clip automation (`npm run screenshots`), and `verify-*.cjs` real-app regression checks |
+| `scripts/settings-search-index.mjs` | Builds the Settings search index from component copy; runs before `dev` and `build` |
 | `examples/monster-repo.sh` | Builds a 140k-commit / 92k-file repo for perf work (`npm run playground:monster`). Not part of the playground — it lives in gitignored `examples/monster/` and nothing wipes it |
-| `scripts/install-local-mac.sh` | `npm run install:mac` — builds arm64 only and replaces `/Applications/Geminio.app`, keeping the user's custom app icon and leaving one registered copy. The only way to update the installed app; never copy a bundle by hand. Run only when the user asks |
+| `scripts/install-local-mac.sh` | `npm run install:mac` — builds arm64 only and replaces `/Applications/Geminio.app`, keeping the user's custom app icon and leaving one registered copy. The only way to update the installed app; never copy a bundle by hand. Run only after the user approves the change and asks for it |
 | `examples/repo-stats.sh` | Times the git commands a refresh spawns, against any repo (`npm run repo:stats [path]`) |
 | `test/perf.bench.test.ts` | Times the gitService reads a refresh performs — skipped unless `GITCITO_BENCH_REPO` points at a repo |
 | `ROADMAP.md` | What might come next, and what is deliberately out |

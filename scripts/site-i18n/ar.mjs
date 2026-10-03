@@ -3,14 +3,11 @@ export const ar = {
   'nav.handbook': 'الدليل',
   'nav.roadmap': 'خارطة الطريق',
   'nav.github': 'GitHub',
-  'nav.sponsor': 'الرعاية',
   'nav.download': 'التنزيل',
 
-  'foot.license': 'رخصة MIT · صُنع بـ 💜 على يد <a href="https://myappdesk.dev">MyAppDesk</a>',
   'foot.source': 'الشيفرة المصدرية',
   'foot.roadmap': 'خارطة الطريق',
   'foot.reportIssue': 'الإبلاغ عن مشكلة',
-  'foot.sponsor': 'الرعاية',
 
   'meta.title': 'Geminio — كل ما في git، مع واجهة تُظهره لك',
   'meta.description':
@@ -57,10 +54,6 @@ export const ar = {
   'handbook.title': 'دليل من {pages} صفحة، مدمج في التطبيق',
   'handbook.sub': 'كل ميزة مشروحة — دون اتصال داخل التطبيق، وهنا أيضًا.',
 
-  'sponsor.title': 'ارعَ Geminio',
-  'sponsor.body':
-    'مجاني، برخصة MIT، بلا خادم خلفي، وبلا تتبّع، وبلا شيء يُباع لك إضافيًا — فلا شيء هنا لتشتريه. الرعاية تدفع ثمن شهادة Apple Developer التي تحتاجها بنى macOS الموقّعة، وثمن الدليل والترجمات. وبلاغات العلل لا تقل عن ذلك قيمة.',
-  'sponsor.cta': 'الرعاية عبر GitHub',
 
   'doc.titleSuffix': 'دليل Geminio',
   'doc.filter': 'تصفية الصفحات…',

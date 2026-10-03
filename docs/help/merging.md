@@ -61,7 +61,7 @@ Reachable from the sidebar (compare with the current branch), the Tools menu, or
 ## Cherry-pick, revert, reset
 
 Cherry-pick and revert live on the graph's context menu, as they always have.
-**Reset** is one entry — **Reset to Commit…** — instead of three raw
+**Reset** is one entry — **Reset to commit…** — instead of three raw
 soft/mixed/hard items that contradicted each other.
 
 Amend, undo and reset sit at the top of the single-commit menu and stay

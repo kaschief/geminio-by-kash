@@ -3,7 +3,7 @@ title: Workspaces, tabs & groups
 category: Start here
 order: 3
 summary: Many repositories without drowning: tabs, groups, folders and workspaces.
-keywords: workspace tabs groups folders multiple repos organise switch layout
+keywords: workspace tabs groups folders multiple repos organise switch layout sort order unpushed attention
 ---
 
 # Workspaces, tabs & groups
@@ -29,6 +29,43 @@ If a close warning appears, <kbd>Escape</kbd> always cancels. <kbd>Enter</kbd>
 confirms only when the tab is clean — when there are uncommitted changes or
 conflicts the warning deliberately makes you reach for the button, so a stray
 keypress after <kbd>⌘W</kbd> cannot close work you were still holding.
+
+### Sorting tabs
+
+With a dozen repositories open, the one waiting on a push is easy to lose.
+Right-click any tab and open **Sort tabs**. It is one choice, and a lit dot
+marks the active one: **Manual** (the default — tabs stay where
+you drag them) or one of these orders, which the strip then keeps:
+
+| Sort | Puts first |
+|------|-----------|
+| Needs attention | Conflicts, then unpushed commits (most first), then uncommitted changes, then clean repositories |
+| Unpushed commits | The most commits no remote has yet |
+| Uncommitted changes | Tabs with work in the working tree |
+| Behind remote | The most commits to pull |
+| Name | A–Z, with numbers in natural order |
+| Recently opened | The repositories you opened last |
+
+![Sorting the tab strip by Needs attention](../screenshots/clip-tab-sort.webp)
+
+Ties always break the same way — by the Needs attention order, then by name — so
+sorting twice gives the same strip. A group sorts by the totals of its
+repositories; the repositories inside a group keep their own order.
+
+A chosen order re-applies when a tab opens or closes and when the window comes
+back into focus — not the moment a status changes, so a commit or push does not
+slide a tab out from under the cursor while you work. Dragging a tab by hand
+switches back to Manual. While an order is held, the **Sort tabs** row names it
+(for example *Needs attention*), so you can tell without opening the flyout.
+
+At launch the strip opens in the order it had when you quit, and waits until
+every repository has loaded its status before re-sorting — so you see at most
+one reorder, made with the full picture, rather than a sort that corrects
+itself a second later.
+
+Limits: page tabs (Settings, the changelog) stay at the end. A repository that
+cannot load (a moved folder, not a git repository) sorts last. Counts are only
+as fresh as the last refresh or fetch. Sorting applies to the current workspace.
 
 ## Working in several repositories
 
@@ -57,9 +94,9 @@ tab is kept until you reconnect or close it.
 ## Fetch and pull
 
 The repository toolbar has one **Pull** button with a dropdown. Choose its
-default action: **Fetch All**, **Pull (fast-forward if possible)**,
+default action: **Fetch all**, **Pull (fast-forward if possible)**,
 **Pull (fast-forward only)** or **Pull (rebase)**. Choosing an option saves the
-preference; click the main button to run it. It reads **Fetch** when Fetch All
+preference; click the main button to run it. It reads **Fetch** when Fetch all
 is selected. Fetch updates remote history without changing your files.
 
 ![The combined Pull and Fetch dropdown](../screenshots/pull-fetch-menu.webp)

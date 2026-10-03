@@ -3,14 +3,11 @@ export const ja = {
   'nav.handbook': 'ハンドブック',
   'nav.roadmap': 'ロードマップ',
   'nav.github': 'GitHub',
-  'nav.sponsor': 'スポンサー',
   'nav.download': 'ダウンロード',
 
-  'foot.license': 'MIT ライセンス · <a href="https://myappdesk.dev">MyAppDesk</a> が 💜 を込めて作りました',
   'foot.source': 'ソース',
   'foot.roadmap': 'ロードマップ',
   'foot.reportIssue': '問題を報告',
-  'foot.sponsor': 'スポンサー',
 
   'meta.title': 'Geminio — git のすべてを見せる UI',
   'meta.description':
@@ -59,10 +56,6 @@ export const ja = {
   'handbook.title': '{pages} ページのハンドブックを、アプリに内蔵',
   'handbook.sub': 'すべての機能に解説を — アプリの中でオフラインでも、そしてこの場でも。',
 
-  'sponsor.title': 'Geminio をスポンサーする',
-  'sponsor.body':
-    '無料、MIT、バックエンドなし、テレメトリなし、売りつけるものもなし — つまり買うものは何もありません。スポンサーは、署名済み macOS ビルドに必要な Apple Developer 証明書と、ハンドブックと翻訳の費用になります。バグ報告にも同じだけの価値があります。',
-  'sponsor.cta': 'GitHub でスポンサーする',
 
   'doc.titleSuffix': 'Geminio ハンドブック',
   'doc.filter': 'ページを絞り込む…',

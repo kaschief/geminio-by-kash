@@ -17,26 +17,25 @@
  *     token spelled exactly; word order around it is yours.
  *   - Product names, git commands and file paths stay as they are.
  *
- * `npm run site` prints per-locale coverage, and `test/docs.test.ts` fails if a
- * locale invents a key English does not have.
+ * `npm run site` prints per-locale coverage. This fork adds site copy in
+ * English only, as it does in the app; the other locales fall back for it.
  */
 
 export const en = {
   'nav.handbook': 'Handbook',
   'nav.roadmap': 'Roadmap',
   'nav.github': 'GitHub',
-  'nav.sponsor': 'Sponsor',
   'nav.download': 'Download',
 
-  'foot.license': 'MIT licensed · Made by <a href="https://myappdesk.dev">MyAppDesk</a> with 💜',
+  'foot.license':
+    'MIT licensed · Geminio by Kash, built on <a href="https://github.com/MyAppDesk/gitcito">Gitcito</a> by MyAppDesk',
   'foot.source': 'Source',
   'foot.roadmap': 'Roadmap',
   'foot.reportIssue': 'Report an issue',
-  'foot.sponsor': 'Sponsor',
 
   'meta.title': 'Geminio — the whole of git, with a UI that shows it to you',
   'meta.description':
-    'A fully vibe-coded Git client. Free. Graph, staging by line, rebase, worktrees, submodules, LFS — plus a few things you did not know git could do.',
+    "Kash's desktop Git client, built on Gitcito. Graph, staging by line, rebase, worktrees, submodules, LFS — plus GitHub without a new sign-in, tabs sorted by what needs you, and undo for changes made outside the app.",
 
   'hero.title': 'The whole of git,<br /><em>with a UI that shows it to you</em>',
   'hero.lede':
@@ -64,14 +63,15 @@ export const en = {
   'ordinary.launch': 'Run &amp; debug straight from <code>.vscode/launch.json</code>',
   'ordinary.ai': 'Optional AI that cites the lines it read',
   'ordinary.themes': 'Built-in themes, light and dark, plus AI-generated ones',
-  'ordinary.languages': 'Translated throughout, handbook included — Arabic and Hebrew mirror the layout',
+  'ordinary.languages': 'Inherited translations, handbook included — Arabic and Hebrew mirror the layout; newer text is English',
   'ordinary.conflictAlt': 'The conflict resolver',
 
   'download.title': 'Download',
-  'download.sub': 'Latest release: <strong>v{version}</strong>. Every build is published from CI.',
+  'download.sub':
+    'Release builds are published from CI to this repository when a version is tagged. Until then, build from source — the README shows how.',
   'download.cli':
     'Or open a repository from your terminal with <code>geminio .</code> — see <a href="{cli}">the command line</a>.',
-  'download.macNote': 'Apple silicon &amp; Intel · signed and notarised',
+  'download.macNote': 'Apple silicon &amp; Intel',
   'download.winNote': 'Installer (x64)',
   'download.linuxNote': 'AppImage · deb',
   'download.forOs': 'Download for {os}',
@@ -79,10 +79,6 @@ export const en = {
   'handbook.title': 'A {pages}-page handbook, built into the app',
   'handbook.sub': 'Every feature explained — offline in the app, and right here.',
 
-  'sponsor.title': 'Sponsor Geminio',
-  'sponsor.body':
-    'Free, MIT, no backend, no telemetry, nothing to upsell — so there is nothing to buy. Sponsorship pays for the Apple Developer certificate the signed macOS builds need, the handbook and the translations. Bug reports are worth just as much.',
-  'sponsor.cta': 'Sponsor on GitHub',
 
   'doc.titleSuffix': 'Geminio handbook',
   'doc.filter': 'Filter pages…',
@@ -129,13 +125,32 @@ export const en = {
   'feature.attributes.title': 'File attributes, with a UI',
   'feature.attributes.body':
     'The most useful file in git that nobody writes. Line endings settled once for everyone, a changelog that stops conflicting, fixtures kept out of release tarballs — and readable diffs for Word and PDF, when the converter is installed.',
-  'feature.languages.title': 'Your language, probably',
-  'feature.languages.body':
-    'Not a stub translation of the buttons — the whole interface, explanations included. Arabic and Hebrew mirror the layout, while the graph, diffs, paths and the terminal stay left-to-right, because that is the direction code reads in.',
   'feature.security.title': 'Your secrets stay yours',
   'feature.security.body':
     'No backend. Tokens and vault entries are encrypted with your OS keychain — and nothing touches that keychain until you have been told what for and said yes.',
   'feature.cli.title': 'A Git GUI with a real CLI',
   'feature.cli.body':
-    '`geminio .` opens a repository, `geminio blame src/api.ts -l 84` opens it at that line, and `geminio doctor` never opens a window at all — it checks what the repository requires and exits with a code your CI can read.'
+    '`geminio .` opens a repository, `geminio blame src/api.ts -l 84` opens it at that line, and `geminio doctor` never opens a window at all — it checks what the repository requires and exits with a code your CI can read.',
+
+  'fork.title': 'What Geminio adds',
+  'fork.sub':
+    'Built on Gitcito and shaped by daily use. The full running list, with the limits of each change, is <a href="{changes}">What Geminio changes</a>.',
+  'feature.github-account.title': 'Your GitHub account, already signed in',
+  'feature.github-account.body':
+    'Pull requests, reviews and avatars reuse the GitHub CLI login or the credential helper you already have; a profile token still wins. The CLI token stays in memory — nothing new stored, no global git config touched.',
+  'feature.tab-sort.title': 'Tabs ordered by what needs you',
+  'feature.tab-sort.body':
+    'Sort repository tabs by conflicts, <strong>unpushed commits</strong>, uncommitted changes, behind, name or recency. The order holds and re-applies between tasks, never under the cursor.',
+  'feature.outside-undo.title': 'Undo what happened elsewhere',
+  'feature.outside-undo.body':
+    'A commit, reset, merge or checkout made from a terminal, an editor or a coding agent can be walked back from the toolbar — previewed first, and re-checked before anything moves.',
+  'feature.hunk-actions.title': 'Hunk and line actions on every diff',
+  'feature.hunk-actions.body':
+    'Stage, unstage or discard — and revert from a commit or apply from a stash — a whole hunk or just the selected lines, in unified or split view. Each one undoable, with a three-way fallback when the file has moved on.',
+  'feature.file-pull.title': 'Pull between files',
+  'feature.file-pull.body':
+    'At the end of a diff, pull a little further and the next file slides in. One gesture, one file, in the order the list shows — and it can be tuned or turned off.',
+  'feature.settings-search.title': 'One searchable Settings window',
+  'feature.settings-search.body':
+    "App and repository settings in one place, with a search that finds a label or its description, dims everything else and opens the right tab."
 }
