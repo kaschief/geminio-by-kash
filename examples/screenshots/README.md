@@ -22,8 +22,10 @@ one. Clips always record one at a time — their frames are sampled on
 wall-clock time, and CPU contention would stutter the recording.
 
 Stills use **cwebp** when installed, otherwise an **ffmpeg** build with `libwebp`.
-Clips require ffmpeg with `libwebp`. Optional `width` / `height` on a shot set its
-viewport, including sizes larger than the host screen.
+Clips need **ffmpeg**; when it lacks `libwebp` (Homebrew's default build does),
+the frames are assembled with libwebp's `img2webp` instead (`brew install webp`).
+Optional `width` / `height` on a shot set its viewport, including sizes larger
+than the host screen.
 
 ## How it works
 
@@ -32,7 +34,9 @@ viewport, including sizes larger than the host screen.
 2. **Seed** the playground repos (`setup-playground.sh`), then symlink them under
    `/tmp/geminio-demo/` so screenshots show a clean, username-free path.
    `--no-seed` skips it.
-3. For each shot: launch the built Electron app with `--shot`, which enables an
+3. For each shot: launch the built Electron app with `--shot --background-test`.
+   The second flag keeps the window hidden and out of the Dock, so a capture
+   run never steals focus from whoever is working. `--shot` enables an
    in-app **store bridge** (`window.__shot`, see
    [`src/renderer/src/lib/shotBridge.ts`](../../src/renderer/src/lib/shotBridge.ts)).
    A throwaway settings file points the app at the right repo(s).
@@ -120,6 +124,23 @@ app fully working, while granting makes macOS raise its own "Geminio Safe
 Storage" dialog — an OS window Playwright cannot dismiss, which stalls the run.
 Set `keychain: true` only on shots that need a readable vault (`vault`,
 `secure-share`, `secure-workspace`); expect a one-off OS prompt on those.
+
+## Real-app regression checks
+
+The `verify-*.cjs` scripts beside the capture harness drive the built app the
+same hidden way to check behaviour no unit test reaches. Each uses throwaway
+settings and disposable repositories, and prints `PASS` lines or fails with an
+assertion. Run them after `npm run build`:
+
+| Script | Checks |
+|--------|--------|
+| `verify-repo-views.cjs` | Each repository keeps its own selection, file, scroll and unsaved editor text across tab switches |
+| `verify-repo-layout.cjs` | No blank or shifting frame on a repository switch, sampled every frame under 4× CPU slowdown. Needs the dev server (`ELECTRON_RENDERER_URL=http://localhost:5173`); `TEST_FILE_MODE=diff` covers working diffs |
+| `verify-settings-search.cjs` | Settings search matches, dims and navigates; the editor button's launch arguments. Runs against the dev server's renderer, like the layout check |
+| `verify-titlebar-startup.cjs` | Fullscreen title-bar padding and the missing-folder Locate/Retry state |
+| `verify-personalization.cjs` | Pull between files (gesture presets, cancellation, scrolling after a switch) and app-icon choices |
+| `verify-empty-details.cjs` | A cleaned working tree clears an empty WIP selection; no keychain access without secrets |
+| `verify-app-icon.cjs` | The packaged app's Finder icon survives quit and relaunch (needs `dist/mac-arm64/Geminio.app`, or `ICON_TEST_BUNDLE`) |
 
 ## Where the images are used
 

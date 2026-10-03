@@ -157,8 +157,7 @@ function seedSettings(shot, theme) {
           conflictStyle: 'clean',
           branchNamingStyle: 'prefix/description',
           customInstructions: '',
-          generateDescription: true,
-          coAuthor: true
+          generateDescription: true
         }
       }
     ],
@@ -417,11 +416,24 @@ async function captureGifOnce(shot) {
     // renders it — GitHub markdown, the site, and the in-app Chromium.
     const out = join(OUT_DIR, `${shot.out}.webp`)
     const vf = `fps=${fps},scale=900:-1:flags=lanczos`
-    await sh('ffmpeg', [
-      '-y', '-framerate', String(inputFps), '-i', join(framesDir, 'f%04d.png'),
-      '-vf', vf, '-c:v', 'libwebp_anim', '-lossless', '0', '-q:v', '70',
-      '-compression_level', '5', '-loop', '0', '-an', out
-    ])
+    try {
+      await sh('ffmpeg', [
+        '-y', '-framerate', String(inputFps), '-i', join(framesDir, 'f%04d.png'),
+        '-vf', vf, '-c:v', 'libwebp_anim', '-lossless', '0', '-q:v', '70',
+        '-compression_level', '5', '-loop', '0', '-an', out
+      ])
+    } catch (err) {
+      // Homebrew's default ffmpeg ships without libwebp. libwebp's own img2webp
+      // (`brew install webp`) gives the same full-colour result: ffmpeg still
+      // resamples and scales, img2webp only assembles the frames.
+      const steady = join(framesDir, 'steady')
+      await mkdir(steady, { recursive: true })
+      await sh('ffmpeg', ['-y', '-framerate', String(inputFps), '-i', join(framesDir, 'f%04d.png'), '-vf', vf, join(steady, 's%04d.png')])
+        .catch(() => { throw err })
+      const stills = (await readdir(steady)).filter((f) => f.endsWith('.png')).sort().map((f) => join(steady, f))
+      await sh('img2webp', ['-loop', '0', '-lossy', '-q', '70', '-m', '5', '-d', String(Math.round(1000 / fps)), ...stills, '-o', out])
+        .catch(() => { throw err })
+    }
     logLine(`  ✓ ${out.replace(ROOT + '/', '')} (${frames.length} frames)`)
   } finally {
     await app.close().catch(() => {})

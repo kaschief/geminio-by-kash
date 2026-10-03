@@ -265,14 +265,14 @@ export const shots = [
     drive: async (page) => {
       const arrow = () => page.locator('.toolbar .tool-btn').filter({ hasText: /^(Pull|Fetch)/ }).locator('.split-arrow')
       await arrow().click()
-      await page.getByRole('menuitem', { name: /Fetch All/ }).click()
+      await page.getByRole('menuitem', { name: /Fetch all/ }).click()
       await page.waitForFunction(() => window.__shot.settings.getState().settings.toolbarPullAction === 'fetch')
       await page.locator('.toolbar .tool-btn').filter({ hasText: /^Fetch/ }).waitFor()
       await arrow().click()
       await page.getByRole('menuitem', { name: /Pull \(fast-forward if possible\)/ }).click()
       await page.waitForFunction(() => window.__shot.settings.getState().settings.toolbarPullAction === 'default')
       await arrow().click()
-      await page.getByRole('menuitem', { name: /Fetch All/ }).waitFor()
+      await page.getByRole('menuitem', { name: /Fetch all/ }).waitFor()
     }
   },
   {
@@ -328,7 +328,7 @@ export const shots = [
       await page.getByRole('menuitem', { name: /AUTHOR/ }).click()
       await page.locator('.graph-header [data-col="author"]').waitFor()
       await page.locator('.graph-header [data-col="author"]').click({ button: 'right' })
-      await page.getByRole('menuitem', { name: /Reset Columns/ }).waitFor()
+      await page.getByRole('menuitem', { name: /Reset columns/ }).waitFor()
       // The filter button stops bubbling; outside dismissal must still run.
       await page.locator('.ghc-filter').first().click()
       await page.locator('.context-menu').waitFor({ state: 'hidden' })
@@ -420,7 +420,7 @@ export const shots = [
     height: 1024,
     drive: async (page) => {
       await page.evaluate(() => window.__shot.ui.getState().openModal({ kind: 'settings', page: 'general' }))
-      await page.locator('.settings-profiles').getByRole('button', { name: 'Files & Diffs', exact: true }).click()
+      await page.locator('.settings-profiles').getByRole('button', { name: 'Files & diffs', exact: true }).click()
     }
   },
   {
@@ -2879,6 +2879,44 @@ export const shots = [
 // `durationMs` is the total clip length (drive + hold on the final frame).
 /** @type {Shot[]} */
 export const clips = [
+  {
+    // Sort Tabs → Needs Attention on a strip opened in alphabetical order:
+    // the conflicted repo jumps to the front, then unpushed work by count,
+    // then uncommitted changes, then the clean one. A still could show only
+    // one of the two orders, which is the whole point.
+    out: 'clip-tab-sort',
+    repos: ['absorb', 'gitflow', 'line-staging', 'merge-conflict', 'multi-remote', 'pr-ready-branch'],
+    themes: ['dark'],
+    prepare: async ({ repoPaths, run }) => {
+      const repo = repoPaths['merge-conflict']
+      await run('git', ['-C', repo, 'merge', '--abort'], { allowFail: true })
+      await run('git', ['-C', repo, 'checkout', '-f', 'main'], { allowFail: true })
+      await run('git', ['-C', repo, 'merge', 'feature'], { allowFail: true })
+    },
+    gif: {
+      durationMs: 7000,
+      drive: async (page, repoPaths) => {
+        const names = ['absorb', 'gitflow', 'line-staging', 'merge-conflict', 'multi-remote', 'pr-ready-branch']
+        await page.evaluate((refs) => {
+          const tabs = refs.map(({ name, path }) => ({
+            id: `tab-${name}`, kind: 'repo', name, repos: [{ path, name }], activeRepoPath: path
+          }))
+          window.__shot.settings.getState().update((s) => ({ ...s, tabs, activeTabId: tabs[0].id }))
+        }, names.map((name) => ({ name, path: repoPaths[name] })))
+        // Status badges only render for loaded repos — load every tab, not just the active one.
+        for (const name of names) {
+          await page.evaluate((p) => window.__shot.repo.getState().ensure(p), repoPaths[name])
+          await page.evaluate((p) => window.__shot.waitForRepo(p), repoPaths[name])
+        }
+        await page.waitForTimeout(1200)
+        await page.locator('.tab', { hasText: 'gitflow' }).click({ button: 'right' })
+        await page.waitForTimeout(700)
+        await page.locator('.context-menu .menu-item', { hasText: 'Sort tabs' }).hover()
+        await page.waitForTimeout(700)
+        await page.locator('.context-menu.submenu .menu-item', { hasText: 'Needs attention' }).click()
+      }
+    }
+  },
   {
     // Writing a commit note, start to finish: the affordance, the typing, and
     // the note landing beside the commit. A still of this only ever catches one
