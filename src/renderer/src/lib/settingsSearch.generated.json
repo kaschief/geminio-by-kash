@@ -212,7 +212,8 @@
   {
     "page": "files",
     "keys": [
-      "chg.showAll",
+      "chg.allFiles",
+      "chg.allFilesOne",
       "settings.changeCounts",
       "settings.changeCountsCapsule",
       "settings.changeCountsHint",

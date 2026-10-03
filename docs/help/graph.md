@@ -122,7 +122,8 @@ deleted, `→` for renamed, `!` for conflicted — drawn as one capsule, or as
 loose numbers (Settings → Files & diffs → **Change counts**).
 
 Those counts are also the list's filter. Click one (say **+3**) to show only
-added files; click it again, or **Show all**, to see everything. Hold
+added files; click it again, the total at the start of the counts, or press <kbd>Esc</kbd>
+to see everything. Hold
 <kbd>⌘</kbd>/<kbd>Ctrl</kbd> while clicking to combine kinds, such as added
 and deleted. The other counts dim while a filter is on. The filter stays as
 you move between commits, and steps aside on a commit that has none of that

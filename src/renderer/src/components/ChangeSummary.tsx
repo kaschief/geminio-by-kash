@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { fileStats, summaryChips, toggleBucket, type BucketFilter, type StatBucket } from '../lib/fileStats'
 import { interp, useT } from '../i18n'
 import { useSettingsStore } from '../stores/settings'
@@ -34,13 +35,51 @@ export function ChangeSummary({
   const spoken = chips.map((c) => interp(t(c.labelKey), { n: c.n })).join(', ')
   const label = [title, spoken].filter(Boolean).join('. ')
   const filtering = !!filter && filter.size > 0
+  const total = files.length
+  const allLabel = total === 1 ? t('chg.allFilesOne') : interp(t('chg.allFiles'), { n: total })
+
+  // Esc clears the filter while focus is anywhere in this panel (the counts,
+  // the list, a row). It runs before window-level Esc handlers — closing an
+  // open file — so a second Esc still does that. Fields keep their own Esc.
+  const ref = useRef<HTMLSpanElement>(null)
+  useEffect(() => {
+    if (!filtering || !onFilter) return
+    const scope = ref.current?.closest<HTMLElement>('.details, .composer')
+    if (!scope) return
+    const onKey = (e: KeyboardEvent): void => {
+      if (e.key !== 'Escape' || e.defaultPrevented) return
+      if ((e.target as HTMLElement).closest('input, textarea, [contenteditable="true"]')) return
+      e.preventDefault()
+      e.stopPropagation()
+      onFilter(new Set())
+    }
+    scope.addEventListener('keydown', onKey)
+    return () => scope.removeEventListener('keydown', onKey)
+  }, [filtering, onFilter])
+
   return (
     <span
+      ref={ref}
       className={`change-summary is-${look}${onFilter ? ' filterable' : ''}${filtering ? ' filtering' : ''}`}
       title={onFilter ? undefined : label || undefined}
       aria-label={label || undefined}
       role={onFilter ? 'group' : undefined}
     >
+      {onFilter && chips.length > 0 && (
+        // The "All" segment: the total, lit while nothing is filtered, and the
+        // way back to everything. Always present, so filtering moves nothing.
+        <button
+          type="button"
+          className={`change-chip kind-all${filtering ? '' : ' on'}`}
+          aria-pressed={!filtering}
+          aria-label={allLabel}
+          data-tip={allLabel}
+          data-tip-delay="labelled"
+          onClick={() => onFilter(new Set())}
+        >
+          {total}
+        </button>
+      )}
       {chips.map((c) => {
         const spokenChip = interp(t(c.labelKey), { n: c.n })
         const content = `${SIGN[c.bucket]}${c.n}`
@@ -70,11 +109,6 @@ export function ChangeSummary({
           </button>
         )
       })}
-      {filtering && onFilter && (
-        <button type="button" className="change-summary-clear" onClick={() => onFilter(new Set())}>
-          {t('chg.showAll')}
-        </button>
-      )}
     </span>
   )
 }

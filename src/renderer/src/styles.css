@@ -13392,33 +13392,15 @@ mark.find-hit.active {
 .change-summary.is-stat.filterable .change-chip.on {
   border-color: color-mix(in srgb, var(--accent) 45%, transparent);
 }
-.change-summary.filtering .change-chip:not(.on) {
+.change-summary.filtering .change-chip:not(.on):not(.kind-all) {
   opacity: 0.45;
 }
-.change-summary.filterable .change-chip:focus-visible,
-.change-summary-clear:focus-visible {
+.change-summary.filterable .change-chip:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 1px;
 }
-.change-summary-clear {
-  flex-shrink: 0;
-  margin-inline-start: 6px;
-  padding: 1px 4px;
-  font-size: 11px;
-  color: var(--text-2);
-  background: transparent;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-.change-summary.is-capsule .change-summary-clear {
-  margin-inline-start: 0;
-  border-inline-start: 1px solid var(--border);
-  border-radius: 0;
-  padding: 1px 8px;
-}
-.change-summary-clear:hover {
-  color: var(--text-0);
+.change-chip.kind-all {
+  color: var(--text-1);
 }
 @media (prefers-reduced-motion: reduce) {
   .change-summary.filterable .change-chip {
