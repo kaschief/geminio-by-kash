@@ -81,44 +81,30 @@ This is honest about where it stops:
   an English tree is isolated rather than reordered, which is correct but can
   still look surprising the first time.
 
-## This handbook is translated too
+## This handbook is in English
 
-Not just the buttons. Every page you are reading exists in every language the
-list above shows — the explanations, the tables of what each option does, the
-sections that say what a feature refuses to do. Switching the interface language
-switches the handbook with it, in the app and on the website alike.
+The interface follows your language; this handbook does not. Every page is
+written in English, in the app and on the website alike.
 
-A translation is allowed to be incomplete. If a page has not been translated
-yet, you get the English one rather than a missing page, and the sidebar keeps
-the same shape in every language so a screenshot or an instruction still lines
-up with what you see.
+The reason is accuracy. The handbook changes with every feature, and a
+translation that cannot keep the same pace ends up describing an older app — a
+confident, well-formatted page about a button that has since moved. One
+up-to-date language is more useful than many drifting ones.
 
-On the website each page carries a language switcher that keeps you on the page
-you were reading, because changing language is not the same as starting over.
-
-**What is machine-translated, and what that costs.** English and Spanish were
-written by hand. The rest were translated by a model against a glossary, then
-checked by script: every page, every link, every image path, every code block
-byte-for-byte against the English. That catches broken structure. It does not
-catch a sentence that is correct but stiff. If a page reads badly in your
-language, that is a bug worth reporting.
+*Limit:* a reader who does not read English gets a translated interface and an
+English manual. Interface strings added since the fork are English too, until
+someone translates them.
 
 ## Adding a language
 
 The dictionaries are one file per locale under
 `src/renderer/src/i18n/`, and the English file is the reference every other one
-is type-checked against — a missing key is a compile error, not a silent
-fallback to English. The test suite also checks that every `{placeholder}` a
+is type-checked against: a locale may lack a key, which then shows in English,
+but it can never invent one. The test suite also checks that every `{placeholder}` a
 string interpolates survives translation, so a sentence cannot lose its commit
 sha on the way into another language.
 
-The handbook works the same way: `docs/help/` holds the English pages and
-`docs/help/<locale>/` holds each translation, one file per page with the same
-filename. `npm run lint:docs` checks that every translated page has an English
-original, that its front matter is complete, and that its links and images
-resolve from one directory deeper.
-
-Contributions are welcome — a page at a time is fine, and correcting a clumsy
-translation is as useful as adding a missing one.
+Correcting a clumsy interface translation is as useful as adding a missing
+one.
 
 **See also:** [Themes & appearance](themes.md) · [Profiles](profiles.md)

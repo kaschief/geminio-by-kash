@@ -5,13 +5,10 @@ import {
   HELP_PAGES,
   helpExcerpt,
   helpSections,
-  loadHelpPages,
   resolveMedia,
-  searchHelp,
-  type HelpPage as HelpPageData
+  searchHelp
 } from '../help/pages'
 import { useT } from '../i18n'
-import { useSettingsStore } from '../stores/settings'
 
 const ISSUES_URL = 'https://github.com/kaschief/geminio-by-kash/issues/new'
 
@@ -25,26 +22,12 @@ const ISSUES_URL = 'https://github.com/kaschief/geminio-by-kash/issues/new'
  */
 export function HelpPage({ initialPage }: { initialPage?: string }): React.JSX.Element {
   const t = useT()
-  const lang = useSettingsStore((s) => s.settings.language ?? 'en')
+  const pages = HELP_PAGES
   const [current, setCurrent] = useState(initialPage ?? HELP_PAGES[0]?.id ?? '')
   const [query, setQuery] = useState('')
   const [history, setHistory] = useState<string[]>([])
   const bodyRef = useRef<HTMLDivElement>(null)
   const searchRef = useRef<HTMLInputElement>(null)
-
-  // The translated handbook loads on demand, so the reader starts on English
-  // and is swapped over once their language arrives — a blank pane while a
-  // chunk downloads would be worse than a page they can already read.
-  const [pages, setPages] = useState<HelpPageData[]>(HELP_PAGES)
-  useEffect(() => {
-    let live = true
-    void loadHelpPages(lang).then((p) => {
-      if (live) setPages(p)
-    })
-    return () => {
-      live = false
-    }
-  }, [lang])
 
   const sections = useMemo(() => helpSections(pages), [pages])
   const results = useMemo(() => searchHelp(query, pages), [query, pages])

@@ -17,7 +17,7 @@ import { readFileSync, readdirSync, mkdirSync, writeFileSync, copyFileSync, rmSy
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { marked } from 'marked'
-import { LOCALE_NAMES, RTL_LOCALES, SITE, coverage, strings } from './site-i18n/index.mjs'
+import { LOCALE_NAMES, RTL_LOCALES, strings } from './site-i18n/index.mjs'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const HELP_DIR = join(ROOT, 'docs/help')
@@ -34,9 +34,8 @@ const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'))
 
 marked.setOptions({ gfm: true, breaks: false })
 
-// The README and the roadmap stay English on purpose: they duplicate what the
-// handbook already says in sixteen languages, and translated copies of them
-// would rot silently — nothing in the gate reads them.
+// The README and the roadmap link to GitHub rather than being rendered here:
+// the handbook already covers the same ground, and a second copy would rot.
 const ROADMAP_URL = `https://github.com/${REPO}/blob/${BRANCH}/ROADMAP.md`
 const CHANGES_URL = `https://github.com/${REPO}/blob/${BRANCH}/docs/geminio-changes.md`
 
@@ -86,9 +85,8 @@ for (const page of pages) {
 /**
  * Rewrite in-repo links so they resolve on the site instead of on GitHub.
  *
- * `depth` is how deep the page sits under the site root: 1 for the English
- * handbook (`help/x.html`), 2 for a translation (`help/es/x.html`), which is
- * also why the Markdown's own image path differs by one `../`.
+ * `depth` is how deep the page sits under the site root — 1 for a handbook
+ * page (`help/x.html`).
  */
 function siteLinks(markdown, depth = 1) {
   const assets = `${'../'.repeat(depth)}assets/`
@@ -97,35 +95,9 @@ function siteLinks(markdown, depth = 1) {
     .replace(/\]\(\.\.\/(?:\.\.\/)?screenshots\/([\w.-]+)\)/g, `](${assets}$1)`)
 }
 
-// ── Translated handbooks ────────────────────────────────────────────────────
-
-/** locale → its pages, merged over English so a partial translation still works. */
-const localeSets = new Map()
-const localeCoverage = new Map()
-for (const entry of readdirSync(HELP_DIR, { withFileTypes: true })) {
-  if (!entry.isDirectory()) continue
-  const locale = entry.name
-  const translated = new Map()
-  for (const file of readdirSync(join(HELP_DIR, locale)).filter((f) => f.endsWith('.md'))) {
-    const page = parsePage(join(locale, file))
-    translated.set(page.id, page)
-  }
-  if (!translated.size) continue
-  // English order wins so every language's sidebar keeps one shape.
-  localeSets.set(
-    locale,
-    pages.map((en) => {
-      const local = translated.get(en.id)
-      return local ? { ...local, id: en.id, order: en.order } : en
-    })
-  )
-  // Tracked separately from the merged set: every locale renders all 61 pages
-  // because untranslated ones fall back, so the merged count would report a
-  // half-finished language as complete.
-  localeCoverage.set(locale, translated.size)
-}
-
-const siteLocales = ['en', ...[...localeSets.keys()].sort()]
+// The handbook is English-only, so the site is too. The generator still takes a
+// locale throughout — the switcher and hreflang links hide themselves with one.
+const siteLocales = ['en']
 
 /** Sections for a given locale's page set. */
 function sectionsOf(pageList) {
@@ -266,7 +238,7 @@ function landing(locale = 'en') {
   const base = '../'.repeat(depth)
   // The handbook a card links to is the one in the reader's language.
   const helpDir = locale === 'en' ? `${base}help/` : `${base}help/${locale}/`
-  const pageList = locale === 'en' ? pages : (localeSets.get(locale) ?? pages)
+  const pageList = pages
 
   const cardsOf = (list) =>
     list
@@ -725,22 +697,6 @@ writeFileSync(join(OUT, 'styles.css'), STYLES)
 writeFileSync(join(OUT, 'index.html'), landing())
 for (const page of pages) writeFileSync(join(OUT, 'help', `${page.id}.html`), helpPage(page))
 
-// A landing page per language at /<locale>/. English keeps the root so no
-// existing link, bookmark or search result moves.
-for (const locale of siteLocales.filter((l) => l !== 'en')) {
-  mkdirSync(join(OUT, locale), { recursive: true })
-  writeFileSync(join(OUT, locale, 'index.html'), landing(locale))
-}
-
-// One handbook tree per translated locale, under help/<locale>/. English keeps
-// the bare help/ path so no existing link or search result breaks.
-for (const [locale, pageList] of localeSets) {
-  mkdirSync(join(OUT, 'help', locale), { recursive: true })
-  for (const page of pageList) {
-    writeFileSync(join(OUT, 'help', locale, `${page.id}.html`), helpPage(page, locale, pageList))
-  }
-}
-
 // Every screenshot the handbook and the landing can reference, plus the mark.
 for (const file of readdirSync(SHOTS_DIR)) copyFileSync(join(SHOTS_DIR, file), join(OUT, 'assets', file))
 copyFileSync(join(ROOT, 'docs/geminio-mark.png'), join(OUT, 'assets/geminio-mark.png'))
@@ -755,19 +711,6 @@ writeFileSync(join(OUT, '.nojekyll'), '')
 
 const count = readdirSync(join(OUT, 'help')).filter((f) => f.endsWith('.html')).length
 console.log(`✔ site: index + ${count} handbook pages → dist-site/`)
-for (const [locale, done] of [...localeCoverage].sort()) {
-  const site = coverage(locale)
-  const full = done === count && site.done === site.total
-  console.log(
-    `  ${full ? '✔' : '·'} ${locale.padEnd(6)} handbook ${String(done).padStart(3)}/${count}` +
-      `   site copy ${String(site.done).padStart(3)}/${site.total}`
-  )
-}
-
-// A locale with site copy but no handbook would render a landing page whose
-// every link leads back into English. Worth saying out loud.
-const orphanCopy = Object.keys(SITE).filter((l) => l !== 'en' && !localeSets.has(l))
-if (orphanCopy.length) console.log(`  ! site copy without a handbook: ${orphanCopy.join(', ')}`)
 if (process.argv.includes('--serve')) {
   console.log(`  preview: npx serve ${existsSync(OUT) ? 'dist-site' : ''}`)
 }

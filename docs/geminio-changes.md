@@ -50,7 +50,7 @@ covers it. Limits are stated where they matter.
 
 **Renamed to Geminio, without losing data.** The app, the `geminio` CLI, the
 repository rules file (`.geminio.json`), the package identifiers and the
-documentation all carry the new name. On first launch the old app's saved
+documentation all carry the new name. On first launch Gitcito's saved
 settings, encrypted secrets and browser storage are copied once into the new
 app-data folder; neither installation is overwritten. Existing `.gitcito.json`
 rules and encrypted `.gitcito` bundles still read. *Limit:* some internal
@@ -430,9 +430,16 @@ GitHub Actions).
 
 **English-first.** New strings go into `en.ts` only; the other locale
 dictionaries are typed `Partial` and fall back to English at runtime. The
-inherited translations and translated handbook pages are kept so upstream's
-edits to them still merge. *Limit:* non-English users see English for anything
-the fork added.
+inherited interface translations are kept so upstream's edits to them still
+merge. *Limit:* non-English users see English for anything the fork added.
+
+**An English-only handbook.** The translated handbooks and the
+website's translated copy are gone; Help and the site show the English pages
+in every interface language. The translations described upstream's app, and
+every feature the fork adds made them more wrong. `npm run lint:docs` rejects a
+translated handbook directory, so an upstream merge cannot quietly bring one
+back. *Limit:* readers who do not read English lose a manual in their
+language. ([Languages](help/languages.md#this-handbook-is-in-english))
 
 **Install scripts allowed.** `package.json` approves install scripts for
 Electron, esbuild and node-pty, which npm's install-script gate had blocked

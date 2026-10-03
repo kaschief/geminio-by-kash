@@ -61,8 +61,6 @@ describe('docs', () => {
     // weight in the repository. Either way, worth knowing about.
     const used = new Set<string>()
     const sources = [readFileSync(join(ROOT, 'README.md'), 'utf8')]
-    // Only the English pages: `docs/help/` also holds one directory per
-    // translated locale, and a translation cannot introduce a new screenshot.
     for (const file of readdirSync(HELP_DIR).filter((f) => f.endsWith('.md'))) {
       sources.push(readFileSync(join(HELP_DIR, file), 'utf8'))
     }
@@ -84,32 +82,13 @@ describe('site', () => {
     expect(readFileSync(join(SITE, 'index.html'), 'utf8')).toContain('Download')
   })
 
-  it('builds the whole handbook again for every translated locale', () => {
-    // A translation that silently stops rendering is worse than one that never
-    // shipped: the language switcher would still offer it.
-    const pages = readdirSync(HELP_DIR).filter((f) => f.endsWith('.md')).length
-    const locales = readdirSync(HELP_DIR, { withFileTypes: true })
-      .filter((e) => e.isDirectory())
-      .map((e) => e.name)
-    for (const locale of locales) {
-      const built = readdirSync(join(SITE, 'help', locale)).filter((f) => f.endsWith('.html'))
-      expect(built.length, `${locale} renders every page`).toBe(pages)
-    }
-  })
-
-  it('marks a right-to-left locale on the page itself', () => {
-    const hebrew = readFileSync(join(SITE, 'help/he/graph.html'), 'utf8')
-    expect(hebrew).toContain('<html lang="he" dir="rtl">')
-    // One level deeper than the English handbook, so the assets hop is longer.
-    expect(hebrew).toContain('src="../../assets/')
-    expect(hebrew).not.toMatch(/src="\.\.\/assets\//)
-  })
-
-  it('offers every language from any page, without leaving it', () => {
-    const spanish = readFileSync(join(SITE, 'help/es/absorb.html'), 'utf8')
-    expect(spanish).toContain('href="../absorb.html" lang="en"')
-    expect(spanish).toContain('href="../ja/absorb.html" lang="ja"')
-    expect(spanish).toContain('hreflang="x-default"')
+  it('builds an English-only site with no language switcher', () => {
+    // The handbook is English-only, so there is nothing to switch to: a
+    // switcher listing one language is noise, and a help/<locale>/ tree would
+    // mean a translated handbook crept back in.
+    const dirs = readdirSync(join(SITE, 'help'), { withFileTypes: true }).filter((e) => e.isDirectory())
+    expect(dirs.map((e) => e.name)).toEqual([])
+    expect(readFileSync(join(SITE, 'help/absorb.html'), 'utf8')).not.toContain('hreflang=')
   })
 
   it('rewrites in-repo links so they resolve on the web', () => {

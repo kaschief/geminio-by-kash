@@ -2,23 +2,11 @@
  * Copy for the website's own chrome — everything the generator writes that does
  * not come from `docs/help/`.
  *
- * The handbook translates itself: its pages are Markdown, one directory per
- * locale. The landing page, the nav, the footer and the feature cards had no
- * such home, so they lived as literals inside `build-site.mjs` and stayed
- * English no matter what language the reader picked. This is that home.
+ * The landing page, the nav, the footer and the feature cards, kept out of
+ * `build-site.mjs` so the copy can be edited without reading the generator.
  *
- * Rules, mirroring the app's dictionaries in `src/renderer/src/i18n/`:
- *
- *   - `en` is the reference. A locale may omit a key; the generator falls back
- *     to English rather than printing the key.
- *   - Values may carry inline HTML (`<code>`, `<em>`, `<strong>`, `<br />`).
- *     Keep the tags; translate around them.
- *   - `{version}`, `{pages}` and `{os}` are substituted at build time. Keep the
- *     token spelled exactly; word order around it is yours.
- *   - Product names, git commands and file paths stay as they are.
- *
- * `npm run site` prints per-locale coverage. This fork adds site copy in
- * English only, as it does in the app; the other locales fall back for it.
+ * Values may carry inline HTML (`<code>`, `<em>`, `<strong>`, `<br />`).
+ * `{version}`, `{pages}` and `{os}` are substituted at build time.
  */
 
 export const en = {
@@ -63,7 +51,7 @@ export const en = {
   'ordinary.launch': 'Run &amp; debug straight from <code>.vscode/launch.json</code>',
   'ordinary.ai': 'Optional AI that cites the lines it read',
   'ordinary.themes': 'Built-in themes, light and dark, plus AI-generated ones',
-  'ordinary.languages': 'Inherited translations, handbook included — Arabic and Hebrew mirror the layout; newer text is English',
+  'ordinary.languages': 'Inherited interface translations — Arabic and Hebrew mirror the layout; newer text and the handbook are English',
   'ordinary.conflictAlt': 'The conflict resolver',
 
   'download.title': 'Download',
