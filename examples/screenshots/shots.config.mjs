@@ -255,7 +255,7 @@ export const shots = [
       await selectors.last().click()
       await page.locator('.repo-picker-popover').waitFor({ state: 'hidden' })
       await page.locator('.branch-picker-popover').waitFor()
-      await page.locator('.graph-header [data-col="message"]').click()
+      await page.locator('.graph-header [data-col="date"]').click()
       await page.locator('.branch-picker-popover').waitFor({ state: 'hidden' })
     }
   },
@@ -265,14 +265,14 @@ export const shots = [
     drive: async (page) => {
       const arrow = () => page.locator('.toolbar .tool-btn').filter({ hasText: /^(Pull|Fetch)/ }).locator('.split-arrow')
       await arrow().click()
-      await page.getByRole('menuitem', { name: /Fetch all/ }).click()
+      await page.getByRole('menuitemradio', { name: /Fetch all/ }).click()
       await page.waitForFunction(() => window.__shot.settings.getState().settings.toolbarPullAction === 'fetch')
       await page.locator('.toolbar .tool-btn').filter({ hasText: /^Fetch/ }).waitFor()
       await arrow().click()
-      await page.getByRole('menuitem', { name: /Pull \(fast-forward if possible\)/ }).click()
+      await page.getByRole('menuitemradio', { name: /Pull \(fast-forward if possible\)/ }).click()
       await page.waitForFunction(() => window.__shot.settings.getState().settings.toolbarPullAction === 'default')
       await arrow().click()
-      await page.getByRole('menuitem', { name: /Fetch all/ }).waitFor()
+      await page.getByRole('menuitemradio', { name: /Fetch all/ }).waitFor()
     }
   },
   {
@@ -322,16 +322,19 @@ export const shots = [
     themes: ['light'],
     drive: async (page) => {
       await page.locator('.graph-header [data-col="author"]').click({ button: 'right' })
-      await page.getByRole('menuitem', { name: /AUTHOR/ }).click()
+      await page.getByRole('menuitemcheckbox', { name: 'Author', exact: true }).click()
       await page.locator('.graph-header [data-col="author"]').waitFor({ state: 'hidden' })
       await page.locator('.graph-header [data-col="message"]').click({ button: 'right' })
-      await page.getByRole('menuitem', { name: /AUTHOR/ }).click()
+      await page.getByRole('menuitemcheckbox', { name: 'Author', exact: true }).click()
       await page.locator('.graph-header [data-col="author"]').waitFor()
       await page.locator('.graph-header [data-col="author"]').click({ button: 'right' })
       await page.getByRole('menuitem', { name: /Reset columns/ }).waitFor()
-      // The filter button stops bubbling; outside dismissal must still run.
+      // The filter button stops bubbling; outside dismissal must still run —
+      // and only dismiss, so it takes a second click to open the filter.
       await page.locator('.ghc-filter').first().click()
       await page.locator('.context-menu').waitFor({ state: 'hidden' })
+      await page.locator('.col-filter-menu').waitFor({ state: 'hidden' })
+      await page.locator('.ghc-filter').first().click()
       await page.locator('.col-filter-menu').waitFor()
       await page.locator('.graph-header [data-col="message"]').click()
       await page.locator('.col-filter-menu').waitFor({ state: 'hidden' })
@@ -1589,6 +1592,9 @@ export const shots = [
     drive: async (page, repoPaths) => {
       const repo = repoPaths['insights']
       await page.evaluate((p) => window.__shot.settings.getState().openPageTab({ type: 'insights', repoPath: p }), repo)
+      // The scenario's commits carry fixed dates, which fall outside the default
+      // 90-day window as time passes — so show the whole history.
+      await page.getByRole('button', { name: 'All', exact: true }).click()
       await page.waitForTimeout(1800)
     }
   },
