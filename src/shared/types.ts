@@ -2837,6 +2837,9 @@ export interface Workspace {
   sourcePath?: string
 }
 
+/** How the change counts above a file list are drawn (`components/ChangeSummary.tsx`). */
+export type ChangeCountStyle = 'stat' | 'capsule'
+
 /** What the tab strip can be ordered by. See `lib/tabSort.ts`. */
 export type TabSortKey = 'attention' | 'unpushed' | 'changes' | 'behind' | 'name' | 'recent'
 
@@ -2865,6 +2868,8 @@ export interface AppSettings {
    * `{ key, keepSorted }` shape a test build may have written.
    */
   tabSort?: TabSortKey
+  /** Loose signed numbers, or one capsule. Absent = capsule. */
+  changeCountStyle?: ChangeCountStyle
   /** Saved tab layouts. Always has at least one ("Default"); the active one's
    *  tabs are kept in sync with the live `tabs`/`activeTabId` above. */
   workspaces: Workspace[]

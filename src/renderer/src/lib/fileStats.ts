@@ -12,15 +12,6 @@ export interface FileStats {
 
 export type StatBucket = keyof FileStats
 
-/** One git status letter per bucket — the same letter the file row paints. */
-export const SAMPLE_STATUS: Record<StatBucket, string> = {
-  mod: 'M',
-  add: 'A',
-  del: 'D',
-  ren: 'R',
-  conflict: 'U'
-}
-
 /** Untracked ('?') and copied ('C') files count as additions, and anything
  *  unrecognised as a modification: a file the summary cannot name is still a
  *  file that changed, and dropping it would make the chips undercount. */

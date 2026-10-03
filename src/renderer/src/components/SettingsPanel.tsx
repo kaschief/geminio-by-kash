@@ -1,10 +1,19 @@
 import { searchSettings } from '../lib/settingsSearch'
+import { ChangeSummary } from './ChangeSummary'
 import { GraphRowAccentControls, StatusDotControls } from './GraphAccentSettings'
 import { AppIconPicker } from './AppIconPicker'
 import { setGitHubAccount } from '../stores/githubAccount'
 import { useAiReady } from './useAiReady'
 import { PATH_DEPTHS, displayPath } from '../lib/pathDisplay'
 import { formatAbsoluteDate } from '../lib/commitDate'
+
+/** A typical commit's mix, for the change-count previews. */
+const CHANGE_COUNT_SAMPLE = [
+  ...Array.from({ length: 7 }, () => ({ status: 'M' })),
+  ...Array.from({ length: 3 }, () => ({ status: 'A' })),
+  { status: 'D' },
+  { status: 'R' }
+]
 
 /** Fixed samples for the live examples on the date and path option cards. */
 const SAMPLE_DATE = Date.UTC(2026, 8, 15, 15, 22) / 1000
@@ -2617,6 +2626,28 @@ function FilesPage(): React.JSX.Element {
           <FileDiff size={14} /> {t('settings.filesDiffs')}
         </h4>
         <p className="settings-hint">{t('settings.filesDiffsIntro')}</p>
+      </div>
+      <div className="settings-field">
+        <span className="settings-field-label">{t('settings.changeCounts')}</span>
+        <span className="settings-hint">{t('settings.changeCountsHint')}</span>
+        {/* Each card draws the real component, so the choice is made by eye. */}
+        <div className="layout-segmented two" role="radiogroup" aria-label={t('settings.changeCounts')}>
+          {(['capsule', 'stat'] as const).map((look) => (
+            <button
+              key={look}
+              type="button"
+              role="radio"
+              aria-checked={(settings.changeCountStyle ?? 'capsule') === look}
+              className={`layout-seg-btn ${(settings.changeCountStyle ?? 'capsule') === look ? 'active' : ''}`}
+              onClick={() => update((s) => ({ ...s, changeCountStyle: look }))}
+            >
+              <strong>{look === 'capsule' ? t('settings.changeCountsCapsule') : t('settings.changeCountsStat')}</strong>
+              <span>
+                <ChangeSummary files={CHANGE_COUNT_SAMPLE} style={look} />
+              </span>
+            </button>
+          ))}
+        </div>
       </div>
       <h4 className="settings-section-title">
         <MapIcon size={13} style={{ marginRight: 6, verticalAlign: '-2px' }} />

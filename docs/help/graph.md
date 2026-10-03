@@ -117,7 +117,11 @@ co-authors, and its signature. The header above the file list splits the
 count by kind, coloured like the glyphs on the rows. `#123` references and
 `@mentions` are autolinked to your host.
 
-Those counts are also the list's filter. Click one (say **+ 3**) to show only
+The counts read like `git diff --stat`: `~7 +3 −1` for modified, added and
+deleted, `→` for renamed, `!` for conflicted — drawn as one capsule, or as
+loose numbers (Settings → Files & diffs → **Change counts**).
+
+Those counts are also the list's filter. Click one (say **+3**) to show only
 added files; click it again, or **Show all**, to see everything. Hold
 <kbd>⌘</kbd>/<kbd>Ctrl</kbd> while clicking to combine kinds, such as added
 and deleted. The other counts dim while a filter is on. The filter stays as

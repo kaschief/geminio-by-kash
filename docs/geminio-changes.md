@@ -202,8 +202,9 @@ The old split setting carries over as the Split layout.
 ([Diffs](help/diffs.md#inline-layout))
 
 **Filter by kind of change.** The counts above a file list — working
-changes, a commit, a stash (modified, added, deleted, renamed) — are also its
-filter:
+changes, a commit, a stash — read like `git diff --stat` (`~7 +3 −1 →1`),
+drawn as one capsule or as loose numbers (Settings → Files & diffs), and are
+also its filter:
 click one to show only that kind, click again or **Show all** to clear,
 <kbd>⌘</kbd>/<kbd>Ctrl</kbd>-click to combine kinds. The filter stays as you
 move between commits and steps aside on a commit with none of that kind, so the

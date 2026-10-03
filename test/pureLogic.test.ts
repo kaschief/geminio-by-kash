@@ -36,7 +36,7 @@ import { pbxprojOutline } from '../src/renderer/src/lib/pbxprojOutline'
 import { previewKind, isBinaryKind } from '../src/renderer/src/preview/registry'
 import { lockfileFor } from '../src/renderer/src/lib/lockfiles'
 import { isBuildNoise, ignoreLineFor } from '../src/renderer/src/lib/buildNoise'
-import { bucketOf, fileStats, summaryChips, SAMPLE_STATUS } from '../src/renderer/src/lib/fileStats'
+import { bucketOf, fileStats, summaryChips } from '../src/renderer/src/lib/fileStats'
 import {
   buildPrefixTree,
   collapseFolderRun,
@@ -6553,11 +6553,6 @@ describe('fileStats', () => {
     expect(bucketOf('R')).toBe('ren')
     expect(bucketOf('U')).toBe('conflict')
     expect(bucketOf('T')).toBe('mod')
-    expect(bucketOf(SAMPLE_STATUS.mod)).toBe('mod')
-    expect(bucketOf(SAMPLE_STATUS.add)).toBe('add')
-    expect(bucketOf(SAMPLE_STATUS.del)).toBe('del')
-    expect(bucketOf(SAMPLE_STATUS.ren)).toBe('ren')
-    expect(bucketOf(SAMPLE_STATUS.conflict)).toBe('conflict')
   })
 
   it('counts each kind and omits empty chips', () => {

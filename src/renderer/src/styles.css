@@ -13333,40 +13333,53 @@ mark.find-hit.active {
 .change-summary {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 2px;
   min-width: 0;
   overflow: hidden;
   vertical-align: middle;
 }
+/* One signed count per kind (~7 +3 −1): colour carries the kind, so the
+   header stays small next to the rows and the view toggle beside it. */
 .change-chip {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
   flex-shrink: 0;
-  white-space: nowrap;
-}
-.change-chip .file-status {
-  width: 16px;
-  height: 16px;
-  font-size: 9px;
-}
-.change-chip-n {
+  padding: 1px 5px;
   font-family: var(--mono);
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.03em;
-  line-height: 1;
-}
-/* Filterable summary (commit and stash details): the chips are buttons. A lit
-   chip is the kind being shown; the rest dim while a filter is on, so the
-   header reads at a glance as "only these". */
-.change-summary.filterable .change-chip {
-  padding: 2px 6px 2px 3px;
-  margin: -2px 0;
+  letter-spacing: -0.02em;
+  line-height: 16px;
+  white-space: nowrap;
   border: 1px solid transparent;
-  border-radius: 7px;
+  border-radius: 5px;
   background: transparent;
+}
+.change-chip.kind-mod { color: var(--yellow); }
+.change-chip.kind-add { color: var(--green); }
+.change-chip.kind-del { color: var(--red); }
+.change-chip.kind-ren { color: var(--blue, #4da3ff); }
+.change-chip.kind-conflict { color: var(--red); }
+/* Capsule: the counts as one segmented control, matching Path / Tree. */
+.change-summary.is-capsule {
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+.change-summary.is-capsule .change-chip {
+  padding: 1px 7px;
+  border: none;
+  border-radius: 0;
+}
+.change-summary.is-capsule .change-chip + .change-chip {
+  border-inline-start: 1px solid var(--border);
+}
+/* Filterable (working changes, commit and stash details): the counts are
+   buttons. A lit count is the kind being shown; the rest dim while a filter
+   is on, so the header reads at a glance as "only these". */
+.change-summary.filterable .change-chip {
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s, opacity 0.15s;
 }
@@ -13375,10 +13388,12 @@ mark.find-hit.active {
 }
 .change-summary.filterable .change-chip.on {
   background: var(--accent-soft);
+}
+.change-summary.is-stat.filterable .change-chip.on {
   border-color: color-mix(in srgb, var(--accent) 45%, transparent);
 }
 .change-summary.filtering .change-chip:not(.on) {
-  opacity: 0.5;
+  opacity: 0.45;
 }
 .change-summary.filterable .change-chip:focus-visible,
 .change-summary-clear:focus-visible {
@@ -13387,13 +13402,20 @@ mark.find-hit.active {
 }
 .change-summary-clear {
   flex-shrink: 0;
-  padding: 2px 4px;
+  margin-inline-start: 6px;
+  padding: 1px 4px;
   font-size: 11px;
   color: var(--text-2);
   background: transparent;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+.change-summary.is-capsule .change-summary-clear {
+  margin-inline-start: 0;
+  border-inline-start: 1px solid var(--border);
+  border-radius: 0;
+  padding: 1px 8px;
 }
 .change-summary-clear:hover {
   color: var(--text-0);
@@ -13403,11 +13425,6 @@ mark.find-hit.active {
     transition: none;
   }
 }
-.change-chip:has(.st-mod) .change-chip-n { color: var(--yellow); }
-.change-chip:has(.st-add) .change-chip-n { color: var(--green); }
-.change-chip:has(.st-del) .change-chip-n { color: var(--red); }
-.change-chip:has(.st-ren) .change-chip-n { color: var(--blue, #4da3ff); }
-.change-chip:has(.st-conflict) .change-chip-n { color: var(--red); }
 /* The summary's `gap` separates its own chips and stops at its edge, so a
    sibling after it — the branch name in the composer toolbar — butts straight
    against the last chip. */

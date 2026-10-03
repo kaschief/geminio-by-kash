@@ -212,6 +212,11 @@
   {
     "page": "files",
     "keys": [
+      "chg.showAll",
+      "settings.changeCounts",
+      "settings.changeCountsCapsule",
+      "settings.changeCountsHint",
+      "settings.changeCountsStat",
       "settings.diffHunkContext",
       "settings.diffHunkContextHint",
       "settings.filePull",
