@@ -7361,16 +7361,10 @@ body.col-resizing .node-ava {
   flex-shrink: 0;
   padding: 3px 6px;
 }
-/* A narrow panel sheds the decorative parts first, so the count and the
-   controls stay visible: the mix bar goes, then the branch name (already in
-   the toolbar and the status bar). */
+/* A narrow panel sheds the branch name first (it is already in the toolbar
+   and the status bar), so the counts and the controls stay visible. */
 .panel-toolbar {
   container-type: inline-size;
-}
-@container (max-width: 400px) {
-  .panel-toolbar .change-summary-bar {
-    display: none;
-  }
 }
 @container (max-width: 330px) {
   .panel-toolbar .panel-title em {
@@ -13344,25 +13338,6 @@ mark.find-hit.active {
   overflow: hidden;
   vertical-align: middle;
 }
-.change-summary-bar {
-  display: inline-flex;
-  flex-shrink: 0;
-  width: 40px;
-  height: 7px;
-  border-radius: 999px;
-  overflow: hidden;
-  background: var(--bg-4);
-}
-.change-summary-seg {
-  display: block;
-  min-width: 3px;
-  height: 100%;
-}
-.change-summary-seg.st-mod { background: var(--yellow); }
-.change-summary-seg.st-add { background: var(--green); }
-.change-summary-seg.st-del { background: var(--red); }
-.change-summary-seg.st-ren { background: var(--blue, #4da3ff); }
-.change-summary-seg.st-conflict { background: var(--red); }
 .change-chip {
   display: inline-flex;
   align-items: center;

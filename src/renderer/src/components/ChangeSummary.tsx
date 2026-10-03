@@ -4,8 +4,8 @@ import { interp, useT } from '../i18n'
 import { statusClass, statusLabel } from './FileListView'
 
 /** The change breakdown above a file list.
- *  Same status tiles the rows use (M / + / − / → / !), a mono count, and a
- *  git-stat bar for the mix — so the header and the tree speak one language.
+ *  Same status tiles the rows use (M / + / − / → / !) and a mono count, so
+ *  the header and the tree speak one language.
  *
  *  Given `onFilter`, the counts double as the list's filter: the breakdown is
  *  already where the eye goes for "what kind of change", so it is where you
@@ -33,17 +33,6 @@ export function ChangeSummary({
       aria-label={label || undefined}
       role={onFilter ? 'group' : undefined}
     >
-      {chips.length > 0 && (
-        <span className="change-summary-bar" aria-hidden="true">
-          {chips.map((c) => (
-            <span
-              key={c.bucket}
-              className={`change-summary-seg ${statusClass(SAMPLE_STATUS[c.bucket])}`}
-              style={{ flexGrow: c.n }}
-            />
-          ))}
-        </span>
-      )}
       {chips.map((c) => {
         const status = SAMPLE_STATUS[c.bucket]
         const spokenChip = interp(t(c.labelKey), { n: c.n })
@@ -71,6 +60,9 @@ export function ChangeSummary({
             aria-pressed={on}
             aria-label={spokenChip}
             data-tip={interp(t('chg.filterTip'), { label: spokenChip })}
+            // A count is a label to read, not an unexplained icon: wait like
+            // labelled controls do, so passing over the header stays quiet.
+            data-tip-delay="labelled"
             onClick={(e) => onFilter(toggleBucket(filter ?? new Set(), c.bucket, e.metaKey || e.ctrlKey))}
           >
             {content}
