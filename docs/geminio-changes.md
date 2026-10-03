@@ -378,10 +378,13 @@ tab. *Limit:* the index is generated from component copy at dev/build time, so
 a label added without a rebuild is not searchable yet.
 ([Finding a setting](help/search.md#finding-a-setting))
 
-**Your app icon.** Classic, your connected GitHub photo, or Monogram, Branch and
-Orbit styles in six colours. The Dock changes immediately; in the installed app
-the Finder icon changes too and survives quitting. The photo is cached for
-offline use. *Limit:* the development build changes only its running Dock icon.
+**Your app icon.** Ten illustrated icons (Monoline, the default, then Portal,
+Deboss, Night slab, Terminal, Crystal, Topo, Water, Mercury and Blueprint)
+replace the older Classic, Monogram, Branch and Orbit styles, their six colours
+and the GitHub photo option. The Dock changes immediately; in the installed app
+the Finder icon changes too and survives quitting. *Limits:* the icons are fixed
+artwork with no colour options; a choice saved by an earlier version falls back
+to Monoline; the development build changes only its running Dock icon.
 ([App icon](help/themes.md#app-icon))
 
 **Number fields you can type into.** Bounded number inputs no longer clamp on

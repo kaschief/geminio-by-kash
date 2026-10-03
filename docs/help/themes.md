@@ -75,15 +75,19 @@ This preference applies across repositories, including repositories inside group
 
 ## App icon
 
-On macOS, **Settings → Appearance → App icon** offers the original Classic
-mascot, your connected **GitHub photo**, and dimensional Monogram, Branch and Orbit styles. Each new style has six colors:
-Violet, Ocean, Mint, Sunset, Rose and Graphite. The selection changes the Dock
-icon immediately. In the installed app, it also updates the Finder icon and
-stays selected in the Dock after quitting. The GitHub photo is
-cached locally so it also works offline after the first selection. Choose **Classic** to restore the original icon. The development demo changes
-only its running Dock icon, keeping the shared Electron runtime unchanged.
+On macOS, **Settings → Appearance → App icon** offers ten illustrated icons:
+Monoline (the default), Portal, Deboss, Night slab, Terminal, Crystal, Topo,
+Water, Mercury and Blueprint. Your choice changes the Dock icon immediately. In
+the installed app it also updates the Finder icon, so it stays selected after
+you quit and relaunch. Choose **Monoline** to go back to the icon the app
+shipped with.
 
-![App icon styles and colors](../screenshots/app-icon-picker.webp)
+The icons are fixed artwork, so there are no color options, and the choice is
+macOS-only. The development build changes only its running Dock icon, leaving
+the shared Electron runtime untouched, and applies your saved choice again each
+time it starts.
+
+![The ten app icons](../screenshots/app-icon-picker.webp)
 
 ## Layout
 

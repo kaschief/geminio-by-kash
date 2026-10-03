@@ -6,7 +6,6 @@ import { execFile, spawn } from 'child_process'
 import icon from '../../resources/icon.png?asset'
 import type { AppRelease } from '../shared/types'
 import { registerGitHandlers } from './git'
-import { registerAppIconHandlers } from './githubAppIcon'
 import { applyAppIcon, hasPendingAppIcon, finishAppIconUpdates } from './appIcon'
 import { readSettings, registerSettingsHandlers } from './settings'
 import { registerAiHandlers } from './ai'
@@ -431,7 +430,6 @@ app.whenReady().then(async () => {
 
   registerGitHandlers()
   registerSettingsHandlers()
-  registerAppIconHandlers()
   registerAiHandlers()
   registerRepoChatHandlers()
   registerWikiHandlers()

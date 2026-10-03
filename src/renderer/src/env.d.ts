@@ -42,7 +42,6 @@ interface LaunchApi {
 }
 
 interface PreloadApi {
-  appIcon: { prepareGithub(url: string): Promise<string> }
   platform: string
   shotMode: boolean
   git(method: string, ...args: unknown[]): Promise<unknown>

@@ -9,7 +9,7 @@ import { persistMacAppIcon } from '../src/main/persistentAppIcon'
 const exec = promisify(execFile)
 
 describe.skipIf(process.platform !== 'darwin')('persistent macOS application icons', () => {
-  it('keeps a selected icon after the writer exits, replaces it, and restores Classic without changing signed resources', async () => {
+  it('keeps a selected icon after the writer exits, replaces it, and restores the default without changing signed resources', async () => {
     const dir = await mkdtemp(join(tmpdir(), 'geminio-icon-test-'))
     const bundle = join(dir, "Kash's Test.app")
     try {
@@ -24,10 +24,10 @@ describe.skipIf(process.platform !== 'darwin')('persistent macOS application ico
       const original = await readFile(icon)
       await exec('/usr/bin/codesign', ['--force', '--sign', '-', bundle])
       const customIcon = async (): Promise<string> => (await exec('/usr/bin/xattr', ['-px', 'com.apple.ResourceFork', join(bundle, 'Icon\r')], { maxBuffer: 8 * 1024 * 1024 })).stdout
-      await persistMacAppIcon(bundle, await readFile(resolve('resources/app-icons/orbit-ocean.png')))
+      await persistMacAppIcon(bundle, await readFile(resolve('resources/app-icons/portal.png')))
       const first = await customIcon() // fresh process, after the native writer has exited
       expect(first.length).toBeGreaterThan(100)
-      await persistMacAppIcon(bundle, await readFile(resolve('resources/app-icons/branch-rose.png')))
+      await persistMacAppIcon(bundle, await readFile(resolve('resources/app-icons/water.png')))
       expect(await customIcon()).not.toBe(first)
       // Finder custom-icon metadata is outside sealed resources; normal signature validation remains intact.
       await exec('/usr/bin/codesign', ['--verify', '--deep', bundle])

@@ -133,9 +133,8 @@ export const shots = [
     clipTo: '.app-icon-picker',
     drive: async (page) => {
       await page.evaluate(() => window.__shot.ui.getState().openModal({ kind: 'settings', page: 'themes' }))
-      await page.getByRole('button', { name: 'Monogram', exact: true }).click()
-      await page.getByRole('button', { name: 'Ocean', exact: true }).click()
-      await page.getByRole('button', { name: 'Ocean', exact: true }).filter({ has: page.locator('svg') }).waitFor()
+      await page.getByRole('button', { name: 'Portal', exact: true }).click()
+      await page.locator('.app-icon-choice.selected', { hasText: 'Portal' }).waitFor()
     }
   },
   {

@@ -467,6 +467,7 @@ redaction logic in production code.
 | `scripts/docs-map.json` | Which page documents which modal / page tab / command |
 | `scripts/build-site.mjs` | The GitHub Pages site (`npm run site`) |
 | `examples/screenshots/` | Playwright screenshot + clip automation (`npm run screenshots`), and `verify-*.cjs` real-app regression checks |
+| `scripts/generate-app-icons.cjs` | Rebuilds the ten app icon PNGs and the default-icon copies (`node_modules/.bin/electron scripts/generate-app-icons.cjs`). macOS only: it needs system fonts, `sips` and `iconutil`. The committed PNGs are the source of truth |
 | `scripts/settings-search-index.mjs` | Builds the Settings search index from component copy; runs before `dev` and `build` |
 | `examples/monster-repo.sh` | Builds a 140k-commit / 92k-file repo for perf work (`npm run playground:monster`). Not part of the playground — it lives in gitignored `examples/monster/` and nothing wipes it |
 | `scripts/install-local-mac.sh` | `npm run install:mac` — builds arm64 only and replaces `/Applications/Geminio.app`, keeping the user's custom app icon and leaving one registered copy. The only way to update the installed app; never copy a bundle by hand. Run only after the user approves the change and asks for it |
