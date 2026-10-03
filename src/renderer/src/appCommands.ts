@@ -21,7 +21,7 @@ import { openInEditor } from './lib/editorOpen'
 import { requestCloseTab } from './lib/repositoryMenuItems'
 import { rightPanelToggleAction } from './lib/repoChatUI'
 
-const ISSUES_URL = 'https://github.com/myappdesk/geminio/issues/new'
+const ISSUES_URL = 'https://github.com/kaschief/geminio-by-kash/issues/new'
 
 /** The repository the active tab is currently showing, or null. */
 export function activeRepoPath(): string | null {

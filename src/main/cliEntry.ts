@@ -577,7 +577,7 @@ ${h('OPTIONS')}
   -h, --help                     This text
   -V, --version                  Version
 
-${dim('Docs: https://myappdesk.github.io/gitcito/help/cli.html')}`)
+${dim('Docs: https://kaschief.github.io/geminio-by-kash/help/cli.html')}`)
 }
 
 function verbList(): void {

@@ -68,7 +68,7 @@ export function buildStackSection(levels: StackSectionLevel[], self: number, tru
     `**Stack** (top → bottom, lands on \`${trunk}\`):`,
     ...rows,
     '',
-    '_Managed by [Geminio](https://myappdesk.github.io/gitcito/) — merge bottom-up._',
+    '_Managed by [Geminio](https://kaschief.github.io/geminio-by-kash/) — merge bottom-up._',
     STACK_SECTION_END
   ].join('\n')
 }

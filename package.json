@@ -5,7 +5,7 @@
   "description": "A lightweight Git client built with Electron, React and clean architecture",
   "main": "out/main/index.js",
   "license": "MIT",
-  "author": "MyAppDesk <team@myappdesk.dev>",
+  "author": "Kaschief Johnson",
   "scripts": {
     "dev": "node scripts/settings-search-index.mjs && electron-vite dev",
     "build": "node scripts/settings-search-index.mjs && node scripts/sync-grammars.mjs && node scripts/gen-licenses.mjs && electron-vite build",
