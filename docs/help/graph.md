@@ -113,7 +113,10 @@ drop a stash whose parent they drop, as noted above.
 ## Commit details
 
 Selecting a commit shows its changed files (tree or flat), author, SHA,
-co-authors, and its signature. The header above the file list splits the
+co-authors, and its signature. A long message — past about 120 characters —
+is set a little smaller and stops at four lines, fading out; click it to read
+the rest in place, and again to fold it. Links in it still open, and selecting
+text never folds it. The header above the file list splits the
 count by kind, coloured like the glyphs on the rows. `#123` references and
 `@mentions` are autolinked to your host.
 

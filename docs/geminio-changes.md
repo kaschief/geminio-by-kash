@@ -201,6 +201,13 @@ digits are ignored (as git does), and a block moved and edited is not marked.
 The old split setting carries over as the Split layout.
 ([Diffs](help/diffs.md#inline-layout))
 
+**Long commit messages stay in their place.** A message past about 120
+characters is set slightly smaller and tighter and stops at four lines with a
+fade; clicking the text opens it in place. Short messages are unchanged, and
+links and text selection inside keep working. *Limit:* it is the message as
+written — a one-line message is not reflowed into a list.
+([Commit details](help/graph.md#commit-details))
+
 **Filter by kind of change.** The counts above a file list — working
 changes, a commit, a stash — read like `git diff --stat` (`~7 +3 −1 →1`),
 drawn as one capsule or as loose numbers (Settings → Files & diffs), and are

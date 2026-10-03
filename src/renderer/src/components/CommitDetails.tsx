@@ -28,6 +28,7 @@ import { mi } from './menuIcons'
 import { fileListViewMenuItems } from '../lib/fileListMenu'
 import { stepRange, claimRangeKeys, ownsRangeKeys, rangeKeysBlocked, domOrder } from '../lib/rangeSelect'
 import { ChangeSummary } from './ChangeSummary'
+import { ClampedMessage } from './ClampedMessage'
 import { effectiveFilter, filterByBuckets, type BucketFilter } from '../lib/fileStats'
 
 function profileUrl(name: string, email: string, remotes: RemoteInfo[]): string | undefined {
@@ -404,13 +405,13 @@ export function CommitDetails({ repo, hash }: { repo: RepoData; hash: string }):
             <FilePenLine size={13} />
           </button>
         </div>
-        <p className="commit-subject">
+        <ClampedMessage className="commit-subject" text={commit.subject} resetKey={commit.hash}>
           {autolink(
             commit.subject,
             remoteWebUrl(repo.remotes.find((r) => r.name === 'origin')?.url ?? repo.remotes[0]?.url),
             repo.config?.config?.links?.tickets
           )}
-        </p>
+        </ClampedMessage>
 
         {/* Full-bleed like the subject above it, and absent entirely when there
             is nothing to show — an empty box on every commit is noise. */}

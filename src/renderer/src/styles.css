@@ -3771,6 +3771,33 @@ body.col-resizing .node-ava {
   border-bottom: 1px solid var(--border-soft);
 }
 
+/* A long commit message (see ClampedMessage) reads as a paragraph: a touch smaller
+   and tighter, four lines at most, fading out where it is cut. The mask fades
+   to transparent, so it blends into any panel colour in any theme. */
+.clamped-message {
+  margin: 0;
+}
+.clamped-message.is-long {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-1);
+}
+.clamped-message.is-clamped {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+}
+.clamped-message.has-more {
+  cursor: pointer;
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 3.2em), transparent calc(100% - 0.4em));
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 3.2em), transparent calc(100% - 0.4em));
+}
+.clamped-message[role='button']:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
 .commit-subject-input {
   width: 100%;
   background: transparent;
