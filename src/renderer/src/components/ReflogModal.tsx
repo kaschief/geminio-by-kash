@@ -5,6 +5,7 @@ import { gitApi } from '../infrastructure/api'
 import { useUIStore } from '../stores/ui'
 import { useRepoStore, repoActions } from '../stores/repo'
 import { useT, interp } from '../i18n'
+import { mi } from './menuIcons'
 
 /** Short "time since" label — mirrors the Toolbar helper. */
 function timeSince(at: number): string {
@@ -65,6 +66,7 @@ export function ReflogModal({ repoPath }: { repoPath: string }): React.JSX.Eleme
     openContextMenu(rect.right, rect.bottom + 4, [
       {
         label: t('reflog.checkoutDetached'),
+        icon: mi.commit(),
         onClick: () => {
           closeModal()
           void repoActions.checkout(repoPath, entry.sha)
@@ -72,6 +74,7 @@ export function ReflogModal({ repoPath }: { repoPath: string }): React.JSX.Eleme
       },
       {
         label: t('reflog.createBranch'),
+        icon: mi.newBranch(),
         onClick: () => {
           openModal({
             kind: 'input',
@@ -86,6 +89,7 @@ export function ReflogModal({ repoPath }: { repoPath: string }): React.JSX.Eleme
       { separator: true },
       {
         label: interp(t('reflog.resetHard'), { ref: repo?.branches.current ?? 'branch' }),
+        icon: mi.discard(),
         danger: true,
         onClick: () => {
           openModal({
@@ -101,6 +105,7 @@ export function ReflogModal({ repoPath }: { repoPath: string }): React.JSX.Eleme
       { separator: true },
       {
         label: t('reflog.copySha'),
+        icon: mi.copy(),
         onClick: () => {
           void navigator.clipboard.writeText(entry.sha)
           toast('success', t('reflog.shaCopied'))

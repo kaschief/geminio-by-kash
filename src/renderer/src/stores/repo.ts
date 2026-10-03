@@ -49,6 +49,7 @@ import { isLockErrorMessage, lockRepairPlan } from '../lib/gitLocks'
 import { overwrittenLocalChanges, readableGitError, summarizePaths } from '../lib/gitErrors'
 import { parseRouteConflict } from '../lib/stackOrder'
 import { timeAgo } from '../lib/timeAgo'
+import { shortFileName } from '../lib/pathDisplay'
 import { workingChangeCount } from '../lib/workingChanges'
 import { splitCommitMessage } from '../lib/commitMenuCapabilities'
 import {
@@ -1503,6 +1504,19 @@ const HUNK_ACTIONS = {
   { target: 'index' | 'worktree'; reverse: boolean; doneKey: TranslationKey; undoKey: TranslationKey }
 >
 
+/** A busy/done label for a file batch: names the file when there is just one
+ *  ("Staged config.js"), counts them otherwise. */
+function filesLabel(oneKey: TranslationKey, manyKey: TranslationKey, files: string[]): string {
+  return files.length === 1
+    ? interp(t(oneKey), { name: shortFileName(files[0]) })
+    : interp(t(manyKey), { n: files.length })
+}
+
+/** The `{what}` of an untrack/ignore label when the caller gave none. */
+function filesWhat(files: string[]): string {
+  return files.length === 1 ? shortFileName(files[0]) : interp(t('act.nFiles'), { n: files.length })
+}
+
 export const repoActions = {
   // Refreshes every slice on purpose: moving HEAD rewrites the `HEAD -> …`
   // decoration the graph reads off each commit, plus the per-directory tree
@@ -1773,7 +1787,11 @@ export const repoActions = {
     const preexisting = !!localBranch && !!repo?.branches.locals.some((b) => b.name === localBranch)
     const apply = async (): Promise<void> => {
       const res = await gitApi.previewRef(path, remote, ref, mode, localBranch)
-      if (res.conflicts.length > 0) toast('info', interp(t('prPreview.conflicted'), { n: String(res.conflicts.length) }))
+      if (res.conflicts.length === 1) {
+        toast('info', interp(t('prPreview.conflictedOne'), { name: shortFileName(res.conflicts[0]) }))
+      } else if (res.conflicts.length > 1) {
+        toast('info', interp(t('prPreview.conflicted'), { n: String(res.conflicts.length) }))
+      }
     }
     const undoEntry: UndoEntry =
       mode === 'merge'
@@ -2440,14 +2458,14 @@ export const repoActions = {
   stashApplyFiles: (path: string, sha: string, tracked: string[], untracked: string[]) =>
     useRepoStore
       .getState()
-      .run(path, interp(t('act.restoredFromStash'), { n: tracked.length + untracked.length }), () =>
+      .run(path, filesLabel('act.restoredFromStashOne', 'act.restoredFromStash', [...tracked, ...untracked]), () =>
         gitApi.stashApplyFiles(path, sha, tracked, untracked)
       , undefined, null, undefined, ['status', 'stashes']),
 
   restoreFromCommit: (path: string, hash: string, paths: string[]) =>
     useRepoStore
       .getState()
-      .run(path, interp(t('act.restoredFromCommit'), { n: paths.length }), () =>
+      .run(path, filesLabel('act.restoredFromCommitOne', 'act.restoredFromCommit', paths), () =>
         gitApi.restoreFromCommit(path, hash, paths)
       , undefined, null, undefined, ['status', 'treeStatus']),
 
@@ -2726,13 +2744,13 @@ export const repoActions = {
   refreshCiStatuses: (path: string) => useRepoStore.getState().refreshCiStatuses(path),
 
   stage: (path: string, files: string[]) =>
-    useRepoStore.getState().run(path, interp(t('act.staged'), { n: files.length }), () => gitApi.stage(path, files), undefined, null, undefined, ['status', 'treeStatus']),
+    useRepoStore.getState().run(path, filesLabel('act.stagedOne', 'act.staged', files), () => gitApi.stage(path, files), undefined, null, undefined, ['status', 'treeStatus']),
   stageAll: (path: string) => useRepoStore.getState().run(path, t('act.stagedAll'), () => gitApi.stageAll(path), undefined, null, undefined, ['status', 'treeStatus']),
   unstage: (path: string, files: string[]) =>
-    useRepoStore.getState().run(path, interp(t('act.unstaged'), { n: files.length }), () => gitApi.unstage(path, files), undefined, null, undefined, ['status', 'treeStatus']),
+    useRepoStore.getState().run(path, filesLabel('act.unstagedOne', 'act.unstaged', files), () => gitApi.unstage(path, files), undefined, null, undefined, ['status', 'treeStatus']),
   unstageAll: (path: string) => useRepoStore.getState().run(path, t('act.unstagedAll'), () => gitApi.unstageAll(path), undefined, null, undefined, ['status', 'treeStatus']),
   discard: (path: string, files: string[], untracked: boolean) =>
-    useRepoStore.getState().run(path, interp(t('act.discarded'), { n: files.length }), () => gitApi.discard(path, files, untracked), undefined, null, undefined, ['status', 'treeStatus']),
+    useRepoStore.getState().run(path, filesLabel('act.discardedOne', 'act.discarded', files), () => gitApi.discard(path, files, untracked), undefined, null, undefined, ['status', 'treeStatus']),
 
   addToGitignore: (path: string, patterns: string[], label?: string) =>
     useRepoStore.getState().run(path, interp(t('act.addedToGitignore'), { what: label ?? interp(t('act.nEntries'), { n: patterns.length }) }), async () => {
@@ -2750,13 +2768,13 @@ export const repoActions = {
     useRepoStore.getState().run(
       path,
       deleteFromDisk
-        ? interp(t('act.untrackedAndDeleted'), { what: label ?? interp(t('act.nFiles'), { n: files.length }) })
-        : interp(t('act.untracked'), { what: label ?? interp(t('act.nFiles'), { n: files.length }) }),
+        ? interp(t('act.untrackedAndDeleted'), { what: label ?? filesWhat(files) })
+        : interp(t('act.untracked'), { what: label ?? filesWhat(files) }),
       () => gitApi.untrack(path, files, deleteFromDisk)
     ),
 
   ignoreAndUntrack: (path: string, files: string[], patterns: string[], label?: string) =>
-    useRepoStore.getState().run(path, interp(t('act.ignored'), { what: label ?? interp(t('act.nFiles'), { n: files.length }) }), async () => {
+    useRepoStore.getState().run(path, interp(t('act.ignored'), { what: label ?? filesWhat(files) }), async () => {
       await gitApi.untrack(path, files, false)
       await gitApi.addToGitignore(path, patterns)
     }),

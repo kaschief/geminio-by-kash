@@ -3,6 +3,8 @@ import { useUIStore } from '../stores/ui'
 import { repoActions } from '../stores/repo'
 import { branchDropActions, type DropRef } from './branchDrop'
 import { t, interp } from '../i18n'
+import { mi } from '../components/menuIcons'
+import { rebaseIcon } from './refMenuItems'
 
 /**
  * The menu a ref-onto-ref drop opens, wired to the store actions. The rules for
@@ -14,11 +16,12 @@ export function openBranchDropMenu(repoPath: string, source: DropRef, target: Dr
   const items: MenuItem[] = branchDropActions(source, target).map((action) => {
     const label = interp(t(action.labelKey), action.vars)
     if (action.id === 'merge') {
-      return { label, onClick: () => void repoActions.mergeInto(repoPath, source.name, target.name) }
+      return { label, icon: mi.merge(), onClick: () => void repoActions.mergeInto(repoPath, source.name, target.name) }
     }
     if (action.id === 'compare') {
       return {
         label,
+        icon: mi.compare(),
         onClick: () =>
           ui.openModal({ kind: 'branch-compare', repoPath, branchA: source.name, branchB: target.name })
       }
@@ -27,6 +30,7 @@ export function openBranchDropMenu(repoPath: string, source: DropRef, target: Dr
     // gesture is easy to make by accident, the rewrite is not obvious to spot.
     return {
       label,
+      icon: rebaseIcon(),
       danger: true,
       onClick: () =>
         ui.openModal({

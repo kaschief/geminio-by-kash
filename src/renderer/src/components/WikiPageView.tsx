@@ -7,6 +7,7 @@ import { useSettingsStore } from '../stores/settings'
 import { useRepoStore } from '../stores/repo'
 import { renderMarkdown } from '../preview/markdown'
 import { interp, useT } from '../i18n'
+import { shortFileName } from '../lib/pathDisplay'
 import { ImportMap, LanguageBar, PageMap, StackList } from './WikiOverview'
 import { topLanguages } from '../../../shared/repoFacts'
 import type { ImportGraph, RepoFacts, RepoWiki, WikiArchetype, WikiProgress } from '../../../shared/types'
@@ -110,7 +111,12 @@ export function WikiPageView({ repoPath }: { repoPath: string }): React.JSX.Elem
     setExporting(true)
     try {
       const written = await wikiApi.export(repoPath)
-      toast('success', interp(t('wiki.exported'), { n: written.length }))
+      toast(
+        'success',
+        written.length === 1
+          ? interp(t('wiki.exportedOne'), { name: shortFileName(written[0]) })
+          : interp(t('wiki.exported'), { n: written.length })
+      )
     } catch (err) {
       toast('error', err instanceof Error ? err.message : String(err))
     } finally {

@@ -3,6 +3,13 @@ import { createPortal } from 'react-dom'
 import { ChevronRight } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useUIStore, type MenuItem } from '../stores/ui'
+import { submenuSummary } from '../lib/menuState'
+import { ChoiceDot } from './StateMarks'
+
+function itemRole(item: MenuItem): 'menuitem' | 'menuitemcheckbox' | 'menuitemradio' {
+  if (item.checked === undefined) return 'menuitem'
+  return item.radio ? 'menuitemradio' : 'menuitemcheckbox'
+}
 
 /** Focus the first enabled item inside a menu container. */
 function focusFirstItem(container: ParentNode | null): void {
@@ -23,6 +30,10 @@ function MenuRow({ item, close }: { item: MenuItem; close: () => void }): React.
   const rowRef = useRef<HTMLButtonElement>(null)
   const subRef = useRef<HTMLDivElement>(null)
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  // A toggle flips in place and leaves the menu open, so several can be set in
+  // one visit (graph columns, sidebar sections). The items are a snapshot taken
+  // when the menu opened, so the row tracks its own state from then on.
+  const [toggledOn, setToggledOn] = useState(item.checked === true)
 
   const cancelClose = (): void => {
     if (closeTimer.current) clearTimeout(closeTimer.current)
@@ -35,22 +46,30 @@ function MenuRow({ item, close }: { item: MenuItem; close: () => void }): React.
   useEffect(() => cancelClose, [])
 
   if (!item.submenu) {
+    const isToggle = item.checked !== undefined && !item.radio
+    const isChoice = item.checked !== undefined && !!item.radio
     return (
       <button
-        className={`menu-item ${item.danger ? 'danger' : ''}`}
-        role="menuitem"
+        className={`menu-item ${item.danger ? 'danger' : ''} ${isChoice && item.checked ? 'chosen' : ''} ${isToggle ? `toggle ${toggledOn ? 'on' : ''}` : ''}`}
+        role={itemRole(item)}
+        aria-checked={isToggle ? toggledOn : item.checked}
         disabled={item.disabled}
         title={item.title}
         onClick={() => {
-          close()
+          if (isToggle) setToggledOn((v) => !v)
+          else close()
           item.onClick?.()
         }}
       >
+        {isChoice && <ChoiceDot on={!!item.checked} />}
         {item.icon && <span className="menu-item-icon">{item.icon}</span>}
         <span className="menu-item-label">{item.label}</span>
+        {item.detail && <span className="menu-item-detail">{item.detail}</span>}
       </button>
     )
   }
+
+  const summary = item.detail ? { kind: 'value' as const, label: item.detail } : submenuSummary(item.submenu)
 
   const openSub = (): void => {
     cancelClose()
@@ -91,6 +110,8 @@ function MenuRow({ item, close }: { item: MenuItem; close: () => void }): React.
       >
         {item.icon && <span className="menu-item-icon">{item.icon}</span>}
         <span className="menu-item-label">{item.label}</span>
+        {summary?.kind === 'value' && <span className="menu-item-detail">{summary.label}</span>}
+        {summary?.kind === 'on' && <span className="menu-item-on-dot" aria-hidden="true" />}
         <ChevronRight size={13} className="menu-item-chevron" aria-hidden="true" />
       </button>
       {pos &&
@@ -125,6 +146,25 @@ function MenuRow({ item, close }: { item: MenuItem; close: () => void }): React.
   )
 }
 
+/** Eat the mouse events that complete a dismissing click (down, up, click,
+ *  and a double-click's second click), so none reaches the page beneath. */
+function swallowRestOfClick(): void {
+  const types = ['mousedown', 'mouseup', 'click', 'dblclick', 'pointerup'] as const
+  const eat = (e: Event): void => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (e.type === 'click') done()
+  }
+  const done = (): void => {
+    for (const type of types) window.removeEventListener(type, eat, true)
+    window.clearTimeout(timer)
+  }
+  for (const type of types) window.addEventListener(type, eat, true)
+  // A click that never completes (the pointer was dragged off) must not leave
+  // the page deaf; the double-click window bounds the rest.
+  const timer = window.setTimeout(done, 500)
+}
+
 export function ContextMenu(): React.JSX.Element {
   const { contextMenu, closeContextMenu } = useUIStore()
   const ref = useRef<HTMLDivElement>(null)
@@ -136,7 +176,16 @@ export function ContextMenu(): React.JSX.Element {
       // any `.context-menu` (root or flyout) as inside, so submenu items fire
       // their onClick instead of the menu closing out from under them.
       if (target.closest?.('.context-menu')) return
-      if (ref.current && !ref.current.contains(target)) closeContextMenu()
+      if (!useUIStore.getState().contextMenu || !ref.current || ref.current.contains(target)) return
+      closeContextMenu()
+      // A click away only dismisses, as in a native menu: it must not also
+      // land on whatever sits under the pointer — selecting a file, switching
+      // the view — which is never what someone closing a menu meant. A
+      // right-click is let through, so it can open the next menu in one go.
+      if (e.button === 2) return
+      e.preventDefault()
+      e.stopPropagation()
+      swallowRestOfClick()
     }
     const onKey = (e: KeyboardEvent): void => {
       if (e.key === 'Escape' && useUIStore.getState().contextMenu) {
@@ -153,6 +202,18 @@ export function ContextMenu(): React.JSX.Element {
       window.removeEventListener('blur', closeContextMenu)
     }
   }, [closeContextMenu])
+
+  // Window-drag regions (the title bar, the cosmos chrome) hand their clicks to
+  // the OS, so the outside-click listener above never sees them and the menu
+  // stays open. While a menu is up, the stylesheet keys off this attribute to
+  // make those regions ordinary content; the window just can't be dragged then.
+  const menuOpen = contextMenu != null
+  useEffect(() => {
+    if (!menuOpen) return
+    const root = document.documentElement
+    root.setAttribute('data-context-menu-open', '')
+    return () => root.removeAttribute('data-context-menu-open')
+  }, [menuOpen])
 
   // Move focus into the menu on open, so arrow keys and screen readers land on
   // the first action instead of staying on whatever was behind the menu.

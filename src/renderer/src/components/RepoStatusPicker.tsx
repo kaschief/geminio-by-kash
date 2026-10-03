@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { Check, ChevronDown, FolderGit2 } from 'lucide-react'
+import { ChevronDown, FolderGit2 } from 'lucide-react'
+import { ChoiceDot } from './StateMarks'
 import type { RepoData } from '../stores/repo'
 import { useSettingsStore } from '../stores/settings'
 import { useUIStore } from '../stores/ui'
@@ -139,7 +140,9 @@ export function RepoStatusPicker({ repo }: { repo: RepoData }): React.JSX.Elemen
                       onClick={() => activate(entry)}
                       onContextMenu={(event) => openRepoContextMenu(event, entry)}
                     >
-                      <span className="branch-picker-check">{active && <Check size={15} />}</span>
+                      <span className="branch-picker-check">
+                        <ChoiceDot on={active} />
+                      </span>
                       <span className="branch-picker-name">{label}</span>
                     </button>
                   </div>

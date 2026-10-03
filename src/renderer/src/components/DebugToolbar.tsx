@@ -26,6 +26,7 @@ import {
   AppWindow,
   Ellipsis
 } from 'lucide-react'
+import { mi } from './menuIcons'
 import { useLaunchStore } from '../stores/launch'
 import { useUIStore } from '../stores/ui'
 import { useSettingsStore } from '../stores/settings'
@@ -45,37 +46,39 @@ const EDGE_MARGIN = 6
 
 /** One glyph per hot-action kind — the toolbar's only vocabulary for them. */
 function hotIcon(icon: HotIcon, size = 14): React.JSX.Element {
+  // Menu rows (size 15) share the menus' thinner stroke; the bar keeps its default.
+  const sw = size === 15 ? 1.75 : undefined
   switch (icon) {
     case 'restart':
-      return <RefreshCw size={size} />
+      return <RefreshCw size={size} strokeWidth={sw} />
     case 'rerun':
-      return <ListRestart size={size} />
+      return <ListRestart size={size} strokeWidth={sw} />
     case 'failed':
-      return <ListX size={size} />
+      return <ListX size={size} strokeWidth={sw} />
     case 'snapshot':
-      return <Camera size={size} />
+      return <Camera size={size} strokeWidth={sw} />
     case 'menu':
-      return <LayoutList size={size} />
+      return <LayoutList size={size} strokeWidth={sw} />
     case 'debugger':
-      return <Bug size={size} />
+      return <Bug size={size} strokeWidth={sw} />
     case 'browser':
-      return <Globe size={size} />
+      return <Globe size={size} strokeWidth={sw} />
     case 'clear':
-      return <Eraser size={size} />
+      return <Eraser size={size} strokeWidth={sw} />
     case 'paint':
-      return <Paintbrush size={size} />
+      return <Paintbrush size={size} strokeWidth={sw} />
     case 'perf':
-      return <Gauge size={size} />
+      return <Gauge size={size} strokeWidth={sw} />
     case 'platform':
-      return <Smartphone size={size} />
+      return <Smartphone size={size} strokeWidth={sw} />
     case 'devtools':
-      return <Wrench size={size} />
+      return <Wrench size={size} strokeWidth={sw} />
     case 'urls':
-      return <Link size={size} />
+      return <Link size={size} strokeWidth={sw} />
     case 'cloud':
-      return <Cloud size={size} />
+      return <Cloud size={size} strokeWidth={sw} />
     default:
-      return <Zap size={size} />
+      return <Zap size={size} strokeWidth={sw} />
   }
 }
 
@@ -225,8 +228,9 @@ export function DebugToolbar({ repoPath }: { repoPath: string }): React.JSX.Elem
       r.left,
       r.bottom,
       hotMore.map((a) => ({
-        label: `${hotLabel(a)}   ${a.keyHint}`,
-        icon: hotIcon(a.icon, 13),
+        label: hotLabel(a),
+        icon: hotIcon(a.icon, 15),
+        detail: a.keyHint,
         onClick: () => sendHot(active.launchId, a)
       }))
     )
@@ -241,8 +245,16 @@ export function DebugToolbar({ repoPath }: { repoPath: string }): React.JSX.Elem
         .slice()
         .reverse()
         .map((s) => ({
-          label: `${nameOf(s)}${s.status === 'exited' ? '  ·  exited' : s.status === 'paused' ? '  ·  paused' : ''}`,
-          icon: <Play size={13} />,
+          label: nameOf(s),
+          icon: mi.run(),
+          radio: true,
+          checked: s.launchId === active.launchId,
+          detail:
+            s.status === 'exited'
+              ? t('launch.sessionExited')
+              : s.status === 'paused'
+                ? t('launch.sessionPaused')
+                : undefined,
           onClick: () => setActive(s.launchId)
         }))
     )

@@ -12,7 +12,7 @@ import { sortFilesForList } from '../src/renderer/src/lib/fileNav'
 import { workingChangeCount } from '../src/renderer/src/lib/workingChanges'
 import { readDraft, settleDraft } from '../src/renderer/src/lib/boundedNumber'
 import { splitHunkHeader } from '../src/renderer/src/lib/diff'
-import { displayPath } from '../src/renderer/src/lib/pathDisplay'
+import { displayPath, shortFileName } from '../src/renderer/src/lib/pathDisplay'
 import { fitBranchAndGraph } from '../src/renderer/src/lib/graphColumnFit'
 import type { FileEntry } from '../src/shared/types'
 import { stackOrder, moveLevel, adoptableBranches, targetFor } from '../src/renderer/src/lib/stackOrder'
@@ -4213,8 +4213,7 @@ describe('AI accounts — migration and resolution', () => {
     conflictStyle: 'clean' as const,
     branchNamingStyle: 'prefix/description' as const,
     customInstructions: '',
-    generateDescription: true,
-    coAuthor: true
+    generateDescription: true
   }
 
   it('folds a single provider into one account without losing anything', () => {
@@ -7168,6 +7167,26 @@ describe('displayPath', () => {
   it('does not mark a path as trimmed when it is already shallow enough', () => {
     expect(displayPath('src/a.ts', 3)).toEqual({ dir: 'src/', name: 'a.ts', trimmed: false })
     expect(displayPath('README.md', 0)).toEqual({ dir: '', name: 'README.md', trimmed: false })
+  })
+})
+
+describe('shortFileName', () => {
+  it('returns the basename untouched when it fits', () => {
+    expect(shortFileName('src/config.js')).toBe('config.js')
+    expect(shortFileName('README.md')).toBe('README.md')
+  })
+  it('cuts a long name in the middle and keeps the extension', () => {
+    const out = shortFileName('src/a-really-long-component-name-that-goes-on.tsx', 24)
+    expect(out.length).toBe(24)
+    expect(out.startsWith('a-really-')).toBe(true)
+    expect(out.endsWith('on.tsx')).toBe(true)
+    expect(out).toContain('…')
+  })
+  it('does not treat a dot deep in a long name as an extension', () => {
+    const out = shortFileName('v1.some-extremely-long-release-notes-file', 20)
+    expect(out.length).toBe(20)
+    expect(out.endsWith('otes-file')).toBe(true)
+    expect(out.startsWith('v1.some-ex')).toBe(true)
   })
 })
 

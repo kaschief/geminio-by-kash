@@ -405,12 +405,12 @@ export function AIConfigWizard({
                 key={cat.id}
                 type="button"
                 className={`wizard-tool-card wizard-category-card ${active ? 'active' : ''}`}
+                aria-pressed={active}
                 onClick={() => toggleCategory(cat.id)}
               >
                 <div className="wizard-tool-card-icon"><Icon size={18} /></div>
                 <span className="wizard-tool-card-label">{t(cat.labelKey)}</span>
                 <span className="wizard-category-card-desc">{t(cat.descriptionKey)}</span>
-                {active && <span className="wizard-tool-card-check"><Check size={10} /></span>}
               </button>
             )
           })}
@@ -453,11 +453,11 @@ export function AIConfigWizard({
                 key={fw.id}
                 type="button"
                 className={`wizard-tool-card ${active ? 'active' : ''}`}
+                aria-pressed={active}
                 onClick={() => toggleFramework(fw.id)}
               >
                 <div className="wizard-tool-card-icon"><Icon size={20} /></div>
                 <span className="wizard-tool-card-label">{fw.label}</span>
-                {active && <span className="wizard-tool-card-check"><Check size={10} /></span>}
               </button>
             )
           })}
@@ -468,6 +468,7 @@ export function AIConfigWizard({
                 key={fw.id}
                 type="button"
                 className={`wizard-tool-card ${active ? 'active' : ''}`}
+                aria-pressed={active}
                 onClick={() => toggleFramework(fw.id)}
               >
                 <div className="wizard-tool-card-icon"><HelpCircle size={20} /></div>

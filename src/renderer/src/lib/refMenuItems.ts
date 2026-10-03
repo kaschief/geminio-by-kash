@@ -1,8 +1,16 @@
+import { createElement, type ReactElement } from 'react'
+import { Redo2, SlidersHorizontal } from 'lucide-react'
 import type { MenuItem } from '../stores/ui'
 import { useUIStore } from '../stores/ui'
 import { repoActions } from '../stores/repo'
 import { refIntegrationActions } from './refMenu'
 import { t, interp } from '../i18n'
+import { mi } from '../components/menuIcons'
+
+// Rebase has no shared icon yet; exported so every rebase row wears the same
+// one. createElement because this module is .ts, not .tsx.
+export const rebaseIcon = (): ReactElement => createElement(Redo2, { size: 15, strokeWidth: 1.75 })
+const mergeOptionsIcon = (): ReactElement => createElement(SlidersHorizontal, { size: 15, strokeWidth: 1.75 })
 
 /**
  * The shared "what to do with this ref" block, wired to the store.
@@ -17,17 +25,19 @@ export function refIntegrationItems(repoPath: string, ref: string, current: stri
     const base = { label, disabled: action.disabled }
     switch (action.id) {
       case 'merge':
-        return { ...base, onClick: () => void repoActions.merge(repoPath, ref) }
+        return { ...base, icon: mi.merge(), onClick: () => void repoActions.merge(repoPath, ref) }
       case 'merge-options':
         return {
           ...base,
+          icon: mergeOptionsIcon(),
           onClick: () => useUIStore.getState().openModal({ kind: 'merge-options', repoPath, source: ref })
         }
       case 'rebase':
-        return { ...base, onClick: () => void repoActions.rebase(repoPath, ref) }
+        return { ...base, icon: rebaseIcon(), onClick: () => void repoActions.rebase(repoPath, ref) }
       default:
         return {
           ...base,
+          icon: mi.compare(),
           onClick: () =>
             useUIStore
               .getState()

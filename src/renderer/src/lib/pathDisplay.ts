@@ -26,3 +26,21 @@ export function displayPath(path: string, depth: PathDepth): DisplayPath {
   const kept = depth === 0 ? [] : parts.slice(-depth)
   return { dir: `…/${kept.length ? `${kept.join('/')}/` : ''}`, name, trimmed: true }
 }
+
+/**
+ * A file's name short enough to sit inside a sentence ("Staged config.js").
+ * Long names lose their middle, not their end, so the extension — usually the
+ * most telling part — survives.
+ */
+export function shortFileName(path: string, max = 32): string {
+  const name = path.split('/').filter(Boolean).pop() ?? path
+  if (name.length <= max) return name
+  const dot = name.lastIndexOf('.')
+  // A "dot" deep inside a long name is not an extension worth protecting.
+  const ext = dot > 0 && name.length - dot <= 8 ? name.slice(dot) : ''
+  const stem = name.slice(0, name.length - ext.length)
+  const room = Math.max(2, max - ext.length - 1)
+  const head = Math.ceil(room / 2)
+  const tail = room - head
+  return `${stem.slice(0, head)}…${tail > 0 ? stem.slice(-tail) : ''}${ext}`
+}

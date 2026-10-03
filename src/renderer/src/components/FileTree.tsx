@@ -8,7 +8,9 @@ import {
   Loader2,
   ExternalLink,
   Package,
-  Pencil
+  Pencil,
+  FilePlus,
+  FolderPlus
 } from 'lucide-react'
 import type { CodeSearchHit, FsDropMode, TreeEntry, TreeStatusKind } from '../../../shared/types'
 import { editorApi, gitApi, shellApi } from '../infrastructure/api'
@@ -16,6 +18,7 @@ import { useUIStore, type MenuItem } from '../stores/ui'
 import { repoActions, type RepoData } from '../stores/repo'
 import { useSettingsStore } from '../stores/settings'
 import { openWithMenuItems } from '../lib/openWith'
+import { mi } from './menuIcons'
 import { treeStatusOf } from '../lib/treeStatus'
 import { isBundleDir } from '../lib/bundleDirs'
 import {
@@ -424,22 +427,26 @@ export function FileTree({
     const items: MenuItem[] = [
       {
         label: t('fileTree.addToGitignore'),
+        icon: mi.ignore(),
         disabled: status === 'ignored',
+        title: status === 'ignored' ? t('act.alreadyIgnored') : undefined,
         onClick: () => void repoActions.addToGitignore(path, patterns, node.path)
       },
       {
         label: t('fileTree.ignoreChoose'),
+        icon: mi.ignore(),
         onClick: () => openModal({ kind: 'ignore', repoPath: path, targetPath: node.path, isFolder: node.dir })
       }
     ]
     if (tracked) {
       items.push({
         label: t('fileTree.ignoreAndUntrackTitle'),
+        icon: mi.ignore(),
         onClick: () =>
           openModal({
             kind: 'confirm',
             title: t('fileTree.ignoreAndUntrackTitle'),
-            message: `Add ${node.path} to .gitignore and stop tracking it in Git. The file(s) stay on disk.`,
+            message: interp(t('fileTree.ignoreAndUntrackMsg'), { path: node.path }),
             confirmLabel: t('fileTree.ignoreAndUntrackConfirm'),
             onConfirm: () => void repoActions.ignoreAndUntrack(path, [node.path], patterns, node.path)
           })
@@ -447,23 +454,25 @@ export function FileTree({
       items.push({ separator: true })
       items.push({
         label: t('fileTree.stopTrackingTitle'),
+        icon: mi.remove(),
         onClick: () =>
           openModal({
             kind: 'confirm',
             title: t('fileTree.stopTrackingTitle'),
-            message: `Stop tracking ${node.path} in Git? It stays on disk but is removed from the repository on the next commit.`,
+            message: interp(t('fileTree.stopTrackingMsg'), { path: node.path }),
             confirmLabel: t('fileTree.stopTrackingConfirm'),
             onConfirm: () => void repoActions.untrack(path, [node.path], false, node.path)
           })
       })
       items.push({
         label: t('fileTree.deleteFromDiskTitle'),
+        icon: mi.delete(),
         danger: true,
         onClick: () =>
           openModal({
             kind: 'confirm',
             title: t('fileTree.deleteFromDiskTitle'),
-            message: `Remove ${node.path} from version control and permanently delete from disk? This cannot be undone.`,
+            message: interp(t('fileTree.deleteFromDiskMsg'), { path: node.path }),
             danger: true,
             confirmLabel: t('fileTree.deleteFromDiskConfirm'),
             onConfirm: () => void repoActions.untrack(path, [node.path], true, node.path)
@@ -476,20 +485,30 @@ export function FileTree({
   const menuFor = (node: TreeEntry): MenuItem[] => [
     ...(node.dir
       ? [
-          { label: t('fileTree.newFileMenu'), onClick: () => promptCreate(node.path, false) } as MenuItem,
-          { label: t('fileTree.newFolderMenu'), onClick: () => promptCreate(node.path, true) } as MenuItem,
+          { label: t('fileTree.newFileMenu'), icon: <FilePlus size={15} strokeWidth={1.75} />, onClick: () => promptCreate(node.path, false) } as MenuItem,
+          { label: t('fileTree.newFolderMenu'), icon: <FolderPlus size={15} strokeWidth={1.75} />, onClick: () => promptCreate(node.path, true) } as MenuItem,
           { separator: true } as MenuItem
         ]
-      : [{ label: t('fileTree.open'), onClick: () => openFile(node.path) } as MenuItem, { separator: true } as MenuItem]),
-    { label: t('fileTree.rename'), onClick: () => promptRename(node) },
-    { label: t('fileTree.moveToTrashMenu'), danger: true, onClick: () => confirmDelete(node) },
+      : [{ label: t('fileTree.open'), icon: mi.view(), onClick: () => openFile(node.path) } as MenuItem, { separator: true } as MenuItem]),
+    { label: t('fileTree.rename'), icon: mi.rename(), onClick: () => promptRename(node) },
+    { label: t('fileTree.moveToTrashMenu'), icon: mi.delete(), danger: true, onClick: () => confirmDelete(node) },
     { separator: true },
     ...ignoreMenu(node),
     { separator: true },
-    { label: t('fileTree.filterGraph'), onClick: () => useUIStore.getState().setPathFilter(node.path) },
+    // An on/off, not a one-shot: right-clicking the path that is already the
+    // filter shows it on, and the same row turns it off again.
+    {
+      label: t('fileTree.filterGraph'),
+      icon: mi.filter(),
+      checked: useUIStore.getState().pathFilter === node.path,
+      onClick: () => {
+        const ui = useUIStore.getState()
+        ui.setPathFilter(ui.pathFilter === node.path ? null : node.path)
+      }
+    },
     { separator: true },
-    { label: shellApi.revealLabel, onClick: () => void shellApi.revealInFolder(abs(path, node.path)) },
-    ...(!editor?.command ? [{ label: t('fileTree.openDefaultApp'), onClick: () => void shellApi.openPath(abs(path, node.path)) }] : []),
+    { label: shellApi.revealLabel, icon: mi.reveal(), onClick: () => void shellApi.revealInFolder(abs(path, node.path)) },
+    ...(!editor?.command ? [{ label: t('fileTree.openDefaultApp'), icon: mi.openExternal(), onClick: () => void shellApi.openPath(abs(path, node.path)) }] : []),
     ...openWithMenuItems(
       abs(path, node.path),
       defaultOpenApp,
@@ -500,12 +519,13 @@ export function FileTree({
       editor,
       { isDir: node.dir, repo: path }
     ),
-    { label: t('fileTree.copyPath'), onClick: () => void navigator.clipboard.writeText(node.path) },
+    { label: t('fileTree.copyPath'), icon: mi.copyPath(), onClick: () => void navigator.clipboard.writeText(node.path) },
     ...(node.dir
       ? []
       : [
           {
             label: t('cmd.historyPurge'),
+            icon: mi.discard(),
             danger: true,
             onClick: () => openModal({ kind: 'history-purge', repoPath: path, initialPath: node.path })
           }
@@ -513,8 +533,8 @@ export function FileTree({
   ]
 
   const rootMenu = (): MenuItem[] => [
-    { label: t('fileTree.newFileMenu'), onClick: () => promptCreate('', false) },
-    { label: t('fileTree.newFolderMenu'), onClick: () => promptCreate('', true) }
+    { label: t('fileTree.newFileMenu'), icon: <FilePlus size={15} strokeWidth={1.75} />, onClick: () => promptCreate('', false) },
+    { label: t('fileTree.newFolderMenu'), icon: <FolderPlus size={15} strokeWidth={1.75} />, onClick: () => promptCreate('', true) }
   ]
 
   const renderLevel = (dir: string, depth: number): React.JSX.Element[] => {

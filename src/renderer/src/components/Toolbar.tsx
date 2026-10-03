@@ -53,7 +53,12 @@ import {
   Lock,
   Users,
   FlaskConical,
-  X
+  X,
+  Cloud,
+  FastForward,
+  Layers2,
+  ListChecks,
+  Zap
 } from 'lucide-react'
 import type { MenuItem } from '../stores/ui'
 import { useRepoStore, repoActions, type RepoData } from '../stores/repo'
@@ -61,7 +66,8 @@ import { useUIStore } from '../stores/ui'
 import { useSettingsStore } from '../stores/settings'
 import { repoChatAvailable } from '../lib/repoChatUI'
 import { externalUndoFirst, externalUndoLabel } from '../lib/externalUndo'
-import { useT, interp } from '../i18n'
+import { mi } from './menuIcons'
+import { useT, interp, type TranslationKey } from '../i18n'
 import { timeAgo, isStale } from '../lib/timeAgo'
 import { BranchStatusPicker } from './BranchStatusPicker'
 import { RepoStatusPicker } from './RepoStatusPicker'
@@ -81,6 +87,8 @@ type BarItem =
       icon: React.JSX.Element
       /** The same action drawn small, for the overflow menu. */
       menuIcon: React.JSX.Element
+      /** The overflow row's current value, when its dropdown holds a setting. */
+      menuDetail?: string
       disabled?: boolean
       /** Primary click. Absent means the button only opens `menu`. */
       run?: () => void
@@ -90,6 +98,18 @@ type BarItem =
       /** Fetch alone hangs its age label under the button. */
       age?: boolean
     }
+
+type PullAction = 'fetch' | 'default' | 'ff-only' | 'rebase'
+
+/** What the Pull button does. Keys, not strings, so labels follow a language switch. */
+const PULL_ACTIONS: readonly { action: PullAction; labelKey: TranslationKey; icon: () => React.JSX.Element }[] = [
+  { action: 'fetch', labelKey: 'pull.fetchAll', icon: mi.fetch },
+  { action: 'default', labelKey: 'repos.pullModeDefault', icon: mi.pull },
+  { action: 'ff-only', labelKey: 'repos.pullModeFfOnly', icon: () => <FastForward size={15} strokeWidth={1.75} /> },
+  { action: 'rebase', labelKey: 'repos.pullModeRebase', icon: () => <Layers2 size={15} strokeWidth={1.75} /> }
+]
+
+const remoteIcon = (): React.JSX.Element => <Cloud size={15} strokeWidth={1.75} />
 
 /** Gap between bar items, and the width the "More" button needs for itself. */
 const ITEM_GAP = 2
@@ -145,45 +165,49 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
 
   const pullItems = (): MenuItem[] => [
     { label: t('pull.chooseDefault'), disabled: true },
-    ...([
-      ['fetch', t('pull.fetchAll')],
-      ['default', t('repos.pullModeDefault')],
-      ['ff-only', t('repos.pullModeFfOnly')],
-      ['rebase', t('repos.pullModeRebase')]
-    ] as const).map(([action, label]) => ({
-      label: `${pullAction === action ? '✓ ' : '   '}${label}`,
+    ...PULL_ACTIONS.map(({ action, labelKey, icon }) => ({
+      label: t(labelKey),
+      icon: icon(),
+      radio: true,
+      checked: pullAction === action,
       onClick: () => useSettingsStore.getState().update((s) => ({ ...s, toolbarPullAction: action }))
     }))
   ]
 
   const pushItems = (): MenuItem[] => [
-    { label: t('toolbar.push'), onClick: () => void repoActions.push(path) },
+    { label: t('toolbar.push'), icon: mi.push(), onClick: () => void repoActions.push(path) },
     // Per-remote entries only earn their place once there is more than one.
     ...(repo.remotes.length > 1
       ? [
           {
             label: t('push.toRemote'),
+            icon: mi.push(),
             submenu: repo.remotes.map((r) => ({
               label: r.name,
+              icon: remoteIcon(),
               onClick: () => void repoActions.pushToRemotes(path, [r.name])
             }))
           },
           {
             label: interp(t('push.allRemotes'), { n: String(repo.remotes.length) }),
+            icon: mi.ahead(),
             onClick: () => void repoActions.pushToRemotes(path, repo.remotes.map((r) => r.name))
           }
         ]
       : []),
     {
       label: t('push.tags'),
+      icon: mi.tag(),
       submenu: repo.remotes.map((r) => ({
         label: r.name,
+        icon: remoteIcon(),
         onClick: () => void repoActions.pushAllTags(path, r.name)
       }))
     },
     { separator: true },
     {
       label: t('push.force'),
+      icon: <Zap size={15} strokeWidth={1.75} />,
       danger: true,
       onClick: () => {
         if (!confirmForcePush) {
@@ -214,10 +238,10 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
     })
 
   const stashItems = (): MenuItem[] => [
-    { label: t('stash.allChanges'), icon: <Archive size={15} />, onClick: stashPrompt },
+    { label: t('stash.allChanges'), icon: mi.stash(), onClick: stashPrompt },
     {
       label: t('stash.selectedFiles'),
-      icon: <Archive size={15} />,
+      icon: <ListChecks size={15} strokeWidth={1.75} />,
       onClick: () => openModal({ kind: 'stash-partial', repoPath: path })
     }
   ]
@@ -229,11 +253,21 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
     return [
       {
         label: t('notes.fetch'),
-        submenu: remotes.map((r) => ({ label: r, onClick: () => void repoActions.fetchNotes(path, r) }))
+        icon: mi.fetch(),
+        submenu: remotes.map((r) => ({
+          label: r,
+          icon: remoteIcon(),
+          onClick: () => void repoActions.fetchNotes(path, r)
+        }))
       },
       {
         label: t('notes.push'),
-        submenu: remotes.map((r) => ({ label: r, onClick: () => void repoActions.pushNotes(path, r) }))
+        icon: mi.push(),
+        submenu: remotes.map((r) => ({
+          label: r,
+          icon: remoteIcon(),
+          onClick: () => void repoActions.pushNotes(path, r)
+        }))
       }
     ]
   }
@@ -248,30 +282,30 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
     // belongs to a repository is here too, with the rarely-used two thirds
     // folded into groups so the list stays readable.
     return [
-      { label: t('tools.reflog'), icon: <History size={15} />, onClick: () => openModal({ kind: 'reflog', repoPath: path }) },
-      { label: t('tools.snapshots'), icon: <Camera size={15} />, onClick: () => openModal({ kind: 'snapshots', repoPath: path }) },
-      { label: t('timeMachine.open'), icon: <Clock size={15} />, onClick: () => openModal({ kind: 'time-machine', repoPath: path }) },
-      { label: t('tools.bisect'), icon: <Bug size={15} />, onClick: () => openModal({ kind: 'bisect', repoPath: path }) },
+      { label: t('tools.reflog'), icon: <History size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'reflog', repoPath: path }) },
+      { label: t('tools.snapshots'), icon: <Camera size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'snapshots', repoPath: path }) },
+      { label: t('timeMachine.open'), icon: <Clock size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'time-machine', repoPath: path }) },
+      { label: t('tools.bisect'), icon: <Bug size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'bisect', repoPath: path }) },
       { separator: true },
-      { label: t('absorb.open'), icon: <Magnet size={15} />, onClick: () => openModal({ kind: 'absorb', repoPath: path }) },
+      { label: t('absorb.open'), icon: <Magnet size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'absorb', repoPath: path }) },
       {
         label: t('radar.open'),
-        icon: <Radar size={15} />,
+        icon: <Radar size={15} strokeWidth={1.75} />,
         onClick: () => openModal({ kind: 'conflict-radar', repoPath: path, base: repo.branches.current || 'HEAD' })
       },
       {
         label: t('teamRadar.open'),
-        icon: <Users size={15} />,
+        icon: <Users size={15} strokeWidth={1.75} />,
         onClick: () => openModal({ kind: 'teammate-radar', repoPath: path })
       },
       {
         label: t('localCi.open'),
-        icon: <FlaskConical size={15} />,
+        icon: <FlaskConical size={15} strokeWidth={1.75} />,
         onClick: () => openModal({ kind: 'local-ci', repoPath: path })
       },
       {
         label: t('tools.compareRefs'),
-        icon: <ArrowLeftRight size={15} />,
+        icon: <ArrowLeftRight size={15} strokeWidth={1.75} />,
         onClick: () => {
           const cur = repo.branches.current || 'HEAD'
           const base =
@@ -283,70 +317,70 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
       },
       {
         label: t('rangeDiff.open'),
-        icon: <History size={15} />,
+        icon: <History size={15} strokeWidth={1.75} />,
         onClick: () =>
           openModal({ kind: 'range-diff', repoPath: path, branch: repo.branches.current || 'HEAD' })
       },
       ...(notesMenu().length
-        ? [{ label: t('notes.title'), icon: <StickyNote size={15} />, submenu: notesMenu() }]
+        ? [{ label: t('notes.title'), icon: <StickyNote size={15} strokeWidth={1.75} />, submenu: notesMenu() }]
         : []),
       { separator: true },
       {
         label: t('tools.groupInspect'),
-        icon: <Search size={15} />,
+        icon: <Search size={15} strokeWidth={1.75} />,
         submenu: [
-          { label: t('cmd.objects'), icon: <ObjectsIcon size={15} />, onClick: () => openModal({ kind: 'objects', repoPath: path }) },
-          { label: t('cmd.codeSearch'), icon: <Search size={15} />, onClick: () => openModal({ kind: 'code-search', repoPath: path }) },
-          { label: t('cmd.insights'), icon: <BarChart3 size={15} />, onClick: () => openModal({ kind: 'repo-settings', repoPath: path, tab: 'insights' }) },
-          { label: t('timelapse.open'), icon: <Film size={15} />, onClick: () => openModal({ kind: 'timelapse', repoPath: path }) },
-          { label: t('prPreview.open'), icon: <GitPullRequestArrow size={15} />, onClick: () => openModal({ kind: 'pr-preview', repoPath: path }) }
+          { label: t('cmd.objects'), icon: <ObjectsIcon size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'objects', repoPath: path }) },
+          { label: t('cmd.codeSearch'), icon: <Search size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'code-search', repoPath: path }) },
+          { label: t('cmd.insights'), icon: <BarChart3 size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'repo-settings', repoPath: path, tab: 'insights' }) },
+          { label: t('timelapse.open'), icon: <Film size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'timelapse', repoPath: path }) },
+          { label: t('prPreview.open'), icon: <GitPullRequestArrow size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'pr-preview', repoPath: path }) }
         ]
       },
       {
         label: t('tools.groupHistory'),
-        icon: <GitMerge size={15} />,
+        icon: <GitMerge size={15} strokeWidth={1.75} />,
         submenu: [
-          { label: t('cmd.mergeOptions'), icon: <GitMerge size={15} />, onClick: () => openModal({ kind: 'merge-options', repoPath: path }) },
-          { label: t('tools.stack'), icon: <Layers size={15} />, onClick: () => openModal({ kind: 'stack', repoPath: path }) },
-          { label: t('cmd.gitflow'), icon: <GitBranch size={15} />, onClick: () => openModal({ kind: 'gitflow', repoPath: path }) },
-          { label: t('cmd.subtree'), icon: <FolderInput size={15} />, onClick: () => openModal({ kind: 'subtree', repoPath: path }) },
-          { label: t('cmd.historyPurge'), icon: <Eraser size={15} />, onClick: () => openModal({ kind: 'history-purge', repoPath: path }) },
-          { label: t('cmd.replace'), icon: <GitGraph size={15} />, onClick: () => openModal({ kind: 'replace', repoPath: path }) }
+          { label: t('cmd.mergeOptions'), icon: <GitMerge size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'merge-options', repoPath: path }) },
+          { label: t('tools.stack'), icon: <Layers size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'stack', repoPath: path }) },
+          { label: t('cmd.gitflow'), icon: <GitBranch size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'gitflow', repoPath: path }) },
+          { label: t('cmd.subtree'), icon: <FolderInput size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'subtree', repoPath: path }) },
+          { label: t('cmd.historyPurge'), icon: <Eraser size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'history-purge', repoPath: path }) },
+          { label: t('cmd.replace'), icon: <GitGraph size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'replace', repoPath: path }) }
         ]
       },
       {
         label: t('tools.groupFiles'),
-        icon: <FileCog size={15} />,
+        icon: <FileCog size={15} strokeWidth={1.75} />,
         submenu: [
-          { label: t('cmd.attributes'), icon: <FileCog size={15} />, onClick: () => openModal({ kind: 'attributes', repoPath: path }) },
-          { label: t('tools.hooks'), icon: <Webhook size={15} />, onClick: () => openModal({ kind: 'hooks', repoPath: path }) },
-          { label: t('tools.lfs'), icon: <Boxes size={15} />, onClick: () => openModal({ kind: 'lfs', repoPath: path }) },
-          { label: t('tools.sparse'), icon: <FolderTree size={15} />, onClick: () => openModal({ kind: 'sparse', repoPath: path }) },
-          { label: t('cmd.clean'), icon: <Trash2 size={15} />, onClick: () => openModal({ kind: 'clean', repoPath: path }) },
-          { label: t('tools.applyPatch'), icon: <FileDiff size={15} />, onClick: () => applyPatchFile(false) },
-          { label: t('tools.applyPatchAm'), icon: <GitCommit size={15} />, onClick: () => applyPatchFile(true) }
+          { label: t('cmd.attributes'), icon: <FileCog size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'attributes', repoPath: path }) },
+          { label: t('tools.hooks'), icon: <Webhook size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'hooks', repoPath: path }) },
+          { label: t('tools.lfs'), icon: <Boxes size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'lfs', repoPath: path }) },
+          { label: t('tools.sparse'), icon: <FolderTree size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'sparse', repoPath: path }) },
+          { label: t('cmd.clean'), icon: <Trash2 size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'clean', repoPath: path }) },
+          { label: t('tools.applyPatch'), icon: <FileDiff size={15} strokeWidth={1.75} />, onClick: () => applyPatchFile(false) },
+          { label: t('tools.applyPatchAm'), icon: <GitCommit size={15} strokeWidth={1.75} />, onClick: () => applyPatchFile(true) }
         ]
       },
       {
         label: t('tools.groupRepo'),
-        icon: <HardDrive size={15} />,
+        icon: <HardDrive size={15} strokeWidth={1.75} />,
         submenu: [
-          { label: t('cmd.maintenance'), icon: <HardDrive size={15} />, onClick: () => openModal({ kind: 'maintenance', repoPath: path }) },
-          { label: t('cmd.bundle'), icon: <Package size={15} />, onClick: () => openModal({ kind: 'export', repoPath: path, tab: 'bundle' }) },
-          { label: t('cmd.archive'), icon: <Archive size={15} />, onClick: () => openModal({ kind: 'export', repoPath: path, tab: 'archive' }) },
-          { label: t('tools.changelog'), icon: <FileText size={15} />, onClick: () => openModal({ kind: 'changelog-gen', repoPath: path }) },
-          { label: t('tools.wiki'), icon: <BookOpen size={15} />, onClick: () => useSettingsStore.getState().openPageTab({ type: 'wiki', repoPath: path }) }
+          { label: t('cmd.maintenance'), icon: <HardDrive size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'maintenance', repoPath: path }) },
+          { label: t('cmd.bundle'), icon: <Package size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'export', repoPath: path, tab: 'bundle' }) },
+          { label: t('cmd.archive'), icon: <Archive size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'export', repoPath: path, tab: 'archive' }) },
+          { label: t('tools.changelog'), icon: <FileText size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'changelog-gen', repoPath: path }) },
+          { label: t('tools.wiki'), icon: <BookOpen size={15} strokeWidth={1.75} />, onClick: () => useSettingsStore.getState().openPageTab({ type: 'wiki', repoPath: path }) }
         ]
       },
       {
         label: t('tools.groupSecurity'),
-        icon: <KeyRound size={15} />,
+        icon: <KeyRound size={15} strokeWidth={1.75} />,
         submenu: [
-          { label: t('tools.vault'), icon: <KeyRound size={15} />, onClick: () => useSettingsStore.getState().openPageTab({ type: 'vault' }) },
-          { label: t('cmd.credentials'), icon: <KeyRound size={15} />, onClick: () => openModal({ kind: 'credentials', repoPath: path }) },
-          { label: t('cmd.sshKeys'), icon: <KeyRound size={15} />, onClick: () => openModal({ kind: 'settings', page: 'security' }) },
-          { label: t('cmd.secureExport'), icon: <Lock size={15} />, onClick: () => openModal({ kind: 'secure-share', repoPath: path, initialMode: 'export' }) },
-          { label: t('cmd.secureImport'), icon: <Lock size={15} />, onClick: () => openModal({ kind: 'secure-share', repoPath: path, initialMode: 'import' }) }
+          { label: t('tools.vault'), icon: <KeyRound size={15} strokeWidth={1.75} />, onClick: () => useSettingsStore.getState().openPageTab({ type: 'vault' }) },
+          { label: t('cmd.credentials'), icon: <KeyRound size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'credentials', repoPath: path }) },
+          { label: t('cmd.sshKeys'), icon: <KeyRound size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'settings', page: 'security' }) },
+          { label: t('cmd.secureExport'), icon: <Lock size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'secure-share', repoPath: path, initialMode: 'export' }) },
+          { label: t('cmd.secureImport'), icon: <Lock size={15} strokeWidth={1.75} />, onClick: () => openModal({ kind: 'secure-share', repoPath: path, initialMode: 'import' }) }
         ]
       }
     ]
@@ -369,7 +403,7 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
       label: t('toolbar.undo'),
       title: undoTitle,
       icon: <Undo2 size={17} />,
-      menuIcon: <Undo2 size={15} />,
+      menuIcon: <Undo2 size={15} strokeWidth={1.75} />,
       disabled: (!appUndo && !reflogUndo) || inflight,
       run: () => void undo(path)
     },
@@ -378,7 +412,7 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
       label: t('toolbar.redo'),
       title: nextRedo ? interp(t('toolbar.redoNext'), { label: nextRedo.label }) : t('toolbar.redo'),
       icon: <Redo2 size={17} />,
-      menuIcon: <Redo2 size={15} />,
+      menuIcon: <Redo2 size={15} strokeWidth={1.75} />,
       disabled: repo.redoStack.length === 0 || inflight,
       run: () => void redo(path)
     },
@@ -388,7 +422,10 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
       label: t(pullAction === 'fetch' ? 'toolbar.fetch' : 'toolbar.pull'),
       title: t(pullAction === 'fetch' ? 'toolbar.fetchTitle' : 'toolbar.pull'),
       icon: busyOp === 'pull' || busyOp === 'fetch' ? <Loader2 size={17} className="spin" /> : pullAction === 'fetch' ? <Download size={17} /> : <ArrowDownToLine size={17} />,
-      menuIcon: <ArrowDownToLine size={15} />,
+      menuIcon: <ArrowDownToLine size={15} strokeWidth={1.75} />,
+      // Every option, the first included, is a real choice of what the button
+      // does — so the overflow row always names it rather than hiding a default.
+      menuDetail: t(PULL_ACTIONS.find((a) => a.action === pullAction)?.labelKey ?? 'repos.pullModeDefault'),
       disabled: inflight,
       run: () => void (pullAction === 'fetch' ? repoActions.fetchAll(path) : repoActions.pull(path, pullAction)),
       menu: pullItems,
@@ -400,7 +437,7 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
       label: t('toolbar.push'),
       title: t('toolbar.push'),
       icon: busyOp === 'push' ? <Loader2 size={17} className="spin" /> : <ArrowUpFromLine size={17} />,
-      menuIcon: <ArrowUpFromLine size={15} />,
+      menuIcon: <ArrowUpFromLine size={15} strokeWidth={1.75} />,
       disabled: inflight,
       run: () => void repoActions.push(path),
       menu: pushItems,
@@ -411,7 +448,7 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
       label: t('toolbar.branch'),
       title: t('toolbar.branchTitle'),
       icon: <GitBranchPlus size={17} />,
-      menuIcon: <GitBranchPlus size={15} />,
+      menuIcon: <GitBranchPlus size={15} strokeWidth={1.75} />,
       run: () => openModal({ kind: 'create-branch', path, currentBranch: repo.branches.current })
     },
     {
@@ -419,7 +456,7 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
       label: t('toolbar.stash'),
       title: t('toolbar.stashWip'),
       icon: <Archive size={17} />,
-      menuIcon: <Archive size={15} />,
+      menuIcon: <Archive size={15} strokeWidth={1.75} />,
       disabled: inflight,
       run: stashPrompt,
       menu: stashItems
@@ -429,7 +466,7 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
       label: t('stashPanel.pop'),
       title: t('toolbar.popTitle'),
       icon: <ArchiveRestore size={17} />,
-      menuIcon: <ArchiveRestore size={15} />,
+      menuIcon: <ArchiveRestore size={15} strokeWidth={1.75} />,
       disabled: repo.stashes.length === 0 || inflight,
       run: () => void repoActions.stashPop(path, 0)
     },
@@ -438,7 +475,7 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
       label: t('toolbar.tools'),
       title: t('toolbar.toolsTitle'),
       icon: <Wrench size={16} />,
-      menuIcon: <Wrench size={15} />,
+      menuIcon: <Wrench size={15} strokeWidth={1.75} />,
       menu: toolsItems
     }
   ]
@@ -524,7 +561,7 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
       e,
       hidden.map((it) =>
         it.menu
-          ? { label: it.label, icon: it.menuIcon, submenu: it.menu() }
+          ? { label: it.label, icon: it.menuIcon, detail: it.menuDetail, submenu: it.menu() }
           : { label: it.label, icon: it.menuIcon, disabled: it.disabled, onClick: it.run }
       )
     )

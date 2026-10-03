@@ -130,7 +130,8 @@ export function ImportMap({ graph }: { graph: ImportGraph }): React.JSX.Element 
       <h3>{t('wiki.imports')}</h3>
       <p className="settings-hint wiki-imports-hint">
         {interp(t('wiki.importsHint'), { resolved: graph.resolved, external: graph.external })}
-        {graph.omittedEdges > 0 && ` ${interp(t('wiki.importsOmitted'), { n: graph.omittedEdges })}`}
+        {graph.omittedEdges === 1 && ` ${t('wiki.importsOmittedOne')}`}
+        {graph.omittedEdges > 1 && ` ${interp(t('wiki.importsOmitted'), { n: graph.omittedEdges })}`}
       </p>
       <div className="wiki-map-scroll">
         <svg

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Bot, Check, List, Loader2, Plus, RefreshCw, Terminal, Trash2, TriangleAlert } from 'lucide-react'
+import { Bot, List, Loader2, Plus, RefreshCw, Terminal, Trash2, TriangleAlert } from 'lucide-react'
 import {
   AI_FEATURES,
   AI_PROVIDERS,
@@ -16,6 +16,7 @@ import { accountLabel, accountNeedsKey, modelFor, newAccount } from '../../../sh
 import { aiApi } from '../infrastructure/api'
 import { useModelCatalogs } from './useModelCatalogs'
 import { useUIStore } from '../stores/ui'
+import { ChoiceDot } from './StateMarks'
 import { interp, useT, type TranslationKey } from '../i18n'
 
 /**
@@ -219,7 +220,7 @@ function AccountCard({
         />
         {isDefault ? (
           <span className="ai-account-badge">
-            <Check size={12} /> {t('settings.defaultAccount')}
+            <ChoiceDot on /> {t('settings.defaultAccount')}
           </span>
         ) : (
           <button type="button" className="btn ghost small" onClick={onMakeDefault}>

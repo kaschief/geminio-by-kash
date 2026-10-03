@@ -1,5 +1,6 @@
 import type { TabState } from '../../../shared/types'
 import type { TranslationKey } from '../i18n'
+import type { MenuIconName } from '../components/menuIcons'
 
 export type RepoMenuPlatform = 'darwin' | 'win32' | 'linux'
 
@@ -38,6 +39,8 @@ export type RepoMenuEntry =
       id: RepoMenuActionId
       labelKey: TranslationKey
       vars?: Record<string, string>
+      /** A name from the shared menu-icon vocabulary — kept a name so this module stays JSX-free. */
+      icon: MenuIconName
       disabled: boolean
       danger?: boolean
     }
@@ -62,35 +65,43 @@ export function repoMenuEntries(caps: RepoMenuCapabilities): RepoMenuEntry[] {
 
   const aliasItems: RepoMenuEntry[] = hasAlias
     ? [
-        { kind: 'action', id: 'changeAlias', labelKey: 'repoMenu.changeAlias', disabled: false },
-        { kind: 'action', id: 'removeAlias', labelKey: 'repoMenu.removeAlias', disabled: false }
+        { kind: 'action', id: 'changeAlias', labelKey: 'repoMenu.changeAlias', icon: 'alias', disabled: false },
+        { kind: 'action', id: 'removeAlias', labelKey: 'repoMenu.removeAlias', icon: 'discard', disabled: false }
       ]
-    : [{ kind: 'action', id: 'createAlias', labelKey: 'repoMenu.createAlias', disabled: false }]
+    : [{ kind: 'action', id: 'createAlias', labelKey: 'repoMenu.createAlias', icon: 'alias', disabled: false }]
 
   return [
     ...aliasItems,
-    { kind: 'action', id: 'showWorktrees', labelKey: 'repoMenu.showWorktrees', disabled: inspect },
-    { kind: 'action', id: 'newWorktree', labelKey: 'repoMenu.newWorktree', disabled: mutateWorktrees },
-    { kind: 'action', id: 'copyName', labelKey: 'repoMenu.copyName', disabled: false },
-    { kind: 'action', id: 'copyPath', labelKey: 'repoMenu.copyPath', disabled: false },
+    { kind: 'action', id: 'showWorktrees', labelKey: 'repoMenu.showWorktrees', icon: 'worktree', disabled: inspect },
+    {
+      kind: 'action',
+      id: 'newWorktree',
+      labelKey: 'repoMenu.newWorktree',
+      icon: 'newBranch',
+      disabled: mutateWorktrees
+    },
+    { kind: 'action', id: 'copyName', labelKey: 'repoMenu.copyName', icon: 'copy', disabled: false },
+    { kind: 'action', id: 'copyPath', labelKey: 'repoMenu.copyPath', icon: 'copyPath', disabled: false },
     { kind: 'separator' },
-    { kind: 'action', id: 'viewOnGitHub', labelKey: 'repoMenu.viewOnGitHub', disabled: !caps.githubUrl },
+    { kind: 'action', id: 'viewOnGitHub', labelKey: 'repoMenu.viewOnGitHub', icon: 'github', disabled: !caps.githubUrl },
     {
       kind: 'action',
       id: 'openTerminal',
       labelKey: 'repoMenu.openTerminal',
+      icon: 'terminal',
       disabled: inspect || !caps.terminalAvailable
     },
-    { kind: 'action', id: 'reveal', labelKey: revealLabelKey(caps.platform), disabled: inspect },
+    { kind: 'action', id: 'reveal', labelKey: revealLabelKey(caps.platform), icon: 'reveal', disabled: inspect },
     {
       kind: 'action',
       id: 'openEditor',
       labelKey: editorLabel,
+      icon: 'editor',
       vars: editorVars,
       disabled: inspect || !caps.editorAvailable
     },
     { kind: 'separator' },
-    { kind: 'action', id: 'remove', labelKey: 'repoMenu.remove', disabled: false, danger: true }
+    { kind: 'action', id: 'remove', labelKey: 'repoMenu.remove', icon: 'remove', disabled: false, danger: true }
   ]
 }
 

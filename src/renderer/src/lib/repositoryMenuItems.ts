@@ -4,7 +4,7 @@ import { useSettingsStore } from '../stores/settings'
 import { useRepoStore, repoActions } from '../stores/repo'
 import { useTerminalsStore } from '../stores/terminals'
 import { shellApi } from '../infrastructure/api'
-import { openInEditor } from './editorOpen'
+import { editorIcon, openInEditor } from './editorOpen'
 import { githubRepoUrl } from './hosting'
 import { canonicalRepoName, lookupRepoAlias } from './repoAlias'
 import {
@@ -15,6 +15,7 @@ import {
   type RepoMenuPlatform
 } from './repositoryMenu'
 import { t, interp } from '../i18n'
+import { mi } from '../components/menuIcons'
 import { closeTabPrompt, repoCloseStatus, tabCloseStatus } from './tabClose'
 
 function platformOf(): RepoMenuPlatform {
@@ -140,10 +141,12 @@ function runAction(id: RepoMenuActionId, caps: RepoMenuCapabilities, onRemove: (
 /** Shared repository-scoped context menu. `extras` are appended after Remove. */
 export function repositoryMenuItems(path: string, onRemove: () => void, extras?: MenuItem[]): MenuItem[] {
   const caps = repoMenuCapabilities(path)
+  const editor = useSettingsStore.getState().settings.editor
   const items: MenuItem[] = repoMenuEntries(caps).map((entry) => {
     if (entry.kind === 'separator') return { separator: true }
     return {
       label: entry.vars ? interp(t(entry.labelKey), entry.vars) : t(entry.labelKey),
+      icon: entry.id === 'openEditor' && editor?.command ? editorIcon(editor) : mi[entry.icon](),
       disabled: entry.disabled,
       danger: entry.danger,
       onClick: () => runAction(entry.id, caps, onRemove)

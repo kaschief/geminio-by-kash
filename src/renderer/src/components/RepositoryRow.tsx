@@ -1,4 +1,5 @@
-import { AlertTriangle, ExternalLink, GitBranch, MoreVertical, Star } from 'lucide-react'
+import { AlertTriangle, ExternalLink, GitBranch, LocateFixed, MoreVertical, Star } from 'lucide-react'
+import { mi } from './menuIcons'
 import { useUIStore } from '../stores/ui'
 import { repositoryMenuItems } from '../lib/repositoryMenuItems'
 import type { RepoRow } from '../lib/repoSections'
@@ -43,10 +44,11 @@ export function RepositoryRow({
     repositoryMenuItems(row.repo.path, () => onForget(row.repo.path, row.label), [
       {
         label: t(row.favourite ? 'repos.unstar' : 'repos.star'),
+        icon: row.favourite ? mi.unfavourite() : mi.favourite(),
         onClick: () => onToggleFavourite(row.repo.path)
       },
       ...(row.repo.missing
-        ? [{ label: t('repos.locate'), onClick: () => onLocate(row.repo.path, row.label) }]
+        ? [{ label: t('repos.locate'), icon: <LocateFixed size={15} strokeWidth={1.75} />, onClick: () => onLocate(row.repo.path, row.label) }]
         : [])
     ])
 

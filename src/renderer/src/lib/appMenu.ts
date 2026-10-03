@@ -81,7 +81,7 @@ export function buildMenuSpec(ctx: MenuContext, t: (key: TranslationKey) => stri
       { role: 'about', label: interp(t('menu.about'), { app: ctx.appName }) },
       { id: 'check-updates', label: t('menu.checkUpdates') },
       SEP,
-      bound('settings', t('settings.title'), b['settings']),
+      bound('settings', t('menu.bar.settingsTitle'), b['settings']),
       SEP,
       { role: 'services', label: t('menu.services') },
       SEP,
@@ -96,18 +96,18 @@ export function buildMenuSpec(ctx: MenuContext, t: (key: TranslationKey) => stri
   const fileMenu: MenuSpecItem = {
     label: t('menu.file'),
     submenu: [
-      bound('new-tab', t('sc.newTab'), 'mod+t'),
-      bound('open-repository', t('sc.openRepository'), b['open-repository']),
-      { id: 'clone', label: t('clone.title') },
+      bound('new-tab', t('menu.bar.scNewTab'), 'mod+t'),
+      bound('open-repository', t('menu.bar.scOpenRepository'), b['open-repository']),
+      { id: 'clone', label: t('menu.bar.cloneTitle') },
       {
         label: t('menu.openRecent'),
         submenu: recent.length ? recent : [{ label: t('menu.noRecent'), enabled: false }]
       },
       SEP,
-      bound('close-tab', t('sc.closeTab'), 'mod+w', ctx.hasTabs),
+      bound('close-tab', t('menu.bar.scCloseTab'), 'mod+w', ctx.hasTabs),
       // Always enabled: the closed-tab stack is session state the menu cannot see,
       // and reopening with an empty stack is a no-op rather than an error.
-      bound('reopen-tab', t('sc.reopenTab'), 'mod+shift+t')
+      bound('reopen-tab', t('menu.bar.scReopenTab'), 'mod+shift+t')
     ]
   }
 
@@ -116,30 +116,30 @@ export function buildMenuSpec(ctx: MenuContext, t: (key: TranslationKey) => stri
   const editMenu: MenuSpecItem = {
     label: t('menu.edit'),
     submenu: [
-      { role: 'undo', label: t('sc.undo') },
-      { role: 'redo', label: t('sc.redo') },
+      { role: 'undo', label: t('menu.bar.scUndo') },
+      { role: 'redo', label: t('menu.bar.scRedo') },
       SEP,
       { role: 'cut', label: t('menu.cut') },
       { role: 'copy', label: t('menu.copy') },
       { role: 'paste', label: t('menu.paste') },
       { role: 'selectAll', label: t('menu.selectAll') },
       SEP,
-      bound('code-search', t('sc.searchCode'), b['code-search'], repo)
+      bound('code-search', t('menu.bar.scSearchCode'), b['code-search'], repo)
     ]
   }
 
   const viewMenu: MenuSpecItem = {
     label: t('menu.view'),
     submenu: [
-      bound('command-palette', t('sc.commandPalette'), b['command-palette']),
+      bound('command-palette', t('menu.bar.scCommandPalette'), b['command-palette']),
       SEP,
-      bound('toggle-left-sidebar', t('sc.toggleLeftSidebar'), b['toggle-left-sidebar'], repo),
-      bound('toggle-right-panel', t('sc.toggleRightPanel'), b['toggle-right-panel'], repo),
-      bound('toggle-terminal', t('toolbar.terminalTitle'), 'ctrl+`', repo),
+      bound('toggle-left-sidebar', t('menu.bar.scToggleLeftSidebar'), b['toggle-left-sidebar'], repo),
+      bound('toggle-right-panel', t('menu.bar.scToggleRightPanel'), b['toggle-right-panel'], repo),
+      bound('toggle-terminal', t('menu.bar.toolbarTerminalTitle'), 'ctrl+`', repo),
       SEP,
-      { id: 'mission-control', label: t('mission.open') },
-      { id: 'repositories', label: t('cmd.repositories') },
-      bound('vault', t('sc.openVault'), b['vault']),
+      { id: 'mission-control', label: t('menu.bar.missionOpen') },
+      { id: 'repositories', label: t('menu.bar.cmdRepositories') },
+      bound('vault', t('menu.bar.scOpenVault'), b['vault']),
       SEP,
       { role: 'resetZoom', label: t('menu.actualSize') },
       { role: 'zoomIn', label: t('menu.zoomIn') },
@@ -157,28 +157,28 @@ export function buildMenuSpec(ctx: MenuContext, t: (key: TranslationKey) => stri
   const repoMenu: MenuSpecItem = {
     label: t('menu.repository'),
     submenu: [
-      { id: 'fetch', label: t('cmd.fetch'), enabled: repo },
-      { id: 'pull', label: t('cmd.pull'), enabled: repo },
-      { id: 'push', label: t('cmd.push'), enabled: repo },
+      { id: 'fetch', label: t('menu.bar.cmdFetch'), enabled: repo },
+      { id: 'pull', label: t('menu.bar.cmdPull'), enabled: repo },
+      { id: 'push', label: t('menu.bar.cmdPush'), enabled: repo },
       SEP,
-      { id: 'commit', label: t('cmd.commit'), enabled: repo },
-      { id: 'stash', label: t('cmd.stash'), enabled: repo },
-      { id: 'create-branch', label: t('cmd.createBranch'), enabled: repo },
+      { id: 'commit', label: t('menu.bar.cmdCommit'), enabled: repo },
+      { id: 'stash', label: t('menu.bar.cmdStash'), enabled: repo },
+      { id: 'create-branch', label: t('menu.bar.cmdCreateBranch'), enabled: repo },
       SEP,
-      { id: 'create-pr', label: t('cmd.createPr'), enabled: repo },
+      { id: 'create-pr', label: t('menu.bar.cmdCreatePr'), enabled: repo },
       SEP,
-      { id: 'undo-last', label: t('toolbar.undoTitle'), enabled: repo && ctx.canUndo },
+      { id: 'undo-last', label: t('menu.bar.toolbarUndoTitle'), enabled: repo && ctx.canUndo },
       SEP,
-      { id: 'reveal', label: t('repoMenu.revealFinder'), enabled: repo },
+      { id: 'reveal', label: t('menu.bar.repoMenuRevealFinder'), enabled: repo },
       {
         id: 'open-in-editor',
         label: ctx.editorName
-          ? interp(t('cmd.openInEditor'), { app: ctx.editorName })
-          : t('repoMenu.openEditor'),
+          ? interp(t('menu.bar.cmdOpenInEditor'), { app: ctx.editorName })
+          : t('menu.bar.repoMenuOpenEditor'),
         enabled: repo && !!ctx.editorName
       },
       SEP,
-      { id: 'repo-settings', label: t('repoSettings.title'), enabled: repo }
+      { id: 'repo-settings', label: t('menu.bar.repoSettingsTitle'), enabled: repo }
     ]
   }
 
@@ -193,11 +193,11 @@ export function buildMenuSpec(ctx: MenuContext, t: (key: TranslationKey) => stri
   const helpMenu: MenuSpecItem = {
     label: t('menu.help'),
     submenu: [
-      { id: 'help', label: t('help.open') },
-      { id: 'cheatsheet', label: t('sc.keyboardShortcuts') },
+      { id: 'help', label: t('menu.bar.helpOpen') },
+      { id: 'cheatsheet', label: t('menu.bar.scKeyboardShortcuts') },
       SEP,
-      { id: 'changelog', label: t('changelog.title') },
-      { id: 'licenses', label: t('licenses.title') },
+      { id: 'changelog', label: t('menu.bar.changelogTitle') },
+      { id: 'licenses', label: t('menu.bar.licensesTitle') },
       SEP,
       { id: 'report-issue', label: t('menu.reportIssue') }
     ]

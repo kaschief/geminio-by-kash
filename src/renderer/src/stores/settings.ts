@@ -18,6 +18,7 @@ import {
   type RepoBookmark,
   type RepoTodo,
   type TodoStatus,
+  type TabSortKey,
   type TabState,
   type Workspace
 } from '../../../shared/types'
@@ -270,6 +271,11 @@ interface SettingsState {
   renameTab(tabId: string, name: string): void
   setTabColor(tabId: string, color: string): void
   reorderTabs(fromId: string, toId: string, before: boolean): void
+  /** Replace the strip with a reordering of the same tabs (a sort). Ignored if
+   *  the set of tabs changed underneath the caller. */
+  setTabOrder(tabs: TabState[]): void
+  /** Hold the strip in `key` order, or null for manual. */
+  setTabSort(key: TabSortKey | null): void
   moveTabIntoGroup(fromTabId: string, toGroupTabId: string): void
   ejectRepoFromGroup(tabId: string, repoPath: string, insertBeforeTabId: string | null): void
   moveRepoBetweenGroups(fromTabId: string, repoPath: string, toTabId: string, insertBeforeRepoPath: string | null): void
@@ -865,8 +871,23 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
       const toIdx = tabs.findIndex((t) => t.id === toId)
       if (toIdx < 0) return s
       tabs.splice(before ? toIdx : toIdx + 1, 0, from)
-      return { ...s, tabs }
+      // A hand-placed tab is a statement about order; the next re-sort would
+      // silently undo it, so dragging switches the strip back to manual.
+      return { ...s, tabs, tabSort: undefined }
     }),
+
+  setTabOrder: (next) =>
+    get().update((s) => {
+      if (next === s.tabs || next.length !== s.tabs.length) return s
+      const ids = new Set(s.tabs.map((t) => t.id))
+      if (!next.every((t) => ids.has(t.id))) return s
+      // Re-read each tab from current state so a stale snapshot cannot revert
+      // an edit (rename, page change) made since the caller took it.
+      const byId = new Map(s.tabs.map((t) => [t.id, t]))
+      return { ...s, tabs: next.map((t) => byId.get(t.id) ?? t) }
+    }),
+
+  setTabSort: (key) => get().update((s) => ({ ...s, tabSort: key ?? undefined })),
 
   moveTabIntoGroup: (fromTabId, toGroupTabId) =>
     get().update((s) => {

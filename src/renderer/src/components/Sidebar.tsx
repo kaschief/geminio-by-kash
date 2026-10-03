@@ -42,7 +42,13 @@ import {
   Power,
   Bookmark as BookmarkIcon,
   Folder,
-  FolderOpen
+  FolderOpen,
+  ArrowRightLeft,
+  ArrowUp,
+  CircleCheck,
+  CircleDashed,
+  MonitorSmartphone,
+  Radar
 } from 'lucide-react'
 import { FileTree } from './FileTree'
 import { FileSearchBar, EMPTY_FILTER, type FileFilter } from './FileSearchBar'
@@ -80,6 +86,41 @@ import { defaultSettings } from '../../../shared/types'
 import type { BranchInfo, MergeRiskKind, ReleaseInfo, RemoteBranchInfo, StashInfo, TagInfo, WorktreeInfo, SubmoduleInfo, LaunchGroup, LaunchConfig, PullRequest, IssueInfo, MilestoneInfo, RemoteInfo, RepoTodo, RepoBookmark } from '../../../shared/types'
 
 import { RemoteIcon } from './RemoteIcon'
+import { mi } from './menuIcons'
+import { resetToRefMenuItem } from '../lib/resetMenu'
+
+// The show/hide menu names sections in sentence case; the headings keep capitals.
+const SECTION_MENU_LABEL_KEY: Record<string, TranslationKey> = {
+  local: 'sidebar.sectionMenu.local',
+  remotes: 'sidebar.sectionMenu.remotes',
+  prs: 'sidebar.sectionMenu.prs',
+  issues: 'sidebar.sectionMenu.issues',
+  milestones: 'sidebar.sectionMenu.milestones',
+  tags: 'sidebar.sectionMenu.tags',
+  releases: 'sidebar.sectionMenu.releases',
+  stashes: 'sidebar.sectionMenu.stashes',
+  todos: 'sidebar.sectionMenu.todos',
+  bookmarks: 'sidebar.sectionMenu.bookmarks',
+  worktrees: 'sidebar.sectionMenu.worktrees',
+  submodules: 'sidebar.sectionMenu.submodules'
+}
+
+// A section's icon lights up in the show/hide menu while the section is shown.
+const SECTION_ICON: Record<string, () => React.JSX.Element> = {
+  local: mi.branch,
+  remotes: mi.remote,
+  prs: mi.pullRequest,
+  issues: mi.issue,
+  milestones: mi.milestone,
+  tags: mi.tag,
+  releases: mi.deploy,
+  stashes: mi.stash,
+  todos: mi.todo,
+  bookmarks: mi.bookmark,
+  worktrees: mi.worktree,
+  submodules: mi.submodule
+}
+import { ChoiceDot } from './StateMarks'
 
 // Keyboard activation for clickable non-button elements: Enter/Space runs the
 // same onClick handler the mouse uses, so every row and icon is reachable.
@@ -335,14 +376,19 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
     if (!useLaunchStore.getState().devicesByRepo[repo.path]) void loadDevices(repo.path)
   }, [repo.path, wantsDevices, loadDevices])
 
-  const deviceIcon = (d: { platform: string }): React.JSX.Element =>
-    d.platform === 'ios' || d.platform === 'android' ? (
-      <Smartphone size={13} />
+  // `menu` switches to the context-menu icon convention (15 / 1.75); the
+  // toolbar button keeps its smaller glyph.
+  const deviceIcon = (d: { platform: string }, menu = false): React.JSX.Element => {
+    const size = menu ? 15 : 13
+    const strokeWidth = menu ? 1.75 : undefined
+    return d.platform === 'ios' || d.platform === 'android' ? (
+      <Smartphone size={size} strokeWidth={strokeWidth} />
     ) : d.platform === 'web' ? (
-      <Globe size={13} />
+      <Globe size={size} strokeWidth={strokeWidth} />
     ) : (
-      <Laptop size={13} />
+      <Laptop size={size} strokeWidth={strokeWidth} />
     )
+  }
 
   const openDeviceMenu = (x: number, y: number): void => {
     const platforms = repoDevicePlatforms(launchConfigs, launchScripts)
@@ -361,7 +407,9 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
       const selected = selectedDevice?.id === d.id
       items.push({
         label: d.detail ? `${d.name}  ·  ${d.detail}` : d.name,
-        icon: selected ? <Check size={13} /> : d.running ? deviceIcon(d) : <Power size={13} />,
+        icon: d.running ? deviceIcon(d, true) : <Power size={15} strokeWidth={1.75} />,
+        radio: true,
+        checked: selected,
         title: d.running ? undefined : t('device.start'),
         onClick: () => (d.running ? selectDevice(repo.path, d) : void bootDevice(repo.path, d))
       })
@@ -370,11 +418,13 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
       { separator: true },
       {
         label: t('device.any'),
-        icon: selectedDevice ? undefined : <Check size={13} />,
+        icon: <MonitorSmartphone size={15} strokeWidth={1.75} />,
+        radio: true,
+        checked: !selectedDevice,
         title: t('device.anyTitle'),
         onClick: () => selectDevice(repo.path, null)
       },
-      { label: t('device.refresh'), icon: <RefreshCw size={13} />, onClick: () => void loadDevices(repo.path) }
+      { label: t('device.refresh'), icon: mi.fetch(), onClick: () => void loadDevices(repo.path) }
     )
     const missing = deviceSnapshot?.missing ?? []
     if (missing.length > 0) {
@@ -422,7 +472,7 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
         prevGroup = grp
         items.push({
           label: cfg.name,
-          icon: <Play size={13} />,
+          icon: mi.run(),
           onClick: () => void runLaunch(repo.path, g, cfg)
         })
       })
@@ -543,8 +593,10 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
     return [
       {
         label: interp(t('sidebar.deleteNBranches'), { n: deletable.length }),
+        icon: mi.delete(),
         danger: true,
         disabled: deletable.length === 0,
+        title: deletable.length === 0 ? t('branch.deleteCurrentBlocked') : undefined,
         onClick: () =>
           openModal({
             kind: 'confirm',
@@ -569,6 +621,7 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
     return [
       {
         label: interp(t('sidebar.deleteNRemoteBranches'), { n: items.length }),
+        icon: mi.delete(),
         danger: true,
         disabled: items.length === 0,
         onClick: () =>
@@ -596,8 +649,10 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
     return [
       {
         label: interp(t('sidebar.deleteFolderBranches'), { folder, n: deletable.length }),
+        icon: mi.delete(),
         danger: true,
         disabled: deletable.length === 0,
+        title: deletable.length === 0 ? t('branch.deleteCurrentBlocked') : undefined,
         onClick: () =>
           openModal({
             kind: 'confirm',
@@ -617,6 +672,7 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
     return [
       {
         label: interp(t('sidebar.deleteFolderRemoteBranches'), { folder, n: items.length }),
+        icon: mi.delete(),
         danger: true,
         disabled: items.length === 0,
         onClick: () =>
@@ -637,6 +693,7 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
     return [
       {
         label: interp(t('sidebar.dropNStashes'), { n: indices.length }),
+        icon: mi.delete(),
         danger: true,
         onClick: () =>
           openModal({
@@ -657,6 +714,7 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
   const tagBulkMenu = (names: string[]): MenuItem[] => [
     {
       label: interp(t('sidebar.deleteNTags'), { n: names.length }),
+      icon: mi.delete(),
       danger: true,
       onClick: () =>
         openModal({
@@ -818,58 +876,44 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
         ? [
             {
               label: interp(t('sidebar.goToRelease'), { name: release.name || release.tag || tag.name }),
+              icon: <Rocket size={15} strokeWidth={1.75} />,
               onClick: () => openPageTab({ type: 'release', release, repoPath: path })
             } satisfies MenuItem,
             { separator: true } satisfies MenuItem
           ]
         : []),
-      { label: interp(t('sidebar.checkoutTag'), { tag: tag.name }), onClick: () => void repoActions.checkout(path, tag.name) },
+      { label: interp(t('sidebar.checkoutTag'), { tag: tag.name }), icon: <ArrowRightLeft size={15} strokeWidth={1.75} />, onClick: () => void repoActions.checkout(path, tag.name) },
       { separator: true },
       {
         label: interp(t('sidebar.rebaseOnTag'), { branch: currentBranch, tag: tag.name }),
+        icon: <Layers size={15} strokeWidth={1.75} />,
         disabled: !currentBranch,
+        title: currentBranch ? undefined : t('sidebar.disabled.detached'),
         onClick: () => void repoActions.rebase(path, tag.name)
       },
-      {
-        label: interp(t('sidebar.resetToTagSoft'), { branch: currentBranch }),
-        disabled: !currentBranch,
-        onClick: () => void repoActions.reset(path, tag.name, 'soft')
-      },
-      {
-        label: interp(t('sidebar.resetToTagMixed'), { branch: currentBranch }),
-        disabled: !currentBranch,
-        onClick: () => void repoActions.reset(path, tag.name, 'mixed')
-      },
-      {
-        label: interp(t('sidebar.resetToTagHard'), { branch: currentBranch }),
-        danger: true,
-        disabled: !currentBranch,
-        onClick: () =>
-          openModal({
-            kind: 'confirm',
-            title: t('sidebar.hardResetTitle'),
-            message: interp(t('sidebar.hardResetMsg'), { ref: tag.name }),
-            danger: true,
-            confirmLabel: t('sidebar.hardResetConfirm'),
-            onConfirm: () => void repoActions.reset(path, tag.name, 'hard')
-          })
-      },
+      resetToRefMenuItem({
+        repoPath: path,
+        ref: tag.name,
+        branch: currentBranch || null,
+        disabledTitle: t('sidebar.disabled.detached')
+      }),
       { separator: true },
-      { label: t('sidebar.copyTagName'), onClick: () => void navigator.clipboard.writeText(tag.name) },
+      { label: t('sidebar.copyTagName'), icon: mi.copy(), onClick: () => void navigator.clipboard.writeText(tag.name) },
       ...(webUrl
         ? [
-            { label: interp(t('sidebar.openTagOnWeb'), { tag: tag.name, remote: remoteName }), onClick: () => void shellApi.openExternal(webUrl) } satisfies MenuItem,
-            { label: interp(t('sidebar.copyTagLink'), { tag: tag.name, remote: remoteName }), onClick: () => void navigator.clipboard.writeText(webUrl) } satisfies MenuItem
+            { label: interp(t('sidebar.openTagOnWeb'), { tag: tag.name, remote: remoteName }), icon: mi.openExternal(), onClick: () => void shellApi.openExternal(webUrl) } satisfies MenuItem,
+            { label: interp(t('sidebar.copyTagLink'), { tag: tag.name, remote: remoteName }), icon: mi.copyLink(), onClick: () => void navigator.clipboard.writeText(webUrl) } satisfies MenuItem
           ]
         : []),
-      { label: t('sidebar.createTagHere'), onClick: createTagAtHead },
+      { label: t('sidebar.createTagHere'), icon: mi.tag(), onClick: createTagAtHead },
       { separator: true },
       ...(repo.remotes.length && !isPushed
-        ? [{ label: interp(t('sidebar.pushTag'), { tag: tag.name, remote: remoteName }), onClick: () => void repoActions.pushTag(path, tag.name, remoteName) } satisfies MenuItem]
+        ? [{ label: interp(t('sidebar.pushTag'), { tag: tag.name, remote: remoteName }), icon: mi.push(), onClick: () => void repoActions.pushTag(path, tag.name, remoteName) } satisfies MenuItem]
         : []),
       ...(repo.remotes.length && isPushed
         ? [{
             label: t('sidebar.deleteRemoteTag'),
+            icon: mi.delete(),
             danger: true,
             onClick: () =>
               openModal({
@@ -884,6 +928,7 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
         : []),
       {
         label: t('sidebar.deleteTagLocal'),
+        icon: mi.delete(),
         danger: true,
         onClick: () =>
           openModal({
@@ -955,6 +1000,7 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
       ? [
           {
             label: t('branch.viewOnGitHub'),
+            icon: mi.github(),
             disabled: !url,
             title: url ? undefined : t('branch.viewOnGitHubUnpushed'),
             onClick: () => url && void shellApi.openExternal(url)
@@ -964,10 +1010,26 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
 
   const localMenu = (b: BranchInfo): MenuItem[] => [
     ...(worktreeForBranch(repo.worktrees, b.name)
-      ? [{ label: interp(t('sidebar.goToWorktree'), { branch: b.name }), onClick: () => void repoActions.checkout(path, b.name) }]
+      ? [
+          {
+            label: interp(t('sidebar.goToWorktree'), { branch: b.name }),
+            icon: mi.worktree(),
+            onClick: () => void repoActions.checkout(path, b.name)
+          }
+        ]
       : [
-          { label: interp(t('sidebar.checkoutBranch'), { branch: b.name }), disabled: b.isCurrent, onClick: () => void repoActions.checkout(path, b.name) },
-          { label: interp(t('sidebar.openInWorktree'), { branch: b.name }), onClick: () => void openInWorktree(b.name) }
+          {
+            label: interp(t('sidebar.checkoutBranch'), { branch: b.name }),
+            icon: <ArrowRightLeft size={15} strokeWidth={1.75} />,
+            disabled: b.isCurrent,
+            title: b.isCurrent ? t('branch.alreadyCheckedOut') : undefined,
+            onClick: () => void repoActions.checkout(path, b.name)
+          },
+          {
+            label: interp(t('sidebar.openInWorktree'), { branch: b.name }),
+            icon: mi.worktree(),
+            onClick: () => void openInWorktree(b.name)
+          }
         ]),
     // Merge / merge with options / rebase / compare — the same block the graph's
     // ref badges render, from one place so the two cannot drift apart.
@@ -976,16 +1038,19 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
       // Scan every branch against *this* one, i.e. "what would break if I land
       // things on top of it".
       label: t('radar.open'),
+      icon: <Radar size={15} strokeWidth={1.75} />,
       onClick: () => openModal({ kind: 'conflict-radar', repoPath: path, base: b.name })
     },
     {
       // Rebased or amended? The reflog still knows where this branch was.
       label: t('rangeDiff.open'),
+      icon: mi.history(),
       onClick: () => openModal({ kind: 'range-diff', repoPath: path, branch: b.name })
     },
     { separator: true },
     {
       label: t('sidebar.renameBranch'),
+      icon: mi.rename(),
       onClick: () =>
         openModal({
           kind: 'input',
@@ -1000,6 +1065,7 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
       ? [
           {
             label: t('sidebar.renameWithRemote'),
+            icon: mi.rename(),
             onClick: (): void =>
               openModal({
                 kind: 'input',
@@ -1017,28 +1083,34 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
       : []),
     // Named, and wired to *this* branch — pushing the checked-out one from a
     // menu you opened on another branch is a trap, not a shortcut.
-    { label: interp(t('branch.pushNamed'), { branch: b.name }), onClick: () => void repoActions.push(path, false, false, b.name) },
+    { label: interp(t('branch.pushNamed'), { branch: b.name }), icon: mi.push(), onClick: () => void repoActions.push(path, false, false, b.name) },
     {
       label: interp(t('branch.pullNamed'), { branch: b.name }),
+      icon: mi.pull(),
       disabled: !b.upstream,
+      title: b.upstream ? undefined : t('sidebar.disabled.noUpstream'),
       onClick: () =>
         void (b.isCurrent ? repoActions.pull(path, 'default') : repoActions.pullBranch(path, b.name))
     },
     {
       label: t('sidebar.createPRFromBranch'),
+      icon: mi.pullRequest(),
       onClick: () => openModal({ kind: 'create-pr', repoPath: path, source: b.name })
     },
     { separator: true },
     {
       label: isPinned(b.name) ? t('sidebar.unpinBranch') : t('sidebar.pinBranch'),
+      icon: isPinned(b.name) ? mi.unpin() : mi.pin(),
       onClick: () => togglePinBranch(b.name)
     },
-    { label: t('sidebar.copyBranchName'), onClick: () => void navigator.clipboard.writeText(b.name) },
+    { label: t('sidebar.copyBranchName'), icon: mi.copy(), onClick: () => void navigator.clipboard.writeText(b.name) },
     ...githubBranchItem(githubLocalBranchUrl(repo.remotes, b.upstream)),
     {
       label: t('sidebar.deleteBranch'),
+      icon: mi.delete(),
       danger: true,
       disabled: b.isCurrent,
+      title: b.isCurrent ? t('branch.deleteCurrentBlocked') : undefined,
       onClick: () =>
         openModal({
           kind: 'confirm',
@@ -1054,6 +1126,7 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
   const remoteMenu = (b: RemoteBranchInfo): MenuItem[] => [
     {
       label: t('sidebar.checkoutAsLocal'),
+      icon: <ArrowRightLeft size={15} strokeWidth={1.75} />,
       onClick: () => void repoActions.checkoutRemote(path, b.fullName, b.name, b.remote)
     },
     ...refIntegrationItems(path, b.fullName, repo.branches.current),
@@ -1061,13 +1134,15 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
       // The tracking ref's reflog records every forced fetch, so this answers
       // "what did they change when they force-pushed?".
       label: t('rangeDiff.open'),
+      icon: mi.history(),
       onClick: () => openModal({ kind: 'range-diff', repoPath: path, branch: b.fullName })
     },
     { separator: true },
-    { label: t('sidebar.copyBranchName'), onClick: () => void navigator.clipboard.writeText(b.fullName) },
+    { label: t('sidebar.copyBranchName'), icon: mi.copy(), onClick: () => void navigator.clipboard.writeText(b.fullName) },
     ...githubBranchItem(githubBranchUrl(repo.remotes, b.remote, b.name)),
     {
       label: t('sidebar.deleteRemoteBranch'),
+      icon: mi.delete(),
       danger: true,
       onClick: () =>
         openModal({
@@ -1095,14 +1170,15 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
     })
 
   const stashMenu = (s: StashInfo): MenuItem[] => [
-    { label: t('sidebar.popStash'), onClick: () => void repoActions.stashPop(path, s.index) },
-    { label: t('sidebar.applyStash'), onClick: () => void repoActions.stashApply(path, s.index) },
+    { label: t('sidebar.popStash'), icon: mi.unstash(), onClick: () => void repoActions.stashPop(path, s.index) },
+    { label: t('sidebar.applyStash'), icon: mi.unstash(), onClick: () => void repoActions.stashApply(path, s.index) },
     { separator: true },
-    { label: t('sidebar.renameStash'), onClick: () => renameStash(s) },
-    { label: t('sidebar.copyStashMsg'), onClick: () => void navigator.clipboard.writeText(s.message) },
+    { label: t('sidebar.renameStash'), icon: mi.rename(), onClick: () => renameStash(s) },
+    { label: t('sidebar.copyStashMsg'), icon: mi.copy(), onClick: () => void navigator.clipboard.writeText(s.message) },
     { separator: true },
     {
       label: t('sidebar.dropStash'),
+      icon: mi.delete(),
       danger: true,
       onClick: () =>
         openModal({
@@ -1117,14 +1193,26 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
   ]
 
   const worktreeMenu = (w: WorktreeInfo): MenuItem[] => [
-    { label: t('sidebar.openWorktree'), disabled: w.isCurrent, onClick: () => openWorktreeTab(w) },
-    { label: t('sidebar.revealWorktree'), onClick: () => void shellApi.revealInFolder(w.path) },
-    { label: t('sidebar.copyPath'), onClick: () => void navigator.clipboard.writeText(w.path) },
+    {
+      label: t('sidebar.openWorktree'),
+      icon: mi.worktree(),
+      disabled: w.isCurrent,
+      title: w.isCurrent ? t('sidebar.disabled.worktreeOpen') : undefined,
+      onClick: () => openWorktreeTab(w)
+    },
+    { label: t('sidebar.revealWorktree'), icon: mi.reveal(), onClick: () => void shellApi.revealInFolder(w.path) },
+    { label: t('sidebar.copyPath'), icon: mi.copyPath(), onClick: () => void navigator.clipboard.writeText(w.path) },
     { separator: true },
     {
       label: t('sidebar.removeWorktree'),
+      icon: mi.remove(),
       danger: true,
       disabled: w.isMain || w.isCurrent,
+      title: w.isMain
+        ? t('sidebar.disabled.worktreeMain')
+        : w.isCurrent
+          ? t('sidebar.disabled.worktreeOpen')
+          : undefined,
       onClick: () =>
         openModal({
           kind: 'confirm',
@@ -1173,20 +1261,23 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
   const remoteMgmtMenu = (remoteName: string, url?: string): MenuItem[] => {
     const web = webUrl(url)
     return [
-      { label: t('sidebar.addRemote'), onClick: () => addRemote() },
-      { label: interp(t('sidebar.fetchRemote'), { remote: remoteName }), onClick: () => void repoActions.fetchRemote(path, remoteName) },
+      { label: t('sidebar.addRemote'), icon: <Plus size={15} strokeWidth={1.75} />, onClick: () => addRemote() },
+      { label: interp(t('sidebar.fetchRemote'), { remote: remoteName }), icon: mi.fetch(), onClick: () => void repoActions.fetchRemote(path, remoteName) },
       // The remote's own row is the obvious place to ask "send this branch
       // there" — the toolbar's push only ever means the upstream.
       {
         label: interp(t('sidebar.pushToRemote'), { remote: remoteName }),
+        icon: mi.push(),
         onClick: () => void repoActions.pushToRemotes(path, [remoteName])
       },
       {
         label: interp(t('sidebar.pushTagsToRemote'), { remote: remoteName }),
+        icon: mi.tag(),
         onClick: () => void repoActions.pushAllTags(path, remoteName)
       },
       {
         label: interp(t('sidebar.editRemote'), { remote: remoteName }),
+        icon: mi.rename(),
         onClick: () =>
           openModal({
             kind: 'editRemote',
@@ -1196,17 +1287,18 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
           })
       },
       { separator: true },
-      ...(web ? [{ label: t('sidebar.openOnWeb'), onClick: (): void => void shellApi.openExternal(web) }] : []),
-      ...(url ? [{ label: t('sidebar.copyRemoteUrl'), onClick: (): void => void navigator.clipboard.writeText(url) }] : []),
+      ...(web ? [{ label: t('sidebar.openOnWeb'), icon: mi.openExternal(), onClick: (): void => void shellApi.openExternal(web) }] : []),
+      ...(url ? [{ label: t('sidebar.copyRemoteUrl'), icon: mi.copyLink(), onClick: (): void => void navigator.clipboard.writeText(url) }] : []),
       { separator: true },
       {
         label: t('sidebar.removeRemote'),
+        icon: mi.remove(),
         danger: true,
         onClick: () =>
           openModal({
             kind: 'confirm',
             title: t('sidebar.removeRemote'),
-            message: `Remove remote "${remoteName}"? Its remote-tracking branches will be deleted locally.`,
+            message: interp(t('sidebar.removeRemoteMsg'), { remote: remoteName }),
             danger: true,
             confirmLabel: t('sidebar.removeRemote'),
             onConfirm: () => void repoActions.removeRemote(path, remoteName)
@@ -1221,29 +1313,32 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
     const web = webUrl(sm.url)
     const initialized = sm.status !== 'uninitialized'
     return [
-      { label: t('sidebar.updateSubmodule'), onClick: () => void repoActions.submoduleUpdate(path, sm.path) },
-      { label: t('sidebar.syncSubmodule'), onClick: () => void repoActions.submoduleSync(path, sm.path) },
+      { label: t('sidebar.updateSubmodule'), icon: mi.pull(), onClick: () => void repoActions.submoduleUpdate(path, sm.path) },
+      { label: t('sidebar.syncSubmodule'), icon: mi.fetch(), onClick: () => void repoActions.submoduleSync(path, sm.path) },
       { separator: true },
       {
         label: t('sidebar.openSubmodule'),
+        icon: <FolderGit2 size={15} strokeWidth={1.75} />,
         disabled: !initialized,
+        title: initialized ? undefined : t('sidebar.disabled.submoduleUninit'),
         onClick: () => openRepoTab({ path: absPath, name: sm.path.split('/').pop() ?? sm.path })
       },
-      { label: t('sidebar.editSubmodule'), onClick: () => editSubmodule(sm) },
-      { label: t('sidebar.revealWorktree'), onClick: () => void shellApi.revealInFolder(absPath) },
+      { label: t('sidebar.editSubmodule'), icon: mi.rename(), onClick: () => editSubmodule(sm) },
+      { label: t('sidebar.revealWorktree'), icon: mi.reveal(), onClick: () => void shellApi.revealInFolder(absPath) },
       { separator: true },
-      { label: t('sidebar.copyPath'), onClick: () => void navigator.clipboard.writeText(absPath) },
-      ...(sm.url ? [{ label: t('sidebar.copySubmoduleUrl'), onClick: (): void => void navigator.clipboard.writeText(sm.url) }] : []),
-      ...(web ? [{ label: t('sidebar.openOnWeb'), onClick: (): void => void shellApi.openExternal(web) }] : []),
+      { label: t('sidebar.copyPath'), icon: mi.copyPath(), onClick: () => void navigator.clipboard.writeText(absPath) },
+      ...(sm.url ? [{ label: t('sidebar.copySubmoduleUrl'), icon: mi.copyLink(), onClick: (): void => void navigator.clipboard.writeText(sm.url) }] : []),
+      ...(web ? [{ label: t('sidebar.openOnWeb'), icon: mi.openExternal(), onClick: (): void => void shellApi.openExternal(web) }] : []),
       { separator: true },
       {
         label: t('sidebar.removeSubmodule'),
+        icon: mi.remove(),
         danger: true,
         onClick: () =>
           openModal({
             kind: 'confirm',
             title: t('sidebar.removeSubmodule'),
-            message: `Remove submodule "${sm.path}"? This deinitializes it and removes it from the index and .gitmodules.`,
+            message: interp(t('sidebar.removeSubmoduleMsg'), { path: sm.path }),
             danger: true,
             confirmLabel: t('common.delete'),
             onConfirm: () => void repoActions.submoduleRemove(path, sm.path)
@@ -1296,12 +1391,14 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
         ? [
             {
               label: t('sidebar.openDetails'),
+              icon: mi.view(),
               onClick: (): void => openModal({ kind: 'pr-detail', repoPath: path, remoteUrl: origin.url, number: pr.id })
             } satisfies MenuItem
           ]
         : []),
       {
         label: t('prPreview.open'),
+        icon: mi.diff(),
         onClick: () =>
           openModal({ kind: 'pr-preview', repoPath: path, number: pr.id, remote: origin?.name, branch: pr.sourceBranch })
       },
@@ -1309,6 +1406,7 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
         ? [
             {
               label: t('sidebar.aiPrReview'),
+              icon: mi.ai(),
               onClick: (): void =>
                 openModal({
                   kind: 'ai-pr-review',
@@ -1321,11 +1419,11 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
           ]
         : []),
       { separator: true },
-      { label: t('common.openInBrowser'), onClick: () => void shellApi.openExternal(pr.url) },
-      { label: t('sidebar.copyLink'), onClick: () => void navigator.clipboard.writeText(pr.url) },
-      { label: t('sidebar.copyTitle'), onClick: () => void navigator.clipboard.writeText(pr.title) },
+      { label: t('common.openInBrowser'), icon: mi.openExternal(), onClick: () => void shellApi.openExternal(pr.url) },
+      { label: t('sidebar.copyLink'), icon: mi.copyLink(), onClick: () => void navigator.clipboard.writeText(pr.url) },
+      { label: t('sidebar.copyTitle'), icon: mi.copy(), onClick: () => void navigator.clipboard.writeText(pr.title) },
       ...(pr.sourceBranch
-        ? [{ label: t('sidebar.copyBranchName'), onClick: (): void => void navigator.clipboard.writeText(pr.sourceBranch) }]
+        ? [{ label: t('sidebar.copyBranchName'), icon: mi.copy(), onClick: (): void => void navigator.clipboard.writeText(pr.sourceBranch) }]
         : [])
     ]
   }
@@ -1337,14 +1435,15 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
         ? [
             {
               label: t('sidebar.openDetails'),
+              icon: mi.view(),
               onClick: (): void => openPageTab({ type: 'issue', issue, repoPath: path, remoteUrl: origin.url })
             } satisfies MenuItem
           ]
         : []),
       { separator: true },
-      { label: t('common.openInBrowser'), onClick: () => void shellApi.openExternal(issue.url) },
-      { label: t('sidebar.copyLink'), onClick: () => void navigator.clipboard.writeText(issue.url) },
-      { label: t('sidebar.copyTitle'), onClick: () => void navigator.clipboard.writeText(issue.title) }
+      { label: t('common.openInBrowser'), icon: mi.openExternal(), onClick: () => void shellApi.openExternal(issue.url) },
+      { label: t('sidebar.copyLink'), icon: mi.copyLink(), onClick: () => void navigator.clipboard.writeText(issue.url) },
+      { label: t('sidebar.copyTitle'), icon: mi.copy(), onClick: () => void navigator.clipboard.writeText(issue.title) }
     ]
   }
 
@@ -1355,24 +1454,25 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
         ? [
             {
               label: t('sidebar.openDetails'),
+              icon: mi.view(),
               onClick: (): void => openPageTab({ type: 'milestone', milestone: m, repoPath: path, remoteUrl: origin.url })
             } satisfies MenuItem
           ]
         : []),
       { separator: true },
-      { label: t('common.openInBrowser'), onClick: () => void shellApi.openExternal(m.url) },
-      { label: t('sidebar.copyLink'), onClick: () => void navigator.clipboard.writeText(m.url) },
-      { label: t('sidebar.copyTitle'), onClick: () => void navigator.clipboard.writeText(m.title) }
+      { label: t('common.openInBrowser'), icon: mi.openExternal(), onClick: () => void shellApi.openExternal(m.url) },
+      { label: t('sidebar.copyLink'), icon: mi.copyLink(), onClick: () => void navigator.clipboard.writeText(m.url) },
+      { label: t('sidebar.copyTitle'), icon: mi.copy(), onClick: () => void navigator.clipboard.writeText(m.title) }
     ]
   }
 
   const releaseMenu = (rel: ReleaseInfo): MenuItem[] => [
-    { label: t('sidebar.openDetails'), onClick: () => openPageTab({ type: 'release', release: rel, repoPath: path }) },
+    { label: t('sidebar.openDetails'), icon: mi.view(), onClick: () => openPageTab({ type: 'release', release: rel, repoPath: path }) },
     { separator: true },
-    { label: t('sidebar.openOnWeb'), onClick: () => void shellApi.openExternal(rel.url) },
-    { label: t('sidebar.copyLink'), onClick: () => void navigator.clipboard.writeText(rel.url) },
+    { label: t('sidebar.openOnWeb'), icon: mi.openExternal(), onClick: () => void shellApi.openExternal(rel.url) },
+    { label: t('sidebar.copyLink'), icon: mi.copyLink(), onClick: () => void navigator.clipboard.writeText(rel.url) },
     ...(rel.tag
-      ? [{ label: t('sidebar.copyTagName'), onClick: (): void => void navigator.clipboard.writeText(rel.tag!) }]
+      ? [{ label: t('sidebar.copyTagName'), icon: mi.copy(), onClick: (): void => void navigator.clipboard.writeText(rel.tag!) }]
       : [])
   ]
 
@@ -1486,7 +1586,11 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
       onContextMenu={(e) => ctxMenu(e, 'local', b.name, () => localMenu(b), localBulkMenu)}
       title={`${b.name}${b.upstream ? ` → ${b.upstream}` : ''}`}
     >
-      {b.isCurrent && <Check size={12} className="sb-current-mark" />}
+      {b.isCurrent && (
+        <span className="sb-current-mark">
+          <ChoiceDot on />
+        </span>
+      )}
       <KindIcon kind="branch" />
       <span className="sb-name">{label}</span>
       {b.ahead > 0 && <span className="badge ahead">↑{b.ahead}</span>}
@@ -1863,9 +1967,10 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
   }
 
   const bookmarkMenu = (bookmark: RepoBookmark): MenuItem[] => [
-    { label: t('bookmarks.open'), icon: <BookmarkIcon size={13} />, onClick: () => void openBookmark(bookmark) },
+    { label: t('bookmarks.open'), icon: mi.bookmark(), onClick: () => void openBookmark(bookmark) },
     {
       label: t('bookmarks.editNote'),
+      icon: mi.rename(),
       onClick: () =>
         openModal({
           kind: 'input',
@@ -1877,7 +1982,7 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
         })
     },
     { separator: true },
-    { label: t('bookmarks.remove'), danger: true, onClick: () => deleteBookmark(repo.path, bookmark.id) }
+    { label: t('bookmarks.remove'), icon: mi.unbookmark(), danger: true, onClick: () => deleteBookmark(repo.path, bookmark.id) }
   ]
 
   // ─── Todos ───
@@ -1898,20 +2003,36 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
   const todoMenu = (td: RepoTodo): MenuItem[] => {
     const settings = useSettingsStore.getState()
     return [
-      { label: t('todos.openDetail'), onClick: () => openModal({ kind: 'todos', repoPath: path, focusId: td.id }) },
-      { label: td.done ? t('todos.markOpen') : t('todos.markDone'), onClick: () => settings.toggleTodo(path, td.id) },
+      { label: t('todos.openDetail'), icon: mi.view(), onClick: () => openModal({ kind: 'todos', repoPath: path, focusId: td.id }) },
+      {
+        label: td.done ? t('todos.markOpen') : t('todos.markDone'),
+        icon: td.done ? <CircleDashed size={15} strokeWidth={1.75} /> : <CircleCheck size={15} strokeWidth={1.75} />,
+        onClick: () => settings.toggleTodo(path, td.id)
+      },
       { separator: true },
       {
         label: t('todos.status'),
+        icon: mi.status(),
+        // Explicit: the automatic summary hides the default ("To Do"), but a
+        // todo's status is worth reading even when it is the first one.
+        detail: t(TODO_STATUS_LABEL[todoStatus(td)]),
         submenu: TODO_STATUSES.map((st) => ({
-          label: `${todoStatus(td) === st ? '✓ ' : '   '}${t(TODO_STATUS_LABEL[st])}`,
+          label: t(TODO_STATUS_LABEL[st]),
+          icon: <TodoStatusIcon status={st} size={15} />,
+          radio: true,
+          checked: todoStatus(td) === st,
           onClick: () => settings.setTodoStatus(path, td.id, st)
         }))
       },
       {
         label: t('todos.priority'),
+        icon: mi.priority(),
+        detail: t(PRIORITY_LABEL[td.priority]),
         submenu: (['high', 'normal', 'low'] as const).map((p) => ({
-          label: `${td.priority === p ? '✓ ' : '   '}${t(PRIORITY_LABEL[p])}`,
+          label: t(PRIORITY_LABEL[p]),
+          icon: <TodoPriorityIcon priority={p} size={15} />,
+          radio: true,
+          checked: td.priority === p,
           onClick: () => settings.patchTodo(path, td.id, { priority: p })
         }))
       },
@@ -1919,11 +2040,11 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
         ? []
         : [
             { separator: true },
-            { label: t('todos.moveUp'), onClick: () => settings.moveTodo(path, td.id, -1) },
-            { label: t('todos.moveDown'), onClick: () => settings.moveTodo(path, td.id, 1) }
+            { label: t('todos.moveUp'), icon: <ArrowUp size={15} strokeWidth={1.75} />, onClick: () => settings.moveTodo(path, td.id, -1) },
+            { label: t('todos.moveDown'), icon: <ArrowDown size={15} strokeWidth={1.75} />, onClick: () => settings.moveTodo(path, td.id, 1) }
           ]),
       { separator: true },
-      { label: t('todos.delete'), danger: true, onClick: () => settings.deleteTodo(path, td.id) }
+      { label: t('todos.delete'), icon: mi.delete(), danger: true, onClick: () => settings.deleteTodo(path, td.id) }
     ]
   }
 
@@ -2680,14 +2801,17 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
 
   const openSectionsMenu = (x: number, y: number): void => {
     const items: MenuItem[] = order.map((id) => ({
-      label: `${sidebarHidden.includes(id) ? '   ' : '✓ '}${sectionLabels[id] ?? id}`,
+      label: SECTION_MENU_LABEL_KEY[id] ? t(SECTION_MENU_LABEL_KEY[id]) : (sectionLabels[id] ?? id),
+      icon: SECTION_ICON[id]?.(),
+      checked: !sidebarHidden.includes(id),
       onClick: () => toggleSection(id)
     }))
     if (sidebarHidden.length) {
-      items.push({ separator: true }, { label: t('sidebar.showAllSections'), onClick: () => updateRepoLayout(repo.path, (l) => ({ ...l, sidebarHidden: [] })) })
+      items.push({ separator: true }, { label: t('sidebar.showAllSections'), icon: mi.view(), onClick: () => updateRepoLayout(repo.path, (l) => ({ ...l, sidebarHidden: [] })) })
     }
     items.push({ separator: true }, {
       label: t('sidebar.resetPanel'),
+      icon: mi.reset(),
       onClick: () => {
         const sd = defaultSettings()
         updateRepoLayout(repo.path, (l) => ({ ...l, sidebarOrder: sd.sidebarOrder, sidebarHidden: sd.sidebarHidden }))

@@ -13,7 +13,8 @@ import {
 } from 'lucide-react'
 import { secureShareApi } from '../infrastructure/api'
 import { useUIStore } from '../stores/ui'
-import { useT } from '../i18n'
+import { interp, useT } from '../i18n'
+import { shortFileName } from '../lib/pathDisplay'
 import type {
   SecureShareCandidate,
   SecureBundleHeader,
@@ -152,7 +153,12 @@ export function SecureShareModal({
       const res = await secureShareApi.apply(bundle.path, importPassword, repoPath, [...importSel])
       if ('error' in res) toast('error', errText(res.error))
       else {
-        toast('success', `${res.written.length} ${t('share.applied')}`)
+        toast(
+          'success',
+          res.written.length === 1
+            ? interp(t('share.appliedOne'), { name: shortFileName(res.written[0]) })
+            : interp(t('share.appliedMany'), { n: res.written.length })
+        )
         closeModal()
       }
     } finally {
@@ -209,7 +215,9 @@ export function SecureShareModal({
             </div>
           )}
           <div className="share-count">
-            {selected.size} {t('share.selected')}
+            {selected.size === 1
+              ? interp(t('share.selectedOne'), { name: shortFileName([...selected][0]) })
+              : interp(t('share.selectedMany'), { n: selected.size })}
           </div>
           <div className="share-passwords">
             <input

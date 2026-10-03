@@ -3,6 +3,7 @@ import { isEditorApp, type EditorSetting } from '../../../shared/editors'
 import type { MenuItem } from '../stores/ui'
 import { shellApi } from '../infrastructure/api'
 import { editorMenuItems } from './editorOpen'
+import { mi } from '../components/menuIcons'
 
 export type DefaultOpenApp = AppSettings['defaultOpenApp']
 
@@ -21,10 +22,11 @@ export function openWithMenuItems(
   if (defaultApp?.path && !isEditorApp(editor, defaultApp.path)) {
     items.push({
       label: labels.openWithDefault(defaultApp.name),
+      icon: mi.openExternal(),
       onClick: () => void shellApi.openWithApp(path, defaultApp.path)
     })
   }
-  items.push({ label: labels.openWith, onClick: () => void shellApi.openWithPicker(path) })
+  items.push({ label: labels.openWith, icon: mi.openExternal(), onClick: () => void shellApi.openWithPicker(path) })
   return items
 }
 
@@ -43,9 +45,9 @@ export function folderOpenMenuItems(
   editor?: EditorSetting
 ): MenuItem[] {
   return [
-    { label: labels.openFolder, onClick: () => void shellApi.openPath(path) },
+    { label: labels.openFolder, icon: mi.reveal(), onClick: () => void shellApi.openPath(path) },
     ...openWithMenuItems(path, defaultApp, labels, editor, { isDir: true }),
     { separator: true },
-    { label: labels.copyPath, onClick: () => void navigator.clipboard.writeText(path) }
+    { label: labels.copyPath, icon: mi.copyPath(), onClick: () => void navigator.clipboard.writeText(path) }
   ]
 }

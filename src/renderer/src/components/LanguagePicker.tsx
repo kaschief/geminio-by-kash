@@ -1,8 +1,9 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { Check, ChevronDown } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 import type { Language } from '../../../shared/types'
 import { LANGUAGES } from '../i18n'
 import { FlagIcon } from './FlagIcon'
+import { ChoiceDot } from './StateMarks'
 
 /**
  * The interface-language field.
@@ -106,7 +107,7 @@ export function LanguagePicker({
             >
               <FlagIcon lang={l.id} />
               <span className="langpick-label">{l.label}</span>
-              {l.id === value && <Check size={12} className="langpick-check" />}
+              <ChoiceDot on={l.id === value} />
             </div>
           ))}
         </div>

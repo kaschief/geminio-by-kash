@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Archive, Pencil } from 'lucide-react'
 import type { FileEntry, StashInfo } from '../../../shared/types'
 import { gitApi, shellApi } from '../infrastructure/api'
@@ -8,12 +8,19 @@ import { ViewToggle } from './CommitComposer'
 import { repoActions, type RepoData } from '../stores/repo'
 import { useSettingsStore } from '../stores/settings'
 import { openWithMenuItems } from '../lib/openWith'
+import { mi } from './menuIcons'
+import { fileListViewMenuItems } from '../lib/fileListMenu'
 import { stepRange, claimRangeKeys, ownsRangeKeys, rangeKeysBlocked, domOrder } from '../lib/rangeSelect'
 import { useT, interp } from '../i18n'
 import { ChangeSummary } from './ChangeSummary'
+import { effectiveFilter, filterByBuckets, type BucketFilter } from '../lib/fileStats'
 
 export function StashDetails({ repo, sha }: { repo: RepoData; sha: string }): React.JSX.Element {
   const [files, setFiles] = useState<FileEntry[]>([])
+  // Change-kind filter from the summary chips, as in commit details.
+  const [kindFilter, setKindFilter] = useState<BucketFilter>(() => new Set())
+  const activeKinds = useMemo(() => effectiveFilter(kindFilter, files), [kindFilter, files])
+  const shownFiles = useMemo(() => filterByBuckets(files, activeKinds), [files, activeKinds])
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const lastClicked = useRef<string | null>(null)
   const fileView = useUIStore((s) => s.fileView)
@@ -178,6 +185,8 @@ export function StashDetails({ repo, sha }: { repo: RepoData; sha: string }): Re
             title={interp(files.length === 1 ? t('stashPanel.changedFile') : t('stashPanel.changedFiles'), {
               n: files.length
             })}
+            filter={activeKinds}
+            onFilter={setKindFilter}
           />
           {selected.size > 0 && (
             <button
@@ -193,7 +202,7 @@ export function StashDetails({ repo, sha }: { repo: RepoData; sha: string }): Re
         <div ref={listWrapRef}>
         <FileListView
           navigationContext={{ repoPath: repo.path, source: { type: 'stash', sha, untracked: false } }}
-          files={files}
+          files={shownFiles}
           current={currentFile}
           selected={selected}
           onFileClick={handleClick}
@@ -202,12 +211,13 @@ export function StashDetails({ repo, sha }: { repo: RepoData; sha: string }): Re
             const targets = targetsFor(f)
             useUIStore.getState().openContextMenu(e.clientX, e.clientY, [
               {
-                label: interp(t('stashPanel.applyFile'), { files: targets.length > 1 ? `${targets.length} files` : 'this file' }),
+                label: targets.length > 1 ? interp(t('stashPanel.applyFiles'), { n: targets.length }) : t('stashPanel.applyThisFile'),
+                icon: mi.unstash(),
                 onClick: () => restoreFiles(targets)
               },
               { separator: true },
-              { label: shellApi.revealLabel, onClick: () => void shellApi.revealInFolder(`${repo.path}/${f.path}`) },
-              ...(!editor?.command ? [{ label: t('stashPanel.openDefaultApp'), onClick: () => void shellApi.openPath(`${repo.path}/${f.path}`) }] : []),
+              { label: shellApi.revealLabel, icon: mi.reveal(), onClick: () => void shellApi.revealInFolder(`${repo.path}/${f.path}`) },
+              ...(!editor?.command ? [{ label: t('stashPanel.openDefaultApp'), icon: mi.openExternal(), onClick: () => void shellApi.openPath(`${repo.path}/${f.path}`) }] : []),
               ...openWithMenuItems(
                 `${repo.path}/${f.path}`,
                 defaultOpenApp,
@@ -218,14 +228,15 @@ export function StashDetails({ repo, sha }: { repo: RepoData; sha: string }): Re
                 editor,
                 { repo: repo.path }
               ),
-              { label: t('common.copyFilePath'), onClick: () => void navigator.clipboard.writeText(`${repo.path}/${f.path}`) }
+              { label: t('common.copyFilePath'), icon: mi.copyPath(), onClick: () => void navigator.clipboard.writeText(`${repo.path}/${f.path}`) },
+              ...fileListViewMenuItems()
             ])
           }}
           onFolderContext={(folderPath, e) => {
             e.preventDefault()
             useUIStore.getState().openContextMenu(e.clientX, e.clientY, [
-              { label: shellApi.revealLabel, onClick: () => void shellApi.revealInFolder(`${repo.path}/${folderPath}`) },
-              ...(!editor?.command ? [{ label: t('stashPanel.openDefaultApp'), onClick: () => void shellApi.openPath(`${repo.path}/${folderPath}`) }] : []),
+              { label: shellApi.revealLabel, icon: mi.reveal(), onClick: () => void shellApi.revealInFolder(`${repo.path}/${folderPath}`) },
+              ...(!editor?.command ? [{ label: t('stashPanel.openDefaultApp'), icon: mi.openExternal(), onClick: () => void shellApi.openPath(`${repo.path}/${folderPath}`) }] : []),
               ...openWithMenuItems(
                 `${repo.path}/${folderPath}`,
                 defaultOpenApp,
@@ -236,7 +247,8 @@ export function StashDetails({ repo, sha }: { repo: RepoData; sha: string }): Re
                 editor,
                 { isDir: true }
               ),
-              { label: t('common.copyFolderPath'), onClick: () => void navigator.clipboard.writeText(`${repo.path}/${folderPath}`) }
+              { label: t('common.copyFolderPath'), icon: mi.copyPath(), onClick: () => void navigator.clipboard.writeText(`${repo.path}/${folderPath}`) },
+              ...fileListViewMenuItems()
             ])
           }}
         />

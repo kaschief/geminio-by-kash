@@ -10,6 +10,7 @@ import { canonicalRepoPath } from '../lib/repoAlias'
 import { filePermalink } from '../lib/autolink'
 import { revealLineWhenReady } from '../lib/reveal'
 import { openInEditor, editorLineMenuItems } from '../lib/editorOpen'
+import { mi } from './menuIcons'
 import { useT, interp, type TranslationKey } from '../i18n'
 import { useHoverExplain } from './HoverExplain'
 import { DiffViewer, type HunkAction } from './DiffViewer'
@@ -21,7 +22,7 @@ import { buildQueryRegExp, highlightHtml, type HighlightLayer } from './FileSear
 import { fileExt, guessLanguage, highlightLine } from '../lib/highlight'
 import { formatBytes, parseTooLargeError } from '../lib/fileSize'
 import { isSecretFile, maskSecretLine } from '../lib/secrets'
-import { Eye, EyeOff, Bookmark as BookmarkIcon } from 'lucide-react'
+import { Eye, EyeOff } from 'lucide-react'
 import { ImageDiff } from './ImageDiff'
 import { PreviewPane } from './PreviewPane'
 import { GutterMark, ChangeGutterPopup } from './ChangeGutter'
@@ -284,7 +285,7 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
     if (items.length) items.push({ separator: true })
     items.push({
       label: marked ? t('bookmarks.remove') : t('bookmarks.add'),
-      icon: <BookmarkIcon size={13} />,
+      icon: marked ? mi.unbookmark() : mi.bookmark(),
       ...(marked ? { danger: true } : {}),
       onClick: () => toggleBookmark(line, snippet)
     })
@@ -731,13 +732,13 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
       toast('success', done)
     }
     useUIStore.getState().openContextMenu(e.clientX, e.clientY, [
-      { label: t('fileViewer.copyPath'), onClick: () => copy(file, t('fileViewer.pathCopied')) },
+      { label: t('fileViewer.copyPath'), icon: mi.copyPath(), onClick: () => copy(file, t('fileViewer.pathCopied')) },
       ...(permalink
-        ? [{ label: t('fileViewer.copyLink'), onClick: () => copy(permalink, t('fileViewer.permalinkCopied')) }]
+        ? [{ label: t('fileViewer.copyLink'), icon: mi.copyLink(), onClick: () => copy(permalink, t('fileViewer.permalinkCopied')) }]
         : []),
       // Editing in place is rare (most edits happen in an editor), so it lives
       // here rather than as a header button.
-      ...(editableFile && !(editable && editing) ? [{ label: t('fileViewer.editFile'), onClick: startEditing }] : [])
+      ...(editableFile && !(editable && editing) ? [{ label: t('fileViewer.editFile'), icon: mi.rename(), onClick: startEditing }] : [])
     ])
   }
 
@@ -1048,9 +1049,9 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
                     onContextMenu={(e) => {
                       e.preventDefault()
                       openContextMenu(e.clientX, e.clientY, [
-                        { label: interp(t('fileViewer.openShaDiff'), { sha: b.sha.slice(0, 7) }), onClick: () => setFileView({ ...view, source: { type: 'commit', hash: b.sha }, mode: 'diff' }) },
-                        { label: t('fileViewer.reblame'), onClick: () => setBlameOverrideRef(`${b.sha}^`) },
-                        { label: t('fileViewer.copySha'), onClick: () => void navigator.clipboard.writeText(b.sha) }
+                        { label: interp(t('fileViewer.openShaDiff'), { sha: b.sha.slice(0, 7) }), icon: mi.diff(), onClick: () => setFileView({ ...view, source: { type: 'commit', hash: b.sha }, mode: 'diff' }) },
+                        { label: t('fileViewer.reblame'), icon: mi.history(), onClick: () => setBlameOverrideRef(`${b.sha}^`) },
+                        { label: t('fileViewer.copySha'), icon: mi.copy(), onClick: () => void navigator.clipboard.writeText(b.sha) }
                       ])
                     }}
                   >

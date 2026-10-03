@@ -4,6 +4,7 @@ import type { LfsInfo, LfsFile } from '../../../shared/types'
 import { gitApi, shellApi } from '../infrastructure/api'
 import { useUIStore } from '../stores/ui'
 import { useT, interp } from '../i18n'
+import { mi } from './menuIcons'
 
 export function LfsModal({ repoPath }: { repoPath: string }): React.JSX.Element {
   const closeModal = useUIStore((s) => s.closeModal)
@@ -16,8 +17,8 @@ export function LfsModal({ repoPath }: { repoPath: string }): React.JSX.Element 
     const full = `${repoPath}/${f.path}`
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
     openContextMenu(rect.right, rect.bottom + 4, [
-      { label: shellApi.revealLabel, icon: <FileDown size={15} />, onClick: () => void shellApi.revealInFolder(full) },
-      { label: t('lfs.openDefaultApp'), icon: <Download size={15} />, onClick: () => void shellApi.openPath(full) }
+      { label: shellApi.revealLabel, icon: mi.reveal(), onClick: () => void shellApi.revealInFolder(full) },
+      { label: t('lfs.openDefaultApp'), icon: mi.openExternal(), onClick: () => void shellApi.openPath(full) }
     ])
   }
 

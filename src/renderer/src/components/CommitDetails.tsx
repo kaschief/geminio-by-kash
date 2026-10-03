@@ -24,8 +24,11 @@ import { SignatureBadge } from './SignatureBadge'
 import type { RepoData } from '../stores/repo'
 import { useT, interp } from '../i18n'
 import { openWithMenuItems } from '../lib/openWith'
+import { mi } from './menuIcons'
+import { fileListViewMenuItems } from '../lib/fileListMenu'
 import { stepRange, claimRangeKeys, ownsRangeKeys, rangeKeysBlocked, domOrder } from '../lib/rangeSelect'
 import { ChangeSummary } from './ChangeSummary'
+import { effectiveFilter, filterByBuckets, type BucketFilter } from '../lib/fileStats'
 
 function profileUrl(name: string, email: string, remotes: RemoteInfo[]): string | undefined {
   const origin = remotes.find((r) => r.name === 'origin')?.url ?? remotes[0]?.url
@@ -171,16 +174,21 @@ export function CommitDetails({ repo, hash }: { repo: RepoData; hash: string }):
     () => (filter.mode === 'name' ? buildQueryRegExp(filter) : null),
     [filter.mode, filter.query, filter.caseSensitive, filter.wholeWord, filter.regex]
   )
+  // Change-kind filter from the summary chips. Kept across commits while the
+  // panel stays open, applied only to kinds the current commit contains.
+  const [kindFilter, setKindFilter] = useState<BucketFilter>(() => new Set())
+  const activeKinds = useMemo(() => effectiveFilter(kindFilter, files), [kindFilter, files])
   const filteredFiles = useMemo(() => {
-    if (!isFilterActive(filter)) return files
-    return files.filter((f) => {
+    const byKind = filterByBuckets(files, activeKinds)
+    if (!isFilterActive(filter)) return byKind
+    return byKind.filter((f) => {
       if (filter.include.trim() && !matchesGlobList(f.path, filter.include)) return false
       if (filter.exclude.trim() && matchesGlobList(f.path, filter.exclude)) return false
       if (!query) return true
       if (filter.mode === 'name') return !nameRe || nameRe.test(f.path)
       return !hitsByFile || hitsByFile.has(f.path)
     })
-  }, [files, filter, query, nameRe, hitsByFile])
+  }, [files, activeKinds, filter, query, nameRe, hitsByFile])
 
   // Shift+↑/↓ extends the file selection while this panel owns the keys. Row
   // order comes from the DOM so ranges follow the tree view's visual order.
@@ -474,6 +482,8 @@ export function CommitDetails({ repo, hash }: { repo: RepoData; hash: string }):
             title={interp(files.length === 1 ? t('commitPanel.changedFile') : t('commitPanel.changedFiles'), {
               n: files.length
             })}
+            filter={activeKinds}
+            onFilter={setKindFilter}
           />
           <ViewToggle />
         </div>
@@ -532,19 +542,25 @@ export function CommitDetails({ repo, hash }: { repo: RepoData; hash: string }):
                   targets.length > 1
                     ? interp(t('commitPanel.restoreFiles'), { n: targets.length })
                     : t('commitPanel.restoreFile'),
+                icon: mi.reset(),
                 onClick: () =>
                   openModal({
                     kind: 'confirm',
                     title: t('commitPanel.restoreTitle'),
-                    message: `${interp(t('commitPanel.restoreMsg'), { n: targets.length, hash: hash.slice(0, 7) })}\n\n${targets.join('\n')}`,
+                    // One file is named in full (a destructive confirm should leave no doubt
+                    // which); several are counted and listed underneath.
+                    message:
+                      targets.length === 1
+                        ? interp(t('commitPanel.restoreMsgOne'), { name: targets[0], hash: hash.slice(0, 7) })
+                        : `${interp(t('commitPanel.restoreMsg'), { n: targets.length, hash: hash.slice(0, 7) })}\n\n${targets.join('\n')}`,
                     danger: true,
                     confirmLabel: t('commitPanel.restoreConfirm'),
                     onConfirm: () => void repoActions.restoreFromCommit(repo.path, hash, targets)
                   })
               },
               { separator: true },
-              { label: shellApi.revealLabel, onClick: () => void shellApi.revealInFolder(`${repo.path}/${f.path}`) },
-              ...(!editor?.command ? [{ label: t('commitPanel.openDefaultApp'), onClick: () => void shellApi.openPath(`${repo.path}/${f.path}`) }] : []),
+              { label: shellApi.revealLabel, icon: mi.reveal(), onClick: () => void shellApi.revealInFolder(`${repo.path}/${f.path}`) },
+              ...(!editor?.command ? [{ label: t('commitPanel.openDefaultApp'), icon: mi.openExternal(), onClick: () => void shellApi.openPath(`${repo.path}/${f.path}`) }] : []),
               ...openWithMenuItems(
                 `${repo.path}/${f.path}`,
                 defaultOpenApp,
@@ -555,22 +571,24 @@ export function CommitDetails({ repo, hash }: { repo: RepoData; hash: string }):
                 editor,
                 { repo: repo.path }
               ),
-              { label: t('common.copyFilePath'), onClick: () => void navigator.clipboard.writeText(`${repo.path}/${f.path}`) },
+              { label: t('common.copyFilePath'), icon: mi.copyPath(), onClick: () => void navigator.clipboard.writeText(`${repo.path}/${f.path}`) },
               // The commit that deleted a file is exactly where someone realises
               // it is still in history, so the way out belongs in this menu.
               {
                 label: t('cmd.historyPurge'),
+                icon: mi.discard(),
                 danger: true,
                 onClick: () =>
                   openModal({ kind: 'history-purge', repoPath: repo.path, initialPath: f.path })
-              }
+              },
+              ...fileListViewMenuItems()
             ])
           }}
           onFolderContext={(folderPath, e) => {
             e.preventDefault()
             useUIStore.getState().openContextMenu(e.clientX, e.clientY, [
-              { label: shellApi.revealLabel, onClick: () => void shellApi.revealInFolder(`${repo.path}/${folderPath}`) },
-              ...(!editor?.command ? [{ label: t('commitPanel.openDefaultApp'), onClick: () => void shellApi.openPath(`${repo.path}/${folderPath}`) }] : []),
+              { label: shellApi.revealLabel, icon: mi.reveal(), onClick: () => void shellApi.revealInFolder(`${repo.path}/${folderPath}`) },
+              ...(!editor?.command ? [{ label: t('commitPanel.openDefaultApp'), icon: mi.openExternal(), onClick: () => void shellApi.openPath(`${repo.path}/${folderPath}`) }] : []),
               ...openWithMenuItems(
                 `${repo.path}/${folderPath}`,
                 defaultOpenApp,
@@ -581,7 +599,8 @@ export function CommitDetails({ repo, hash }: { repo: RepoData; hash: string }):
                 editor,
                 { isDir: true }
               ),
-              { label: t('common.copyFolderPath'), onClick: () => void navigator.clipboard.writeText(`${repo.path}/${folderPath}`) }
+              { label: t('common.copyFolderPath'), icon: mi.copyPath(), onClick: () => void navigator.clipboard.writeText(`${repo.path}/${folderPath}`) },
+              ...fileListViewMenuItems()
             ])
           }}
         />

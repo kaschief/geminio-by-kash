@@ -156,6 +156,12 @@ textarea:focus {
   padding-inline-end: 8px;
 }
 
+/* See ContextMenu: a drag region swallows the click that should dismiss an open menu. */
+:root[data-context-menu-open] .titlebar,
+:root[data-context-menu-open] .cosmos-chrome {
+  -webkit-app-region: no-drag;
+}
+
 .titlebar.mac:not(.fullscreen) {
   padding-inline-start: 78px;
 }
@@ -698,16 +704,12 @@ textarea:focus {
   align-items: center;
   justify-content: center;
   color: #fff;
-  transition: transform 0.12s, box-shadow 0.12s;
 }
 
 .group-color-swatch:hover {
   transform: scale(1.12);
 }
 
-.group-color-swatch.selected {
-  box-shadow: 0 0 0 2px var(--bg-0), 0 0 0 4px currentColor;
-}
 
 .group-color-custom {
   display: flex;
@@ -810,11 +812,8 @@ textarea:focus {
   color: var(--text-0);
   font-size: 12.5px;
 }
-.settings-workspace-check {
-  flex: 0 0 13px;
-  display: flex;
-  align-items: center;
-  color: var(--accent);
+.settings-workspace-row.active .settings-workspace-label {
+  font-weight: 600;
 }
 .settings-workspace-label {
   overflow: hidden;
@@ -1608,7 +1607,9 @@ input.is-invalid {
   color: var(--text-0);
 }
 .sb-current-mark {
-  color: var(--green);
+  display: inline-flex;
+  justify-content: center;
+  width: 12px;
   margin-inline-start: -16px;
 }
 .sb-name {
@@ -2084,9 +2085,8 @@ input.is-invalid {
   background: var(--accent);
   color: #0a1220;
 }
-.col-filter-check {
-  flex: 0 0 12px;
-  font-size: 11px;
+.col-filter-item.selected .col-filter-label {
+  font-weight: 600;
 }
 .col-filter-icon {
   flex: 0 0 auto;
@@ -2176,6 +2176,17 @@ body.col-resizing .node-ava {
 }
 .ref-check {
   flex-shrink: 0;
+  display: inline-flex;
+}
+/* HEAD sits on a pill filled with its lane colour; an accent glow would clash,
+   so the lit dot takes the pill's text colour instead. */
+.ref-badge .ref-check .state-choice {
+  margin-inline-start: 0;
+  flex-basis: 8px;
+}
+.ref-badge .ref-check .state-dot.on {
+  background: currentColor;
+  box-shadow: none;
 }
 
 .graph-row {
@@ -5480,6 +5491,92 @@ body.col-resizing .node-ava {
 .menu-item:hover:not(:disabled) .menu-item-chevron {
   color: inherit;
 }
+/* State, never a tick: a lit dot for the chosen option of a group, a lit icon
+   tile for an on/off, and the current value (or an "on" dot) trailing a
+   submenu row — so a setting is visible without opening its flyout. */
+.state-choice {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 10px;
+  margin-inline-start: -4px;
+}
+.state-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: transparent;
+  transform: scale(0.4);
+  transition: transform 0.18s cubic-bezier(0.2, 0.9, 0.3, 1.3), background 0.15s;
+}
+.state-dot.on {
+  background: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent),
+    0 0 8px color-mix(in srgb, var(--accent) 55%, transparent);
+  transform: scale(1);
+}
+.menu-item.chosen .menu-item-label {
+  font-weight: 600;
+}
+.menu-item:hover:not(:disabled) .state-dot.on {
+  background: currentColor;
+  box-shadow: none;
+}
+/* An on/off row keeps its label at full strength whether on or off — a
+   dimmed row reads as disabled, not as "click to turn on". Only the icon
+   carries the state: lit inside a soft accent tile when on, the ordinary grey
+   outline every other menu icon wears when off. */
+.menu-item.toggle .menu-item-icon {
+  width: 22px;
+  height: 22px;
+  margin: -3px 0 -3px -4px;
+  justify-content: center;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+}
+.menu-item.toggle.on .menu-item-icon {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 20%, transparent);
+}
+.menu-item.toggle.on:hover:not(:disabled) .menu-item-icon {
+  color: inherit;
+  background: color-mix(in srgb, currentColor 16%, transparent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .state-dot,
+  .menu-item.toggle .menu-item-icon {
+    transition: none;
+  }
+}
+/* The lit dot sits on hover backgrounds that are themselves the accent; it
+   inverts to the row's text colour there instead of vanishing. Any row that
+   hovers in solid accent adds itself to this list. */
+.col-filter-item:hover .state-dot.on {
+  background: currentColor;
+  box-shadow: none;
+}
+
+.menu-item-detail {
+  flex-shrink: 0;
+  max-width: 45%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11.5px;
+  color: var(--text-2);
+}
+.menu-item-on-dot {
+  flex: 0 0 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.menu-item:hover:not(:disabled) .menu-item-detail {
+  color: inherit;
+}
+.menu-item:hover:not(:disabled) .menu-item-on-dot {
+  background: currentColor;
+}
 /* Submenu flyout is portalled to <body> and positioned inline (see ContextMenu). */
 .context-menu.submenu {
   z-index: 1001;
@@ -5573,13 +5670,13 @@ body.col-resizing .node-ava {
   margin-left: auto;
 }
 
-.launch-input-default-mark {
-  color: var(--accent, #6c5ce7);
-  flex: none;
+/* The dot here marks the input's default, not the keyboard cursor. */
+.launch-input-option .state-choice {
+  margin-inline-start: auto;
 }
 
-.launch-input-option-value + .launch-input-default-mark {
-  margin-left: 6px;
+.launch-input-option-value + .state-choice {
+  margin-inline-start: 6px;
 }
 
 .launch-input-option .launch-input-option-label {
@@ -5814,12 +5911,11 @@ body.col-resizing .node-ava {
 .owner-option:hover {
   background: var(--bg-3);
 }
-.owner-option.selected {
-  border-color: var(--accent);
+.owner-option.selected .owner-label {
+  font-weight: 600;
 }
-.owner-check {
-  flex-shrink: 0;
-  color: var(--accent);
+.owner-option .state-choice {
+  margin-inline-start: 0;
 }
 
 .modal-hint {
@@ -9528,16 +9624,11 @@ body.col-resizing .node-ava {
   overflow: hidden;
   cursor: pointer;
   background: var(--bg-1);
-  transition: border-color 0.15s, transform 0.1s;
   text-align: start;
 }
 .theme-card:hover {
   border-color: var(--accent);
   background: color-mix(in srgb, var(--accent) 8%, var(--bg-1));
-}
-.theme-card.selected {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px var(--accent-soft);
 }
 
 .theme-swatch {
@@ -9579,9 +9670,6 @@ body.col-resizing .node-ava {
 .theme-card.selected .theme-card-label {
   color: var(--text-0);
   font-weight: 600;
-}
-.theme-card-label .theme-check {
-  color: var(--accent);
 }
 
 .theme-ai-prompt {
@@ -9947,20 +10035,6 @@ input[type='range']:focus-visible {
   font-size: 11.5px;
   font-weight: 500;
 }
-.wizard-tool-card-check {
-  position: absolute;
-  top: 6px;
-  inset-inline-end: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: #fff;
-}
-
 .wizard-artifacts-list {
   display: flex;
   flex-direction: column;
@@ -10593,7 +10667,7 @@ input[type='range']:focus-visible {
   border-color: var(--accent);
 }
 .onboarding-theme-card.selected {
-  border-color: var(--accent);
+  border-color: transparent;
 }
 
 .onboarding-theme-swatch {
@@ -10619,20 +10693,6 @@ input[type='range']:focus-visible {
   height: 6px;
   border-radius: 3px;
   width: 60%;
-}
-
-.onboarding-theme-check {
-  position: absolute;
-  top: 5px;
-  inset-inline-end: 5px;
-  width: 17px;
-  height: 17px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .onboarding-theme-name {
@@ -11698,8 +11758,8 @@ input[type='range']:focus-visible {
   cursor: pointer;
 }
 .langpick-opt.active { background: var(--bg-4); }
-.langpick-opt.current { color: var(--accent); font-weight: 600; }
-.langpick-check { flex: 0 0 auto; margin-inline-start: auto; }
+.langpick-opt.current .langpick-label { font-weight: 600; }
+.langpick-opt .state-choice { margin-inline-start: auto; }
 .langpick-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 /* Endonyms are written in their own script, so a row can be RTL inside an LTR
    app (and the reverse). Isolate each so it cannot reorder its neighbours. */
@@ -13322,6 +13382,51 @@ mark.find-hit.active {
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.03em;
   line-height: 1;
+}
+/* Filterable summary (commit and stash details): the chips are buttons. A lit
+   chip is the kind being shown; the rest dim while a filter is on, so the
+   header reads at a glance as "only these". */
+.change-summary.filterable .change-chip {
+  padding: 2px 6px 2px 3px;
+  margin: -2px 0;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+}
+.change-summary.filterable .change-chip:hover {
+  background: var(--bg-3);
+}
+.change-summary.filterable .change-chip.on {
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+.change-summary.filtering .change-chip:not(.on) {
+  opacity: 0.5;
+}
+.change-summary.filterable .change-chip:focus-visible,
+.change-summary-clear:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.change-summary-clear {
+  flex-shrink: 0;
+  padding: 2px 4px;
+  font-size: 11px;
+  color: var(--text-2);
+  background: transparent;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.change-summary-clear:hover {
+  color: var(--text-0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .change-summary.filterable .change-chip {
+    transition: none;
+  }
 }
 .change-chip:has(.st-mod) .change-chip-n { color: var(--yellow); }
 .change-chip:has(.st-add) .change-chip-n { color: var(--green); }
@@ -17237,7 +17342,6 @@ mark.diff-find-hit.current { background: #ff9632; color: #10121a; }
   padding-inline: 0 2px;
   margin-inline-start: -2px;
 }
-.repos-menu-tick { display: inline-block; width: 13px; height: 13px; }
 
 /* ── The scan → workspaces picker ── */
 .ws-plan {
@@ -17364,11 +17468,10 @@ mark.diff-find-hit.current { background: #ff9632; color: #10121a; }
 .app-icon-choice { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 8px 12px; border: 1px solid var(--border-soft); border-radius: 12px; background: var(--bg-1); color: var(--text-1); cursor: pointer; font-size: 12px; }
 .app-icon-choice img { width: min(100%, 90px); aspect-ratio: 1; }
 .app-icon-choice:hover { background: var(--bg-2); }
-.app-icon-choice.selected { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--bg-1)); color: var(--text-0); }
-.app-icon-check { position: absolute; top: 8px; right: 8px; color: var(--accent); }
+.app-icon-choice.selected { background: color-mix(in srgb, var(--accent) 8%, var(--bg-1)); color: var(--text-0); }
+.app-icon-busy { position: absolute; top: 8px; inset-inline-end: 8px; color: var(--accent); }
 .app-icon-colors { display: flex; gap: 10px; justify-content: center; margin-top: 14px; }
 .app-icon-colors button { width: 26px; height: 26px; border-radius: 50%; border: 2px solid transparent; display: grid; place-items: center; color: white; cursor: pointer; }
-.app-icon-colors button[aria-pressed='true'] { outline: 2px solid var(--text-2); outline-offset: 3px; }
 .app-icon-colors button:disabled { opacity: .3; cursor: default; }
 
 .fv-pull-meter { position: relative; flex: 0 0 48px; width: 48px; height: 48px; }
@@ -17453,3 +17556,76 @@ mark.diff-find-hit.current { background: #ff9632; color: #10121a; }
 .status-dot-settings { margin-top: 22px; }
 .graph-mini-stub { position: absolute; width: 30px; height: 4px; border-radius: 3px; background: var(--text-2); opacity: .35; }
 .graph-mini-rowtint { position: absolute; left: 0; right: 0; border-radius: 4px; }
+
+/* Cards and swatches show "chosen" as a ring standing just off the edge, never
+   a tick in a corner. The ring is an outline so its gap reads on any
+   background; keyboard focus is a dashed ring, so the two never look alike. */
+.theme-card,
+.onboarding-theme-card,
+.wizard-tool-card,
+.app-icon-choice,
+.app-icon-colors button,
+.group-color-swatch {
+  outline: 2px solid transparent;
+  outline-offset: 0;
+  transition: outline-color 0.18s, outline-offset 0.18s cubic-bezier(0.2, 0.9, 0.3, 1.3), box-shadow 0.18s,
+    border-color 0.15s, background 0.15s, transform 0.12s;
+}
+.theme-card.selected,
+.onboarding-theme-card.selected,
+.wizard-tool-card.active,
+.app-icon-choice.selected,
+.app-icon-colors button[aria-pressed='true'],
+.group-color-swatch.selected {
+  outline-color: var(--accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 14px -3px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+.theme-card:focus-visible,
+.onboarding-theme-card:focus-visible,
+.wizard-tool-card:focus-visible,
+.app-icon-choice:focus-visible,
+.app-icon-colors button:focus-visible,
+.group-color-swatch:focus-visible {
+  outline: 2px dashed var(--text-1);
+  outline-offset: 2px;
+}
+/* Focused and chosen at once: keep the solid ring, add a soft halo beyond it. */
+.theme-card.selected:focus-visible,
+.onboarding-theme-card.selected:focus-visible,
+.wizard-tool-card.active:focus-visible,
+.app-icon-choice.selected:focus-visible,
+.app-icon-colors button[aria-pressed='true']:focus-visible,
+.group-color-swatch.selected:focus-visible {
+  outline-style: solid;
+  outline-color: var(--accent);
+  box-shadow: 0 0 0 7px var(--accent-soft);
+}
+@media (prefers-reduced-motion: reduce) {
+  .theme-card,
+  .onboarding-theme-card,
+  .wizard-tool-card,
+  .app-icon-choice,
+  .app-icon-colors button,
+  .group-color-swatch {
+    transition: none;
+  }
+}
+
+/* ── Selected controls answer hover too ─────────────────────────────────────
+   Every control whose "on" state is the soft accent tint deepens that tint on
+   hover, the way its unselected neighbours brighten. Without this the selected
+   segment was the one button in a row that ignored the pointer — it read as
+   inert, as if it could not be clicked again (or clicked to turn off).
+   Add a selector here when a new control adopts the accent-soft "on" look. */
+:root {
+  --accent-soft-hover: color-mix(in srgb, var(--accent) 26%, transparent);
+}
+:is(.tab-page-chip.active, .prob-count.on, .prob-toggle.on, .prob-tab.on,
+  .remote-mode-toggle button.active, .profile-item.selected, .view-toggle button.active,
+  .view-sort.active, .fv-mode.active, .diff-tool.on, .theme-mode-btn.active, .imgd-tab.active,
+  .wizard-preview-mode-btn.active, .pr-preview-tabs .btn.active, .mc-sort.active, .tl-speed.active,
+  .fs-toggle.active, .tree-row.selected, .sb-tab.active, .sm-file.selected, .codesearch-tab.active,
+  .codesearch-opt.on, .diff-word-toggle.on, .change-summary.filterable .change-chip.on):hover:not(:disabled):not([aria-disabled='true']) {
+  background: var(--accent-soft-hover);
+}

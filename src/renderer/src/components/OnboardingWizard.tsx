@@ -257,6 +257,7 @@ function ThemeStep({
             <button
               key={theme.id}
               className={`onboarding-theme-card${selected ? ' selected' : ''}`}
+              aria-pressed={selected}
               onClick={() => patch({ themeId: theme.id })}
             >
               <div className="onboarding-theme-swatch" style={{ background: c.bg0 }}>
@@ -267,11 +268,6 @@ function ThemeStep({
                   <div className="onboarding-theme-bar" style={{ background: c.bg3, width: '55%' }} />
                 </div>
               </div>
-              {selected && (
-                <div className="onboarding-theme-check">
-                  <Check size={10} />
-                </div>
-              )}
               <div className="onboarding-theme-name">{theme.name}</div>
             </button>
           )

@@ -72,3 +72,38 @@ export function summaryChips(s: FileStats): StatChip[] {
     n: s[c.bucket]
   }))
 }
+
+/** A file-list filter by change kind; empty means "show everything". */
+export type BucketFilter = ReadonlySet<StatBucket>
+
+/**
+ * The filter after a click on a summary chip. A plain click shows only that
+ * kind, and clicking the kind already shown alone clears the filter, so the
+ * same chip turns it on and off. A ⌘/Ctrl-click adds or removes one kind.
+ */
+export function toggleBucket(filter: BucketFilter, bucket: StatBucket, additive: boolean): BucketFilter {
+  if (additive) {
+    const next = new Set(filter)
+    if (next.has(bucket)) next.delete(bucket)
+    else next.add(bucket)
+    return next
+  }
+  return filter.size === 1 && filter.has(bucket) ? new Set() : new Set([bucket])
+}
+
+/**
+ * The filter that actually applies to these files: kinds the list does not
+ * contain are dropped. The filter outlives a change of commit, and a kept
+ * "deleted only" on a commit with no deletions would show an empty list with
+ * no chip lit to explain it — so it quietly stands down instead.
+ */
+export function effectiveFilter(filter: BucketFilter, files: { status: string }[]): BucketFilter {
+  if (filter.size === 0) return filter
+  const present = new Set(files.map((f) => bucketOf(f.status)))
+  const kept = [...filter].filter((b) => present.has(b))
+  return kept.length === filter.size ? filter : new Set(kept)
+}
+
+export function filterByBuckets<T extends { status: string }>(files: T[], filter: BucketFilter): T[] {
+  return filter.size === 0 ? files : files.filter((f) => filter.has(bucketOf(f.status)))
+}

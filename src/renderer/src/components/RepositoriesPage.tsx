@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   ArrowDownToLine,
-  Check,
   ChevronDown,
   ChevronRight,
   ChevronsDownUp,
@@ -10,9 +9,13 @@ import {
   FolderGit2,
   Loader2,
   MoreVertical,
+  Palette,
+  FastForward,
+  Layers2,
   Search,
   X
 } from 'lucide-react'
+import { mi } from './menuIcons'
 import { GROUP_COLORS, useSettingsStore } from '../stores/settings'
 import { useReposStore } from '../stores/repos'
 import { repoActions, type PullMode } from '../stores/repo'
@@ -47,10 +50,10 @@ const SECTION_TITLE: Record<Exclude<SectionKind, 'workspace'>, TranslationKey> =
 
 /** The pull modes, in the order the chooser lists them. Keys, not strings — a
  *  module-level constant holding copy freezes at the language active on import. */
-const PULL_MODES: { mode: PullMode; labelKey: TranslationKey }[] = [
-  { mode: 'default', labelKey: 'repos.pullModeDefault' },
-  { mode: 'ff-only', labelKey: 'repos.pullModeFfOnly' },
-  { mode: 'rebase', labelKey: 'repos.pullModeRebase' }
+const PULL_MODES: { mode: PullMode; labelKey: TranslationKey; icon: () => React.JSX.Element }[] = [
+  { mode: 'default', labelKey: 'repos.pullModeDefault', icon: mi.pull },
+  { mode: 'ff-only', labelKey: 'repos.pullModeFfOnly', icon: () => <FastForward size={15} strokeWidth={1.75} /> },
+  { mode: 'rebase', labelKey: 'repos.pullModeRebase', icon: () => <Layers2 size={15} strokeWidth={1.75} /> }
 ]
 
 /** Uncommitted work of any kind — staged, unstaged or untracked. */
@@ -255,6 +258,7 @@ export function RepositoriesPage(): React.JSX.Element {
     openContextMenu(rect.left, rect.bottom, [
       {
         label: t('repos.sectionColor'),
+        icon: <Palette size={15} strokeWidth={1.75} />,
         onClick: () =>
           openModal({
             kind: 'group-color',
@@ -265,7 +269,7 @@ export function RepositoriesPage(): React.JSX.Element {
       // Only offered once a section has been overridden: with no stored colour
       // there is nothing to reset, since the default is what is already showing.
       ...(key in chosenColors
-        ? [{ label: t('repos.sectionColorReset'), onClick: () => setRepoSectionColor(key, null) }]
+        ? [{ label: t('repos.sectionColorReset'), icon: mi.reset(), onClick: () => setRepoSectionColor(key, null) }]
         : [])
     ])
   }
@@ -293,11 +297,11 @@ export function RepositoriesPage(): React.JSX.Element {
     openContextMenu(
       rect.left,
       rect.bottom,
-      PULL_MODES.map(({ mode, labelKey }) => ({
+      PULL_MODES.map(({ mode, labelKey, icon }) => ({
         label: t(labelKey),
-        // MenuItem has no checked state, so the tick is the icon slot. The
-        // inactive entries still reserve it, or the labels would not line up.
-        icon: mode === active ? <Check size={13} /> : <span className="repos-menu-tick" />,
+        icon: icon(),
+        radio: true,
+        checked: mode === active,
         onClick: () => updateSettings((cur) => ({ ...cur, pullMode: mode }))
       }))
     )

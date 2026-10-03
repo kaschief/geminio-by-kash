@@ -2,7 +2,11 @@ import { formatAbsoluteDate } from '../lib/commitDate'
 import { fitBranchAndGraph } from '../lib/graphColumnFit'
 import { useLayoutEffect, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { Archive, GitCommitHorizontal, Tag, Laptop, Cloud, Check, Star, Settings2, Pencil, Plus, Minus, CheckCircle2, XCircle, Clock, MinusCircle, StickyNote, FlaskConical, ArrowUp } from 'lucide-react'
+import { Archive, GitCommitHorizontal, Tag, Laptop, Cloud, Star, Settings2, Pencil, Plus, Minus, CheckCircle2, XCircle, Clock, MinusCircle, StickyNote, FlaskConical, ArrowUp, FileDown, Layers, X, PencilLine, CornerUpLeft, ListOrdered, Wrench, PackageOpen, type LucideIcon } from 'lucide-react'
+import { mi } from './menuIcons'
+import { resetToRefMenuItem } from '../lib/resetMenu'
+import { ChoiceDot } from './StateMarks'
+import { rebaseIcon } from '../lib/refMenuItems'
 import { ciIcon, CI_STATE_KEY } from './CiIcon'
 import type { CiState, CiStatus, GraphCommit, StashInfo, GraphColumnId, GraphFlowColumnId, GraphColumns, FileEntry, CommitMenuProbe, GraphFocus } from '../../../shared/types'
 import { defaultGraphColumns, defaultGraphColumnOrder, defaultGraphStyle } from '../../../shared/types'
@@ -69,6 +73,33 @@ const COL_LABEL_KEY: Record<GraphColumnId, string> = {
   sha: 'graph.col.sha',
   signature: 'graph.col.signature'
 }
+
+// The columns menu names columns in sentence case; COL_LABEL_KEY is the header's.
+const COL_MENU_LABEL_KEY: Record<GraphColumnId, TranslationKey> = {
+  branch: 'graph.colMenu.branch',
+  graph: 'graph.colMenu.graph',
+  message: 'graph.colMenu.message',
+  deployment: 'graph.colMenu.deployment',
+  author: 'graph.colMenu.author',
+  date: 'graph.colMenu.date',
+  sha: 'graph.colMenu.sha',
+  signature: 'graph.colMenu.signature'
+}
+
+// A column's icon lights up in the columns menu while the column is shown.
+const COL_ICON: Record<GraphColumnId, () => React.JSX.Element> = {
+  branch: mi.branch,
+  graph: mi.commit,
+  message: mi.message,
+  deployment: mi.deploy,
+  author: mi.author,
+  date: mi.date,
+  sha: mi.hash,
+  signature: mi.signature
+}
+
+// One-off menu icons, at the shared menu size (see menuIcons.tsx).
+const ic = (Icon: LucideIcon): React.JSX.Element => <Icon size={15} strokeWidth={1.75} />
 
 /** A commit's date as the date column shows it (absolute forms: lib/commitDate). */
 function formatCommitDate(unixSeconds: number, format: 'relative' | 'datetime' | 'iso'): string {
@@ -687,12 +718,14 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
     const items: MenuItem[] = [
       {
         label: t('graph.themeSettings'),
-        icon: <Settings2 size={14} />,
+        icon: ic(Settings2),
         onClick: () => openModal({ kind: 'settings', page: 'themes', themeTab: 'graph' })
       },
       { separator: true },
       ...ids.map((id) => ({
-        label: `${columns[id].visible ? '✓ ' : '   '}${t(COL_LABEL_KEY[id] as Parameters<typeof t>[0])}`,
+        label: t(COL_MENU_LABEL_KEY[id]),
+        icon: COL_ICON[id](),
+        checked: columns[id].visible,
         onClick: () => setColumn(id, { visible: !columns[id].visible })
       }))
     ]
@@ -700,13 +733,17 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
       { separator: true },
       {
         label: t('graph.focus'),
+        icon: mi.focus(),
         submenu: GRAPH_FOCUS_MODES.map((m) => ({
-          label: `${focus === m.id ? '✓ ' : '   '}${t(m.labelKey)}`,
+          label: t(m.labelKey),
+          radio: true,
+          checked: focus === m.id,
           onClick: () => setFocus(m.id)
         }))
       },
       {
         label: t('graph.resetColumns'),
+        icon: mi.reset(),
         onClick: () =>
           updateRepoLayout(repo.path, (l) => ({ ...l, graphColumns: defaultGraphColumns(), graphColumnOrder: defaultGraphColumnOrder() }))
       }
@@ -1193,16 +1230,18 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
     const items: MenuItem[] = [
       {
         label: interp(t('commit.cherryPickMany'), { n: sel.length, branch: repo.branches.current.trim() || 'HEAD' }),
+        icon: mi.cherryPick(),
         disabled: !repo.branches.current.trim(),
         onClick: () => void repoActions.cherryPickMany(repo.path, sel)
       },
-      { label: interp(t('commit.exportMany'), { n: sel.length }), onClick: () => void exportManyPatches(sel) }
+      { label: interp(t('commit.exportMany'), { n: sel.length }), icon: ic(FileDown), onClick: () => void exportManyPatches(sel) }
     ]
     if (canSquash) {
       const oldest = sel[sel.length - 1]
       const defaultMsg = [...sel].reverse().map(subjectOf).filter(Boolean).join('; ')
       items.push({
         label: interp(t('commit.squashMany'), { n: sel.length }),
+        icon: ic(Layers),
         onClick: () =>
           openModal({
             kind: 'input',
@@ -1221,8 +1260,8 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
     }
     items.push(
       { separator: true },
-      { label: interp(t('commit.copyShas'), { n: sel.length }), onClick: () => void navigator.clipboard.writeText(sel.join('\n')) },
-      { label: t('commit.clearSelection'), onClick: () => setMulti(new Set()) }
+      { label: interp(t('commit.copyShas'), { n: sel.length }), icon: mi.copy(), onClick: () => void navigator.clipboard.writeText(sel.join('\n')) },
+      { label: t('commit.clearSelection'), icon: ic(X), onClick: () => setMulti(new Set()) }
     )
     return items
   }
@@ -1262,7 +1301,9 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
     const copyBranch = branchNames.length ? branchNames.join('\n') : currentBranch
     const mergeItems = mergeableRefs(c.refs).map<MenuItem>((ref) => ({
       label: interp(t('commit.mergeInto'), { ref, branch: currentBranch }),
+      icon: mi.merge(),
       disabled: !currentBranch || ref === currentBranch,
+      title: currentBranch && ref === currentBranch ? t('commit.mergeIntoSelf') : undefined,
       onClick: () => void repoActions.merge(repo.path, ref)
     }))
     const disabledTitle = (action: 'amend' | 'undo' | 'reset' | 'viewOnGitHub'): string | undefined => {
@@ -1305,12 +1346,14 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
     return [
       {
         label: t('commitMenu.amend'),
+        icon: ic(PencilLine),
         disabled: !caps.canAmend,
         title: disabledTitle('amend'),
         onClick: enterAmend
       },
       {
         label: t('commitMenu.undo'),
+        icon: mi.undo(),
         disabled: !caps.canUndo,
         title: disabledTitle('undo'),
         onClick: () =>
@@ -1324,6 +1367,7 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
       },
       {
         label: t('commitMenu.resetTo'),
+        icon: mi.reset(),
         disabled: !caps.canReset,
         title: disabledTitle('reset'),
         onClick: () =>
@@ -1342,6 +1386,7 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
       ...(mergeItems.length ? [{ separator: true } satisfies MenuItem] : []),
       {
       label: t('commit.createBranchHere'),
+      icon: mi.newBranch(),
       onClick: () =>
         openModal({
           kind: 'input',
@@ -1354,50 +1399,57 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
     },
     {
       label: t('commit.createTagHere'),
+      icon: mi.tag(),
       onClick: () => openModal({ kind: 'create-tag', repoPath: repo.path, hash: c.hash, at: c.hash.slice(0, 7) })
     },
     ...(localCiOn
       ? [
           {
             label: t('localCi.runHere'),
+            icon: mi.run(),
             onClick: () => openModal({ kind: 'local-ci', repoPath: repo.path, rev: c.hash })
           } satisfies MenuItem
         ]
       : []),
     { separator: true },
-    { label: t('commit.checkoutDetached'), onClick: () => void repoActions.checkout(repo.path, c.hash) },
-    { label: t('commit.cherryPick'), onClick: () => void repoActions.cherryPick(repo.path, c.hash) },
+    { label: t('commit.checkoutDetached'), icon: mi.commit(), onClick: () => void repoActions.checkout(repo.path, c.hash) },
+    { label: t('commit.cherryPick'), icon: mi.cherryPick(), onClick: () => void repoActions.cherryPick(repo.path, c.hash) },
     {
       label: t('commit.cherryPickNoCommit'),
+      icon: mi.cherryPick(),
       onClick: () => void repoActions.cherryPick(repo.path, c.hash, true)
     },
-    { label: t('commit.revert'), onClick: () => void repoActions.revertCommit(repo.path, c.hash) },
+    { label: t('commit.revert'), icon: ic(CornerUpLeft), onClick: () => void repoActions.revertCommit(repo.path, c.hash) },
     { separator: true },
     {
       label: t('commit.createPr'),
+      icon: mi.pullRequest(),
       onClick: () => openModal({ kind: 'create-pr', repoPath: repo.path, source: repo.branches.current ?? undefined })
     },
-    { label: t('commit.exportPatch'), onClick: () => void exportPatch(c) },
-    { label: t('commit.copySha'), onClick: () => void navigator.clipboard.writeText(c.hash) },
+    { label: t('commit.exportPatch'), icon: ic(FileDown), onClick: () => void exportPatch(c) },
+    { label: t('commit.copySha'), icon: mi.copy(), onClick: () => void navigator.clipboard.writeText(c.hash) },
     {
       label: t('commitMenu.viewOnGitHub'),
+      icon: mi.github(),
       disabled: !caps.canViewOnGitHub,
       title: disabledTitle('viewOnGitHub'),
       onClick: () => {
         if (caps.githubCommitUrl) void shellApi.openExternal(caps.githubCommitUrl)
       }
     },
-    { label: t('commit.copyMessage'), onClick: () => void navigator.clipboard.writeText(c.subject) },
+    { label: t('commit.copyMessage'), icon: mi.copy(), onClick: () => void navigator.clipboard.writeText(c.subject) },
     ...(copyBranch
-      ? [{ label: t('branch.copyBranchName'), onClick: () => void navigator.clipboard.writeText(copyBranch) } satisfies MenuItem]
+      ? [{ label: t('branch.copyBranchName'), icon: mi.copy(), onClick: () => void navigator.clipboard.writeText(copyBranch) } satisfies MenuItem]
       : []),
     { separator: true },
     {
       label: t('commit.editCommit'),
+      icon: mi.rename(),
       onClick: () => openModal({ kind: 'commit-edit', repoPath: repo.path, sha: c.hash, subject: c.subject })
     },
     {
       label: t('commit.interactiveRebase'),
+      icon: ic(ListOrdered),
       onClick: () =>
         openModal({
           kind: 'interactive-rebase',
@@ -1408,11 +1460,13 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
     },
     {
       label: t('commit.fixup'),
+      icon: ic(Wrench),
       disabled: (repo.status?.staged.length ?? 0) === 0,
       onClick: () => void repoActions.commitFixup(repo.path, c.hash)
     },
     {
       label: t('commit.autosquash'),
+      icon: ic(Layers),
       onClick: () =>
         openModal({
           kind: 'confirm',
@@ -1426,10 +1480,11 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
   }
 
   const stashMenu = (s: StashInfo): MenuItem[] => [
-    { label: t('stash.applyKeep'), onClick: () => void repoActions.stashApply(repo.path, s.index) },
-    { label: t('stash.pop'), onClick: () => void repoActions.stashPop(repo.path, s.index) },
+    { label: t('stash.applyKeep'), icon: mi.unstash(), onClick: () => void repoActions.stashApply(repo.path, s.index) },
+    { label: t('stash.pop'), icon: ic(PackageOpen), onClick: () => void repoActions.stashPop(repo.path, s.index) },
     {
       label: t('stash.branchFrom'),
+      icon: mi.newBranch(),
       onClick: () =>
         openModal({
           kind: 'input',
@@ -1443,9 +1498,10 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
         })
     },
     { separator: true },
-    { label: t('stash.copyMsg'), onClick: () => void navigator.clipboard.writeText(s.message) },
+    { label: t('stash.copyMsg'), icon: mi.copy(), onClick: () => void navigator.clipboard.writeText(s.message) },
     {
       label: t('stash.drop'),
+      icon: mi.delete(),
       danger: true,
       onClick: () =>
         openModal({
@@ -1458,7 +1514,7 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
         })
     },
     { separator: true },
-    { label: t('stash.copySha'), onClick: () => void navigator.clipboard.writeText(s.sha) }
+    { label: t('stash.copySha'), icon: mi.copy(), onClick: () => void navigator.clipboard.writeText(s.sha) }
   ]
 
   const tagRemoteUrl = (remoteUrl: string, tagName: string): string | null => {
@@ -1478,10 +1534,11 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
       const remUrl = repo.remotes.find((r) => r.name === remoteName)?.url
       const webUrl = remUrl ? tagRemoteUrl(remUrl, g.label) : null
       return [
-        { label: interp(t('tag.checkout'), { tag: g.label }), onClick: () => void repoActions.checkout(repo.path, g.label) },
-        { label: t('commit.checkoutDetached'), onClick: () => void repoActions.checkout(repo.path, c.hash) },
+        { label: interp(t('tag.checkout'), { tag: g.label }), icon: mi.tag(), onClick: () => void repoActions.checkout(repo.path, g.label) },
+        { label: t('commit.checkoutDetached'), icon: mi.commit(), onClick: () => void repoActions.checkout(repo.path, c.hash) },
         {
           label: t('tag.worktree'),
+          icon: mi.worktree(),
           onClick: () =>
             openModal({
               kind: 'input',
@@ -1497,11 +1554,13 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
         { separator: true },
         {
           label: interp(t('tag.rebaseOnto'), { branch: currentBranch, tag: g.label }),
+          icon: rebaseIcon(),
           disabled: !currentBranch,
           onClick: () => void repoActions.rebase(repo.path, g.label)
         },
         {
           label: t('tag.createBranchHere'),
+          icon: mi.newBranch(),
           onClick: () =>
             openModal({
               kind: 'input',
@@ -1513,43 +1572,21 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
             })
         },
         { separator: true },
-        {
-          label: interp(t('tag.resetSoft'), { branch: currentBranch, tag: g.label }),
-          disabled: !currentBranch,
-          onClick: () => void repoActions.reset(repo.path, g.label, 'soft')
-        },
-        {
-          label: interp(t('tag.resetMixed'), { branch: currentBranch, tag: g.label }),
-          disabled: !currentBranch,
-          onClick: () => void repoActions.reset(repo.path, g.label, 'mixed')
-        },
-        {
-          label: interp(t('tag.resetHard'), { branch: currentBranch, tag: g.label }),
-          danger: true,
-          disabled: !currentBranch,
-          onClick: () =>
-            openModal({
-              kind: 'confirm',
-              title: t('commit.hardResetTitle'),
-              message: interp(t('commit.hardResetMsg'), { sha: g.label }),
-              danger: true,
-              confirmLabel: t('commit.hardResetConfirm'),
-              onConfirm: () => void repoActions.reset(repo.path, g.label, 'hard')
-            })
-        },
+        resetToRefMenuItem({ repoPath: repo.path, ref: g.label, branch: currentBranch || null }),
         { separator: true },
-        { label: t('tag.copyName'), onClick: () => void navigator.clipboard.writeText(g.label) },
-        { label: t('commit.copySha'), onClick: () => void navigator.clipboard.writeText(c.hash) },
+        { label: t('tag.copyName'), icon: mi.copy(), onClick: () => void navigator.clipboard.writeText(g.label) },
+        { label: t('commit.copySha'), icon: mi.copy(), onClick: () => void navigator.clipboard.writeText(c.hash) },
         ...(webUrl
-          ? [{ label: interp(t('tag.copyLink'), { tag: g.label, remote: remoteName }), onClick: () => void navigator.clipboard.writeText(webUrl) } satisfies MenuItem]
+          ? [{ label: interp(t('tag.copyLink'), { tag: g.label, remote: remoteName }), icon: mi.copyLink(), onClick: () => void navigator.clipboard.writeText(webUrl) } satisfies MenuItem]
           : []),
         { separator: true },
         ...(repo.remotes.length && !isPushed
-          ? [{ label: interp(t('tag.push'), { tag: g.label, remote: remoteName }), onClick: () => void repoActions.pushTag(repo.path, g.label, remoteName) } satisfies MenuItem]
+          ? [{ label: interp(t('tag.push'), { tag: g.label, remote: remoteName }), icon: mi.push(), onClick: () => void repoActions.pushTag(repo.path, g.label, remoteName) } satisfies MenuItem]
           : []),
         ...(repo.remotes.length && isPushed
           ? [{
               label: interp(t('tag.deleteFromRemote'), { tag: g.label, remote: remoteName }),
+              icon: mi.delete(),
               danger: true,
               onClick: () =>
                 openModal({
@@ -1564,6 +1601,7 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
           : []),
         {
           label: interp(t('tag.deleteLocalLabel'), { tag: g.label }),
+          icon: mi.delete(),
           danger: true,
           onClick: () =>
             openModal({
@@ -1584,18 +1622,24 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
     const ref = g.isLocal ? g.label : g.remotes.length ? `${g.remotes[0]}/${g.label}` : g.label
     const items: MenuItem[] = []
     if (g.isLocal) {
-      items.push({ label: interp(t('tag.checkout'), { tag: g.label }), disabled: isCurrent, onClick: () => void repoActions.checkout(repo.path, g.label) })
+      items.push({
+        label: interp(t('tag.checkout'), { tag: g.label }),
+        icon: mi.branch(),
+        disabled: isCurrent,
+        title: isCurrent ? t('branch.alreadyCheckedOut') : undefined,
+        onClick: () => void repoActions.checkout(repo.path, g.label) })
     } else if (g.remotes.length) {
       const full = `${g.remotes[0]}/${g.label}`
-      items.push({ label: interp(t('branch.checkoutAsLocal'), { branch: g.label }), onClick: () => void repoActions.checkoutRemote(repo.path, full, g.label, g.remotes[0]) })
+      items.push({ label: interp(t('branch.checkoutAsLocal'), { branch: g.label }), icon: mi.branch(), onClick: () => void repoActions.checkoutRemote(repo.path, full, g.label, g.remotes[0]) })
     }
-    items.push({ label: t('commit.checkoutDetached'), onClick: () => void repoActions.checkout(repo.path, c.hash) })
+    items.push({ label: t('commit.checkoutDetached'), icon: mi.commit(), onClick: () => void repoActions.checkout(repo.path, c.hash) })
     items.push({ separator: true })
     // Shared with the sidebar's branch rows — see lib/refMenu.ts.
     items.push(...refIntegrationItems(repo.path, ref, currentBranch))
     items.push({ separator: true })
     items.push({
       label: t('commit.createBranchHere'),
+      icon: mi.newBranch(),
       onClick: () =>
         openModal({
           kind: 'input',
@@ -1608,42 +1652,21 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
     })
     items.push({
       label: t('commit.createTagHere'),
+      icon: mi.tag(),
       onClick: () => openModal({ kind: 'create-tag', repoPath: repo.path, hash: c.hash, at: c.hash.slice(0, 7) })
     })
     if (g.isLocal) {
       items.push({
         label: t('commit.createPr'),
+        icon: mi.pullRequest(),
         onClick: () => openModal({ kind: 'create-pr', repoPath: repo.path, source: g.label })
       })
     }
     items.push({ separator: true })
-    items.push({
-      label: interp(t('tag.resetSoft'), { branch: currentBranch, tag: ref }),
-      disabled: !currentBranch,
-      onClick: () => void repoActions.reset(repo.path, ref, 'soft')
-    })
-    items.push({
-      label: interp(t('tag.resetMixed'), { branch: currentBranch, tag: ref }),
-      disabled: !currentBranch,
-      onClick: () => void repoActions.reset(repo.path, ref, 'mixed')
-    })
-    items.push({
-      label: interp(t('tag.resetHard'), { branch: currentBranch, tag: ref }),
-      danger: true,
-      disabled: !currentBranch,
-      onClick: () =>
-        openModal({
-          kind: 'confirm',
-          title: t('commit.hardResetTitle'),
-          message: interp(t('commit.hardResetMsg'), { sha: ref }),
-          danger: true,
-          confirmLabel: t('commit.hardResetConfirm'),
-          onConfirm: () => void repoActions.reset(repo.path, ref, 'hard')
-        })
-    })
+    items.push(resetToRefMenuItem({ repoPath: repo.path, ref, branch: currentBranch || null }))
     items.push({ separator: true })
-    items.push({ label: t('branch.copyBranchName'), onClick: () => void navigator.clipboard.writeText(g.label) })
-    items.push({ label: t('branch.copySha'), onClick: () => void navigator.clipboard.writeText(c.hash) })
+    items.push({ label: t('branch.copyBranchName'), icon: mi.copy(), onClick: () => void navigator.clipboard.writeText(g.label) })
+    items.push({ label: t('branch.copySha'), icon: mi.copy(), onClick: () => void navigator.clipboard.writeText(c.hash) })
     if (githubRemote(repo.remotes)) {
       // A local badge goes through its upstream; a remote-only one names its remote.
       const local = g.isLocal ? repo.branches.locals.find((b) => b.name === g.label) : undefined
@@ -1654,6 +1677,7 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
           : null
       items.push({
         label: t('branch.viewOnGitHub'),
+        icon: mi.github(),
         disabled: !url,
         title: url ? undefined : t('branch.viewOnGitHubUnpushed'),
         onClick: () => url && void shellApi.openExternal(url)
@@ -1664,11 +1688,13 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
     if (g.isLocal) {
       items.push({
         label: interp(t('branch.pushNamed'), { branch: g.label }),
+        icon: mi.push(),
         onClick: () => void repoActions.push(repo.path, false, false, g.label)
       })
       const local = repo.branches.locals.find((b) => b.name === g.label)
       items.push({
         label: interp(t('branch.pullNamed'), { branch: g.label }),
+        icon: mi.pull(),
         disabled: !local?.upstream,
         onClick: () =>
           void (isCurrent ? repoActions.pull(repo.path, 'default') : repoActions.pullBranch(repo.path, g.label))
@@ -1680,6 +1706,7 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
       items.push({ separator: true })
       items.push({
         label: isStarred(g) ? t('sidebar.unpinBranch') : t('sidebar.pinBranch'),
+        icon: isStarred(g) ? mi.unpin() : mi.pin(),
         onClick: () => togglePinBranch(g.label)
       })
     }
@@ -1689,6 +1716,7 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
       items.push({ separator: true })
       items.push({
         label: t('sidebar.renameBranch'),
+        icon: mi.rename(),
         onClick: () =>
           openModal({
             kind: 'input',
@@ -1708,6 +1736,7 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
         const remote = g.remotes[0]
         items.push({
           label: t('sidebar.renameWithRemote'),
+          icon: mi.rename(),
           onClick: () =>
             openModal({
               kind: 'input',
@@ -1728,8 +1757,10 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
     if (g.isLocal) {
       deletions.push({
         label: t('branch.deleteLocal'),
+        icon: mi.delete(),
         danger: true,
         disabled: isCurrent,
+        title: isCurrent ? t('branch.deleteCurrentBlocked') : undefined,
         onClick: () =>
           openModal({
             kind: 'confirm',
@@ -1744,6 +1775,7 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
     for (const remote of g.remotes) {
       deletions.push({
         label: interp(t('branch.deleteFromRemote'), { branch: g.label, remote }),
+        icon: mi.delete(),
         danger: true,
         onClick: () =>
           openModal({
@@ -1869,7 +1901,12 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
           openContextMenu(e.clientX, e.clientY, groupMenu(g, c))
         }}
       >
-        {g.isHead && <Check size={10} className="ref-check" />}
+        {/* The checked-out branch: the shared "chosen" dot, not a tick. */}
+        {g.isHead && (
+          <span className="ref-check">
+            <ChoiceDot on />
+          </span>
+        )}
         {groupIcons(g)}
         <span className="ref-text">{g.label}</span>
         {/* Idle, a favourite says so with its offset ring alone; the star is

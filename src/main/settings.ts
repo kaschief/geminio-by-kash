@@ -284,7 +284,7 @@ export function registerSettingsHandlers(): void {
 
   ipcMain.handle('settings:importFile', async () => {
     const { canceled, filePaths } = await dialog.showOpenDialog({
-      title: 'Import Settings',
+      title: 'Import settings',
       filters: [{ name: 'JSON', extensions: ['json'] }],
       properties: ['openFile']
     })
@@ -299,7 +299,7 @@ export function registerSettingsHandlers(): void {
 
   ipcMain.handle('settings:exportFile', async (_e, data: unknown) => {
     const { canceled, filePath } = await dialog.showSaveDialog({
-      title: 'Export Settings',
+      title: 'Export settings',
       defaultPath: 'geminio-settings.json',
       filters: [{ name: 'JSON', extensions: ['json'] }]
     })

@@ -12,6 +12,7 @@ import {
   Ungroup,
   X
 } from 'lucide-react'
+import { mi } from './menuIcons'
 import { TerminalPanel } from './TerminalPanel'
 import { ResizeHandle } from './ResizeHandle'
 import { useTerminalsStore, type TermGroup } from '../stores/terminals'
@@ -206,19 +207,19 @@ export function TerminalContainer({ cwd }: { cwd: string }): React.JSX.Element {
     openContextMenu(e.clientX, e.clientY, [
       {
         label: t('terminal.rename'),
-        icon: <Pencil size={13} />,
+        icon: mi.rename(),
         onClick: () => startRename(group.id, null, groupName)
       },
       {
         label: t('terminal.split'),
-        icon: <SquareSplitHorizontal size={13} />,
+        icon: <SquareSplitHorizontal size={15} strokeWidth={1.75} />,
         onClick: () => splitGroup(cwd, group.id, cwd)
       },
       ...(split
         ? [
             {
               label: t('terminal.unsplit'),
-              icon: <Ungroup size={13} />,
+              icon: <Ungroup size={15} strokeWidth={1.75} />,
               onClick: () => unsplitGroup(cwd, group.id)
             }
           ]
@@ -226,7 +227,7 @@ export function TerminalContainer({ cwd }: { cwd: string }): React.JSX.Element {
       { separator: true },
       {
         label: t('terminal.kill'),
-        icon: <Trash2 size={13} />,
+        icon: mi.delete(),
         danger: true,
         onClick: () => removeGroup(cwd, group.id)
       }
@@ -487,13 +488,13 @@ export function TerminalContainer({ cwd }: { cwd: string }): React.JSX.Element {
                             openContextMenu(e.clientX, e.clientY, [
                               {
                                 label: t('terminal.rename'),
-                                icon: <Pencil size={13} />,
+                                icon: mi.rename(),
                                 onClick: () => startRename(group.id, panel.id, panelName)
                               },
                               { separator: true },
                               {
                                 label: t('terminal.killPanel'),
-                                icon: <Trash2 size={13} />,
+                                icon: mi.delete(),
                                 danger: true,
                                 onClick: () => removePanel(cwd, group.id, panel.id)
                               }

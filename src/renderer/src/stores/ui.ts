@@ -24,6 +24,20 @@ export interface MenuItem {
   onClick?: () => void
   /** Nested items — renders a flyout submenu on hover instead of a click action. */
   submenu?: MenuItem[]
+  /**
+   * Makes the row a stateful item with a check gutter, announced as checked or
+   * not. `radio` marks it as one choice among siblings (exactly one is on);
+   * otherwise it is an independent on/off toggle. Leave undefined for plain
+   * actions — a label swap like "Pin"/"Unpin" is an action, not a state.
+   */
+  checked?: boolean
+  radio?: boolean
+  /**
+   * Dimmed trailing text — the current value of a setting. A submenu parent
+   * without one derives it from its children (see `submenuSummary`), so an
+   * active choice is visible before the flyout is opened.
+   */
+  detail?: string
 }
 
 export interface ContextMenuState {

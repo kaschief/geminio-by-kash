@@ -1285,7 +1285,9 @@ export default function App(): React.JSX.Element {
                 onClick={(e) => {
                   const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
                   const items = repo.branches.locals.map((b) => ({
-                    label: `${b.isCurrent ? '✓ ' : '   '}${b.name}`,
+                    label: b.name,
+                    radio: true,
+                    checked: b.isCurrent,
                     onClick: () => {
                       if (!b.isCurrent) void repoActions.checkout(repo.path, b.name)
                     }

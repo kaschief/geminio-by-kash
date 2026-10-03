@@ -4,6 +4,7 @@ import type { MenuItem } from '../stores/ui'
 import { useUIStore } from '../stores/ui'
 import { editorApi } from '../infrastructure/api'
 import { t, interp } from '../i18n'
+import { editorGlyph } from '../components/editorGlyphs'
 
 /**
  * The "Open in <editor>" menu entries. Labels are resolved here rather than
@@ -11,6 +12,11 @@ import { t, interp } from '../i18n'
  * every one of the dozen menus that offer this, and a menu is built on click,
  * so the non-reactive `t()` is already the right tool.
  */
+
+/** The editor's own mark, drawn in the menu's outline style. */
+export function editorIcon(editor: EditorSetting): React.ReactNode {
+  return editorGlyph(editor.id)
+}
 
 /** Launch the editor and toast whatever went wrong — a failed launch is a
  *  nuisance, not something to unwind state for. */
@@ -28,6 +34,7 @@ export function editorMenuItems(editor: EditorSetting | undefined, target: Edito
   return [
     {
       label: interp(t('editor.openIn'), { app: editor.name }),
+      icon: editorIcon(editor),
       onClick: () => void openInEditor(editor, target)
     }
   ]
@@ -47,6 +54,7 @@ export function editorLineMenuItems(
   return [
     {
       label: interp(t('editor.openInAtLine'), { app: editor.name, line: String(target.line) }),
+      icon: editorIcon(editor),
       onClick: () => void openInEditor(editor, target)
     }
   ]

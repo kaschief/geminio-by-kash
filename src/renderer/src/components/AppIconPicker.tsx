@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Check, Loader2 } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { APP_ICON_STYLES, APP_ICON_COLORS, normalizeAppIcon, appIconSvg, appIconColor, githubAvatarUrl, type AppIconStyle } from '../../../shared/appIcons'
 import classicIcon from '../../../../resources/icon.png'
 import { useSettingsStore } from '../stores/settings'
@@ -41,8 +41,7 @@ export function AppIconPicker(): React.JSX.Element | null {
             onClick={() => void choose(style)}>
             <img src={style === 'classic' ? classicIcon : style === 'github' ? photo ?? classicIcon : `data:image/svg+xml,${encodeURIComponent(appIconSvg(style, current.color))}`} alt="" />
             <span>{t(`appIcon.style.${style}`)}</span>
-            {style === 'github' && photoBusy && <Loader2 size={14} className="app-icon-check spin" />}
-            {current.style === style && <Check size={13} className="app-icon-check" />}
+            {style === 'github' && photoBusy && <Loader2 size={14} className="app-icon-busy spin" />}
           </button>
         ))}
       </div>
@@ -52,7 +51,6 @@ export function AppIconPicker(): React.JSX.Element | null {
             aria-pressed={current.color === color} disabled={current.style === 'classic' || current.style === 'github' || photoBusy}
             style={{ background: appIconColor(color) }}
             onClick={() => update((s) => ({ ...s, appIcon: { ...current, color } }))}>
-            {current.color === color && <Check size={14} />}
           </button>
         ))}
       </div>

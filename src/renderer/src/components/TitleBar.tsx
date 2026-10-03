@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Plus, FolderGit2, X, Minus, Square, Settings, Sparkles, LifeBuoy, FileText, Bell, BarChart3, BookOpen, ScrollText, CircleDot, Flag, Tag, Download, ArrowDownToLine, KeyRound, LayoutGrid, Folder, FolderOpen, FolderPlus, FolderTree, Trash2, Scale, Wrench } from 'lucide-react'
+import { Plus, FolderGit2, X, Minus, Square, Settings, Sparkles, LifeBuoy, FileText, Bell, BarChart3, BookOpen, ScrollText, CircleDot, Flag, Tag, Download, KeyRound, LayoutGrid, Folder, FolderOpen, FolderPlus, FolderTree, Scale, Wrench, FolderRoot, Palette, House, LogOut } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useSettingsStore } from '../stores/settings'
 import { useUIStore, type MenuItem } from '../stores/ui'
@@ -23,7 +23,10 @@ import { pagesForRepo } from '../lib/tabPages'
 import { repoCloseStatus, tabCloseStatus, type TabStatus } from '../lib/tabClose'
 import { repoDisplayName } from '../lib/repoAlias'
 import { TabStatusMark } from './TabStatusMark'
+import { applyTabSort, tabSortMenuItem } from '../lib/tabSortMenu'
+import { activeTabSortKey, tabsSettled } from '../lib/tabSort'
 import { confirmRemoveRepoFromGroup, repositoryMenuItems, requestCloseTab } from '../lib/repositoryMenuItems'
+import { mi } from './menuIcons'
 import { useT, interp } from '../i18n'
 
 export { requestCloseTab }
@@ -79,6 +82,9 @@ function pageTabIcon(type: string): React.JSX.Element {
   }
 }
 
+const stripSettled = (): boolean =>
+  tabsSettled(useSettingsStore.getState().settings.tabs, useRepoStore.getState().repos)
+
 // ── drag types ──────────────────────────────────────────────────────────────
 // Tabs, repos and folders all ride the same native HTML5 drag. Folder chips are
 // plain divs for exactly that reason: Chromium will not start a drag from a
@@ -118,6 +124,28 @@ export function TitleBar(): React.JSX.Element {
     void windowApi.isFullscreen().then((value) => { if (alive && !changed) setFullscreen(value) })
     return () => { alive = false; off() }
   }, [])
+
+  // A held sort re-applies when a tab opens or closes and when the window comes
+  // back into focus — not on every status change, so a commit or push does
+  // not move a tab out from under the cursor while you are working. It waits
+  // for every repo to finish loading, so launch shows the order saved last
+  // session and then at most one animated adjustment, never a sort-then-resort.
+  const heldSort = useSettingsStore((s) => activeTabSortKey(s.settings.tabSort))
+  const tabSet = useSettingsStore((s) => s.settings.tabs.map((tab) => tab.id).sort().join('\n'))
+  const settled = useRepoStore((s) => tabsSettled(useSettingsStore.getState().settings.tabs, s.repos))
+  useEffect(() => {
+    // Re-checked against live state: a just-opened tab's repo is not in the
+    // repo store yet, so the memoised `settled` above can still read true.
+    if (heldSort && settled && stripSettled()) applyTabSort(heldSort)
+  }, [heldSort, tabSet, settled])
+  useEffect(() => {
+    if (!heldSort) return
+    const onFocus = (): void => {
+      if (stripSettled()) applyTabSort(heldSort)
+    }
+    window.addEventListener('focus', onFocus)
+    return () => window.removeEventListener('focus', onFocus)
+  }, [heldSort])
 
   // ── drag state ──────────────────────────────────────────────────────────
   const dragItem = useRef<DragItem | null>(null)
@@ -590,9 +618,10 @@ export function TitleBar(): React.JSX.Element {
     if (others.length === 0) return null
     return {
       label: t('titlebar.moveToWorkspace'),
-      icon: <LayoutGrid size={15} />,
+      icon: <LayoutGrid size={15} strokeWidth={1.75} />,
       submenu: others.map((w) => ({
         label: w.name,
+        icon: <LayoutGrid size={15} strokeWidth={1.75} />,
         onClick: () => moveTabToWorkspace(tab.id, w.id)
       }))
     }
@@ -602,14 +631,17 @@ export function TitleBar(): React.JSX.Element {
     if (tab.kind === 'page') {
       const move = moveToWorkspaceItem(tab)
       return [
-        ...(move ? [move, { separator: true } as MenuItem] : []),
-        { label: t('titlebar.closeTab'), onClick: () => closeTab(tab.id) }
+        ...(move ? [move] : []),
+        tabSortMenuItem(),
+        { separator: true },
+        { label: t('titlebar.closeTab'), icon: <X size={15} strokeWidth={1.75} />, onClick: () => closeTab(tab.id) }
       ]
     }
     if (tab.kind === 'repo' && tab.repos[0]) {
       const extras: MenuItem[] = []
       const move = moveToWorkspaceItem(tab)
       if (move) extras.push(move)
+      extras.push(tabSortMenuItem())
       return repositoryMenuItems(tab.repos[0].path, () => requestCloseTab(tab.id), extras)
     }
     const items: MenuItem[] = []
@@ -618,27 +650,29 @@ export function TitleBar(): React.JSX.Element {
         const paths = tab.repos.map((r) => r.path)
         items.push({
           label: interp(t('titlebar.fetchAll'), { count: paths.length }),
-          icon: <Download size={15} />,
+          icon: mi.fetch(),
           onClick: () => void repoActions.batch(paths, 'fetch')
         })
         items.push({
           label: interp(t('titlebar.pullAll'), { count: paths.length }),
-          icon: <ArrowDownToLine size={15} />,
+          icon: mi.pull(),
           onClick: () => void repoActions.batch(paths, 'pull')
         })
         items.push({ separator: true })
       }
       items.push({
         label: t('titlebar.manageRepos'),
+        icon: <FolderGit2 size={15} strokeWidth={1.75} />,
         onClick: () => openModal({ kind: 'launcher', groupId: tab.id })
       })
       items.push({
         label: t('titlebar.newFolderMenu'),
-        icon: <FolderPlus size={15} />,
+        icon: <FolderPlus size={15} strokeWidth={1.75} />,
         onClick: () => promptNewFolder(tab.id, null)
       })
       items.push({
         label: t('titlebar.changeColor'),
+        icon: <Palette size={15} strokeWidth={1.75} />,
         onClick: () =>
           openModal({
             kind: 'group-color',
@@ -650,6 +684,7 @@ export function TitleBar(): React.JSX.Element {
       if (tab.activeRepoPath) {
         items.push({
           label: t('titlebar.viewGroupHome'),
+          icon: <House size={15} strokeWidth={1.75} />,
           onClick: () => setGroupActiveRepo(tab.id, null)
         })
       }
@@ -657,19 +692,28 @@ export function TitleBar(): React.JSX.Element {
     }
     items.push({
       label: t('titlebar.rename'),
+      icon: mi.rename(),
       onClick: () =>
         openModal({
           kind: 'input',
           title: t('titlebar.renameTab'),
           label: t('modal.name'),
           initial: tab.name,
-          submitLabel: 'Rename',
+          submitLabel: t('common.rename'),
           onSubmit: (name) => renameTab(tab.id, name)
         })
     })
     const move = moveToWorkspaceItem(tab)
     if (move) items.push(move)
-    items.push({ separator: true }, { label: t('titlebar.closeTab'), onClick: () => requestCloseTab(tab.id) })
+    items.push(tabSortMenuItem())
+    items.push(
+      { separator: true },
+      {
+        label: t('titlebar.closeTab'),
+        icon: <X size={15} strokeWidth={1.75} />,
+        onClick: () => requestCloseTab(tab.id)
+      }
+    )
     return items
   }
 
@@ -687,6 +731,19 @@ export function TitleBar(): React.JSX.Element {
       }
     })
 
+  /** One destination in a "Move … To" list. Where the item already lives is the
+   *  checked choice — disabled, since moving there is a no-op, with a tooltip so
+   *  the greyed row reads as "here" rather than "not allowed". */
+  const folderTarget = (label: string, isRoot: boolean, here: boolean, onClick: () => void): MenuItem => ({
+    label,
+    icon: isRoot ? <FolderRoot size={15} strokeWidth={1.75} /> : <Folder size={15} strokeWidth={1.75} />,
+    radio: true,
+    checked: here,
+    disabled: here,
+    title: here ? t('titlebar.alreadyHere') : undefined,
+    onClick
+  })
+
   /** "Move to folder →" submenu: the group root plus every folder in the tree,
    *  labelled with its full trail so deep nestings stay unambiguous. */
   const moveRepoToFolderItem = (tab: GroupTab, repoPath: string): MenuItem | null => {
@@ -695,14 +752,16 @@ export function TitleBar(): React.JSX.Element {
     const current = all.find((x) => x.folder.paths.includes(repoPath))?.folder.id ?? null
     return {
       label: t('titlebar.moveToFolder'),
-      icon: <Folder size={15} />,
+      icon: mi.moveToFolder(),
       submenu: [
-        { label: t('titlebar.groupRoot'), disabled: current === null, onClick: () => moveRepoToFolder(tab.id, repoPath, null) },
-        ...all.map(({ folder }) => ({
-          label: folderTrail(tab.folders ?? [], folder.id),
-          disabled: folder.id === current,
-          onClick: () => moveRepoToFolder(tab.id, repoPath, folder.id)
-        }))
+        folderTarget(t('titlebar.groupRoot'), true, current === null, () =>
+          moveRepoToFolder(tab.id, repoPath, null)
+        ),
+        ...all.map(({ folder }) =>
+          folderTarget(folderTrail(tab.folders ?? [], folder.id), false, folder.id === current, () =>
+            moveRepoToFolder(tab.id, repoPath, folder.id)
+          )
+        )
       ]
     }
   }
@@ -711,18 +770,24 @@ export function TitleBar(): React.JSX.Element {
    *  subtree) — that would detach the branch from the tree. */
   const moveFolderItem = (tab: GroupTab, folder: RepoFolder): MenuItem | null => {
     const tree = tab.folders ?? []
-    const targets = flattenFolders(tree).filter((x) => !isSelfOrDescendant(tree, folder.id, x.folder.id))
-    const atRoot = tree.some((f) => f.id === folder.id)
-    if (!targets.length && atRoot) return null
+    const all = flattenFolders(tree)
+    const targets = all.filter((x) => !isSelfOrDescendant(tree, folder.id, x.folder.id))
+    // The current parent is a legal target in the tree sense but a no-op move:
+    // it shows as the checked location rather than as an enabled destination.
+    const parentId = all.find((x) => x.folder.id === folder.id)?.parentId ?? null
+    if (!targets.length && parentId === null) return null
     return {
       label: t('titlebar.moveFolderTo'),
-      icon: <FolderTree size={15} />,
+      icon: <FolderTree size={15} strokeWidth={1.75} />,
       submenu: [
-        { label: t('titlebar.groupRoot'), disabled: atRoot, onClick: () => moveFolderToFolder(tab.id, folder.id, null) },
-        ...targets.map((x) => ({
-          label: folderTrail(tree, x.folder.id),
-          onClick: () => moveFolderToFolder(tab.id, folder.id, x.folder.id)
-        }))
+        folderTarget(t('titlebar.groupRoot'), true, parentId === null, () =>
+          moveFolderToFolder(tab.id, folder.id, null)
+        ),
+        ...targets.map((x) =>
+          folderTarget(folderTrail(tree, x.folder.id), false, x.folder.id === parentId, () =>
+            moveFolderToFolder(tab.id, folder.id, x.folder.id)
+          )
+        )
       ]
     }
   }
@@ -733,23 +798,24 @@ export function TitleBar(): React.JSX.Element {
     if (paths.length > 0) {
       items.push({
         label: interp(t('titlebar.fetchAll'), { count: paths.length }),
-        icon: <Download size={15} />,
+        icon: mi.fetch(),
         onClick: () => void repoActions.batch(paths, 'fetch')
       })
       items.push({
         label: interp(t('titlebar.pullAll'), { count: paths.length }),
-        icon: <ArrowDownToLine size={15} />,
+        icon: mi.pull(),
         onClick: () => void repoActions.batch(paths, 'pull')
       })
       items.push({ separator: true })
     }
     items.push({
       label: t('titlebar.newSubfolderMenu'),
-      icon: <FolderPlus size={15} />,
+      icon: <FolderPlus size={15} strokeWidth={1.75} />,
       onClick: () => promptNewFolder(tab.id, folder.id)
     })
     items.push({
       label: t('titlebar.rename'),
+      icon: mi.rename(),
       onClick: () =>
         openModal({
           kind: 'input',
@@ -765,6 +831,7 @@ export function TitleBar(): React.JSX.Element {
     })
     items.push({
       label: t('titlebar.changeColor'),
+      icon: <Palette size={15} strokeWidth={1.75} />,
       onClick: () =>
         openModal({
           kind: 'group-color',
@@ -779,7 +846,7 @@ export function TitleBar(): React.JSX.Element {
       { separator: true },
       {
         label: t('titlebar.deleteFolder'),
-        icon: <Trash2 size={15} />,
+        icon: mi.delete(),
         danger: true,
         // Deleting only unpacks the folder: its repos and subfolders move up to
         // the parent, so nothing leaves the group.
@@ -794,7 +861,7 @@ export function TitleBar(): React.JSX.Element {
     // make the first one.
     const filing: MenuItem = moveRepoToFolderItem(groupTab, repoPath) ?? {
       label: t('titlebar.newFolderMenu'),
-      icon: <FolderPlus size={15} />,
+      icon: <FolderPlus size={15} strokeWidth={1.75} />,
       onClick: () => promptNewFolder(groupTab.id, null)
     }
     return repositoryMenuItems(
@@ -805,6 +872,7 @@ export function TitleBar(): React.JSX.Element {
         { separator: true },
         {
           label: t('titlebar.eject'),
+          icon: <LogOut size={15} strokeWidth={1.75} />,
           onClick: () => ejectRepoFromGroup(groupTab.id, repoPath, null)
         }
       ]

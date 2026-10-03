@@ -34,7 +34,6 @@ import {
   Loader2,
   ChevronDown,
   Palette,
-  Check,
   Settings2,
   ShieldCheck,
   KeyRound,
@@ -123,6 +122,7 @@ import { ShortcutEditor } from './CheatsheetModal'
 import madLogo from '../assets/mad-high.png'
 import { RepoSettingsModal } from './RepoSettingsModal'
 import { ArrowUp, FolderGit2 } from 'lucide-react'
+import { ChoiceDot } from './StateMarks'
 
 type SettingsPage =
   | 'repository'
@@ -667,7 +667,7 @@ function LocalCiSection(): React.JSX.Element {
         <p className="settings-hint">
           {/* i18n-ignore tool names and versions, identical in every language */}
           {status.act ? `act: ${status.act}` : t('localCi.actMissing')} ·{' '}
-          {status.docker ? 'Docker ✓' : t('localCi.dockerMissing')}
+          {status.docker ? t('localCi.dockerReady') : t('localCi.dockerMissing')}
         </p>
       )}
     </>
@@ -903,21 +903,6 @@ export function AIPage({ profile, edit }: { profile: Profile; edit: (p: Partial<
             placeholder={t('settings.customInstructionsPlaceholder')}
             onChange={(e) => edit({ ai: { ...ai, customInstructions: e.target.value } })}
           />
-        </label>
-
-        <label className="settings-toggle-card" style={{ marginTop: 12 }}>
-          <input
-            type="checkbox"
-            checked={ai.coAuthor !== false}
-            onChange={(e) => edit({ ai: { ...ai, coAuthor: e.target.checked } })}
-          />
-          <span className="settings-toggle-control" aria-hidden="true">
-            <span className="settings-toggle-thumb" />
-          </span>
-          <span className="settings-toggle-copy">
-            <strong>{t('settings.coAuthor')}</strong>
-            <span className="settings-hint">{t('settings.coAuthorHint')}</span>
-          </span>
         </label>
       </details>
       </div>
@@ -1433,6 +1418,7 @@ function GraphStyleTab(): React.JSX.Element {
                 key={p.id}
                 role="button"
                 tabIndex={0}
+                aria-pressed={p.id === style.paletteId}
                 className={`theme-card ${p.id === style.paletteId ? 'selected' : ''}`}
                 onClick={() => selectPalette(p.id)}
                 onKeyDown={(e) => e.key === 'Enter' && selectPalette(p.id)}
@@ -1440,7 +1426,6 @@ function GraphStyleTab(): React.JSX.Element {
                 <PaletteSwatch colors={p.colors} />
                 <div className="theme-card-label">
                   <span>{p.name}</span>
-                  {p.id === style.paletteId && <Check size={13} className="theme-check" />}
                 </div>
                 {!p.builtin && (
                   <button
@@ -1824,6 +1809,7 @@ function ThemesPage({ initialTab, searchTab }: { initialTab?: 'theme' | 'graph';
             key={th.id}
             role="button"
             tabIndex={0}
+            aria-pressed={th.id === settings.appThemeId}
             className={`theme-card ${th.id === settings.appThemeId ? 'selected' : ''}`}
             onClick={() => selectApp(th.id)}
             onKeyDown={(e) => e.key === 'Enter' && selectApp(th.id)}
@@ -1831,7 +1817,6 @@ function ThemesPage({ initialTab, searchTab }: { initialTab?: 'theme' | 'graph';
             <AppThemeSwatch colors={resolveAppColors(th, mode)} />
             <div className="theme-card-label">
               <span>{th.name}</span>
-              {th.id === settings.appThemeId && <Check size={13} className="theme-check" />}
             </div>
             {!th.builtin && (
               <button
@@ -1927,7 +1912,6 @@ function ThemesPage({ initialTab, searchTab }: { initialTab?: 'theme' | 'graph';
                 </span>
                 <span className="theme-card-label">
                   <span>{t(choice === 'subtle' ? 'settings.activeRepoAccentSubtle' : choice === 'theme' ? 'settings.activeRepoAccentTheme' : 'settings.activeRepoAccentCustom')}</span>
-                  {selected && <Check size={13} className="theme-check" />}
                 </span>
               </button>
             )
@@ -1982,6 +1966,7 @@ function ThemesPage({ initialTab, searchTab }: { initialTab?: 'theme' | 'graph';
             key={th.id}
             role="button"
             tabIndex={0}
+            aria-pressed={th.id === settings.codeThemeId}
             className={`theme-card ${th.id === settings.codeThemeId ? 'selected' : ''}`}
             onClick={() => selectCode(th.id)}
             onKeyDown={(e) => e.key === 'Enter' && selectCode(th.id)}
@@ -1989,7 +1974,6 @@ function ThemesPage({ initialTab, searchTab }: { initialTab?: 'theme' | 'graph';
             <CodeThemeSwatch colors={resolveCodeColors(th, mode)} />
             <div className="theme-card-label">
               <span>{th.name}</span>
-              {th.id === settings.codeThemeId && <Check size={13} className="theme-check" />}
             </div>
             {!th.builtin && (
               <button
@@ -2283,10 +2267,11 @@ function WorkspacesPage(): React.JSX.Element {
               <button
                 type="button"
                 className="settings-workspace-name"
+                aria-current={isActive ? 'true' : undefined}
                 onClick={() => switchWorkspace(w.id)}
                 title={isActive ? t('ws.activeTitle') : t('ws.switchTitle')}
               >
-                <span className="settings-workspace-check">{isActive ? <Check size={13} /> : null}</span>
+                <ChoiceDot on={isActive} />
                 <span className="settings-workspace-label">{w.name}</span>
                 <span className="settings-workspace-count">
                   {interp(t(w.tabs.length === 1 ? 'ws.tabCountOne' : 'ws.tabCountMany'), { n: w.tabs.length })}

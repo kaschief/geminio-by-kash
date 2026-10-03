@@ -4,11 +4,9 @@ import {
   AlertTriangle,
   Bot,
   Check,
-  Copy,
   FileCode2,
   FolderOpen,
   GitCommitHorizontal,
-  Link2,
   Loader2,
   Paperclip,
   Play,
@@ -21,6 +19,7 @@ import {
   Wand2,
   X
 } from 'lucide-react'
+import { mi } from './menuIcons'
 import type {
   ChatActionApproval,
   PreparedRepoChatFileAction,
@@ -133,21 +132,21 @@ function useCopyMenu(content: string): (event: React.MouseEvent) => void {
         ? [
             {
               label: t('chat.copySelection'),
-              icon: <Copy size={13} />,
+              icon: mi.copy(),
               onClick: () => void navigator.clipboard.writeText(selection)
             }
           ]
         : []),
       {
         label: t('chat.copyMessage'),
-        icon: <Copy size={13} />,
+        icon: mi.copy(),
         onClick: () => void navigator.clipboard.writeText(content)
       },
       ...(href && /^https?:/i.test(href)
         ? [
             {
               label: t('chat.copyLink'),
-              icon: <Link2 size={13} />,
+              icon: mi.copyLink(),
               onClick: () => void navigator.clipboard.writeText(href)
             }
           ]
@@ -204,6 +203,7 @@ function ChatActionCard({
   const actions = message.actions ?? []
   const state = message.actionsState ?? 'pending'
   const execution = message.execution
+  const ranCount = execution?.applied ?? message.actionsApplied ?? actions.length
   return (
     <div className={`repo-chat-actions ${state}`}>
       <div className="repo-chat-actions-list">
@@ -262,9 +262,9 @@ function ChatActionCard({
           <>
             <span className="repo-chat-actions-status done">
               <Check size={12} />{' '}
-              {interp(t(message.actionsAuto ? 'chat.actionsAutoRan' : 'chat.actionsRan'), {
-                n: execution?.applied ?? message.actionsApplied ?? actions.length
-              })}
+              {ranCount === 1
+                ? t(message.actionsAuto ? 'chat.actionsAutoRanOne' : 'chat.actionsRanOne')
+                : interp(t(message.actionsAuto ? 'chat.actionsAutoRan' : 'chat.actionsRan'), { n: ranCount })}
             </span>
             {/* The guard snapshot is only worth offering while it still
                 describes the repository — once undone, the button is gone. */}
@@ -486,7 +486,7 @@ export function RepoChatPanel({ repoPath, repoName }: { repoPath: string; repoNa
         .getState()
         .run(
           repoPath,
-          interp(t('chat.actionsRunLabel'), { n: actions.length }),
+          actions.length === 1 ? t('chat.actionsRunLabelOne') : interp(t('chat.actionsRunLabel'), { n: actions.length }),
           async () => {
             // One guard snapshot for the whole plan, taken while the lock is
             // held so nothing can slip in between the photo and the first
@@ -665,13 +665,13 @@ export function RepoChatPanel({ repoPath, repoName }: { repoPath: string; repoNa
           t(item.kind === 'commit' ? 'chat.addCommit' : 'chat.addFile'),
           { name: attachmentLabel(item) }
         ),
-        icon: item.kind === 'commit' ? <GitCommitHorizontal size={13} /> : <FileCode2 size={13} />,
+        icon: item.kind === 'commit' ? mi.commit() : <FileCode2 size={15} strokeWidth={1.75} />,
         onClick: () => attach(repoPath, [item])
       })),
       ...(suggestions.length ? [{ separator: true }] : []),
       {
         label: t('chat.browse'),
-        icon: <FolderOpen size={13} />,
+        icon: <FolderOpen size={15} strokeWidth={1.75} />,
         onClick: () => {
           void window.api.openFilePath(t('chat.browseTitle')).then((picked) => {
             if (picked) attach(repoPath, [{ kind: 'external', path: picked }])

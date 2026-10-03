@@ -1,17 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import {
-  Check,
-  ChevronDown,
-  Copy,
-  FolderGit2,
-  GitBranch,
-  GitBranchPlus,
-  GitMerge,
-  Github,
-  Pencil,
-  Trash2
-} from 'lucide-react'
+import { ChevronDown, GitBranch, GitBranchPlus } from 'lucide-react'
 import type { BranchInfo, RemoteBranchInfo } from '../../../shared/types'
 import { branchContextActionIds, branchMergeWouldChange, branchWorktreePlan } from '../lib/branchMenu'
 import { githubBranchUrl, githubLocalBranchUrl, githubRemote } from '../lib/hosting'
@@ -20,6 +9,8 @@ import { shellApi } from '../infrastructure/api'
 import { repoActions, type RepoData } from '../stores/repo'
 import { useSettingsStore } from '../stores/settings'
 import { useUIStore, type MenuItem } from '../stores/ui'
+import { mi } from './menuIcons'
+import { ChoiceDot } from './StateMarks'
 
 type BranchTarget =
   | { kind: 'local'; branch: BranchInfo }
@@ -99,7 +90,7 @@ export function BranchStatusPicker({ repo }: { repo: RepoData }): React.JSX.Elem
         case 'rename':
           items.push({
             label: t('sidebar.renameBranch'),
-            icon: <Pencil size={14} />,
+            icon: mi.rename(),
             onClick: () => {
               close()
               openModal({
@@ -119,7 +110,7 @@ export function BranchStatusPicker({ repo }: { repo: RepoData }): React.JSX.Elem
         case 'copy':
           items.push({
             label: t('sidebar.copyBranchName'),
-            icon: <Copy size={14} />,
+            icon: mi.copy(),
             onClick: () => {
               close()
               void navigator.clipboard.writeText(copyName)
@@ -132,7 +123,7 @@ export function BranchStatusPicker({ repo }: { repo: RepoData }): React.JSX.Elem
                 : githubBranchUrl(repo.remotes, target.branch.remote, target.branch.name)
             items.push({
               label: t('branch.viewOnGitHub'),
-              icon: <Github size={14} />,
+              icon: mi.github(),
               disabled: !url,
               title: url ? undefined : t('branch.viewOnGitHubUnpushed'),
               onClick: () => {
@@ -145,8 +136,9 @@ export function BranchStatusPicker({ repo }: { repo: RepoData }): React.JSX.Elem
         case 'worktree':
           items.push({
             label: interp(t('sidebar.openInWorktree'), { branch: ref }),
-            icon: <FolderGit2 size={14} />,
+            icon: mi.worktree(),
             disabled: checkedOutInWorktree,
+            title: checkedOutInWorktree ? t('sidebar.disabled.inWorktree') : undefined,
             onClick: () => {
               close()
               const plan = branchWorktreePlan(path, branchName, ref, localExists)
@@ -169,7 +161,7 @@ export function BranchStatusPicker({ repo }: { repo: RepoData }): React.JSX.Elem
               branch: repo.branches.current,
               current: repo.branches.current
             }),
-            icon: <GitMerge size={14} />,
+            icon: mi.merge(),
             onClick: () => {
               close()
               void repoActions.merge(path, ref)
@@ -179,9 +171,10 @@ export function BranchStatusPicker({ repo }: { repo: RepoData }): React.JSX.Elem
         case 'delete':
           items.push({
             label: isLocal ? t('sidebar.deleteBranch') : t('sidebar.deleteRemoteBranch'),
-            icon: <Trash2 size={14} />,
+            icon: mi.delete(),
             danger: true,
             disabled: isLocal && branchName === repo.branches.current,
+            title: isLocal && branchName === repo.branches.current ? t('branch.deleteCurrentBlocked') : undefined,
             onClick: () => {
               close()
               if (target.kind === 'local') {
@@ -257,14 +250,17 @@ export function BranchStatusPicker({ repo }: { repo: RepoData }): React.JSX.Elem
                   key={`local:${branch.name}`}
                   type="button"
                   className={`branch-picker-item ${branch.isCurrent ? 'active' : ''}`}
-                  role="menuitem"
+                  role="menuitemradio"
+                  aria-checked={branch.isCurrent}
                   onClick={() => {
                     close()
                     if (!branch.isCurrent) void repoActions.checkout(path, branch.name)
                   }}
                   onContextMenu={(event) => openBranchContextMenu(event, { kind: 'local', branch })}
                 >
-                  <span className="branch-picker-check">{branch.isCurrent && <Check size={15} />}</span>
+                  <span className="branch-picker-check">
+                    <ChoiceDot on={branch.isCurrent} />
+                  </span>
                   <span className="branch-picker-name">{branch.name}</span>
                 </button>
               ))}

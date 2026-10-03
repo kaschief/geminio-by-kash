@@ -21,7 +21,7 @@ const SHOW_DELAY_MS = 250
  * waits until the pointer has clearly settled — the same bubble, never the
  * system's, but out of the way of anyone just passing over.
  */
-const LABELLED_DELAY_MS = 900
+const LABELLED_DELAY_MS = 1100
 /** Moving to a neighbour this soon after a tip closed shows its tip at once. */
 const WARM_WINDOW_MS = 600
 /** Gap between the control and its tip, and the minimum margin from the window edge. */
@@ -55,11 +55,16 @@ function words(text: string): string {
  * next to a visible label the label stays the name (a name that differs from
  * the screen breaks voice control) and the title becomes the description.
  */
+/** A visible word of three or more letters: the control already says what it is. */
+function hasVisibleLabel(el: HTMLElement): boolean {
+  return /\p{L}{3,}/u.test((el.textContent ?? '').trim())
+}
+
 function adoptTitle(el: HTMLElement): void {
   const title = el.getAttribute('title')
   if (!title) return
   const label = (el.textContent ?? '').trim()
-  const labelled = /\p{L}{3,}/u.test(label)
+  const labelled = hasVisibleLabel(el)
   el.removeAttribute('title')
   if (!el.hasAttribute('aria-label') && !el.hasAttribute('aria-labelledby')) {
     if (labelled) el.setAttribute('aria-description', title)
@@ -106,7 +111,11 @@ export function FastTooltip(): React.JSX.Element | null {
       window.clearTimeout(timer)
       current = el
       const warm = performance.now() - lastHiddenAt < WARM_WINDOW_MS
-      const delay = el.dataset.tipDelay === 'labelled' ? LABELLED_DELAY_MS : warm ? 0 : SHOW_DELAY_MS
+      // Judged on the element itself too, not only on adopted titles: a button
+      // that sets `data-tip` directly next to an icon and a word is just as
+      // labelled, and a quick tip over it is noise every time the pointer passes.
+      const labelled = el.dataset.tipDelay === 'labelled' || hasVisibleLabel(el)
+      const delay = labelled ? LABELLED_DELAY_MS : warm ? 0 : SHOW_DELAY_MS
       timer = window.setTimeout(
         () => {
           // The control may have been disabled-and-moved or unmounted meanwhile.

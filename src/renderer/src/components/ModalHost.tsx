@@ -72,6 +72,7 @@ import { RepoSettingsModal } from './RepoSettingsModal'
 import { useT, interp } from '../i18n'
 import { defaultOptionIndex, isPickInput, normalizeOptions } from '../lib/launchInputs'
 import { AIAccountsNotice } from './AIAccountsNotice'
+import { ChoiceDot } from './StateMarks'
 
 /**
  * After a scan, offer the folder tree as workspaces. Up-to-date rows stay
@@ -172,10 +173,10 @@ function GroupColorModal({ spec }: { spec: Extract<ModalSpec, { kind: 'group-col
             key={c}
             className={`group-color-swatch ${spec.current === c ? 'selected' : ''}`}
             style={{ background: c }}
+            aria-label={c}
+            aria-pressed={spec.current === c}
             onClick={() => select(c)}
-          >
-            {spec.current === c && <Check size={12} />}
-          </button>
+          />
         ))}
       </div>
       <label className="modal-label">{t('modal.customColor')}</label>
@@ -298,12 +299,13 @@ function LaunchInputModal({ spec }: { spec: Extract<ModalSpec, { kind: 'launch-i
                 role="option"
                 aria-selected={i === selected}
                 className={`launch-input-option${i === selected ? ' selected' : ''}`}
+                title={o.value === input.default ? t('launch.inputDefault') : undefined}
                 onMouseEnter={() => setSelected(i)}
                 onClick={() => submit(o.value)}
               >
                 <span className="launch-input-option-label">{o.label}</span>
                 {o.value !== o.label && <span className="launch-input-option-value">{o.value}</span>}
-                {o.value === input.default && <Check size={13} className="launch-input-default-mark" />}
+                <ChoiceDot on={o.value === input.default} />
               </button>
             ))}
           </div>
@@ -722,6 +724,7 @@ function OwnerSelect({
         {open && (
           <motion.div
             className="owner-menu"
+            role="listbox"
             initial={{ opacity: 0, y: -4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
@@ -731,6 +734,8 @@ function OwnerSelect({
               <button
                 key={o.id}
                 type="button"
+                role="option"
+                aria-selected={value?.id === o.id}
                 className={`owner-option ${value?.id === o.id ? 'selected' : ''}`}
                 onClick={() => {
                   onChange(o)
@@ -742,7 +747,7 @@ function OwnerSelect({
                   {o.login}
                   {o.type !== 'user' && <span className="owner-tag">org</span>}
                 </span>
-                {value?.id === o.id && <Check size={13} className="owner-check" />}
+                <ChoiceDot on={value?.id === o.id} />
               </button>
             ))}
           </motion.div>
@@ -1719,14 +1724,14 @@ function LauncherModal({ spec }: { spec: Extract<ModalSpec, { kind: 'launcher' }
     : undefined
 
   const listTitle = spec.groupId
-    ? groupTab?.repos.length ? 'REPOSITORIES' : undefined
-    : settings.recentRepos.length ? 'RECENT' : undefined
+    ? groupTab?.repos.length ? t('launcher.groupRepos') : undefined
+    : settings.recentRepos.length ? t('launcher.recent') : undefined
 
-  const emptyMessage = spec.groupId ? 'No repositories in this group.' : undefined
+  const emptyMessage = spec.groupId ? t('launcher.groupEmpty') : undefined
 
   return (
     <>
-      <h3>{spec.groupId ? `Manage — ${groupTab?.name ?? 'Group'}` : 'Open Repository'}</h3>
+      <h3>{spec.groupId ? interp(t('launcher.manageGroup'), { name: groupTab?.name ?? t('launcher.group') }) : t('launcher.openRepo')}</h3>
       <LauncherPanel
         onOpen={() => void openRepo()}
         onClone={cloneRepo}

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Filter } from 'lucide-react'
+import { ChoiceDot } from './StateMarks'
 
 export interface FilterOption {
   value: string
@@ -81,17 +82,19 @@ export function GraphHeaderFilter({
       {open &&
         pos &&
         createPortal(
-          <div ref={panelRef} className="col-filter-menu" style={{ left: pos.left, top: pos.top }}>
+          <div ref={panelRef} role="menu" className="col-filter-menu" style={{ left: pos.left, top: pos.top }}>
             {options.map((o) => (
               <button
                 key={o.value}
+                role="menuitemradio"
+                aria-checked={active === o.value}
                 className={`col-filter-item ${active === o.value ? 'selected' : ''}`}
                 onClick={() => {
                   onSelect(o.value)
                   setOpen(false)
                 }}
               >
-                <span className="col-filter-check">{active === o.value ? '✓' : ''}</span>
+                <ChoiceDot on={active === o.value} />
                 {o.icon && <span className="col-filter-icon">{o.icon}</span>}
                 <span className="col-filter-label">{o.label}</span>
               </button>

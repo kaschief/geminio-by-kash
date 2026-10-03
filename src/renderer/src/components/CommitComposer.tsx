@@ -1,8 +1,11 @@
 import { useAiReady } from './useAiReady'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sparkles, Loader2, Trash2, AlignLeft, FolderTree, ArrowDownAZ, GitMerge, ChevronDown, CheckCheck, Users, Plus, Minus } from 'lucide-react'
-import { MYAPPDESK_COAUTHOR, type CodeSearchHit, type FileEntry, type CommitStyle } from '../../../shared/types'
+import { Sparkles, Loader2, Trash2, AlignLeft, FolderTree, ArrowDownAZ, GitMerge, ChevronDown, CheckCheck, Users, Plus, Minus, ListFilter, EyeOff, FileMinus, ArrowLeftToLine, ArrowRightToLine } from 'lucide-react'
+import { mi } from './menuIcons'
+import { fileListViewMenuItems } from '../lib/fileListMenu'
+import { shortFileName } from '../lib/pathDisplay'
+import { type CodeSearchHit, type FileEntry, type CommitStyle } from '../../../shared/types'
 import { gitApi, aiApi, shellApi, diffToolApi } from '../infrastructure/api'
 import { repoActions, useRepoStore, type RepoData } from '../stores/repo'
 import { useUIStore, type MenuItem } from '../stores/ui'
@@ -27,6 +30,7 @@ import { openWithMenuItems } from '../lib/openWith'
 import { buildFilePathClipboardPayload } from '../lib/filePathClipboard'
 import { stepRange, claimRangeKeys, ownsRangeKeys, rangeKeysBlocked, domOrder } from '../lib/rangeSelect'
 import { ChangeSummary } from './ChangeSummary'
+import { effectiveFilter, filterByBuckets, type BucketFilter } from '../lib/fileStats'
 
 type ListName = 'staged' | 'unstaged'
 
@@ -95,6 +99,10 @@ export function ViewToggle(): React.JSX.Element {
   )
 }
 
+// The same glyphs as the row's stage/unstage buttons, so the menu and the row agree.
+const stageIcon = (): React.JSX.Element => <Plus size={15} strokeWidth={1.75} />
+const unstageIcon = (): React.JSX.Element => <Minus size={15} strokeWidth={1.75} />
+
 export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element {
   const t = useT()
   const summary = useRepoStore((s) => s.drafts[repo.path] ?? '')
@@ -140,9 +148,20 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
   // Gitmoji picker shows just the emoji collapsed, but emoji + label in the menu.
   const openGitmojiMenu = (e: React.MouseEvent): void => {
     const r = (e.currentTarget as HTMLElement).getBoundingClientRect()
+    // One choice: the emoji the subject starts with, "none" first as the default.
     openContextMenu(r.left, r.bottom + 4, [
-      { label: `🙂  ${t('gitmoji.none')}`, onClick: () => applyGitmojiToDraft('') },
-      ...GITMOJIS.map((g) => ({ label: `${g.emoji}  ${t(g.labelKey)}`, onClick: () => applyGitmojiToDraft(g.emoji) }))
+      {
+        label: `🙂  ${t('gitmoji.none')}`,
+        radio: true,
+        checked: !currentGitmoji,
+        onClick: () => applyGitmojiToDraft('')
+      },
+      ...GITMOJIS.map((g) => ({
+        label: `${g.emoji}  ${t(g.labelKey)}`,
+        radio: true,
+        checked: g.emoji === currentGitmoji,
+        onClick: () => applyGitmojiToDraft(g.emoji)
+      }))
     ])
   }
   // Co-author picker: append `Co-authored-by:` trailers from the repo's
@@ -163,11 +182,19 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
       r.left,
       r.bottom + 4,
       list.length
-        ? list.map((c) => ({
-            label: `${c.name} · ${c.email}`,
-            icon: <Avatar email={c.email} name={c.name} size={16} />,
-            onClick: () => addCoAuthor(c)
-          }))
+        ? list.map((c) => {
+            // Already credited reads as on — but removal is an edit of the message,
+            // not a menu toggle, so the row is shown checked and left inert.
+            const added = description.includes(`Co-authored-by: ${c.name} <${c.email}>`)
+            return {
+              label: `${c.name} · ${c.email}`,
+              icon: <Avatar email={c.email} name={c.name} size={16} />,
+              checked: added || undefined,
+              disabled: added,
+              title: added ? t('composer.alreadyCoAuthor') : undefined,
+              onClick: () => addCoAuthor(c)
+            }
+          })
         : [{ label: t('composer.noCoAuthors'), disabled: true, onClick: () => {} }]
     )
   }
@@ -348,9 +375,23 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
     return true
   }
   const active = isFilterActive(filter)
-  const fUnstaged = useMemo(() => (active ? unstaged.filter(matchesFilter) : unstaged), [unstaged, filter, contentMatches, active])
-  const fStaged = useMemo(() => (active ? staged.filter(matchesFilter) : staged), [staged, filter, contentMatches, active])
-  const fConflicted = useMemo(() => (active ? conflicted.filter(matchesFilter) : conflicted), [conflicted, filter, contentMatches, active])
+  // Change-kind filter from the summary chips, as in commit details. It applies
+  // to all three lists at once and stands down for kinds no list contains.
+  const [kindFilter, setKindFilter] = useState<BucketFilter>(() => new Set())
+  const allChanged = useMemo(() => [...conflicted, ...staged, ...unstaged], [conflicted, staged, unstaged])
+  const activeKinds = useMemo(() => effectiveFilter(kindFilter, allChanged), [kindFilter, allChanged])
+  const fUnstaged = useMemo(
+    () => filterByBuckets(active ? unstaged.filter(matchesFilter) : unstaged, activeKinds),
+    [unstaged, filter, contentMatches, active, activeKinds]
+  )
+  const fStaged = useMemo(
+    () => filterByBuckets(active ? staged.filter(matchesFilter) : staged, activeKinds),
+    [staged, filter, contentMatches, active, activeKinds]
+  )
+  const fConflicted = useMemo(
+    () => filterByBuckets(active ? conflicted.filter(matchesFilter) : conflicted, activeKinds),
+    [conflicted, filter, contentMatches, active, activeKinds]
+  )
 
   // ─── Shift+↑/↓ extends the file selection while this panel owns the keys ───
   // Row order comes from the DOM, not the data array: in tree view the visual
@@ -543,8 +584,8 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
   const copyPathItems = (relPaths: string[]): MenuItem[] => {
     const payload = buildFilePathClipboardPayload(path, relPaths, window.api.platform)
     return [
-      { label: t('fileMenu.copyFilePath'), onClick: () => void navigator.clipboard.writeText(payload.absolute) },
-      { label: t('fileMenu.copyRelativeFilePath'), onClick: () => void navigator.clipboard.writeText(payload.relative) },
+      { label: t('fileMenu.copyFilePath'), icon: mi.copyPath(), onClick: () => void navigator.clipboard.writeText(payload.absolute) },
+      { label: t('fileMenu.copyRelativeFilePath'), icon: mi.copyPath(), onClick: () => void navigator.clipboard.writeText(payload.relative) },
       { separator: true }
     ]
   }
@@ -560,9 +601,10 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
     const ignoreTarget = isFolder ? folderPath! : entries[0].path
     const items: MenuItem[] = [
       { separator: true },
-      { label: t('composer.addToGitignore'), onClick: () => void repoActions.addToGitignore(path, patterns, displayLabel) },
+      { label: t('composer.addToGitignore'), icon: mi.ignore(), onClick: () => void repoActions.addToGitignore(path, patterns, displayLabel) },
       {
         label: t('composer.ignoreChoose'),
+        icon: <ListFilter size={15} strokeWidth={1.75} />,
         onClick: () =>
           useUIStore.getState().openModal({ kind: 'ignore', repoPath: path, targetPath: ignoreTarget, isFolder })
       }
@@ -570,6 +612,7 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
     if (hasTracked) {
       items.push({
         label: t('composer.ignoreAndUntrackTitle'),
+        icon: <EyeOff size={15} strokeWidth={1.75} />,
         onClick: () =>
           useUIStore.getState().openModal({
             kind: 'confirm',
@@ -582,6 +625,7 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
       items.push({ separator: true })
       items.push({
         label: t('composer.stopTrackingLabel'),
+        icon: <FileMinus size={15} strokeWidth={1.75} />,
         onClick: () =>
           useUIStore.getState().openModal({
             kind: 'confirm',
@@ -593,6 +637,7 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
       })
       items.push({
         label: t('composer.deleteFromDiskTitle'),
+        icon: mi.delete(),
         danger: true,
         onClick: () =>
           useUIStore.getState().openModal({
@@ -615,16 +660,17 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
     const label = targets.length > 1 ? interp(t('composer.nFiles'), { n: targets.length }) : `"${file.path}"`
     useUIStore.getState().openContextMenu(e.clientX, e.clientY, [
       list === 'staged'
-        ? { label: targets.length > 1 ? interp(t('composer.unstageFiles'), { n: targets.length }) : t('composer.unstageFile'), onClick: () => void repoActions.unstage(path, targets) }
-        : { label: targets.length > 1 ? interp(t('composer.stageFiles'), { n: targets.length }) : t('composer.stageFile'), onClick: () => void repoActions.stage(path, targets) },
+        ? { label: targets.length > 1 ? interp(t('composer.unstageFiles'), { n: targets.length }) : t('composer.unstageFile'), icon: unstageIcon(), onClick: () => void repoActions.unstage(path, targets) }
+        : { label: targets.length > 1 ? interp(t('composer.stageFiles'), { n: targets.length }) : t('composer.stageFile'), icon: stageIcon(), onClick: () => void repoActions.stage(path, targets) },
       {
         label: targets.length > 1 ? interp(t('composer.stashFiles'), { n: targets.length }) : t('composer.stashFile'),
+        icon: mi.stash(),
         onClick: () => void repoActions.stashPush(path, undefined, targets, false)
       },
       { separator: true },
       ...copyPathItems(targetFiles.map((f) => f.path)),
-      { label: shellApi.revealLabel, onClick: () => void shellApi.revealInFolder(`${path}/${file.path}`) },
-      ...(!editor?.command ? [{ label: t('composer.openDefaultApp'), onClick: () => void shellApi.openPath(`${path}/${file.path}`) }] : []),
+      { label: shellApi.revealLabel, icon: mi.reveal(), onClick: () => void shellApi.revealInFolder(`${path}/${file.path}`) },
+      ...(!editor?.command ? [{ label: t('composer.openDefaultApp'), icon: mi.openExternal(), onClick: () => void shellApi.openPath(`${path}/${file.path}`) }] : []),
       ...openWithMenuItems(
         `${path}/${file.path}`,
         defaultOpenApp,
@@ -639,6 +685,7 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
         ? [
             {
               label: interp(t('difftool.openDiff'), { tool: diffTool }),
+              icon: mi.diff(),
               onClick: () =>
                 void diffToolApi.diff(path, file.path).then((err) => {
                   if (err) useUIStore.getState().toast('error', err)
@@ -648,6 +695,7 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
         : []),
       {
         label: t('cmd.historyPurge'),
+        icon: mi.delete(),
         danger: true,
         onClick: () =>
           useUIStore.getState().openModal({ kind: 'history-purge', repoPath: path, initialPath: file.path })
@@ -659,6 +707,7 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
           targets.length > 1
             ? interp(t('composer.discardFilesN'), { n: targets.length })
             : interp(t('composer.discardFileNamed'), { name: file.path.split('/').pop() ?? file.path }),
+        icon: mi.discard(),
         danger: true,
         onClick: () =>
           useUIStore.getState().openModal({
@@ -675,7 +724,8 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
             }
           })
       },
-      ...buildIgnoreMenu(targetFiles, label)
+      ...buildIgnoreMenu(targetFiles, label),
+      ...fileListViewMenuItems()
     ])
   }
 
@@ -684,23 +734,23 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
     const inFolder = files.filter((f) => f.path === folderPath || f.path.startsWith(`${folderPath}/`))
     const targets = inFolder.map((f) => f.path)
     if (targets.length === 0) return
-    const label = `"${folderPath}/" (${targets.length} file${targets.length === 1 ? '' : 's'})`
     useUIStore.getState().openContextMenu(e.clientX, e.clientY, [
       list === 'staged'
-        ? { label: interp(t('composer.unstageFolderN'), { n: targets.length }), onClick: () => void repoActions.unstage(path, targets) }
-        : { label: interp(t('composer.stageFolderN'), { n: targets.length }), onClick: () => void repoActions.stage(path, targets) },
+        ? { label: interp(t('composer.unstageFolderN'), { n: targets.length }), icon: unstageIcon(), onClick: () => void repoActions.unstage(path, targets) }
+        : { label: interp(t('composer.stageFolderN'), { n: targets.length }), icon: stageIcon(), onClick: () => void repoActions.stage(path, targets) },
       { separator: true },
-      { label: shellApi.revealLabel, onClick: () => void shellApi.revealInFolder(`${path}/${folderPath}`) },
-      { label: t('common.copyFolderPath'), onClick: () => void navigator.clipboard.writeText(`${path}/${folderPath}`) },
+      { label: shellApi.revealLabel, icon: mi.reveal(), onClick: () => void shellApi.revealInFolder(`${path}/${folderPath}`) },
+      { label: t('common.copyFolderPath'), icon: mi.copyPath(), onClick: () => void navigator.clipboard.writeText(`${path}/${folderPath}`) },
       { separator: true },
       {
         label: t('composer.discardFolder'),
+        icon: mi.discard(),
         danger: true,
         onClick: () =>
           useUIStore.getState().openModal({
             kind: 'confirm',
             title: t('composer.discardChanges'),
-            message: interp(t('composer.discardMsg'), { file: label }),
+            message: interp(t('composer.discardFolderMsg'), { folder: `${folderPath}/` }),
             danger: true,
             confirmLabel: t('composer.discardConfirm'),
             onConfirm: async () => {
@@ -711,7 +761,8 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
             }
           })
       },
-      ...buildIgnoreMenu(inFolder, `"${folderPath}/"`, folderPath)
+      ...buildIgnoreMenu(inFolder, `"${folderPath}/"`, folderPath),
+      ...fileListViewMenuItems()
     ])
   }
 
@@ -793,9 +844,14 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
       }
       await repoActions.stage(path, result.toStage)
       const skipped = files.length - result.toStage.length
+      // One file is named; several are counted.
+      const one = result.toStage.length === 1
+      const what: Record<string, string | number> = one
+        ? { name: shortFileName(result.toStage[0]) }
+        : { n: result.toStage.length }
       const msg = skipped > 0
-        ? interp(t('composer.smartStageFound'), { n: result.toStage.length, skipped, reason: result.reason })
-        : interp(t('composer.smartStageFoundSimple'), { n: result.toStage.length, reason: result.reason })
+        ? interp(t(one ? 'composer.smartStageFoundOne' : 'composer.smartStageFound'), { ...what, skipped, reason: result.reason })
+        : interp(t(one ? 'composer.smartStageFoundSimpleOne' : 'composer.smartStageFoundSimple'), { ...what, reason: result.reason })
       toast('success', msg)
     } catch (err) {
       toast('error', err instanceof Error ? err.message : String(err))
@@ -817,10 +873,6 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
   const doCommit = async (): Promise<void> => {
     let message = description.trim() ? `${summary.trim()}\n\n${description.trim()}` : summary.trim()
     if (!message) return
-    const trailer = `Co-authored-by: ${MYAPPDESK_COAUTHOR}`
-    if (activeProfile().ai.coAuthor !== false && !message.includes(trailer)) {
-      message = `${message}\n\n${trailer}`
-    }
     // Trailers the repository asks every commit to carry (`Refs: {ticket}`…).
     // Dropped rather than half-written when their placeholder has nothing to
     // fill it — see configTrailers.
@@ -935,7 +987,9 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
         </button>
         <span className="panel-title">
           <ChangeSummary
-            files={[...conflicted, ...staged, ...unstaged]}
+            files={allChanged}
+            filter={activeKinds}
+            onFilter={setKindFilter}
             title={interp(
               conflicted.length + staged.length + unstaged.length === 1
                 ? t('commitPanel.changedFile')
@@ -1000,19 +1054,21 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
                   useUIStore.getState().openContextMenu(e.clientX, e.clientY, [
                     {
                       label: t('composer.resolveConflicts'),
+                      icon: mi.merge(),
                       onClick: () => useUIStore.getState().setConflictView({ repoPath: path, file: f.path })
                     },
-                    { label: t('composer.keepOurs'), onClick: () => void repoActions.conflictTakeSide(path, f.path, 'ours') },
-                    { label: t('composer.keepTheirs'), onClick: () => void repoActions.conflictTakeSide(path, f.path, 'theirs') },
-                    { label: t('composer.deleteFile'), danger: true, onClick: () => void repoActions.conflictTakeSide(path, f.path, 'delete') },
+                    { label: t('composer.keepOurs'), icon: <ArrowLeftToLine size={15} strokeWidth={1.75} />, onClick: () => void repoActions.conflictTakeSide(path, f.path, 'ours') },
+                    { label: t('composer.keepTheirs'), icon: <ArrowRightToLine size={15} strokeWidth={1.75} />, onClick: () => void repoActions.conflictTakeSide(path, f.path, 'theirs') },
+                    { label: t('composer.deleteFile'), icon: mi.delete(), danger: true, onClick: () => void repoActions.conflictTakeSide(path, f.path, 'delete') },
                     {
                       label: t('composer.markResolved'),
+                      icon: <CheckCheck size={15} strokeWidth={1.75} />,
                       onClick: () => void repoActions.stage(path, [f.path])
                     },
                     { separator: true },
                     ...copyPathItems([f.path]),
-                    { label: shellApi.revealLabel, onClick: () => void shellApi.revealInFolder(`${path}/${f.path}`) },
-                    ...(!editor?.command ? [{ label: t('composer.openDefaultApp'), onClick: () => void shellApi.openPath(`${path}/${f.path}`) }] : []),
+                    { label: shellApi.revealLabel, icon: mi.reveal(), onClick: () => void shellApi.revealInFolder(`${path}/${f.path}`) },
+                    ...(!editor?.command ? [{ label: t('composer.openDefaultApp'), icon: mi.openExternal(), onClick: () => void shellApi.openPath(`${path}/${f.path}`) }] : []),
                     ...openWithMenuItems(
                       `${path}/${f.path}`,
                       defaultOpenApp,
@@ -1022,7 +1078,8 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
                       },
                       editor,
         { repo: path }
-                    )
+                    ),
+                    ...fileListViewMenuItems()
                   ])
                 }}
                 action={(f) => (
@@ -1373,9 +1430,12 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
             {amend
               ? t('composer.amendLast')
               : interp(t('composer.commitN'), {
-                  files: staged.length
-                    ? interp(t('composer.nFiles'), { n: staged.length })
-                    : ''
+                  files:
+                    staged.length === 1
+                      ? shortFileName(staged[0].path)
+                      : staged.length
+                        ? interp(t('composer.nFiles'), { n: staged.length })
+                        : ''
                 }).trim()}
           </motion.button>
         </div>
