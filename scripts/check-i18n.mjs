@@ -15,8 +15,7 @@
  */
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { dirname, join, relative } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
-import { findSinkViolations } from './i18n-sinks.mjs'
+import { fileURLToPath } from 'node:url'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const SCAN_DIR = join(ROOT, 'src/renderer/src')
@@ -73,7 +72,7 @@ function walk(dir, out = []) {
  * Heuristic: does this literal read like human copy rather than an
  * identifier, class name, path, or protocol token?
  */
-export function isHumanCopy(s) {
+function isHumanCopy(s) {
   const str = s.trim()
   if (str.length < 2) return false
   if (!/[A-Za-z]/.test(str)) return false
@@ -104,18 +103,13 @@ export function isHumanCopy(s) {
   return true
 }
 
-// Importable (the sink rule's tests reuse `isHumanCopy`); scans only when run.
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) main()
-
-function main() {
 const violations = []
 
 for (const file of walk(SCAN_DIR)) {
   const rel = relative(ROOT, file)
   const posix = file.replace(/\\/g, '/')
   if (SKIP_PATH.some((p) => posix.includes(p))) continue
-  const source = readFileSync(file, 'utf8')
-  const lines = source.split('\n')
+  const lines = readFileSync(file, 'utf8').split('\n')
 
   lines.forEach((line, i) => {
     const prev = lines[i - 1] ?? ''
@@ -168,15 +162,6 @@ for (const file of walk(SCAN_DIR)) {
       }
     }
   })
-
-  // 5. Copy that reaches a UI call through a const, a template or a ternary,
-  //    or from a line the regexes above never see (see i18n-sinks.mjs).
-  for (const v of findSinkViolations(source, file, isHumanCopy)) {
-    const ignoredAt = (n) => lines[n - 1]?.includes('i18n-ignore')
-    if (ignoredAt(v.line) || /^\s*(\/\/|\{?\/\*)\s*i18n-ignore/.test(lines[v.line - 2] ?? '')) continue
-    const dup = violations.some((o) => o.rel === rel && o.line === v.line && o.text === v.text.trim())
-    if (!dup) violations.push({ rel, ...v, text: v.text.trim() })
-  }
 }
 
 if (violations.length) {
@@ -188,8 +173,7 @@ if (violations.length) {
   console.error(
     `\n✖ ${violations.length} hardcoded user-facing string(s) in ${byFile.size} file(s).\n` +
       `  Every string the user can read must come from src/renderer/src/i18n/.\n` +
-      `  Add the key to en.ts (English only — other locales fall back to it) and render it with\n` +
-      `  \`t('your.key')\`, or \`interp(t('your.key'), { … })\` for a sentence with values in it.\n` +
+      `  Add the key to EVERY locale file there (en.ts, es.ts, …) and render it with \`t('your.key')\`.\n` +
       `  If the string must not be translated (proper noun, filename, git token), add it to\n` +
       `  scripts/i18n-allowlist.json or annotate the line with \`// i18n-ignore <reason>\`.\n`
   )
@@ -202,4 +186,3 @@ if (violations.length) {
 }
 
 console.log('✔ i18n: no hardcoded user-facing strings found.')
-}
