@@ -16,8 +16,11 @@ const windows = new Map<string, Window[]>()
 
 export function noteAppWrite(repoPath: string, startMs: number, endMs: number): void {
   const list = windows.get(repoPath) ?? []
-  // Reflog timestamps are whole seconds: widen to the seconds the write touched.
-  list.push({ start: Math.floor(startMs / 1000), end: Math.ceil(endMs / 1000) })
+  // Reflog timestamps are whole seconds, taken by git during the write — so
+  // floor(start)..floor(end) holds every stamp it can leave. Rounding the end
+  // up would claim the next second too, and pass off a terminal or agent's
+  // move made in it as ours: it would then never be offered for undo.
+  list.push({ start: Math.floor(startMs / 1000), end: Math.floor(endMs / 1000) })
   if (list.length > MAX_WINDOWS) list.splice(0, list.length - MAX_WINDOWS)
   windows.set(repoPath, list)
 }

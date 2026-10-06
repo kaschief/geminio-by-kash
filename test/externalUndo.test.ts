@@ -119,7 +119,9 @@ describe('appWrites', () => {
   it('attributes reflog seconds inside a write window to the app', () => {
     noteAppWrite('/tmp/x', 5_000_400, 5_001_200)
     expect(wasAppWrite('/tmp/x', 5000)).toBe(true)
-    expect(wasAppWrite('/tmp/x', 5002)).toBe(true)
+    expect(wasAppWrite('/tmp/x', 5001)).toBe(true)
+    // The write was over by 5001.2: a move stamped 5002 was made by someone else.
+    expect(wasAppWrite('/tmp/x', 5002)).toBe(false)
     expect(wasAppWrite('/tmp/x', 4999)).toBe(false)
     expect(wasAppWrite('/tmp/other', 5000)).toBe(false)
   })
