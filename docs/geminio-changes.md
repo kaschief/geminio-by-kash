@@ -473,6 +473,21 @@ GitHub Actions).
 
 ## Developer workflow & tooling
 
+**A bug hunter.** `npm run hunt` drives the real built app through random
+sequences that mix what a person does in Geminio with what a terminal or an
+agent does to the same repository — commits, amends, resets in GitKraken's,
+Geminio's and git's own wording, stashes — and checks the app's promises after
+every step: the file chip tells the truth, Details never sits on a vanished
+commit, typed text is never overwritten, Redo is offered only when it works,
+an outside change is never taken for the app's own. A finding is saved with
+its exact steps, the app's state and git's reflog, and replays with
+`--replay`; the `bug-hunter` agent runs and triages it. Its first runs found
+four bugs, all fixed: a stash hiding an undone commit from the file view, an
+undo whose waiting message overwrote typed text, an uncommit missed when an
+amend's undo came between, and outside changes attributed to the app.
+*Limits:* it finds logic and state bugs, not layout ones; it waits past the
+second of each app write, where attribution is unavoidably ambiguous.
+
 **English-first.** New strings go into `en.ts` only; the other locale
 dictionaries are typed `Partial` and fall back to English at runtime. The
 inherited interface translations are kept so upstream's edits to them still

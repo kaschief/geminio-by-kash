@@ -21,6 +21,7 @@
     "playground": "bash examples/setup-playground.sh",
     "playground:rebuild": "PLAYGROUND_FORCE=1 bash examples/setup-playground.sh",
     "screenshots": "node examples/screenshots/capture.mjs",
+    "hunt": "node examples/bughunt/hunt.cjs",
     "screenshots:clips": "node examples/screenshots/capture.mjs --clips",
     "screenshots:gif": "node examples/screenshots/capture.mjs --clips",
     "lint:i18n": "node scripts/check-i18n.mjs",

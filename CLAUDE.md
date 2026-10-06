@@ -469,6 +469,7 @@ redaction logic in production code.
 | `scripts/docs-map.json` | Which page documents which modal / page tab / command |
 | `scripts/build-site.mjs` | The GitHub Pages site (`npm run site`) |
 | `examples/screenshots/` | Playwright screenshot + clip automation (`npm run screenshots`), and `verify-*.cjs` real-app regression checks |
+| `examples/bughunt/hunt.cjs` | The bug hunter (`npm run hunt`): random mixes of in-app actions and outside git changes against the real built app, checking the app's promises after every step. Findings land in gitignored `examples/bughunt/found/` and replay with `--replay`. The `bug-hunter` agent (`.claude/agents/`) runs and triages it |
 | `scripts/generate-app-icons.cjs` | Rebuilds the ten app icon PNGs and the default-icon copies (`node_modules/.bin/electron scripts/generate-app-icons.cjs`). macOS only: it needs system fonts, `sips` and `iconutil`. The committed PNGs are the source of truth |
 | `scripts/settings-search-index.mjs` | Builds the Settings search index from component copy; runs before `dev` and `build` |
 | `examples/monster-repo.sh` | Builds a 140k-commit / 92k-file repo for perf work (`npm run playground:monster`). Not part of the playground — it lives in gitignored `examples/monster/` and nothing wipes it |
