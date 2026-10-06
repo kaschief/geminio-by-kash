@@ -105,6 +105,15 @@ the operation log; "behind" news needs a fetch (auto-fetch, or one finished
 while away); kept per machine.
 ([Notifications](help/notifications.md))
 
+**Needs attention weighs freshness.** A commit left unpushed for two years
+outranked the repository being worked on today, because the sort only knew
+what was waiting, not when. Now each kind of waiting work has a weight
+(conflict, unpushed, changes, behind — added up) that halves for every three
+days since the last activity there, and equally pressing tabs go by which was
+touched last. *Limits:* activity is your unpushed commits, your edits to
+changed files and the last fetch — opening a repository alone does not count.
+([Sorting tabs](help/workspaces.md#sorting-tabs))
+
 **Sort tabs by what needs you.** Right-click any tab → **Sort tabs**: Manual,
 Needs attention (conflicts, then unpushed commits, then uncommitted changes),
 Unpushed commits, Uncommitted changes, Behind remote, Name, or Recently opened.

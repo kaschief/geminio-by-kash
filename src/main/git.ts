@@ -3140,6 +3140,26 @@ export const gitService = {
     }
   },
 
+  /**
+   * When the working tree last changed: the newest modification time among the
+   * changed files the caller already has from its status read — no second
+   * `git status`, which is the costliest part of a refresh on a big tree.
+   * Deleted files have no time and are skipped; at most 200 are looked at.
+   * Null when none can be read. Feeds "Needs attention", which ranks fresh
+   * work above old.
+   */
+  async workTreeActivity(repoPath: string, files: string[]): Promise<number | null> {
+    const paths = (Array.isArray(files) ? files : []).filter((f): f is string => typeof f === 'string').slice(0, 200)
+    let newest: number | null = null
+    for (const rel of paths) {
+      // Repository-relative only: never step outside the working tree.
+      if (rel.startsWith('/') || rel.split('/').includes('..')) continue
+      const mtime = await stat(join(repoPath, rel)).then((s) => s.mtimeMs).catch(() => null)
+      if (mtime !== null && (newest === null || mtime > newest)) newest = mtime
+    }
+    return newest
+  },
+
   async pull(repoPath: string, mode: 'default' | 'ff-only' | 'rebase' = 'default'): Promise<void> {
     const remote = await upstreamRemote(repoPath)
     const args = ['pull']
@@ -7654,6 +7674,7 @@ const READ_METHODS = new Set<string>([
   'directoryExists',
   'open',
   'lastFetchAt',
+  'workTreeActivity',
   'upstreamSuggestion',
   'staleLocks',
   'remoteHasBranches',

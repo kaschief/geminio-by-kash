@@ -243,6 +243,7 @@ export const gitApi = {
   fetchAll: (path: string) => call<ForcedRefUpdate[]>('fetchAll', path),
   /** When the repo last fetched, from FETCH_HEAD — a CLI fetch counts too. */
   lastFetchAt: (path: string) => call<number | null>('lastFetchAt', path),
+  workTreeActivity: (path: string, files: string[]) => call<number | null>('workTreeActivity', path, files),
   pull: (path: string, mode: 'default' | 'ff-only' | 'rebase') => call<void>('pull', path, mode),
   push: (path: string, branch: string, opts?: { force?: boolean; remote?: string }) =>
     call<void>('push', path, branch, opts),

@@ -39,7 +39,7 @@ you drag them) or one of these orders, which the strip then keeps:
 
 | Sort | Puts first |
 |------|-----------|
-| Needs attention | Conflicts, then unpushed commits (most first), then uncommitted changes, then clean repositories |
+| Needs attention | What is waiting, weighed by how fresh it is — see below |
 | Unpushed commits | The most commits no remote has yet |
 | Uncommitted changes | Tabs with work in the working tree |
 | Behind remote | The most commits to pull |
@@ -48,8 +48,17 @@ you drag them) or one of these orders, which the strip then keeps:
 
 ![Sorting the tab strip by Needs attention](../screenshots/clip-tab-sort.webp)
 
-Ties always break the same way — by the Needs attention order, then by name — so
-sorting twice gives the same strip. A group sorts by the totals of its
+**Needs attention** weighs what is waiting in each repository — a conflict
+(100), unpushed commits (50), uncommitted changes (35), being behind its remote
+(15), added up — by how fresh it is: the weight halves for every three days
+since the last activity there (your newest unpushed commit, your newest edit to
+a changed file, the fetch that put you behind). Work you are doing today comes
+first; a commit left unpushed for months sinks below it, though it still sorts
+above a clean repository. Two equally pressing tabs go by which you touched
+most recently.
+
+Other ties always break the same way — by conflicts, then unpushed, then
+changes, then by name — so sorting twice gives the same strip. A group sorts by the totals of its
 repositories; the repositories inside a group keep their own order.
 
 A chosen order re-applies when a tab opens or closes and when the window comes

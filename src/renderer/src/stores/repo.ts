@@ -187,6 +187,9 @@ export interface RepoData {
   lastRefreshAt: number | null
   /** Epoch ms of the last successful network fetch/pull of remotes. */
   lastFetchAt: number | null
+  /** Newest modification time among the changed files — when work last
+   *  happened here. Null with a clean tree. Read after each status refresh. */
+  workTreeActivityAt: number | null
   ciStatuses: Record<string, CiStatus>
   /** Repo-relative path → working-tree status, for the project tree colors. */
   treeStatus: Record<string, TreeStatusKind>
@@ -246,6 +249,7 @@ const emptyRepo = (path: string): RepoData => ({
   remoteTagNames: [],
   lastRefreshAt: null,
   lastFetchAt: null,
+  workTreeActivityAt: null,
   ciStatuses: {},
   treeStatus: {},
   notedShas: [],
@@ -753,6 +757,13 @@ async function doRefresh(path: string, slices: RefreshSlice[]): Promise<void> {
       missingFolder: false,
       lastRefreshAt: Date.now()
     })
+    // When work last happened here, for "Needs attention" — from the files the
+    // status read just listed, only when it changed.
+    if (status && status !== repo?.status) {
+      const changed = [...status.staged, ...status.unstaged, ...status.conflicted].map((f) => f.path)
+      const at = changed.length ? await gitApi.workTreeActivity(path, changed).catch(() => null) : null
+      store.patch(path, { workTreeActivityAt: at })
+    }
     // A terminal or agent took the last commit off while the app was open:
     // its message goes to the composer, as Geminio's own Undo does. Once per
     // uncommit, so clearing the composer is respected; never for history from

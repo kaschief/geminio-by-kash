@@ -97,3 +97,62 @@ describe('sortTabs', () => {
     expect(tabSortStats(group, byPath, []).unpushed).toBe(41)
   })
 })
+
+describe('needs attention balances urgency against freshness', () => {
+  const DAY = 24 * 60 * 60 * 1000
+  const now = 1_800_000_000_000
+  // A repository with work of a given age (days before `now`).
+  const aged = (o: { conflict?: boolean; changes?: number; unpushed?: number; behind?: number }, days: number): SortRepoSnapshot => {
+    const base = snap(o)
+    const at = now - days * DAY
+    const hashes = Array.from({ length: o.unpushed ?? 0 }, (_, i) => `u${i}${days}`)
+    return {
+      ...base,
+      unpushed: hashes,
+      commits: hashes.map((hash) => ({ hash, date: Math.floor(at / 1000) })),
+      workTreeActivityAt: at,
+      lastFetchAt: at
+    }
+  }
+  const rank = (byPath: Record<string, SortRepoSnapshot>): string[] => {
+    const tabs = Object.keys(byPath).map((p) => repoTab(p.replace('/r/', '')))
+    return sortTabs(tabs, 'attention', (tab) => tabSortStats(tab, byPath, []), now).map((t) => t.id)
+  }
+
+  it('ranks today’s changes above unpushed commits left for two years', () => {
+    // The reported case: geminio being worked on, an old repo with stale commits.
+    expect(rank({ '/r/old': aged({ unpushed: 3 }, 730), '/r/geminio': aged({ changes: 2, unpushed: 1 }, 0) })).toEqual(['geminio', 'old'])
+  })
+
+  it('still puts fresh urgent work first: a conflict today beats changes today', () => {
+    expect(rank({ '/r/edits': aged({ changes: 4 }, 0), '/r/merge': aged({ conflict: true }, 0) })).toEqual(['merge', 'edits'])
+  })
+
+  it('lets fresh lighter work overtake heavier work that has gone stale', () => {
+    // Unpushed a week ago (50 × ¼) vs uncommitted changes today (35).
+    expect(rank({ '/r/week': aged({ unpushed: 1 }, 7), '/r/today': aged({ changes: 1 }, 0) })).toEqual(['today', 'week'])
+  })
+
+  it('adds up what is waiting: unpushed and changes outrank either alone, same age', () => {
+    expect(rank({ '/r/one': aged({ unpushed: 1 }, 1), '/r/both': aged({ unpushed: 1, changes: 1 }, 1) })).toEqual(['both', 'one'])
+  })
+
+  it('keeps even very old work above a clean repository', () => {
+    expect(rank({ '/r/clean': aged({}, 0), '/r/ancient': aged({ unpushed: 1 }, 2000) })).toEqual(['ancient', 'clean'])
+  })
+})
+
+describe('needs attention: two tabs equally pressing', () => {
+  it('puts the one touched most recently first, not the one with more commits', () => {
+    const now = 1_800_000_000_000
+    const at = (mins: number): number => now - mins * 60_000
+    const byPath: Record<string, SortRepoSnapshot> = {
+      // Many unpushed commits, edited 5 minutes ago.
+      '/r/budget': { ...snap({ changes: 2 }), unpushed: ['b1', 'b2', 'b3'], commits: [{ hash: 'b1', date: Math.floor(at(10) / 1000) }], workTreeActivityAt: at(5) },
+      // Fewer, but edited a minute ago.
+      '/r/geminio': { ...snap({ changes: 7 }), unpushed: ['g1'], commits: [{ hash: 'g1', date: Math.floor(at(10) / 1000) }], workTreeActivityAt: at(1) }
+    }
+    const tabs = [repoTab('budget'), repoTab('geminio')]
+    expect(sortTabs(tabs, 'attention', (tab) => tabSortStats(tab, byPath, []), now).map((t) => t.id)).toEqual(['geminio', 'budget'])
+  })
+})
