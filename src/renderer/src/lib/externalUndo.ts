@@ -117,11 +117,11 @@ export function planExternalUndo(moves: RecentRefMoves | null, skip: ReadonlySet
   // says where: the `commit:` line that created it. That line need not be the
   // one just before — an amend undone in between does not change what this
   // move undid (found by the bug hunter). Putting it back restores exactly
-  // that commit.
+  // that commit. An amended commit counts too: its parent is the one the
+  // original was made on, so follow the amends back to that `commit:` line
+  // (also found by the bug hunter).
   const log = moves.branch ? moves.branchLog : moves.head
-  const committed = log
-    .slice(log.indexOf(m) + 1)
-    .find((c) => c.new === m.old && c.old === m.new && /^commit( \(merge\))?:/.test(c.message))
+  const committed = madeOn(log.slice(log.indexOf(m) + 1), m.old, m.new)
   if (committed) {
     {
       return {
@@ -139,6 +139,28 @@ export function planExternalUndo(moves: RecentRefMoves | null, skip: ReadonlySet
     }
   }
   return { id: refMoveId(m), kind, move: m, branch: moves.branch, expectedHead: currentHead, ...branchActions(kind, m) }
+}
+
+/**
+ * The reflog line that made `sha` as a commit on top of `parent` — directly,
+ * or through amends of a commit that was. Returns the newest such line, whose
+ * subject is the one the commit carries now. Null when `sha` was made some
+ * other way (a merge from elsewhere, a rebase, a checkout).
+ */
+function madeOn(earlier: readonly RefMove[], sha: string, parent: string): RefMove | null {
+  let newest: RefMove | null = null
+  let at = sha
+  // Each step moves strictly back through `earlier`, so the walk ends.
+  for (let from = 0; from < earlier.length; ) {
+    const i = earlier.findIndex((c, k) => k >= from && c.new === at && /^commit/.test(c.message))
+    if (i < 0) return null
+    const c = earlier[i]
+    newest ??= c
+    if (/^commit( \(merge\))?:/.test(c.message)) return c.old === parent ? newest : null
+    at = c.old // an amend: the commit it replaced sits on the same parent
+    from = i + 1
+  }
+  return null
 }
 
 /**

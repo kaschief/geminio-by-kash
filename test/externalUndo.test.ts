@@ -105,6 +105,19 @@ describe('planExternalUndo', () => {
     expect(plan).toMatchObject({ kind: 'uncommit', subject: 'chore: drop session' })
   })
 
+  it('recognises an uncommit of an amended commit, with the amended subject', () => {
+    // Commit B on A, amend it to C, then reset HEAD~1 from C back to A.
+    const plan = planExternalUndo(
+      onBranch([
+        move(C, A, 'reset: moving to HEAD~1', 3),
+        move(B, C, 'commit (amend): test: drop forecast', 2),
+        move(A, B, 'commit: feat: fix profile', 1)
+      ]),
+      new Set()
+    )
+    expect(plan).toMatchObject({ kind: 'uncommit', subject: 'test: drop forecast' })
+  })
+
   it('does not mistake other moves for an uncommit', () => {
     // Back further than the commit's parent.
     expect(planExternalUndo(onBranch([move(B, ZERO.replace(/0/g, 'd'), 'reset: moving to HEAD~2', 2), move(A, B, 'commit: x', 1)]), new Set())?.kind)
