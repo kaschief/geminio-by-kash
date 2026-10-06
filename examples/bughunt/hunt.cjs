@@ -7,6 +7,7 @@
 //   npm run build && npm run hunt                    # 20 sequences, random seeds
 //   npm run hunt -- --runs 100 --steps 40           # longer hunt
 //   npm run hunt -- --seed 1234                      # one sequence, reproducibly
+//   npm run hunt -- --only app-click-away            # just one kind of action
 //   npm run hunt -- --replay examples/bughunt/found/<file>.json
 //
 // A failure is written to examples/bughunt/found/ as the exact steps taken, so
@@ -34,6 +35,8 @@ const STEPS = Number(arg('steps', 40))
 const SEED = arg('seed', null)
 const REPLAY = arg('replay', null)
 const VERBOSE = argv.includes('--verbose')
+// `--only app-click-away,app-undo`: hunt with just these actions (focus on one area).
+const ONLY = arg('only', null)?.split(',') ?? null
 
 // ─── Seeded randomness, so a failing sequence can be regenerated ────────────
 function rng(seed) {
@@ -75,8 +78,23 @@ const ACTIONS = {
   'app-select-wip': { side: 'app', weight: 2, gen: () => ({}) },
   'app-select-head': { side: 'app', weight: 2, gen: () => ({}) },
   'app-type-draft': { side: 'app', weight: 1, gen: (r) => ({ text: `my words ${Math.floor(r.next() * 1e4)}` }) },
-  'app-clear-draft': { side: 'app', weight: 1, gen: () => ({}) }
+  'app-clear-draft': { side: 'app', weight: 1, gen: () => ({}) },
+  // Open a popover, then really click something outside it.
+  'app-click-away': { side: 'app', weight: 3, gen: (r) => ({ popover: r.pick(POPOVERS.map((p) => p.name)) }) }
 }
+
+// Popovers that close on an outside press. Each: how to open it, and what
+// marks it as open. The click lands on the title bar's + button, which opens
+// a menu — so a click that leaks through the dismissal is visible.
+const POPOVERS = [
+  { name: 'repo-picker', open: (page) => page.locator('.repo-pill').first().click(), openSel: '.branch-picker-popover' },
+  { name: 'branch-picker', open: (page) => page.locator('.repo-pill').nth(1).click(), openSel: '.branch-picker-popover' },
+  {
+    name: 'context-menu',
+    open: (page) => page.evaluate(() => window.__shot.ui.getState().openContextMenu(400, 300, [{ label: 'Hunter item', onClick: () => undefined }])),
+    openSel: '.context-menu'
+  }
+]
 
 function message(r) {
   const subject = `${r.pick(TYPES)}: ${r.pick(['add', 'tidy', 'fix', 'drop'])} ${r.pick(WORDS)} ${Math.floor(r.next() * 1e4)}`
@@ -84,7 +102,9 @@ function message(r) {
 }
 
 function generate(r, count) {
-  const table = Object.entries(ACTIONS).flatMap(([kind, a]) => Array(a.weight).fill(kind))
+  const table = Object.entries(ACTIONS)
+    .filter(([kind]) => !ONLY || ONLY.includes(kind))
+    .flatMap(([kind, a]) => Array(a.weight).fill(kind))
   return Array.from({ length: count }, () => {
     const kind = r.pick(table)
     return { kind, ...ACTIONS[kind].gen(r) }
@@ -248,6 +268,24 @@ async function runSequence(label, steps) {
           case 'app-select-head': await page.evaluate(({ p, h }) => window.__shot.repo.getState().select(p, { type: 'commit', hash: h }), { p: repo, h: head() }); break
           case 'app-type-draft': await page.evaluate(({ p, t }) => window.__shot.repo.getState().setDraft(p, t), { p: repo, t: step.text }); typed = step.text; break
           case 'app-clear-draft': await page.evaluate((p) => window.__shot.repo.getState().setDraft(p, ''), repo); typed = null; break
+          case 'app-click-away': {
+            const pop = POPOVERS.find((x) => x.name === step.popover)
+            await page.evaluate(() => window.__shot.ui.getState().closeContextMenu())
+            await pop.open(page)
+            await page.locator(pop.openSel).first().waitFor({ timeout: 3000 })
+            const box = await page.locator('.tab-add').boundingBox()
+            await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2)
+            await page.waitForTimeout(250)
+            // Recorded for the rule below: did anything other than the dismissal happen?
+            step.after = await page.evaluate((sel) => ({
+              stillOpen: !!document.querySelector(sel),
+              contextMenu: !!window.__shot.ui.getState().contextMenu,
+              modal: window.__shot.ui.getState().modal?.kind ?? null
+            }), pop.openSel)
+            // Leave the app as it was for the next step.
+            await page.evaluate(() => { const ui = window.__shot.ui.getState(); ui.closeContextMenu(); if (ui.modal) ui.closeModal() })
+            break
+          }
         }
       } catch (e) {
         // A git command refusing (nothing to stash, conflicts on pop) is the
@@ -321,6 +359,13 @@ async function checkInvariants({ page, git, gitOk, after, kind, step, typed, dra
   for (const t of toasts) {
     if (t.kind !== 'error') continue
     if (/changed since|undefined|TypeError|Cannot read|is not a function/i.test(t.message)) out.push(`error toast: "${t.message}"`)
+  }
+
+  // 10. A click outside a popover only closes it — it never also presses what
+  //     is underneath (here the + button, which would open a menu).
+  if (kind === 'app-click-away' && step.after) {
+    if (step.after.stillOpen) out.push(`clicking outside the ${step.popover} did not close it`)
+    if (step.after.contextMenu || step.after.modal) out.push(`clicking outside the ${step.popover} also pressed the + button underneath (a ${step.after.modal ?? 'menu'} opened)`)
   }
 
   // 8. An outside change is never mistaken for the app's own.

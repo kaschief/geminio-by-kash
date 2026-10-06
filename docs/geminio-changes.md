@@ -331,6 +331,13 @@ confirms. With a detached HEAD the row is disabled and says why.
 
 ## Menus & interaction design
 
+**A click outside a picker only closes it.** Clicking away from the
+repository or branch picker closed it and also pressed whatever was under the
+pointer — a tab, the + button. Menus and pickers now swallow that click, as
+macOS menus do; hover previews and suggestion lists still let it through. The
+bug hunter now opens each picker and clicks outside it.
+([Repositories](help/repositories.md))
+
 **State you can read at a glance — and no tick marks.** Every menu and picker
 uses one vocabulary:
 

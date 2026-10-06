@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { useOutsidePress } from './useOutsidePress'
 import { ChevronDown, FolderGit2 } from 'lucide-react'
 import { ChoiceDot } from './StateMarks'
 import type { RepoData } from '../stores/repo'
@@ -31,25 +32,19 @@ export function RepoStatusPicker({ repo }: { repo: RepoData }): React.JSX.Elemen
 
   const close = (): void => setPosition(null)
 
+  // A press outside only closes the picker; it never also presses what is under
+  // it. The context menu is portalled to <body> — keep the picker open behind it.
+  useOutsidePress(position !== null, [triggerRef, popoverRef], close, (target) => !!target.closest?.('.context-menu'))
+
   useEffect(() => {
     if (!position) return
-    const onMouseDown = (event: MouseEvent): void => {
-      const target = event.target as HTMLElement
-      if (triggerRef.current?.contains(target) || popoverRef.current?.contains(target)) return
-      // The context menu is portalled to <body>, same as BranchStatusPicker's
-      // overlay — keep the picker open behind it.
-      if (target.closest?.('.context-menu')) return
-      close()
-    }
     const onKeyDown = (event: KeyboardEvent): void => {
       if (event.key === 'Escape') close()
     }
-    window.addEventListener('pointerdown', onMouseDown, true)
     window.addEventListener('keydown', onKeyDown)
     window.addEventListener('resize', close)
     window.addEventListener('blur', close)
     return () => {
-      window.removeEventListener('pointerdown', onMouseDown, true)
       window.removeEventListener('keydown', onKeyDown)
       window.removeEventListener('resize', close)
       window.removeEventListener('blur', close)

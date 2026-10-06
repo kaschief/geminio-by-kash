@@ -279,6 +279,11 @@ existing vocabulary rather than inventing its own:
 - **No noise.** Success toasts only for what the user cannot see happen
   (remote work, results elsewhere); errors always. No control that duplicates
   another, and AI buttons only when AI is usable (`useAiReady`).
+- **Dismissing is all a click outside does.** Menus and pickers close on a
+  press outside without passing it through to what is underneath
+  (`useOutsidePress`, or the context menu's own handling) — closing a
+  popover must never also switch a tab or press a button. Hover previews and
+  suggestion lists are the exception: a click there goes where it lands.
 - **Nothing moves under the pointer.** Toggles that do not apply are disabled,
   not hidden; floating chrome (find bars, selection pills) overlays content
   instead of pushing it.
