@@ -2070,7 +2070,6 @@ export const ptBR: Dict = {
   'composer.unstageSelected': 'Tirar os selecionados do stage ({n})',
   'composer.unstageAll': 'Tirar tudo do stage',
   'composer.addToGitignore': 'Adicionar ao .gitignore',
-  'composer.ignoreChoose': 'Ignorar… (escolher o padrão e o local)',
   'composer.discardChanges': 'Descartar alterações',
   'composer.discardMsg': 'Descartar as alterações em {file}?\n\nIsso não pode ser desfeito.',
   'composer.discardConfirm': 'Descartar',

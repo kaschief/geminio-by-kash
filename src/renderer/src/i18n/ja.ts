@@ -2030,7 +2030,6 @@ export const ja: Dict = {
   'composer.unstageSelected': '選択したものをステージから外す（{n}）',
   'composer.unstageAll': 'すべてステージから外す',
   'composer.addToGitignore': '.gitignore に追加',
-  'composer.ignoreChoose': '無視する…（パターンと場所を選ぶ）',
   'composer.discardChanges': '変更を破棄',
   'composer.discardMsg': '{file} の変更を破棄しますか？\n\n取り消せません。',
   'composer.discardConfirm': '破棄',

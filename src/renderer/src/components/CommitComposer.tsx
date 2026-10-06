@@ -3,7 +3,6 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Sparkles, Loader2, Trash2, AlignLeft, FolderTree, ArrowDownAZ, GitMerge, ChevronDown, CheckCheck, Users, Plus, Minus, ListFilter, EyeOff, FileMinus, ArrowLeftToLine, ArrowRightToLine } from 'lucide-react'
 import { mi } from './menuIcons'
-import { fileListViewMenuItems } from '../lib/fileListMenu'
 import { shortFileName } from '../lib/pathDisplay'
 import { type CodeSearchHit, type FileEntry, type CommitStyle } from '../../../shared/types'
 import { gitApi, aiApi, shellApi, diffToolApi } from '../infrastructure/api'
@@ -100,8 +99,6 @@ export function ViewToggle(): React.JSX.Element {
 }
 
 // The same glyphs as the row's stage/unstage buttons, so the menu and the row agree.
-const stageIcon = (): React.JSX.Element => <Plus size={15} strokeWidth={1.75} />
-const unstageIcon = (): React.JSX.Element => <Minus size={15} strokeWidth={1.75} />
 
 export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element {
   const t = useT()
@@ -595,10 +592,16 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
 
   const copyPathItems = (relPaths: string[]): MenuItem[] => {
     const payload = buildFilePathClipboardPayload(path, relPaths, window.api.platform)
+    // Two flavours of one verb: a submenu keeps them to one row.
     return [
-      { label: t('fileMenu.copyFilePath'), icon: mi.copyPath(), onClick: () => void navigator.clipboard.writeText(payload.absolute) },
-      { label: t('fileMenu.copyRelativeFilePath'), icon: mi.copyPath(), onClick: () => void navigator.clipboard.writeText(payload.relative) },
-      { separator: true }
+      {
+        label: t('fileTree.copyPath'),
+        icon: mi.copyPath(),
+        submenu: [
+          { label: t('fileMenu.copyFilePath'), icon: mi.copyPath(), onClick: () => void navigator.clipboard.writeText(payload.absolute) },
+          { label: t('fileMenu.copyRelativeFilePath'), icon: mi.copyPath(), onClick: () => void navigator.clipboard.writeText(payload.relative) }
+        ]
+      }
     ]
   }
 
@@ -611,18 +614,20 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
     const hasTracked = entries.some((f) => !f.untracked)
     const trackTargets = isFolder ? [folderPath] : entries.filter((f) => !f.untracked).map((f) => f.path)
     const ignoreTarget = isFolder ? folderPath! : entries[0].path
-    const items: MenuItem[] = [
-      { separator: true },
+    // Every way of making Git stop seeing the file is one row, opened on demand:
+    // they are rare next to staging, and four of them made the menu a wall.
+    const ignoreItems: MenuItem[] = [
       { label: t('composer.addToGitignore'), icon: mi.ignore(), onClick: () => void repoActions.addToGitignore(path, patterns, displayLabel) },
       {
-        label: t('composer.ignoreChoose'),
+        label: t('composer.ignoreChoosePattern'),
         icon: <ListFilter size={15} strokeWidth={1.75} />,
         onClick: () =>
           useUIStore.getState().openModal({ kind: 'ignore', repoPath: path, targetPath: ignoreTarget, isFolder })
       }
     ]
     if (hasTracked) {
-      items.push({
+      ignoreItems.push({ separator: true })
+      ignoreItems.push({
         label: t('composer.ignoreAndUntrackTitle'),
         icon: <EyeOff size={15} strokeWidth={1.75} />,
         onClick: () =>
@@ -634,8 +639,7 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
             onConfirm: () => void repoActions.ignoreAndUntrack(path, trackTargets, patterns, displayLabel)
           })
       })
-      items.push({ separator: true })
-      items.push({
+      ignoreItems.push({
         label: t('composer.stopTrackingLabel'),
         icon: <FileMinus size={15} strokeWidth={1.75} />,
         onClick: () =>
@@ -647,6 +651,10 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
             onConfirm: () => void repoActions.untrack(path, trackTargets, false, displayLabel)
           })
       })
+    }
+    const items: MenuItem[] = [{ label: t('composer.ignoreMenu'), icon: mi.ignore(), submenu: ignoreItems }]
+    if (hasTracked) {
+      items.push({ separator: true })
       items.push({
         label: t('composer.deleteFromDiskTitle'),
         icon: mi.delete(),
@@ -672,15 +680,37 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
     const label = targets.length > 1 ? interp(t('composer.nFiles'), { n: targets.length }) : `"${file.path}"`
     useUIStore.getState().openContextMenu(e.clientX, e.clientY, [
       list === 'staged'
-        ? { label: targets.length > 1 ? interp(t('composer.unstageFiles'), { n: targets.length }) : t('composer.unstageFile'), icon: unstageIcon(), onClick: () => void repoActions.unstage(path, targets) }
-        : { label: targets.length > 1 ? interp(t('composer.stageFiles'), { n: targets.length }) : t('composer.stageFile'), icon: stageIcon(), onClick: () => void repoActions.stage(path, targets) },
+        ? { label: targets.length > 1 ? interp(t('composer.unstageFiles'), { n: targets.length }) : t('composer.unstageFile'), icon: mi.unstage(), onClick: () => void repoActions.unstage(path, targets) }
+        : { label: targets.length > 1 ? interp(t('composer.stageFiles'), { n: targets.length }) : t('composer.stageFile'), icon: mi.stage(), onClick: () => void repoActions.stage(path, targets) },
+      {
+        // Names its target, so it never reads as "discard everything".
+        label:
+          targets.length > 1
+            ? interp(t('composer.discardFilesN'), { n: targets.length })
+            : interp(t('composer.discardFileNamed'), { name: file.path.split('/').pop() ?? file.path }),
+        icon: mi.discard(),
+        danger: true,
+        onClick: () =>
+          useUIStore.getState().openModal({
+            kind: 'confirm',
+            title: t('composer.discardChanges'),
+            message: interp(t('composer.discardMsg'), { file: label }),
+            danger: true,
+            confirmLabel: t('composer.discardConfirm'),
+            onConfirm: async () => {
+              const untracked = targetFiles.filter((f) => f.untracked).map((f) => f.path)
+              const tracked = targetFiles.filter((f) => !f.untracked).map((f) => f.path)
+              if (tracked.length) await repoActions.discard(path, tracked, false)
+              if (untracked.length) await repoActions.discard(path, untracked, true)
+            }
+          })
+      },
       {
         label: targets.length > 1 ? interp(t('composer.stashFiles'), { n: targets.length }) : t('composer.stashFile'),
         icon: mi.stash(),
         onClick: () => void repoActions.stashPush(path, undefined, targets, false)
       },
       { separator: true },
-      ...copyPathItems(targetFiles.map((f) => f.path)),
       { label: shellApi.revealLabel, icon: mi.reveal(), onClick: () => void shellApi.revealInFolder(`${path}/${file.path}`) },
       ...(!editor?.command ? [{ label: t('composer.openDefaultApp'), icon: mi.openExternal(), onClick: () => void shellApi.openPath(`${path}/${file.path}`) }] : []),
       ...openWithMenuItems(
@@ -705,39 +735,9 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
             }
           ]
         : []),
-      {
-        label: t('cmd.historyPurge'),
-        icon: mi.delete(),
-        danger: true,
-        onClick: () =>
-          useUIStore.getState().openModal({ kind: 'history-purge', repoPath: path, initialPath: file.path })
-      },
       { separator: true },
-      {
-        // Names its target, so it never reads as "discard everything".
-        label:
-          targets.length > 1
-            ? interp(t('composer.discardFilesN'), { n: targets.length })
-            : interp(t('composer.discardFileNamed'), { name: file.path.split('/').pop() ?? file.path }),
-        icon: mi.discard(),
-        danger: true,
-        onClick: () =>
-          useUIStore.getState().openModal({
-            kind: 'confirm',
-            title: t('composer.discardChanges'),
-            message: interp(t('composer.discardMsg'), { file: label }),
-            danger: true,
-            confirmLabel: t('composer.discardConfirm'),
-            onConfirm: async () => {
-              const untracked = targetFiles.filter((f) => f.untracked).map((f) => f.path)
-              const tracked = targetFiles.filter((f) => !f.untracked).map((f) => f.path)
-              if (tracked.length) await repoActions.discard(path, tracked, false)
-              if (untracked.length) await repoActions.discard(path, untracked, true)
-            }
-          })
-      },
-      ...buildIgnoreMenu(targetFiles, label),
-      ...fileListViewMenuItems()
+      ...copyPathItems(targetFiles.map((f) => f.path)),
+      ...buildIgnoreMenu(targetFiles, label)
     ])
   }
 
@@ -748,8 +748,8 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
     if (targets.length === 0) return
     useUIStore.getState().openContextMenu(e.clientX, e.clientY, [
       list === 'staged'
-        ? { label: interp(t('composer.unstageFolderN'), { n: targets.length }), icon: unstageIcon(), onClick: () => void repoActions.unstage(path, targets) }
-        : { label: interp(t('composer.stageFolderN'), { n: targets.length }), icon: stageIcon(), onClick: () => void repoActions.stage(path, targets) },
+        ? { label: interp(t('composer.unstageFolderN'), { n: targets.length }), icon: mi.unstage(), onClick: () => void repoActions.unstage(path, targets) }
+        : { label: interp(t('composer.stageFolderN'), { n: targets.length }), icon: mi.stage(), onClick: () => void repoActions.stage(path, targets) },
       { separator: true },
       { label: shellApi.revealLabel, icon: mi.reveal(), onClick: () => void shellApi.revealInFolder(`${path}/${folderPath}`) },
       { label: t('common.copyFolderPath'), icon: mi.copyPath(), onClick: () => void navigator.clipboard.writeText(`${path}/${folderPath}`) },
@@ -773,8 +773,7 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
             }
           })
       },
-      ...buildIgnoreMenu(inFolder, `"${folderPath}/"`, folderPath),
-      ...fileListViewMenuItems()
+      ...buildIgnoreMenu(inFolder, `"${folderPath}/"`, folderPath)
     ])
   }
 
@@ -1080,6 +1079,7 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
                     },
                     { separator: true },
                     ...copyPathItems([f.path]),
+                    { separator: true },
                     { label: shellApi.revealLabel, icon: mi.reveal(), onClick: () => void shellApi.revealInFolder(`${path}/${f.path}`) },
                     ...(!editor?.command ? [{ label: t('composer.openDefaultApp'), icon: mi.openExternal(), onClick: () => void shellApi.openPath(`${path}/${f.path}`) }] : []),
                     ...openWithMenuItems(
@@ -1091,8 +1091,7 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
                       },
                       editor,
         { repo: path }
-                    ),
-                    ...fileListViewMenuItems()
+                    )
                   ])
                 }}
                 action={(f) => (

@@ -2069,7 +2069,6 @@ export const de: Dict = {
   'composer.unstageSelected': 'Ausgewählte entstagen ({n})',
   'composer.unstageAll': 'Alle entstagen',
   'composer.addToGitignore': 'Zu .gitignore hinzufügen',
-  'composer.ignoreChoose': 'Ignorieren… (Muster & Ort wählen)',
   'composer.discardChanges': 'Änderungen verwerfen',
   'composer.discardMsg': 'Änderungen in {file} verwerfen?\n\nDas lässt sich nicht rückgängig machen.',
   'composer.discardConfirm': 'Verwerfen',

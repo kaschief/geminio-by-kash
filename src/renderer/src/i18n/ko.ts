@@ -2069,7 +2069,6 @@ export const ko: Dict = {
   'composer.unstageSelected': '선택 항목 스테이징 해제 ({n})',
   'composer.unstageAll': '모두 스테이징 해제',
   'composer.addToGitignore': '.gitignore에 추가',
-  'composer.ignoreChoose': '무시… (패턴과 위치 선택)',
   'composer.discardChanges': '변경 사항 버리기',
   'composer.discardMsg': '{file}의 변경 사항을 버릴까요?\n\n되돌릴 수 없습니다.',
   'composer.discardConfirm': '버리기',

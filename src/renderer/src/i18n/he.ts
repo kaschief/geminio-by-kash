@@ -2069,7 +2069,6 @@ export const he: Dict = {
   'composer.unstageSelected': 'הורדת הנבחרים מהסטייג׳ ({n})',
   'composer.unstageAll': 'הורדת הכול מהסטייג׳',
   'composer.addToGitignore': 'הוספה אל .gitignore',
-  'composer.ignoreChoose': 'החרגה… (בחירת תבנית ומיקום)',
   'composer.discardChanges': 'זריקת השינויים',
   'composer.discardMsg': 'לזרוק את השינויים בקובץ {file}?\n\nלא ניתן לבטל את הפעולה.',
   'composer.discardConfirm': 'זריקה',

@@ -2069,7 +2069,6 @@ export const ru: Dict = {
   'composer.unstageSelected': 'Убрать из индекса выбранные ({n})',
   'composer.unstageAll': 'Убрать из индекса всё',
   'composer.addToGitignore': 'Добавить в .gitignore',
-  'composer.ignoreChoose': 'Игнорировать… (выбрать шаблон и место)',
   'composer.discardChanges': 'Отбросить изменения',
   'composer.discardMsg': 'Отбросить изменения в {file}?\n\nЭто необратимо.',
   'composer.discardConfirm': 'Отбросить',

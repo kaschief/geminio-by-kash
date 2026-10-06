@@ -2069,7 +2069,6 @@ export const uk: Dict = {
   'composer.unstageSelected': 'Прибрати з індексу вибрані ({n})',
   'composer.unstageAll': 'Прибрати з індексу все',
   'composer.addToGitignore': 'Додати до .gitignore',
-  'composer.ignoreChoose': 'Ігнорувати… (вибрати шаблон і місце)',
   'composer.discardChanges': 'Відкинути зміни',
   'composer.discardMsg': 'Відкинути зміни у {file}?\n\nЦю дію не можна скасувати.',
   'composer.discardConfirm': 'Відкинути',

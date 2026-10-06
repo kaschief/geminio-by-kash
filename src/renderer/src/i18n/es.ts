@@ -2063,7 +2063,6 @@ export const es: Dict = {
   'composer.unstageSelected': 'Quitar seleccionados ({n})',
   'composer.unstageAll': 'Quitar todo',
   'composer.addToGitignore': 'Añadir a .gitignore',
-  'composer.ignoreChoose': 'Ignorar… (elegir patrón y ubicación)',
   'composer.discardChanges': 'Descartar cambios',
   'composer.discardMsg': '¿Descartar cambios en {file}?\n\nEsta acción no se puede deshacer.',
   'composer.discardConfirm': 'Descartar',

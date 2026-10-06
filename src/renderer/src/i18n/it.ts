@@ -2031,7 +2031,6 @@ export const it: Dict = {
   'composer.unstageSelected': 'Togli dallo staging i selezionati ({n})',
   'composer.unstageAll': 'Togli tutto dallo staging',
   'composer.addToGitignore': 'Aggiungi a .gitignore',
-  'composer.ignoreChoose': 'Ignora… (scegli pattern e posizione)',
   'composer.discardChanges': 'Scarta le modifiche',
   'composer.discardMsg': 'Scartare le modifiche in {file}?\n\nNon si può annullare.',
   'composer.discardConfirm': 'Scarta',

@@ -2030,7 +2030,6 @@ export const fr: Dict = {
   'composer.unstageSelected': 'Désindexer la sélection ({n})',
   'composer.unstageAll': 'Tout désindexer',
   'composer.addToGitignore': 'Ajouter à .gitignore',
-  'composer.ignoreChoose': 'Ignorer… (choisir le motif et l’emplacement)',
   'composer.discardChanges': 'Abandonner les modifications',
   'composer.discardMsg': 'Abandonner les modifications de {file} ?\n\nC’est irréversible.',
   'composer.discardConfirm': 'Abandonner',

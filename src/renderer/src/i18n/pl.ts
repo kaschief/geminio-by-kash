@@ -2069,7 +2069,6 @@ export const pl: Dict = {
   'composer.unstageSelected': 'Usuń wybrane z indeksu ({n})',
   'composer.unstageAll': 'Usuń wszystko z indeksu',
   'composer.addToGitignore': 'Dodaj do .gitignore',
-  'composer.ignoreChoose': 'Ignoruj… (wybierz wzorzec i miejsce)',
   'composer.discardChanges': 'Odrzuć zmiany',
   'composer.discardMsg': 'Odrzucić zmiany w {file}?\n\nTego nie da się cofnąć.',
   'composer.discardConfirm': 'Odrzuć',

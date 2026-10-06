@@ -2030,7 +2030,6 @@ export const tr: Dict = {
   'composer.unstageSelected': 'Seçilenleri stage’den çıkar ({n})',
   'composer.unstageAll': 'Tümünü stage’den çıkar',
   'composer.addToGitignore': '.gitignore dosyasına ekle',
-  'composer.ignoreChoose': 'Yok say… (deseni ve konumu seç)',
   'composer.discardChanges': 'Değişiklikleri at',
   'composer.discardMsg': '{file} dosyasındaki değişiklikler atılsın mı?\n\nBu geri alınamaz.',
   'composer.discardConfirm': 'At',

@@ -2069,7 +2069,6 @@ export const zhCN: Dict = {
   'composer.unstageSelected': '取消暂存选中项（{n}）',
   'composer.unstageAll': '全部取消暂存',
   'composer.addToGitignore': '添加到 .gitignore',
-  'composer.ignoreChoose': '忽略…（选择模式与位置）',
   'composer.discardChanges': '放弃改动',
   'composer.discardMsg': '放弃 {file} 中的改动？\n\n此操作无法撤销。',
   'composer.discardConfirm': '放弃',

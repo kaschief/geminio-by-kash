@@ -2070,7 +2070,6 @@ export const nl: Dict = {
   'composer.unstageSelected': 'Geselecteerde unstagen ({n})',
   'composer.unstageAll': 'Alles unstagen',
   'composer.addToGitignore': 'Toevoegen aan .gitignore',
-  'composer.ignoreChoose': 'Negeren… (patroon & locatie kiezen)',
   'composer.discardChanges': 'Wijzigingen weggooien',
   'composer.discardMsg': 'Wijzigingen in {file} weggooien?\n\nDit kan niet ongedaan gemaakt worden.',
   'composer.discardConfirm': 'Weggooien',

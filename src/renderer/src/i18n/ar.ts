@@ -2069,7 +2069,6 @@ export const ar: Dict = {
   'composer.unstageSelected': 'إلغاء تحضير المحدد ({n})',
   'composer.unstageAll': 'إلغاء تحضير الكل',
   'composer.addToGitignore': 'إضافة إلى .gitignore',
-  'composer.ignoreChoose': 'تجاهل… (اختر النمط والموضع)',
   'composer.discardChanges': 'تجاهل التغييرات',
   'composer.discardMsg': 'أتتجاهل التغييرات في {file}؟\n\nلا يمكن التراجع عن هذا.',
   'composer.discardConfirm': 'تجاهل',
