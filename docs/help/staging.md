@@ -41,9 +41,9 @@ keeps git's own order, which is by byte value, so `Zeta.md` comes before
 there. The choice applies to every file list (staging, commit details and
 stashes) and is remembered.
 
-The same two choices are on the right-click menu of any file or folder in
-those lists, under **View as** and **Sort by**, so you can switch without
-going back to the header. Both places change the same setting.
+In commit details and stashes the same two choices are also on a file's
+right-click menu, under **View as** and **Sort by**. The staging list leaves
+them to its header, which is right there, to keep its menu short.
 
 The counts in the header (modified, added, deleted…) filter the lists: click
 one to show only that kind across conflicted, unstaged and staged files, click
@@ -79,6 +79,14 @@ are looking at:
 | Staged changes | **Unstage hunk** | Takes the change out of the index. The file on disk is untouched |
 | A commit | **Revert hunk** | Undoes that part of the commit in your working tree, as an uncommitted change. No commit is made |
 | A stash | **Apply hunk** | Brings just that part of the stash into your working tree. The stash is kept |
+
+**Right-click a line** for the same actions without selecting first: *Stage
+this line* or *Discard this line* (or Unstage, Revert, Apply, depending on the
+diff), the whole hunk, and *Copy line*. Right-click a line that is part of a
+selection and the menu acts on the whole selection instead ("Stage selected
+(3)"). With text highlighted in the diff, *Copy* copies just that text. In the
+inline layout a row is a line's old and new version together, so *this line*
+means both halves of the edit.
 
 Every one of them can be undone. Discard asks first, because the lines it throws
 away exist nowhere else; before it (and before revert and apply) Geminio also

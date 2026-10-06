@@ -242,7 +242,9 @@ asks first, and working-tree actions take a WIP snapshot. When the file has
 moved on, Revert and Apply fall back to a three-way merge; overlapping edits get
 conflict markers and a notice, and a hunk that no longer applies says so instead
 of reporting success. Hunk buttons stick to the visible edge so long lines
-cannot hide them. *Limits:* new untracked files have no hunks, and conflicted
+cannot hide them. Right-click any diff line for *Stage this line* / *Discard
+this line* (or the selection it is part of), its hunk, and *Copy line*, as in
+GitKraken. *Limits:* new untracked files have no hunks, and conflicted
 files' combined diffs take no hunk actions.
 ([Hunk and line actions](help/staging.md#hunk-and-line-actions))
 
@@ -305,8 +307,8 @@ editor are the same, file menus show one entry instead of two.
 **File lists you can shape.** A–Z sort for flat lists (git's byte order is the
 default), a **Folders shown in paths** setting, and file names that never
 truncate — folders give way from the left instead. The same View as (path or
-tree) and Sort by choices are on every file and folder right-click menu in the
-staging, commit and stash lists; both places write the same setting.
+tree) and Sort by choices are also on file right-click menus in commit details
+and stashes; both places write the same setting.
 ([Path, tree, and order](help/staging.md#path-tree-and-order))
 
 **Discarding is explicit.** **Discard All Changes** sits at the top-left of the
@@ -401,7 +403,12 @@ the title bar (a window-drag region the page normally never sees clicks from)
 now dismisses a menu too. A click away only dismisses: it does not also land
 on whatever is under the pointer, so closing a menu over a file list never
 selects a file or switches the view (a right-click still opens the next menu
-in one go). <kbd>Esc</kbd> closes a context menu before its
+in one go). A menu opens beside the pointer, never over it: below and to the
+right when it fits, flipped above or to the left near an edge, so the row you
+right-clicked stays visible. The staging list's file menu is down to nine rows,
+with the copy-path variants and the four ignore choices in submenus. Removing a
+file from history is not on it, because a working change is not in history yet;
+it is in Tools and on commit file menus. <kbd>Esc</kbd> closes a context menu before its
 parent dialog, and Settings ignores a backdrop click while a repository config,
 info or vault editor has unsaved changes. *Limit:* the window cannot be dragged
 by its title bar while a menu is open. ([Per-repository settings](help/repo-settings.md))
