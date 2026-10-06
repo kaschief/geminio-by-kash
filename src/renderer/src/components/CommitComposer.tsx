@@ -287,6 +287,11 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
   const composerIntent = useUIStore((s) => s.composerIntent)
   useEffect(() => {
     if (!composerIntent || composerIntent.path !== path) return
+    const current = useRepoStore.getState().drafts[path] ?? ''
+    if (composerIntent.onlyIfSummary !== undefined && current.trim() !== composerIntent.onlyIfSummary.trim()) {
+      useUIStore.getState().consumeComposerIntent()
+      return
+    }
     setSummary(composerIntent.summary)
     setDescription(composerIntent.description)
     setAmend(composerIntent.amend)
@@ -873,7 +878,8 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
       setSummary('')
       setDescription('')
       setAmend(false)
-      setFileView(null, path)
+      // The open file closes and Details shows the new commit — in the same
+      // store update as the commit itself (repo store `patch`), so nothing flashes.
     }
   }
 

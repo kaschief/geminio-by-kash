@@ -15,6 +15,7 @@ import { splitHunkHeader } from '../src/renderer/src/lib/diff'
 import { displayPath, shortFileName } from '../src/renderer/src/lib/pathDisplay'
 import { fitBranchAndGraph } from '../src/renderer/src/lib/graphColumnFit'
 import type { FileEntry } from '../src/shared/types'
+import { followCommitFile, followSelectedCommit, followWipFile, headMove, headOf, isHeadCommit, landedCommit } from '../src/renderer/src/lib/wipFileFollow'
 import { stackOrder, moveLevel, adoptableBranches, targetFor } from '../src/renderer/src/lib/stackOrder'
 import { planStackSubmit, summariseStackPlan } from '../src/shared/stackPr'
 import { groupPrStacks, stackRowStates } from '../src/renderer/src/lib/prStacks'
@@ -7299,5 +7300,128 @@ describe('GitHub author photo matching', () => {
     expect(accountAvatar(account, 'other@example.com')).toBeNull()
     expect(accountAvatar(account, undefined)).toBeNull()
     expect(accountAvatar(null, 'author@example.com')).toBeNull()
+  })
+})
+
+describe('followWipFile', () => {
+  const unstagedSide = { type: 'wip', staged: false, untracked: false } as const
+  const stagedSide = { type: 'wip', staged: true, untracked: false } as const
+  const entry = (path: string, untracked = false): FileEntry => ({ path, status: 'M', untracked })
+  const lists = (staged: FileEntry[], unstaged: FileEntry[], conflicted: FileEntry[] = []) => ({ staged, unstaged, conflicted })
+
+  it('flips to staged when the file was staged elsewhere', () => {
+    expect(followWipFile(unstagedSide, 'a.ts', lists([entry('a.ts')], []))).toEqual({
+      kind: 'move',
+      source: { type: 'wip', staged: true, untracked: false }
+    })
+  })
+
+  it('flips to unstaged, carrying untracked, when the file was unstaged elsewhere', () => {
+    expect(followWipFile(stagedSide, 'a.ts', lists([], [entry('a.ts', true)]))).toEqual({
+      kind: 'move',
+      source: { type: 'wip', staged: false, untracked: true }
+    })
+  })
+
+  it('keeps the chosen side while a file is partly staged', () => {
+    const both = lists([entry('a.ts')], [entry('a.ts')])
+    expect(followWipFile(unstagedSide, 'a.ts', both)).toEqual({ kind: 'keep' })
+    expect(followWipFile(stagedSide, 'a.ts', both)).toEqual({ kind: 'keep' })
+  })
+
+  it('keeps a view already on the right side', () => {
+    expect(followWipFile(stagedSide, 'a.ts', lists([entry('a.ts')], []))).toEqual({ kind: 'keep' })
+  })
+
+  it('leaves conflicted files alone', () => {
+    expect(followWipFile(unstagedSide, 'a.ts', lists([entry('a.ts')], [], [entry('a.ts')]))).toEqual({ kind: 'keep' })
+  })
+
+  it('reports a file that is no longer a working change', () => {
+    expect(followWipFile(unstagedSide, 'a.ts', lists([entry('b.ts')], []))).toEqual({ kind: 'left' })
+  })
+})
+
+describe('followCommitFile', () => {
+  const entry = (path: string, untracked = false): FileEntry => ({ path, status: 'M', untracked })
+  const lists = (staged: FileEntry[], unstaged: FileEntry[], conflicted: FileEntry[] = []) => ({ staged, unstaged, conflicted })
+
+  it('keeps a commit that is still in history', () => {
+    expect(followCommitFile('a.ts', false, true, lists([entry('a.ts')], []))).toEqual({ kind: 'keep' })
+  })
+
+  it('returns an undone commit to the staged side when a soft reset left it there', () => {
+    expect(followCommitFile('a.ts', true, true, lists([entry('a.ts')], [entry('a.ts')]))).toEqual({
+      kind: 'move',
+      source: { type: 'wip', staged: true, untracked: false }
+    })
+  })
+
+  it('returns an undone commit to the unstaged side after a mixed reset', () => {
+    expect(followCommitFile('a.ts', true, false, lists([], [entry('a.ts', true)]))).toEqual({
+      kind: 'move',
+      source: { type: 'wip', staged: false, untracked: true }
+    })
+  })
+
+  it('looks in the new HEAD when HEAD was rewritten and the file is not a working change', () => {
+    expect(followCommitFile('a.ts', true, true, lists([], []))).toEqual({ kind: 'head' })
+  })
+
+  it('closes when HEAD was undone and its changes thrown away, rather than show the parent', () => {
+    expect(followCommitFile('a.ts', true, true, lists([], []), true)).toEqual({ kind: 'close' })
+  })
+
+  it('keeps a commit that left history some other way rather than guessing', () => {
+    expect(followCommitFile('a.ts', true, false, lists([], []))).toEqual({ kind: 'keep' })
+  })
+
+  it('reads HEAD from log decorations, attached or detached', () => {
+    expect(isHeadCommit(['HEAD -> main', 'origin/main'])).toBe(true)
+    expect(isHeadCommit(['HEAD'])).toBe(true)
+    expect(isHeadCommit(['origin/HEAD', 'main'])).toBe(false)
+  })
+})
+
+describe('Details following HEAD as it is committed, undone and amended', () => {
+  const c = (hash: string, parents: string[], head = false) => ({ hash, parents, refs: head ? ['HEAD -> main'] : [] })
+  const on = (sha: string, ...commits: ReturnType<typeof c>[]) => ({ commits, branches: { locals: [{ sha, isCurrent: true }] } })
+  const base = c('a', [])
+  const before = on('b', c('b', ['a'], true), base)
+
+  it('lands on a commit made on top, or an amend beside it', () => {
+    expect(landedCommit(on('a', c('a', [], true)), on('b', c('b', ['a'], true), base))).toBe('b')
+    expect(landedCommit(before, on('b2', c('b2', ['a'], true), base))).toBe('b2')
+    expect(landedCommit(before, on('a', c('a', [], true)))).toBeNull()
+  })
+
+  it('moves from an undone commit to the working changes it left behind', () => {
+    expect(followSelectedCommit('b', headMove(before, on('a', c('a', [], true))), true)).toEqual({ type: 'wip' })
+  })
+
+  it('moves to the commit underneath when the undo threw the changes away', () => {
+    expect(followSelectedCommit('b', headMove(before, on('a', c('a', [], true))), false)).toEqual({ type: 'commit', hash: 'a' })
+  })
+
+  it('moves to the rewritten commit after an amend', () => {
+    expect(followSelectedCommit('b', headMove(before, on('b2', c('b2', ['a'], true), base)), false)).toEqual({ type: 'commit', hash: 'b2' })
+  })
+
+  it('follows an undo even when a stash keeps the undone commit in the log', () => {
+    // Found by the bug hunter: the graph lists stash bases, so the undone
+    // commit was still "in the log" and nothing followed it.
+    const after = on('a', c('s', ['b']), c('b', ['a']), c('a', [], true))
+    expect(headMove(before, after).kind).toBe('undone')
+    expect(followSelectedCommit('b', headMove(before, after), true)).toEqual({ type: 'wip' })
+  })
+
+  it('reads HEAD from the branch, not the log label', () => {
+    // A log row that lost its `HEAD ->` decoration does not lose HEAD.
+    expect(headOf(on('b', c('b', ['a']), base))?.hash).toBe('b')
+  })
+
+  it('leaves an older commit, and HEAD moving on top, alone', () => {
+    expect(followSelectedCommit('a', headMove(before, on('a', c('a', [], true))), true)).toBeNull()
+    expect(followSelectedCommit('b', headMove(before, on('c', c('c', ['b'], true), c('b', ['a']), base)), true)).toBeNull()
   })
 })

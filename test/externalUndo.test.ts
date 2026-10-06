@@ -203,3 +203,29 @@ describe('recentRefMoves against a real repository', () => {
     expect(plan).toMatchObject({ kind: 'checkout', from: 'main', to: 'dev' })
   })
 })
+  it('sees a terminal uncommit and offers to put the commit back', async () => {
+    const repo = initRepo()
+    commitFile(repo, 'a.txt', 'one\n', 'base')
+    const head = commitFile(repo, 'a.txt', 'two\n', 'feat: change a')
+    git(repo, ['reset', '--soft', 'HEAD~1'])
+
+    const plan = planExternalUndo(await gitService.recentRefMoves(repo), new Set())
+    expect(plan).toMatchObject({ kind: 'uncommit', subject: 'feat: change a', undo: { target: head } })
+
+    await gitService.reset(repo, plan!.undo.target, 'soft')
+    expect(git(repo, ['rev-parse', 'HEAD'])).toBe(head)
+    expect(git(repo, ['status', '--porcelain'])).toBe('')
+  })
+
+  it('sees an uncommit written by Geminio (a sha) and by GitKraken (`undo: commit:`)', async () => {
+    for (const how of ['sha', 'gitkraken'] as const) {
+      const repo = initRepo()
+      const base = commitFile(repo, 'a.txt', 'one\n', 'base')
+      commitFile(repo, 'a.txt', 'two\n', 'feat: change a')
+      if (how === 'sha') git(repo, ['reset', '--soft', base])
+      else git(repo, ['update-ref', '-m', 'undo: commit: feat: change a', 'HEAD', base])
+      const plan = planExternalUndo(await gitService.recentRefMoves(repo), new Set())
+      expect(plan, how).toMatchObject({ kind: 'uncommit', subject: 'feat: change a' })
+    }
+  })
+

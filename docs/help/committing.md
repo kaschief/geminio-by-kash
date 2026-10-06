@@ -76,6 +76,23 @@ full message, switches the composer into amend mode, and focuses it. A HEAD
 that was already pushed can still be amended, but Geminio warns that updating
 the remote will take a force push.
 
+**Undo puts the message back.** Undoing a commit — the toolbar's Undo, or
+<kbd>⌘Z</kbd> — returns its message and description to the composer along with
+its staged changes, so one more fix can go in before committing again. Redo
+takes the message back out. An undo never overwrites a message you have typed:
+it only fills an empty composer, or one still holding the message a previous
+undo put there. Undo several commits in a row and the composer shows the last
+one undone, while their changes gather in Staged.
+
+**Details follows the commit.** Commit while Details shows your working
+changes and it moves to the new commit instead of closing. A file you had open
+closes, so what you see is the result: the commit highlighted in the graph, its
+message, and every file that went into it. (A commit made *outside* Geminio
+while you read a file works the other way — the file stays and follows into the
+commit; see [When the file changes under you](diffs.md#when-the-file-changes-under-you).) Undo while it shows
+that commit and it moves to the working changes the undo left behind; after an
+amend, to the rewritten commit. It never sits on "Commit not found".
+
 **Undo commit…** is the sibling for an unpushed HEAD: mixed reset to the
 parent, working-tree changes kept, message restored to the composer. The
 initial commit has a dedicated path that leaves an unborn branch instead of

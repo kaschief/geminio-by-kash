@@ -39,7 +39,7 @@ import type {
 import { gitApi, hostingApi } from '../infrastructure/api'
 import { planStackSubmit, buildStackSection } from '../../../shared/stackPr'
 import type { LocalCiVerdict } from '../../../shared/localCi'
-import { useUIStore } from './ui'
+import { useUIStore, type FileViewState } from './ui'
 import { useSettingsStore } from './settings'
 import { worktreeForBranch, worktreeTabName } from '../lib/worktrees'
 import { isSecretFile } from '../lib/secrets'
@@ -52,6 +52,7 @@ import { timeAgo } from '../lib/timeAgo'
 import { shortFileName } from '../lib/pathDisplay'
 import { workingChangeCount } from '../lib/workingChanges'
 import { splitCommitMessage } from '../lib/commitMenuCapabilities'
+import { followSelectedCommit, headMove, landedCommit } from '../lib/wipFileFollow'
 import {
   externalUndoEffect,
   externalUndoFirst,
@@ -62,6 +63,61 @@ import {
   type RefAction
 } from '../lib/externalUndo'
 import { t, interp, type TranslationKey } from '../i18n'
+
+/** Repos whose composer is committing right now — see the file rule in `patch`. */
+const committingInApp = new Set<string>()
+
+/** The summary an undo last put back in each repo's composer. A later undo may
+ *  replace it, but never text the user typed. */
+const lastRestored = new Map<string, string>()
+
+/**
+ * Hand an undone commit's message back to the composer, so the commit can be
+ * reworked and made again without retyping it. Only into an empty composer, or
+ * one still holding what an earlier undo put there — never over typed text.
+ */
+function restoreCommitMessage(path: string, message: string): void {
+  const { summary, description } = splitCommitMessage(message)
+  if (!summary) return
+  const draft = (useRepoStore.getState().drafts[path] ?? '').trim()
+  if (draft && draft !== lastRestored.get(path)) return
+  lastRestored.set(path, summary)
+  useUIStore.getState().requestComposerIntent({ path, summary, description, amend: false, onlyIfSummary: draft })
+}
+
+/** Redo put the commit back: take its message out again, unless it was edited. */
+function clearRestoredCommitMessage(path: string, message: string): void {
+  const { summary } = splitCommitMessage(message)
+  // Compare with what the composer will show: a message still waiting to be
+  // shown counts, so Redo can withdraw it before it ever appears.
+  const pending = useUIStore.getState().composerIntent
+  const shown = pending?.path === path ? pending.summary : (useRepoStore.getState().drafts[path] ?? '')
+  if (shown !== summary) return
+  lastRestored.delete(path)
+  if (pending?.path === path) {
+    useUIStore.getState().consumeComposerIntent()
+    return
+  }
+  useUIStore.getState().requestComposerIntent({ path, summary: '', description: '', amend: false, onlyIfSummary: summary })
+}
+
+/** The same, for a commit known only by its sha — one made outside the app. The
+ *  object outlives the undo, so its full message (body included) is still there. */
+async function restoreCommitMessageOf(path: string, sha: string): Promise<void> {
+  const message = await gitApi.getCommitMessage(path, sha).catch(() => '')
+  if (message.trim()) restoreCommitMessage(path, message)
+}
+
+async function clearRestoredCommitMessageOf(path: string, sha: string): Promise<void> {
+  const message = await gitApi.getCommitMessage(path, sha).catch(() => '')
+  if (message.trim()) clearRestoredCommitMessage(path, message)
+}
+
+/** Outside uncommits whose message has been handed to the composer already, so a
+ *  later refresh does not hand it over again after the user cleared it. */
+const restoredUncommits = new Set<string>()
+/** Reflog seconds before this are history from before the app opened. */
+const sessionStartSec = Math.floor(Date.now() / 1000)
 
 /** Repos already warned this session about pushing tracked secrets (don't nag). */
 const secretPushWarned = new Set<string>()
@@ -682,6 +738,14 @@ async function doRefresh(path: string, slices: RefreshSlice[]): Promise<void> {
       missingFolder: false,
       lastRefreshAt: Date.now()
     })
+    // A terminal or agent took the last commit off while the app was open:
+    // its message goes to the composer, as Geminio's own Undo does. Once per
+    // uncommit, so clearing the composer is respected; never for history from
+    // before the app opened.
+    if (externalUndo?.kind === 'uncommit' && externalUndo.move.date >= sessionStartSec && !restoredUncommits.has(externalUndo.id)) {
+      restoredUncommits.add(externalUndo.id)
+      void restoreCommitMessageOf(path, externalUndo.move.old)
+    }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     // A folder may disappear between the preflight and the concurrent reads.
@@ -706,14 +770,43 @@ export const useRepoStore = create<RepoStoreState>((set, get) => ({
   // Deliberately a no-op for unknown paths: only `ensure` creates entries.
   // Otherwise an in-flight refresh resolving after a tab closes would
   // resurrect the just-evicted repo with a full commit payload.
-  patch: (path, partial) => set((s) => {
-    if (!s.repos[path]) return s
-    const repo = { ...s.repos[path], ...partial }
+  patch: (path, partial) => {
+    const current = get().repos[path]
+    if (!current) return
+    const repo = { ...current, ...partial }
+    // An empty working tree has nothing to show, so Details on it closes —
+    // unless the changes just went into a commit. Then Details moves to that
+    // commit, in this same update: clearing it and re-selecting a moment later
+    // would close and reopen the panel. An open file goes with it (the hook
+    // useFollowWipFile does the same for changes made outside the app).
+    //
+    // Who committed decides what happens to an open file. The composer: the
+    // file closes, so the result — the commit, all its files — is what you
+    // see. Anything else (a terminal, an agent): your view is not taken from
+    // you; the file follows into the commit.
+    let fileNext: { kind: 'follow'; hash: string; view: FileViewState } | { kind: 'close' } | null = null
     if (repo.selected?.type === 'wip' && repo.status && !repo.mergeState && workingChangeCount(repo.status) === 0) {
-      repo.selected = null
+      const hash = partial.commits ? landedCommit(current, repo) : null
+      const ui = useUIStore.getState()
+      const view = path === ui.activeRepoPath ? ui.fileView : ui.repoViews[path]?.fileView
+      if (hash && view?.source.type === 'wip') {
+        fileNext = committingInApp.has(path) ? { kind: 'close' } : { kind: 'follow', hash, view }
+      }
+      repo.selected = hash ? { type: 'commit', hash } : null
+    } else if (repo.selected?.type === 'commit' && (partial.commits || partial.branches) && repo.status) {
+      // The commit Details shows was just undone or amended: follow it to
+      // where its changes went instead of staying on a commit that has left
+      // the branch's history.
+      const next = followSelectedCommit(repo.selected.hash, headMove(current, repo), workingChangeCount(repo.status) > 0)
+      if (next) repo.selected = next
     }
-    return { repos: { ...s.repos, [path]: repo } }
-  }),
+    set((s) => (s.repos[path] ? { repos: { ...s.repos, [path]: repo } } : s))
+    if (fileNext?.kind === 'follow') {
+      useUIStore.getState().setFileView({ ...fileNext.view, source: { type: 'commit', hash: fileNext.hash } })
+    } else if (fileNext?.kind === 'close') {
+      useUIStore.getState().setFileView(null, path)
+    }
+  },
 
   setDraft: (path, value) => set((s) => ({ drafts: { ...s.drafts, [path]: value } })),
 
@@ -1436,15 +1529,21 @@ function runExternalUndo(path: string, plan: ExternalUndoPlan): Promise<void> {
     muteWatcher(path)
     try {
       let afterUndo = await stepExternal(path, plan, plan.undo, plan.expectedHead)
+      // An uncommitted commit's message goes back to the composer, wherever
+      // the commit was made.
+      const isCommit = plan.kind === 'commit'
+      if (isCommit) await restoreCommitMessageOf(path, plan.move.new)
       // From here on it is an ordinary entry: Redo replays the change, and an
       // Undo after that walks it back again — each side checks HEAD first.
       const entry: UndoEntry = {
         label,
         undo: async () => {
           afterUndo = await stepExternal(path, plan, plan.undo, plan.expectedHead)
+          if (isCommit) await restoreCommitMessageOf(path, plan.move.new)
         },
         redo: async () => {
           await stepExternal(path, plan, plan.redo, afterUndo)
+          if (isCommit) await clearRestoredCommitMessageOf(path, plan.move.new)
         }
       }
       const repo = useRepoStore.getState().repos[path]
@@ -2574,16 +2673,43 @@ export const repoActions = {
   renameStash: (path: string, index: number, message: string) =>
     useRepoStore.getState().run(path, t('act.renamedStash'), () => gitApi.renameStash(path, index, message), undefined, null, undefined, ['stashes']),
 
-  commit: (path: string, message: string, amend = false) =>
-    useRepoStore.getState().run(
+  commit: (path: string, message: string, amend = false) => {
+    // Undo hands the message back to the composer, so the commit can be
+    // reworked and made again without retyping it — as the commit menu's own
+    // "Undo commit" does. Redo takes it back out, unless it has been edited.
+    const restoreMessage = (): void => restoreCommitMessage(path, message)
+    const clearRestoredMessage = (): void => clearRestoredCommitMessage(path, message)
+    // An amend replaces HEAD rather than adding to it, so its undo returns to
+    // the commit as it stood before — `HEAD~1` would drop that commit too.
+    let beforeAmend = ''
+    return useRepoStore
+      .getState()
+      .run(
       path,
-      amend ? 'Amended commit' : 'Committed',
-      () => gitApi.commit(path, message, amend),
-      {
-        label: t('undoLabel.commit'),
-        undo: () => gitApi.reset(path, 'HEAD~1', 'soft'),
-        redo: () => gitApi.commit(path, message)
+      amend ? t('act.amendingCommit') : t('act.committing'),
+      async () => {
+        if (amend) beforeAmend = (await gitApi.resolveRev(path, 'HEAD')) ?? ''
+        await gitApi.commit(path, message, amend)
+        // Held until the refresh that follows has shown the new commit.
+        committingInApp.add(path)
       },
+      amend
+        ? {
+            label: t('undoLabel.amend'),
+            undo: () => gitApi.reset(path, beforeAmend, 'soft'),
+            redo: () => gitApi.commit(path, message, true)
+          }
+        : {
+            label: t('undoLabel.commit'),
+            undo: async () => {
+              await gitApi.reset(path, 'HEAD~1', 'soft')
+              restoreMessage()
+            },
+            redo: async () => {
+              await gitApi.commit(path, message)
+              clearRestoredMessage()
+            }
+          },
       null,
       (error) => {
         const problems = commitHookProblems(error)
@@ -2592,7 +2718,10 @@ export const repoActions = {
         return true
       },
       ['log', 'status', 'branches']
-    ),
+    )
+      // run() resolves after its refresh, so the file rule has already applied.
+      .finally(() => committingInApp.delete(path))
+  },
 
   amendCommitMessage: (path: string, message: string, previousMessage?: string) =>
     useRepoStore

@@ -10,7 +10,9 @@ import type { TranslationKey } from '../i18n'
  * Everything here is a decision over reflog data; the store executes it.
  */
 
-export type ExternalUndoKind = 'commit' | 'amend' | 'reset' | 'move' | 'checkout'
+/** `uncommit` is a reset that took the last commit back off (`reset HEAD~1`).
+ *  Reversing it puts the commit back — to the user, that is a Redo, not an Undo. */
+export type ExternalUndoKind = 'commit' | 'amend' | 'reset' | 'move' | 'checkout' | 'uncommit'
 
 /**
  * How to move a ref. `restore` is a reset whose mode depends on the working
@@ -35,6 +37,8 @@ export type ExternalUndoPlan = {
   /** For a checkout: where HEAD goes back to, and where it came from. */
   from?: string
   to?: string
+  /** For an uncommit: the subject of the commit it took off. */
+  subject?: string
 }
 
 export function refMoveId(m: Pick<RefMove, 'old' | 'new' | 'date'>): string {
@@ -42,8 +46,7 @@ export function refMoveId(m: Pick<RefMove, 'old' | 'new' | 'date'>): string {
 }
 
 const CHECKOUT = /^checkout: moving from (.+) to (.+)$/
-
-function classify(message: string): Exclude<ExternalUndoKind, 'checkout'> {
+function classify(message: string): Exclude<ExternalUndoKind, 'checkout' | 'uncommit'> {
   if (/^commit \(amend\):/.test(message)) return 'amend'
   if (/^commit( \(merge\))?:/.test(message)) return 'commit'
   if (/^reset:/.test(message)) return 'reset'
@@ -51,7 +54,7 @@ function classify(message: string): Exclude<ExternalUndoKind, 'checkout'> {
 }
 
 /** The reset that walks each kind back, and the one that replays it. */
-function branchActions(kind: Exclude<ExternalUndoKind, 'checkout'>, m: RefMove): Pick<ExternalUndoPlan, 'undo' | 'redo'> {
+function branchActions(kind: Exclude<ExternalUndoKind, 'checkout' | 'uncommit'>, m: RefMove): Pick<ExternalUndoPlan, 'undo' | 'redo'> {
   switch (kind) {
     // The classic uncommit: the commit goes, its changes stay staged.
     case 'commit':
@@ -107,6 +110,34 @@ export function planExternalUndo(moves: RecentRefMoves | null, skip: ReadonlySet
   // A branch's first line has no old position to go back to.
   if (isNullSha(m.old) || m.old === m.new) return null
   const kind = classify(m.message)
+  // An uncommit is recognised by what it did, not by how a tool worded it:
+  // the terminal writes `reset: moving to HEAD~1`, Geminio `reset: moving to
+  // <sha>`, GitKraken `undo: commit: <subject>`. What they share: HEAD went
+  // from a commit straight back to where that commit was made. The reflog
+  // says where: the `commit:` line that created it. That line need not be the
+  // one just before — an amend undone in between does not change what this
+  // move undid (found by the bug hunter). Putting it back restores exactly
+  // that commit.
+  const log = moves.branch ? moves.branchLog : moves.head
+  const committed = log
+    .slice(log.indexOf(m) + 1)
+    .find((c) => c.new === m.old && c.old === m.new && /^commit( \(merge\))?:/.test(c.message))
+  if (committed) {
+    {
+      return {
+        id: refMoveId(m),
+        kind: 'uncommit',
+        move: m,
+        branch: moves.branch,
+        expectedHead: currentHead,
+        // `undo` reverses the reflog move — here, it puts the commit back. The
+        // changes it held are staged (or unstaged), so a soft reset re-wraps them.
+        undo: { type: 'reset', mode: 'soft', target: m.old },
+        redo: { type: 'reset', mode: 'soft', target: m.new },
+        subject: subjectOf(committed.message)
+      }
+    }
+  }
   return { id: refMoveId(m), kind, move: m, branch: moves.branch, expectedHead: currentHead, ...branchActions(kind, m) }
 }
 
@@ -131,6 +162,8 @@ export function externalUndoLabel(plan: ExternalUndoPlan): { key: TranslationKey
   switch (plan.kind) {
     case 'commit':
       return { key: 'extUndo.label.commit', vars: { subject: subjectOf(plan.move.message) } }
+    case 'uncommit':
+      return { key: 'extUndo.label.commit', vars: { subject: plan.subject ?? '' } }
     case 'amend':
       return { key: 'extUndo.label.amend', vars: { subject: subjectOf(plan.move.message) } }
     case 'reset':
@@ -148,6 +181,8 @@ export function externalUndoEffect(plan: ExternalUndoPlan): { key: TranslationKe
   switch (plan.kind) {
     case 'commit':
       return { key: 'extUndo.effect.commit', vars }
+    case 'uncommit':
+      return { key: 'extUndo.effect.uncommit', vars }
     case 'amend':
       return { key: 'extUndo.effect.amend', vars }
     case 'reset':

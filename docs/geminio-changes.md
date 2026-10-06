@@ -183,6 +183,16 @@ wait until a word is finished, and a hook rejection names each rule that
 failed. *Limits:* the style is inferred from history, not read from the
 commitlint config. ([The linter](help/committing.md#the-linter))
 
+**An open file keeps up with git outside the app.** A working-tree file you
+were reading used to keep the side it opened on: if a terminal or an agent
+staged it, the pane said "No changes to display" under an Unstaged chip, and a
+commit left it blank. Now the view switches between staged and unstaged as the
+file does, follows a file committed outside the app into the new commit (Details moves
+to that commit with it, rather than closing), returns to the staged or unstaged diff when
+that commit is undone, moves on with an amended `HEAD`, and closes only when
+the change is discarded.  *Limits:* paused while you edit in place; follows only into the
+commit at `HEAD`. ([When the file changes under you](help/diffs.md#when-the-file-changes-under-you))
+
 **Hunk and line actions on every diff.** Stage or Discard (unstaged), Unstage
 (staged), Revert (a commit) and Apply (a stash) — on a whole hunk or on
 selected lines, in unified and split view, each with an undo entry. Discard

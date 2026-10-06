@@ -219,6 +219,22 @@ export type FileViewSource =
 
 export type FileViewMode = 'preview' | 'diff' | 'file' | 'blame' | 'history'
 
+/** A message handed to the composer, applied when it is next on screen. */
+export interface ComposerIntent {
+  path: string
+  summary: string
+  description: string
+  amend: boolean
+  /**
+   * Set by automatic hand-backs (an undo restoring its message): the summary
+   * the composer held when the message was offered. If it holds anything else
+   * by the time it opens, the person has typed since, and the offer is
+   * dropped rather than written over their words. Explicit requests (Amend
+   * commit…) leave it unset and always apply.
+   */
+  onlyIfSummary?: string
+}
+
 export interface FileViewState {
   repoPath: string
   file: string
@@ -387,7 +403,7 @@ interface UIState {
    *  so the user can't fire a second action before the first has settled. */
   inflight: number
   /** Prefill the commit composer (amend from HEAD, or restore after undo). */
-  composerIntent: { path: string; summary: string; description: string; amend: boolean } | null
+  composerIntent: ComposerIntent | null
   activeRepoPath: string | null
   repoViews: Record<string, RepoViewState>
   fileReaders: Record<string, FileReaderSession>
@@ -441,7 +457,7 @@ interface UIState {
   setBusy(label: string | null, op?: 'push' | 'pull' | 'fetch' | null): void
   beginInflight(): void
   endInflight(): void
-  requestComposerIntent(intent: { path: string; summary: string; description: string; amend: boolean }): void
+  requestComposerIntent(intent: ComposerIntent): void
   consumeComposerIntent(): void
   setFileView(view: FileViewState | null, repoPath?: string): void
   setEditorDirty(dirty: boolean, repoPath?: string): void

@@ -112,6 +112,42 @@ selected mode and enabled toggles retain their purple highlight.
 The header controls scroll horizontally when the pane is narrow. Find and
 selected-line actions float within the viewer without moving the code.
 
+## When the file changes under you
+
+A working-tree file stays open while something else works on it — a terminal,
+an editor, or an agent you asked to commit. The viewer keeps up instead of
+going stale, so the chip in its header — Unstaged, Staged, or a commit — always
+says where the file is now:
+
+| What happens outside Geminio | What the open file does |
+|------------------------------|-------------------------|
+| The file is staged | Switches to the **Staged** diff |
+| The file is unstaged | Switches back to the **Unstaged** diff |
+| Part of the file is staged | Stays on the side you chose; both are real |
+| The file is committed | Follows it into the new commit, so the diff stays on screen — and Details, if it was showing your working changes, moves to that commit too |
+| The change is discarded or stashed | Closes, as there is nothing left to show |
+| The commit you are reading is undone | Goes back to the **Staged** or **Unstaged** diff, wherever the change landed |
+| …and its changes thrown away (`reset --hard`) | Closes — the change exists nowhere now, and the commit underneath is a different one |
+| That commit was `HEAD` and is amended or reworded | Moves on to the rewritten commit |
+
+This is for changes you did not make here. Committing from Geminio's own
+composer is different on purpose: the file closes and Details shows the new
+commit with all its files, because when you commit, the result is what you
+want to see.
+
+If you had closed Details yourself, it stays closed. With no file open,
+committing the last change still closes Details: an empty working tree has
+nothing to show.
+
+A commit that leaves history some other way — rebased away further back, say —
+keeps its view: its content still exists, and guessing where it went would be
+the surprise.
+
+*Limits:* while you are editing the file in place, the viewer holds still, so
+an unsaved draft is never thrown away. It also only follows into the commit
+that `HEAD` now points at. If several commits land at once and the file is not
+in the newest one, the view closes.
+
 ## Pull between files
 
 When reading a commit, stash, or staged/unstaged file list, scroll to the bottom

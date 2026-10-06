@@ -16,6 +16,7 @@ import { useHoverExplain } from './HoverExplain'
 import { DiffViewer, type HunkAction } from './DiffViewer'
 import { ElasticFileNavigation } from './ElasticFileNavigation'
 import { useAiReady } from './useAiReady'
+import { useFollowWipFile } from './useFollowWipFile'
 import { displayPath } from '../lib/pathDisplay'
 import { SemanticSummary } from './SemanticSummary'
 import { buildQueryRegExp, highlightHtml, type HighlightLayer } from './FileSearchBar'
@@ -209,6 +210,7 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
   const [editing, setEditing] = useState(restoredReader?.editing ?? false)
   const [draft, setDraft] = useState(restoredReader?.draft ?? '')
   const [saving, setSaving] = useState(false)
+  useFollowWipFile(view, editing)
 
   const { repoPath, file, mode, source } = view
 

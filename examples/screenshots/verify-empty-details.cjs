@@ -26,9 +26,10 @@ assert.equal(await page.locator('.right-panel').count(),0)
 await fs.writeFile(join(repo,'details-test.txt'),'A real working change\n');await refresh();await select();await page.locator('.right-panel').waitFor()
 git('add','details-test.txt');await refresh();assert.equal(await page.evaluate(p=>window.__shot.repo.getState().repos[p].selected?.type,repo),'wip')
 git('-c','user.name=Demo','-c','user.email=demo@example.com','commit','-qm','Finish working change');await refresh()
-await page.locator('.right-panel').waitFor({state:'detached'})
+// Committing the last change moves Details to that commit rather than closing it.
+const head=git('rev-parse','HEAD').trim();assert.deepEqual(await page.evaluate(p=>window.__shot.repo.getState().repos[p].selected,repo),{type:'commit',hash:head});await page.locator('.right-panel').waitFor()
 await page.evaluate(p=>{const state=window.__shot.repo.getState();state.select(p,{type:'commit',hash:state.repos[p].commits[0].hash})},repo)
 await refresh();await page.locator('.right-panel').waitFor();assert.equal(await page.evaluate(p=>window.__shot.repo.getState().repos[p].selected?.type,repo),'commit')
-console.log('PASS no Safe Storage probe with no saved secrets; existing encrypted secrets retain gate; empty WIP stays closed; dirty/staged details available; committing last file closes WIP; historical commit details preserved')
+console.log('PASS no Safe Storage probe with no saved secrets; existing encrypted secrets retain gate; empty WIP stays closed; dirty/staged details available; committing last file moves Details to the commit; historical commit details preserved')
 }finally{await app?.close();await fs.rm(tmp,{recursive:true,force:true})}
 })().catch(e=>{console.error(e);process.exitCode=1})
