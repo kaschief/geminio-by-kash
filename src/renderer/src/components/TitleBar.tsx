@@ -141,8 +141,21 @@ export function TitleBar(): React.JSX.Element {
   }, [heldSort, tabSet, settled])
   useEffect(() => {
     if (!heldSort) return
+    // Coming back is when the order catches up — so it has to be sorted on
+    // what is true now. Only the active repository refreshes on focus and only
+    // it is watched, so an edit made in another repository from an editor or a
+    // terminal would otherwise sort on stale state, and the tab would move
+    // "eventually". Refresh every open repository's status first (light: no
+    // history), then sort once. A newer return supersedes an older one.
+    let generation = 0
     const onFocus = (): void => {
-      if (stripSettled()) applyTabSort(heldSort)
+      const mine = ++generation
+      const paths = useSettingsStore
+        .getState()
+        .settings.tabs.flatMap((tab) => (tab.kind === 'page' ? [] : tab.repos.map((r) => r.path)))
+      void Promise.all(paths.map((p) => useRepoStore.getState().refresh(p, { light: true }).catch(() => undefined))).then(() => {
+        if (mine === generation && stripSettled()) applyTabSort(heldSort)
+      })
     }
     window.addEventListener('focus', onFocus)
     return () => window.removeEventListener('focus', onFocus)

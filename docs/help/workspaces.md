@@ -63,7 +63,10 @@ repositories; the repositories inside a group keep their own order.
 
 A chosen order re-applies when a tab opens or closes and when the window comes
 back into focus — not the moment a status changes, so a commit or push does not
-slide a tab out from under the cursor while you work. Dragging a tab by hand
+slide a tab out from under the cursor while you work. Coming back first
+re-reads the status of every open repository, so an edit you made in another
+one from your editor or terminal counts straight away, not once you happen to
+open its tab. Dragging a tab by hand
 switches back to Manual. While an order is held, the **Sort tabs** row names it
 (for example *Needs attention*), so you can tell without opening the flyout.
 
