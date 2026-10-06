@@ -78,7 +78,8 @@ const ROOT = resolve(__dirname, '../..')
     await until(async () => state() === before1, 'Undo restores staged and unstaged parts exactly')
     await until(async () => (await openView()) === 'a.txt:unstaged', 'Undo brings back the exact view that was open')
     assert.ok(await page.evaluate(() => window.__shot.ui.getState().toasts.some((t) => t.message === 'Restored a.txt')), 'the undo says what came back')
-    assert.equal(await page.locator('.toast-action').count(), 0, 'and the discard toast, its Undo now spent, is gone')
+    // Its Undo spent, the discard toast goes (once its exit animation ends).
+    await until(async () => (await page.locator('.toast-action').count()) === 0, 'the discard toast is gone')
     await page.evaluate(() => window.__shot.ui.getState().setFileView(null))
 
     console.log('  step 2')
@@ -148,7 +149,9 @@ const ROOT = resolve(__dirname, '../..')
     try { git('merge', 'other') } catch { /* conflict expected */ }
     await fs.writeFile(join(repo, 'c.txt'), 'side edit\n'); await refresh()
     const at = { left: 300, top: 200, width: 200, height: 24 }
-    await page.evaluate(({ p, at }) => window.__shot.repoActions.discardChanges(p, [{ path: 'c.txt', untracked: true }], { what: 'c.txt', anchor: at }), { p: repo, at })
+    // Started, not awaited: it settles only once the popover is answered, which
+    // happens below — awaiting it here would wait forever.
+    await page.evaluate(({ p, at }) => { void window.__shot.repoActions.discardChanges(p, [{ path: 'c.txt', untracked: true }], { what: 'c.txt', anchor: at }) }, { p: repo, at })
     await pop.waitFor()
     assert.match(await page.locator('.confirm-popover-detail').innerText(), /cannot be undone/)
     await pop.locator('.btn.danger').click()
