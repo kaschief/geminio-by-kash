@@ -3508,7 +3508,7 @@ export const en = {
   'settings.systemNotificationsAll': 'Errors and updates',
   'settings.systemNotificationsAllEx': 'Also new commits from others, and work that finished while you were away',
   'notices.clear': 'Clear',
-  'notices.empty': 'Nothing needs you. Failures, new commits from others, and work that finished while you were away appear here.',
+  'notices.empty': 'Nothing needs you',
   'notices.githubInbox': 'GitHub inbox',
   'notices.openRepo': 'Open this repository',
   'titlebar.settings': 'Settings',

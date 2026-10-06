@@ -735,10 +735,15 @@ textarea:focus {
   margin: 0 6px;
   transition: background 0.15s, color 0.15s;
 }
-.titlebar-action:hover {
+.titlebar-action:hover,
+.titlebar-action[aria-expanded='true'] {
   background: var(--bg-3);
   color: var(--text-0);
 }
+/* Open is shown as pressed (above), the way the repository picker does; a ring
+   is only for keyboard focus, in the accent rather than the browser's default. */
+.titlebar-action:focus { outline: none; }
+.titlebar-action:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 
 /* Profile selector in the title bar (left of Settings). */
 .profile-switcher {
@@ -15965,7 +15970,7 @@ mark.diff-find-hit.current { background: #ff9632; color: #10121a; }
 .notice-github-count { min-width: 18px; padding: 1px 6px; border-radius: 9px; font-size: 11px; font-weight: 600; text-align: center; color: #0a1220; background: var(--accent); }
 .notice-github-chevron { color: var(--text-2); }
 .notice-list { min-height: 0; overflow-y: auto; padding: 4px 6px 6px; }
-.notice-empty { margin: 0; padding: 18px 10px 20px; font-size: 12px; line-height: 1.5; color: var(--text-2); text-align: center; }
+.notice-empty { margin: 0; padding: 22px 10px 24px; font-size: 12.5px; color: var(--text-2); text-align: center; }
 .notice-row { position: relative; display: flex; gap: 9px; width: 100%; padding: 8px 10px 8px 12px; border-radius: 7px; text-align: start; color: var(--text-0); }
 button.notice-row { cursor: pointer; }
 button.notice-row:hover { background: var(--bg-2); }
