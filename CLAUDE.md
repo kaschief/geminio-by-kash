@@ -182,7 +182,11 @@ Never use these to silence a string a user actually reads.
 ### Enforcement
 
 `scripts/check-i18n.mjs` scans the renderer for JSX text, UI props, inline
-ternaries, and toast calls holding literal copy. It runs:
+ternaries, and toast calls holding literal copy. Its AST pass
+(`scripts/i18n-sinks.mjs`) also follows the arguments of `setBusy`, `toast`,
+`notify` and the dialog calls back through `const` bindings, templates and
+ternaries, so `const verb = 'Fetching'` reaching a busy label is caught. It does
+not follow function parameters, `let`, or values from other modules. It runs:
 
 - after every renderer edit (`.claude/hooks/i18n-guard.sh`),
 - when a turn ends with source changes (`.claude/hooks/verify-gate.sh`),
