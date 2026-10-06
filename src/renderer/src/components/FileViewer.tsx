@@ -47,6 +47,22 @@ const IMAGE_EXTS = new Set(['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'ico', '
  *  complete, so find, reveal-line and text selection behave exactly as before. */
 const HUGE_LINES = 5000
 
+/** The diff's right-click menu: one line's worth of each hunk action. */
+const LINE_LABEL = {
+  stage: 'hunk.stageLine',
+  unstage: 'hunk.unstageLine',
+  discard: 'hunk.discardLine',
+  revert: 'hunk.revertLine',
+  apply: 'hunk.applyLine'
+} as const satisfies Record<HunkActionKind, TranslationKey>
+const HUNK_ICON = {
+  stage: mi.stage,
+  unstage: mi.unstage,
+  discard: mi.discard,
+  revert: mi.revert,
+  apply: mi.unstash
+} as const satisfies Record<HunkActionKind, () => React.JSX.Element>
+
 function isImage(name: string): boolean {
   return IMAGE_EXTS.has(fileExt(name))
 }
@@ -702,6 +718,8 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
       id: kind,
       hunkLabel: t(hunkKey),
       linesLabel: (n) => interp(t(linesKey), { n }),
+      lineLabel: t(LINE_LABEL[kind]),
+      icon: HUNK_ICON[kind](),
       reverse: kind !== 'stage' && kind !== 'apply',
       // Forward (stage, apply) is green; anything that takes work back or away
       // (unstage, revert, discard) is red — one rule, whatever the undo story.

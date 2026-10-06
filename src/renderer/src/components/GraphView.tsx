@@ -1419,7 +1419,7 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
       icon: mi.cherryPick(),
       onClick: () => void repoActions.cherryPick(repo.path, c.hash, true)
     },
-    { label: t('commit.revert'), icon: ic(CornerUpLeft), onClick: () => void repoActions.revertCommit(repo.path, c.hash) },
+    { label: t('commit.revert'), icon: mi.revert(), onClick: () => void repoActions.revertCommit(repo.path, c.hash) },
     { separator: true },
     {
       label: t('commit.createPr'),

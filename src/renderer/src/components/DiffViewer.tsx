@@ -17,6 +17,8 @@ import { highlightHtml, buildQueryRegExp, type HighlightLayer } from './FileSear
 import { highlightLine } from '../lib/highlight'
 import { maskSecretLine } from '../lib/secrets'
 import { useT, interp, type TranslationKey } from '../i18n'
+import { useUIStore, type MenuItem } from '../stores/ui'
+import { mi } from './menuIcons'
 import { buildLinePatch, extractHunks, singleHunkPatch } from '../lib/hunkPatch'
 import { useAiReady } from './useAiReady'
 import { useSettingsStore } from '../stores/settings'
@@ -90,6 +92,9 @@ export interface HunkAction {
   hunkLabel: string
   /** Button on the line-selection bar, given how many lines are selected. */
   linesLabel: (n: number) => string
+  /** The right-click menu's row for the one line under the pointer. */
+  lineLabel: string
+  icon: React.ReactNode
   /** The patch will be applied reversed, so a line selection is built mirrored. */
   reverse: boolean
   /** Colour by direction: forward moves work ahead (green), backward takes it
@@ -365,6 +370,7 @@ export function DiffViewer({
         c && selected.has(c.idx) ? 'line-selected' : ''
       }${c ? movedClass(c.idx) : ''}`}
       onClick={selectable && c ? () => toggleLine(c.idx) : undefined}
+      onContextMenu={c ? (e) => openLineMenu(e, [c.idx], c.text) : undefined}
       title={selectable ? t('diff.selectLineTitle') : undefined}
     >
       {c && moved.has(c.idx) ? (
@@ -441,6 +447,58 @@ export function DiffViewer({
     if (!hunkData || selected.size === 0) return
     action.run(buildLinePatch(lines, hunkData.header, selected, action.reverse ? 'reverse' : 'forward'))
     setSelected(new Set())
+  }
+
+  // Right-click on a line, as in GitKraken: act on that line — or on the
+  // selection, when the line is part of one — on its whole hunk, or copy it.
+  // `idxs` is what the row shows: one line, or an inline row's − and + pair.
+  const openLineMenu = (e: React.MouseEvent, idxs: number[], text: string): void => {
+    const first = lines[idxs[0]]
+    if (!first) return
+    e.preventDefault()
+    const items: MenuItem[] = []
+    if (hunkData && hasHunkActions) {
+      const changed = idxs.filter((i) => lines[i].kind === 'add' || lines[i].kind === 'del')
+      const inSelection = changed.some((i) => selected.has(i))
+      const target = inSelection ? new Set(selected) : new Set(changed)
+      if (target.size > 0) {
+        for (const a of hunkActions) {
+          items.push({
+            label: inSelection ? a.linesLabel(target.size) : a.lineLabel,
+            icon: a.icon,
+            danger: a.id === 'discard',
+            onClick: () => {
+              a.run(buildLinePatch(lines, hunkData.header, target, a.reverse ? 'reverse' : 'forward'))
+              setSelected(new Set())
+            }
+          })
+        }
+        items.push({ separator: true })
+      }
+      for (const a of hunkActions) {
+        items.push({
+          label: a.hunkLabel,
+          icon: a.icon,
+          danger: a.id === 'discard',
+          onClick: () => a.run(singleHunkPatch(hunkData, first.hunkIdx))
+        })
+      }
+      items.push({ separator: true })
+    }
+    // Text picked inside the diff wins; otherwise the line, as it is shown
+    // (a secret file's values stay masked on the clipboard too).
+    const picked = window.getSelection()
+    const pickedText = picked && viewerRef.current?.contains(picked.anchorNode) ? picked.toString() : ''
+    items.push(
+      pickedText
+        ? { label: t('diff.copySelection'), icon: mi.copy(), onClick: () => void navigator.clipboard.writeText(pickedText) }
+        : {
+            label: t('diff.copyLine'),
+            icon: mi.copy(),
+            onClick: () => void navigator.clipboard.writeText(maskValues ? maskSecretLine(text) : text)
+          }
+    )
+    useUIStore.getState().openContextMenu(e.clientX, e.clientY, items)
   }
 
   // Recount find matches whenever the query or rendered content changes.
@@ -707,6 +765,7 @@ export function DiffViewer({
               key={i}
               className={`diff-line inline ${hasHunkActions ? 'selectable' : ''} ${pairSelected ? 'line-selected' : ''}`}
               onClick={hasHunkActions ? () => togglePair(pair) : undefined}
+              onContextMenu={(e) => openLineMenu(e, [pair.del, pair.add], lines[pair.add].text)}
               title={hasHunkActions ? t('diff.selectLineTitle') : undefined}
             >
               <span className="diff-gutter">{l.oldNo ?? ''}</span>
@@ -734,6 +793,7 @@ export function DiffViewer({
             key={i}
             className={`diff-line ${l.kind} ${selectable ? 'selectable' : ''} ${selected.has(i) ? 'line-selected' : ''}${movedClass(i)}`}
             onClick={selectable ? () => toggleLine(i) : undefined}
+            onContextMenu={(e) => openLineMenu(e, [i], l.text)}
             title={selectable ? t('diff.selectLineTitle') : undefined}
           >
             <span className="diff-gutter">{l.oldNo ?? ''}</span>
