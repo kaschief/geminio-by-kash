@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { ChevronRight } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useUIStore, type MenuItem } from '../stores/ui'
 import { submenuSummary } from '../lib/menuState'
+import { placeMenu, type MenuPlacement } from '../lib/menuPlacement'
 import { ChoiceDot } from './StateMarks'
 
 function itemRole(item: MenuItem): 'menuitem' | 'menuitemcheckbox' | 'menuitemradio' {
@@ -221,15 +222,21 @@ export function ContextMenu(): React.JSX.Element {
     if (contextMenu) requestAnimationFrame(() => focusFirstItem(ref.current))
   }, [contextMenu])
 
-  const clampedPos = (): { left: number; top: number } => {
-    if (!contextMenu) return { left: 0, top: 0 }
-    // Cap the estimated height to the viewport — long menus (e.g. gitmoji) scroll
-    // instead of being pushed off the bottom of the window.
-    const menuH = Math.min(contextMenu.items.length * 30 + 12, window.innerHeight - 16)
-    const left = Math.min(contextMenu.x, window.innerWidth - 240)
-    const top = Math.min(contextMenu.y, window.innerHeight - menuH)
-    return { left, top: Math.max(8, top) }
-  }
+  // Placed from its real size, measured before the first paint: an estimate
+  // from the row count ran short (separators, two-line rows), and the clamp that
+  // made up for it slid the menu up over the very row that was clicked.
+  const [placement, setPlacement] = useState<MenuPlacement | null>(null)
+  useLayoutEffect(() => {
+    const el = ref.current
+    if (!contextMenu || !el) return setPlacement(null)
+    setPlacement(
+      placeMenu(
+        { x: contextMenu.x, y: contextMenu.y },
+        { width: el.offsetWidth, height: el.offsetHeight },
+        { width: window.innerWidth, height: window.innerHeight }
+      )
+    )
+  }, [contextMenu])
 
   // Arrow-key movement, scoped to the menu the focus is currently in (root or
   // flyout — flyout key events bubble here through the React tree).
@@ -259,9 +266,13 @@ export function ContextMenu(): React.JSX.Element {
           ref={ref}
           className="context-menu"
           role="menu"
-          style={clampedPos()}
-          initial={{ opacity: 0, scale: 0.94, y: -4 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
+          style={
+            placement
+              ? { left: placement.left, top: placement.top, transformOrigin: placement.origin }
+              : { left: 0, top: 0, visibility: 'hidden' }
+          }
+          initial={{ opacity: 0, scale: 0.94 }}
+          animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.96 }}
           transition={{ duration: 0.12 }}
           onKeyDown={onMenuKey}
