@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import type { ReactNode } from 'react'
 import type { CiState, DivergedStrategy, KeychainReason, ResetStrategy, SemanticDiff } from '../../../shared/types'
 import type { WorkspaceCandidate } from '../lib/workspacePlan'
+import { addNotice, parseStoredNotices, sanitizeNoticeMessage, type Notice } from '../lib/notices'
 
 export type CiFilter = 'all' | CiState
 
@@ -358,6 +359,10 @@ interface UIState {
   contextMenu: ContextMenuState | null
   modal: ModalSpec | null
   toasts: Toast[]
+  /** Every toast, kept after it leaves the screen — the bell's list (lib/notices). */
+  notices: Notice[]
+  /** The newest notice id the person has seen in the bell's panel. */
+  noticesSeenUpTo: number
   /** Cmd/Ctrl+K command palette — fuzzy jump to branches, commits, files, actions. */
   commandPaletteOpen: boolean
   /**
@@ -436,7 +441,9 @@ interface UIState {
   setMissionOpen(open: boolean): void
   toggleCommandPalette(): void
   setGithubUnread(n: number): void
-  toast(kind: Toast['kind'], message: string, opts?: { repoPath?: string }): void
+  toast(kind: Toast['kind'], message: string, opts?: { repoPath?: string; remote?: boolean }): void
+  markNoticesSeen(): void
+  clearNotices(): void
   dismissToast(id: number): void
   toggleTerminal(repoPath: string): void
   toggleProblems(repoPath: string): void
@@ -472,7 +479,20 @@ interface UIState {
   closeCosmos(): void
 }
 
-let toastId = 0
+// The bell's history survives a restart: an overnight push that failed is
+// still there in the morning. Per machine, in this window's local storage.
+const NOTICES_KEY = 'geminio-notices-v1'
+const storedNotices = parseStoredNotices(
+  (() => {
+    try {
+      return typeof localStorage === 'undefined' ? null : localStorage.getItem(NOTICES_KEY)
+    } catch {
+      return null
+    }
+  })()
+)
+// Ids carry on from the saved list, so "seen up to" still means the same thing.
+let toastId = storedNotices.notices.reduce((max, n) => Math.max(max, n.id), storedNotices.seenUpTo)
 let revealSeq = 0
 
 export const useUIStore = create<UIState>((set, get) => ({
@@ -508,6 +528,8 @@ export const useUIStore = create<UIState>((set, get) => ({
   contextMenu: null,
   modal: null,
   toasts: [],
+  notices: storedNotices.notices,
+  noticesSeenUpTo: storedNotices.seenUpTo,
   commandPaletteOpen: false,
   missionOpen: false,
   githubUnread: 0,
@@ -553,9 +575,34 @@ export const useUIStore = create<UIState>((set, get) => ({
 
   toast: (kind, message, opts) => {
     const id = ++toastId
-    set({ toasts: [...get().toasts, { id, kind, message, ...(opts?.repoPath ? { repoPath: opts.repoPath } : {}) }] })
-    setTimeout(() => get().dismissToast(id), kind === 'error' ? 7000 : 3500)
+    const repo = opts?.repoPath ? { repoPath: opts.repoPath } : {}
+    set({
+      toasts: [...get().toasts, { id, kind, message, ...repo }],
+      notices: addNotice(get().notices, {
+        id,
+        kind,
+        message: sanitizeNoticeMessage(message),
+        ...repo,
+        ...(opts?.remote ? { remote: true } : {}),
+        at: Date.now()
+      })
+    })
+    const dismiss = (): void => {
+      setTimeout(() => get().dismissToast(id), kind === 'error' ? 7000 : 3500)
+    }
+    // An error raised while the window is in the background would time out
+    // unseen: its countdown starts when the person comes back.
+    if (kind === 'error' && typeof document !== 'undefined' && !document.hasFocus()) {
+      window.addEventListener('focus', dismiss, { once: true })
+    } else {
+      dismiss()
+    }
   },
+  markNoticesSeen: () => {
+    const newest = get().notices[get().notices.length - 1]?.id ?? 0
+    if (newest > get().noticesSeenUpTo) set({ noticesSeenUpTo: newest })
+  },
+  clearNotices: () => set({ notices: [] }),
   dismissToast: (id) => set({ toasts: get().toasts.filter((t) => t.id !== id) }),
 
   toggleTerminal: (repoPath) =>
@@ -636,3 +683,13 @@ export const useUIStore = create<UIState>((set, get) => ({
   openCosmos: (repoPath) => set({ cosmos: { repoPath } }),
   closeCosmos: () => set({ cosmos: null })
 }))
+
+// Keep the bell's history on disk as it changes.
+useUIStore.subscribe((next, prev) => {
+  if (next.notices === prev.notices && next.noticesSeenUpTo === prev.noticesSeenUpTo) return
+  try {
+    localStorage.setItem(NOTICES_KEY, JSON.stringify({ notices: next.notices, seenUpTo: next.noticesSeenUpTo }))
+  } catch {
+    // Storage full or unavailable: the list still works for this session.
+  }
+})

@@ -2562,6 +2562,26 @@ function GraphPage(): React.JSX.Element {
           </div>
         </div>
 
+        <div className="settings-field">
+          <span className="settings-field-label">{t('settings.systemNotifications')}</span>
+          <span className="settings-hint">{t('settings.systemNotificationsHint')}</span>
+          <div className="layout-segmented three" role="radiogroup" aria-label={t('settings.systemNotifications')}>
+            {SYSTEM_NOTIFICATION_CHOICES.map((c) => (
+              <button
+                key={c.id}
+                type="button"
+                role="radio"
+                aria-checked={(settings.systemNotifications ?? 'off') === c.id}
+                className={`layout-seg-btn ${(settings.systemNotifications ?? 'off') === c.id ? 'active' : ''}`}
+                onClick={() => update((s) => ({ ...s, systemNotifications: c.id }))}
+              >
+                <strong>{t(c.labelKey)}</strong>
+                <span>{t(c.detailKey)}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
         <label className="settings-toggle-card">
           <input
             type="checkbox"
@@ -4097,6 +4117,13 @@ function readLastPage(): SettingsPage {
   const stored = localStorage.getItem(LAST_PAGE_KEY)
   return stored && (PAGE_IDS as string[]).includes(stored) ? (stored as SettingsPage) : 'general'
 }
+
+// Keys, not strings: module constants must follow a language switch.
+const SYSTEM_NOTIFICATION_CHOICES: { id: 'off' | 'errors' | 'all'; labelKey: TranslationKey; detailKey: TranslationKey }[] = [
+  { id: 'off', labelKey: 'settings.systemNotificationsOff', detailKey: 'settings.systemNotificationsOffEx' },
+  { id: 'errors', labelKey: 'settings.systemNotificationsErrors', detailKey: 'settings.systemNotificationsErrorsEx' },
+  { id: 'all', labelKey: 'settings.systemNotificationsAll', detailKey: 'settings.systemNotificationsAllEx' }
+]
 
 export function SettingsPanel({ initialPage, initialThemeTab, repoPath, initialRepoTab }: { initialPage?: SettingsPage; initialThemeTab?: 'theme' | 'graph'; repoPath?: string; initialRepoTab?: React.ComponentProps<typeof RepoSettingsModal>['initialTab'] } = {}): React.JSX.Element {
   const { settings, addProfile, deleteProfile } = useSettingsStore()

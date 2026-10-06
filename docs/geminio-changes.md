@@ -87,6 +87,18 @@ message now shows as on (and inert) instead of being offered again.
 
 ## Workspace & tabs
 
+**A notifications bell.** A message lasted a few seconds on screen, so
+anything that happened while you were in another app — a failed push, a
+rejected commit — was simply missed, and the bell only ever meant GitHub. Now
+the title-bar bell keeps every message, newest first, with its repository and
+time; a dot says something is new, a red count that something failed, and the
+Dock icon counts unseen errors. The list keeps the last 200 across restarts,
+with credentials stripped from URLs. **Settings → General → System
+notifications** adds macOS notifications (off by default). The GitHub inbox is
+the list's first row. *Limits:* the app's messages, not every git command —
+that is the operation log; kept per machine.
+([Notifications](help/notifications.md))
+
 **Sort tabs by what needs you.** Right-click any tab → **Sort tabs**: Manual,
 Needs attention (conflicts, then unpushed commits, then uncommitted changes),
 Unpushed commits, Uncommitted changes, Behind remote, Name, or Recently opened.

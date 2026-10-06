@@ -15940,14 +15940,45 @@ mark.diff-find-hit.current { background: #ff9632; color: #10121a; }
 .notif-bell { position: relative; }
 .notif-badge {
   position: absolute; top: 2px; right: 2px;
-  min-width: 15px; height: 15px; padding: 0 3px;
+  min-width: 16px; height: 16px; padding: 0 4px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 9px; font-weight: 700; line-height: 1;
+  font-size: 10.5px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums;
   color: #fff; background: var(--red, #e5484d);
   border-radius: 8px; box-shadow: 0 0 0 1.5px var(--bg-1);
 }
 /* In the title bar the bell sits on --bg-0, so match the badge ring. */
 .titlebar-action.notif-bell .notif-badge { box-shadow: 0 0 0 1.5px var(--bg-0); }
+/* Nothing urgent unseen: a small dot, no number — the count is in the list.
+   A number on a badge is for what needs you, and only an error does. */
+.notif-dot { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 2px var(--bg-0); }
+
+/* ─── Notification panel (the bell) ────────────────────────────────────── */
+.notice-panel { width: min(380px, calc(100vw - 16px)); padding: 0; }
+.notice-head { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px 8px 14px; border-bottom: 1px solid var(--border-soft); }
+.notice-title { font-size: 12.5px; font-weight: 600; color: var(--text-0); }
+.notice-clear { font-size: 12px; color: var(--text-2); padding: 3px 8px; border-radius: 6px; }
+.notice-clear:hover { color: var(--text-0); background: var(--bg-2); }
+.notice-clear:focus-visible, .notice-github:focus-visible, button.notice-row:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.notice-github { display: flex; align-items: center; gap: 8px; margin: 6px 6px 0; padding: 8px 10px; border-radius: 7px; font-size: 12.5px; color: var(--text-0); text-align: start; background: var(--bg-2); }
+.notice-github:hover { background: var(--accent-soft); }
+.notice-github-label { flex: 1; }
+.notice-github-count { min-width: 18px; padding: 1px 6px; border-radius: 9px; font-size: 11px; font-weight: 600; text-align: center; color: #0a1220; background: var(--accent); }
+.notice-github-chevron { color: var(--text-2); }
+.notice-list { min-height: 0; overflow-y: auto; padding: 4px 6px 6px; }
+.notice-empty { margin: 0; padding: 18px 10px 20px; font-size: 12px; line-height: 1.5; color: var(--text-2); text-align: center; }
+.notice-row { position: relative; display: flex; gap: 9px; width: 100%; padding: 8px 10px 8px 12px; border-radius: 7px; text-align: start; color: var(--text-0); }
+button.notice-row { cursor: pointer; }
+button.notice-row:hover { background: var(--bg-2); }
+/* Not yet seen: a small accent dot in the gutter, the way Mail marks unread. */
+.notice-row.unseen::before { content: ''; position: absolute; left: 3px; top: 14px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+.notice-icon { flex: 0 0 auto; margin-top: 1px; display: flex; }
+.notice-row.success .notice-icon { color: var(--green, #30a46c); }
+.notice-row.error .notice-icon { color: var(--red, #e5484d); }
+.notice-row.info .notice-icon { color: var(--text-2); }
+.notice-body { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.notice-message { font-size: 12.5px; line-height: 1.4; white-space: pre-wrap; overflow-wrap: anywhere; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden; }
+.notice-meta { display: flex; gap: 8px; font-size: 11px; color: var(--text-2); }
+.notice-repo { font-weight: 600; color: var(--text-1); }
 
 /* ─── Graph path filter bar ────────────────────────────────────────────── */
 .path-filter-bar {

@@ -128,6 +128,30 @@ export const shots = [
     }
   },
   {
+    out: 'notifications',
+    repos: ['line-staging', 'merge-conflict'],
+    clipTo: '.notice-panel',
+    drive: async (page) => {
+      // A realistic afternoon: older messages already seen, three new since.
+      await page.evaluate(() => {
+        const ui = window.__shot.ui.getState()
+        const paths = window.__shot.settings.getState().settings.tabs.flatMap((t) => (t.kind === 'page' ? [] : t.repos.map((r) => r.path)))
+        const [a, b] = [paths[0], paths[1] ?? paths[0]]
+        ui.clearNotices()
+        ui.toast('success', 'Pushed main to origin', { repoPath: a })
+        ui.toast('info', 'Nothing to redo — the repository has moved on since the undo.', { repoPath: a })
+        ui.markNoticesSeen()
+        ui.toast('success', 'Pulled 3 commits into main', { repoPath: b })
+        ui.toast('error', 'Push rejected: origin/main has commits you do not have. Pull first, then push again.', { repoPath: a })
+        ui.toast('success', 'Fetched origin', { repoPath: b })
+        const ago = [42, 31, 9, 3, 1].map((m) => Date.now() - m * 60000)
+        window.__shot.ui.setState((s) => ({ notices: s.notices.map((n, i) => ({ ...n, at: ago[i] ?? n.at })), toasts: [] }))
+      })
+      await page.locator('.notif-bell').click()
+      await page.locator('.notice-panel').waitFor()
+    }
+  },
+  {
     out: 'app-icon-picker',
     repos: ['line-staging'],
     clipTo: '.app-icon-picker',

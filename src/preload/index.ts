@@ -409,7 +409,11 @@ const api = {
     },
     minimize: (): void => ipcRenderer.send('window:minimize'),
     maximize: (): void => ipcRenderer.send('window:maximize'),
-    close: (): void => ipcRenderer.send('window:close')
+    close: (): void => ipcRenderer.send('window:close'),
+    /** Unseen errors, shown on the Dock icon (0 clears it). */
+    setAttention: (count: number): void => ipcRenderer.send('window:attention', count),
+    /** Bring the window forward — clicking a system notification. */
+    focus: (): void => ipcRenderer.send('window:focus')
   },
 
   zoom: {

@@ -294,7 +294,7 @@ interface RepoStoreState {
   redo(path: string): Promise<void>
 }
 
-const toast = (kind: 'success' | 'error' | 'info', msg: string, opts?: { repoPath?: string }): void =>
+const toast = (kind: 'success' | 'error' | 'info', msg: string, opts?: { repoPath?: string; remote?: boolean }): void =>
   useUIStore.getState().toast(kind, msg, opts)
 
 /** How a pull reconciles: git's default, refuse-unless-ff, or rebase. */
@@ -1046,7 +1046,9 @@ export const useRepoStore = create<RepoStoreState>((set, get) => ({
       muteWatcher(path)
       try {
         await fn()
-        if (announce) toast('success', label)
+        // Named and marked as remote work, so the bell's list can say where it
+        // happened and system notifications can announce it.
+        if (announce) toast('success', label, { repoPath: path, remote: !!op })
         if (undoEntry) {
           const repo = get().repos[path]
           if (repo) {

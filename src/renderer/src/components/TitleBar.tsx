@@ -16,6 +16,7 @@ import {
   subtreePaths
 } from '../lib/repoFolders'
 import { ProfileSwitcher } from './ProfileSwitcher'
+import { NotificationBell } from './NotificationBell'
 import { AppHomeButton } from './AppHomeButton'
 import { windowApi } from '../infrastructure/api'
 import { tabLabel, pageTabLabel } from '../lib/tabLabel'
@@ -1303,18 +1304,9 @@ export function TitleBar(): React.JSX.Element {
         </button>
       </div>
       <ProfileSwitcher />
-      {/* A typed token or a live inbox: the credential-helper fallback can
-          feed the badge without any token in Settings. */}
-      {(hasGithubToken || githubUnread > 0) && (
-        <button
-          className="titlebar-action notif-bell"
-          title={t('titlebar.notifications')}
-          onClick={() => useSettingsStore.getState().openPageTab({ type: 'notifications' })}
-        >
-          <Bell size={16} />
-          {githubUnread > 0 && <span className="notif-badge">{githubUnread > 99 ? '99+' : githubUnread}</span>}
-        </button>
-      )}
+      {/* The GitHub inbox shows with a typed token or a live inbox: the
+          credential-helper fallback can feed it without any token in Settings. */}
+      <NotificationBell github={{ show: hasGithubToken || githubUnread > 0, unread: githubUnread }} />
       <button
         className="titlebar-action"
         title={t('titlebar.settings')}

@@ -94,9 +94,10 @@ are browsable with a changelog page.
 ## Notifications — GitHub
 
 Your whole inbox — review requests, mentions, CI activity — across every
-repository, with unread/all filters and mark-as-read. The toolbar bell carries
-an unread badge, and optional desktop notifications fire when a review is
-requested or CI finishes.
+repository, with unread/all filters and mark-as-read. It is the first row of
+the title-bar bell, whose badge counts its unread items along with the app's
+own messages (see [Notifications](notifications.md)); optional desktop
+notifications fire when a review is requested or CI finishes.
 
 ## Tokens
 

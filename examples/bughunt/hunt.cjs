@@ -87,6 +87,7 @@ const ACTIONS = {
 // marks it as open. The click lands on the title bar's + button, which opens
 // a menu — so a click that leaks through the dismissal is visible.
 const POPOVERS = [
+  { name: 'bell', open: (page) => page.locator('.notif-bell').click(), openSel: '.notice-panel' },
   { name: 'repo-picker', open: (page) => page.locator('.repo-pill').first().click(), openSel: '.branch-picker-popover' },
   { name: 'branch-picker', open: (page) => page.locator('.repo-pill').nth(1).click(), openSel: '.branch-picker-popover' },
   {

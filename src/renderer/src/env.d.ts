@@ -272,6 +272,8 @@ interface PreloadApi {
     minimize(): void
     maximize(): void
     close(): void
+    setAttention(count: number): void
+    focus(): void
   }
   zoom: {
     get(): number

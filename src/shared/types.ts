@@ -2902,6 +2902,10 @@ export interface AppSettings {
   relativeDates: boolean
   /** How the graph's date column shows a commit's date. */
   dateFormat: 'relative' | 'datetime' | 'iso'
+  /** macOS notifications while Geminio is in the background: none, errors, or
+   *  errors plus finished pushes, pulls and fetches. Off by default, so the
+   *  system never asks for permission until the person opts in. */
+  systemNotifications: 'off' | 'errors' | 'all'
   commitAvatars: boolean
   /** Idle motion on the title-bar profile avatar. The pose it holds still
    *  follows the working tree either way; this only stops it moving. */
@@ -3391,6 +3395,7 @@ export function defaultSettings(): AppSettings {
     autoLoadOnScroll: true,
     relativeDates: true,
     dateFormat: 'relative',
+    systemNotifications: 'off',
     commitAvatars: true,
     avatarMotion: true,
     fileListView: 'path',

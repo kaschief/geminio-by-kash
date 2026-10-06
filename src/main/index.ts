@@ -427,6 +427,18 @@ app.whenReady().then(async () => {
     if (w) w.isMaximized() ? w.unmaximize() : w.maximize()
   })
   ipcMain.on('window:close', (e) => BrowserWindow.fromWebContents(e.sender)?.close())
+  // Unseen errors on the Dock icon: the one signal visible from another app.
+  ipcMain.on('window:attention', (_e, count: unknown) => {
+    const n = typeof count === 'number' && Number.isFinite(count) ? Math.max(0, Math.floor(count)) : 0
+    app.dock?.setBadge(n > 0 ? String(n) : '')
+  })
+  ipcMain.on('window:focus', (e) => {
+    const w = BrowserWindow.fromWebContents(e.sender)
+    if (!w) return
+    if (w.isMinimized()) w.restore()
+    w.show()
+    w.focus()
+  })
 
   registerGitHandlers()
   registerSettingsHandlers()

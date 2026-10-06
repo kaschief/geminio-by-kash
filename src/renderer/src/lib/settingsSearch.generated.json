@@ -202,7 +202,15 @@
       "settings.groupBranchesHint",
       "settings.initialCommitCount",
       "settings.initialCommitCountHint",
-      "settings.loadMoreCount"
+      "settings.loadMoreCount",
+      "settings.systemNotifications",
+      "settings.systemNotificationsAll",
+      "settings.systemNotificationsAllEx",
+      "settings.systemNotificationsErrors",
+      "settings.systemNotificationsErrorsEx",
+      "settings.systemNotificationsHint",
+      "settings.systemNotificationsOff",
+      "settings.systemNotificationsOffEx"
     ]
   },
   {

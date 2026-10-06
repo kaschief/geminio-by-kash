@@ -16,6 +16,7 @@ import { todoSummary } from './lib/todos'
 import { doctorSummary } from './lib/repoConfig'
 import { canonicalRepoPath } from './lib/repoAlias'
 import { useScrollFades } from './components/useScrollFades'
+import { useAttentionSignals } from './components/useAttentionSignals'
 import { applyAppTheme, applyCodeTheme, applyStatusDotColors, findAppTheme, findCodeTheme } from './theme/themes'
 import { TitleBar, requestCloseTab } from './components/TitleBar'
 import { Toolbar } from './components/Toolbar'
@@ -529,6 +530,7 @@ export default function App(): React.JSX.Element {
   const setLayout = useUIStore((s) => s.setLayout)
   const sidebarCollapsed = useUIStore((s) => s.sidebarCollapsed)
   useScrollFades()
+  useAttentionSignals()
   const chatPanelOpen = useUIStore((s) => s.chatPanelOpen)
   const rightPanelTab = useUIStore((s) => s.rightPanelTab)
   const openChatPanel = useUIStore((s) => s.openChatPanel)
