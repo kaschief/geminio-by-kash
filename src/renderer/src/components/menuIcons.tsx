@@ -53,7 +53,11 @@ import {
   Hash,
   History,
   Link2,
+  ListMinus,
+  ListPlus,
+  ListRestart,
   ListTodo,
+  ListX,
   MessageSquare,
   Minus,
   Milestone,
@@ -156,9 +160,14 @@ export const mi = {
   status: make(Flag),
   run: make(Play),
   ai: make(Sparkles),
-  // staging
+  // staging — a line (or file) wears the plain glyph, a hunk its list form,
+  // so the two scopes never share an icon in one menu
   stage: make(Plus),
   unstage: make(Minus),
+  stageHunk: make(ListPlus),
+  unstageHunk: make(ListMinus),
+  discardHunk: make(ListX),
+  revertHunk: make(ListRestart),
   // undoing & removing
   undo: make(Undo2),
   revert: make(CornerUpLeft),

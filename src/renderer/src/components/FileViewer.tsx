@@ -55,12 +55,19 @@ const LINE_LABEL = {
   revert: 'hunk.revertLine',
   apply: 'hunk.applyLine'
 } as const satisfies Record<HunkActionKind, TranslationKey>
-const HUNK_ICON = {
+const LINE_ICON = {
   stage: mi.stage,
   unstage: mi.unstage,
   discard: mi.discard,
   revert: mi.revert,
   apply: mi.unstash
+} as const satisfies Record<HunkActionKind, () => React.JSX.Element>
+const HUNK_ICON = {
+  stage: mi.stageHunk,
+  unstage: mi.unstageHunk,
+  discard: mi.discardHunk,
+  revert: mi.revertHunk,
+  apply: mi.stageHunk
 } as const satisfies Record<HunkActionKind, () => React.JSX.Element>
 
 function isImage(name: string): boolean {
@@ -719,7 +726,8 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
       hunkLabel: t(hunkKey),
       linesLabel: (n) => interp(t(linesKey), { n }),
       lineLabel: t(LINE_LABEL[kind]),
-      icon: HUNK_ICON[kind](),
+      icon: LINE_ICON[kind](),
+      hunkIcon: HUNK_ICON[kind](),
       reverse: kind !== 'stage' && kind !== 'apply',
       // Forward (stage, apply) is green; anything that takes work back or away
       // (unstage, revert, discard) is red — one rule, whatever the undo story.

@@ -95,6 +95,9 @@ export interface HunkAction {
   /** The right-click menu's row for the one line under the pointer. */
   lineLabel: string
   icon: React.ReactNode
+  /** The same action on the whole hunk: a different glyph, so the line and
+   *  hunk rows of one menu are told apart at a glance. */
+  hunkIcon: React.ReactNode
   /** The patch will be applied reversed, so a line selection is built mirrored. */
   reverse: boolean
   /** Colour by direction: forward moves work ahead (green), backward takes it
@@ -478,7 +481,7 @@ export function DiffViewer({
       for (const a of hunkActions) {
         items.push({
           label: a.hunkLabel,
-          icon: a.icon,
+          icon: a.hunkIcon,
           danger: a.id === 'discard',
           onClick: () => a.run(singleHunkPatch(hunkData, first.hunkIdx))
         })
