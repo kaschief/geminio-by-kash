@@ -11,7 +11,8 @@ import { repoDisplayName } from '../lib/repoAlias'
  * - The Dock icon counts unseen errors — the one thing worth seeing from
  *   another app — and clears when the bell is opened.
  * - A macOS notification, only while the window is in the background and only
- *   if Settings asks for it: errors, or errors plus finished remote work.
+ *   if Settings asks for it: errors, or errors plus updates (new commits from
+ *   others, work that finished while away).
  *   Off by default, so the system never asks for permission unprompted.
  */
 export function useAttentionSignals(): void {
@@ -42,9 +43,11 @@ export function useAttentionSignals(): void {
 }
 
 function wants(mode: 'off' | 'errors' | 'all', n: Notice): boolean {
-  if (mode === 'off') return false
+  // Seen as it happened, or already fixed: nothing to tell.
+  if (mode === 'off' || n.quiet || n.resolved) return false
   if (n.kind === 'error') return true
-  return mode === 'all' && n.kind === 'success' && !!n.remote
+  // News from others (new commits, rewritten history) and work finished while away.
+  return mode === 'all'
 }
 
 function announce(n: Notice): void {

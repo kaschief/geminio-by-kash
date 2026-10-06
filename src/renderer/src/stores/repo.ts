@@ -65,6 +65,16 @@ import {
 } from '../lib/externalUndo'
 import { t, interp, type TranslationKey } from '../i18n'
 
+/** Whether the window is in front — the person saw what just happened. True
+ *  where there is no window (tests, headless runs): nothing went unseen there. */
+function personIsLooking(): boolean {
+  return typeof document === 'undefined' || document.hasFocus()
+}
+
+/** Repos with work running in the background (the automatic fetch): it never
+ *  toasts, and its failures count as unseen even with the window in front. */
+const backgroundRuns = new Set<string>()
+
 /** Repos whose composer is committing right now — see the file rule in `patch`. */
 const committingInApp = new Set<string>()
 
@@ -294,7 +304,7 @@ interface RepoStoreState {
   redo(path: string): Promise<void>
 }
 
-const toast = (kind: 'success' | 'error' | 'info', msg: string, opts?: { repoPath?: string; remote?: boolean }): void =>
+const toast = (kind: 'success' | 'error' | 'info', msg: string, opts?: { repoPath?: string }): void =>
   useUIStore.getState().toast(kind, msg, opts)
 
 /** How a pull reconciles: git's default, refuse-unless-ff, or rebase. */
@@ -1044,11 +1054,16 @@ export const useRepoStore = create<RepoStoreState>((set, get) => ({
       // Ignore the FS-watch event our own write is about to produce; the
       // targeted refresh below already reflects it.
       muteWatcher(path)
+      const background = backgroundRuns.has(path)
       try {
         await fn()
-        // Named and marked as remote work, so the bell's list can say where it
-        // happened and system notifications can announce it.
-        if (announce) toast('success', label, { repoPath: path, remote: !!op })
+        if (announce) toast('success', label, { repoPath: path })
+        if (op) {
+          // A success fixes the failures before it ("Push failed × 3").
+          ui.resolveNotice(`${op}:${path}`)
+          // Remote work that finished while the person was elsewhere is news.
+          if (!background && !personIsLooking()) ui.notify('success', label, { repoPath: path, remote: true })
+        }
         if (undoEntry) {
           const repo = get().repos[path]
           if (repo) {
@@ -1062,6 +1077,17 @@ export const useRepoStore = create<RepoStoreState>((set, get) => ({
         return true
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err)
+        // What the bell keeps (lib/notices): a failure of remote work always —
+        // quietly if the person watched it fail — and of local work only if
+        // they were elsewhere. Background work is never something they watched.
+        const watching = personIsLooking() && !background
+        if (op || !watching) {
+          ui.notify('error', isConflictErrorMessage(message) ? conflictHint(message) : readableGitError(message), {
+            repoPath: path,
+            ...(op ? { key: `${op}:${path}`, remote: true } : {}),
+            quiet: watching
+          })
+        }
         if (onError?.(message)) return false
         // Generic, because any write can lose to a leftover lock: offer the
         // repair and re-run the very operation that failed.
@@ -1308,13 +1334,25 @@ async function runPushInner(path: string, branch: string, force: boolean, isCurr
     'push'
   )
   muteWatcher(path)
+  // Push has its own runner, so it applies the bell's rules itself (see run()).
+  const watching = (): boolean => personIsLooking()
   try {
     await gitApi.push(path, branch, { force })
     toast('success', label)
+    ui.resolveNotice(`push:${path}`)
+    if (!watching()) ui.notify('success', label, { repoPath: path, remote: true })
     return true
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
-    if (!force && isNonFastForwardError(message)) {
+    const rejected = !force && isNonFastForwardError(message)
+    // A rejected push opens a dialog that waits for an answer — unseen, if the
+    // person is in another app. Either way it is a failure worth keeping.
+    ui.notify(
+      'error',
+      rejected ? `${t('confirm.pushRejected.title')}: ${interp(t('confirm.pushRejected.message'), { branch })}` : readableGitError(message),
+      { repoPath: path, key: `push:${path}`, remote: true, quiet: watching() }
+    )
+    if (rejected) {
       // Rebasing to reconcile needs a working tree, so it is only on offer for
       // the branch actually checked out. For any other branch the honest set of
       // choices is force it or go check it out.
@@ -2085,20 +2123,39 @@ export const repoActions = {
       redo: () => gitApi.autosquash(path, base)
     }),
 
-  fetchAll: async (path: string, opts?: { skipEmpty?: boolean }) => {
+  /**
+   * `background` is the automatic fetch: silent — no toast, success or failure —
+   * and it reports only news to the bell: the branch fell behind (commits from
+   * others) or a branch's history was rewritten. A failure collapses into one
+   * row and resolves on the next fetch that works.
+   */
+  fetchAll: async (path: string, opts?: { skipEmpty?: boolean; background?: boolean }) => {
     if (!opts?.skipEmpty && promptNoRemote(path, 'fetch')) return false
     if (opts?.skipEmpty && !useRepoStore.getState().repos[path]?.remotes.length) return false
+    const background = !!opts?.background
     const before = new Set((useRepoStore.getState().repos[path]?.commits ?? []).map((c) => c.hash))
+    const behindBefore = useRepoStore.getState().repos[path]?.status?.behind ?? 0
     let forced: ForcedRefUpdate[] = []
-    const ok = await useRepoStore.getState().run(
-      path,
-      t('act.fetchedAll'),
-      async () => {
-        forced = await gitApi.fetchAll(path)
-      },
-      undefined,
-      'fetch'
-    )
+    if (background) backgroundRuns.add(path)
+    const ok = await useRepoStore
+      .getState()
+      .run(
+        path,
+        t('act.fetchedAll'),
+        async () => {
+          forced = await gitApi.fetchAll(path)
+        },
+        undefined,
+        'fetch',
+        // Background failures go to the bell (run records them), never a toast.
+        background ? () => true : undefined,
+        undefined,
+        !background
+      )
+      .finally(() => backgroundRuns.delete(path))
+    // News is for what happened out of sight: a background fetch, or one that
+    // finished while the person was elsewhere.
+    const outOfSight = background || !personIsLooking()
     if (ok) {
       const after = useRepoStore.getState().repos[path]?.commits ?? []
       const newCommits = before.size ? after.filter((c) => !before.has(c.hash)).map((c) => c.hash) : []
@@ -2108,11 +2165,25 @@ export const repoActions = {
       for (const f of forced) seen[f.ref] = f
       useRepoStore.getState().patch(path, { lastFetchAt: Date.now(), newCommits, forcedUpdates: seen })
       if (forced.length) {
-        toast(
-          'info',
+        const rewritten =
           forced.length === 1
             ? interp(t('sync.forcedOne'), { ref: forced[0].ref })
             : interp(t('sync.forcedMany'), { n: forced.length })
+        if (!background) toast('info', rewritten)
+        if (outOfSight) useUIStore.getState().notify('info', rewritten, { repoPath: path, key: `forced:${path}`, remote: true })
+      }
+      // Others' commits arrived on the branch you are on: it is now behind.
+      const status = useRepoStore.getState().repos[path]?.status
+      const behind = status?.behind ?? 0
+      if (outOfSight && behind > behindBefore && status?.current) {
+        useUIStore.getState().notify(
+          'info',
+          interp(t(behind === 1 ? 'notices.behindOne' : 'notices.behind'), {
+            branch: status.current,
+            upstream: status.tracking ?? 'origin',
+            n: behind
+          }),
+          { repoPath: path, key: `incoming:${path}`, remote: true }
         )
       }
       // Fresh remote state → sweep the teammate radar in the background.
@@ -2166,8 +2237,16 @@ export const repoActions = {
         else await gitApi.pull(path, mode)
         synced = true
         done++
-      } catch {
+        ui.resolveNotice(`${op === 'fetch' ? 'fetch' : 'pull'}:${path}`)
+      } catch (err) {
         failed++
+        // One failing repository among many is easy to miss in a summary.
+        ui.notify('error', readableGitError(err instanceof Error ? err.message : String(err)), {
+          repoPath: path,
+          key: `${op === 'fetch' ? 'fetch' : 'pull'}:${path}`,
+          remote: true,
+          quiet: personIsLooking()
+        })
       }
       // Refresh repos already in the store so their graph/badges update.
       if (useRepoStore.getState().repos[path]) {

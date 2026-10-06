@@ -8,6 +8,8 @@ const gitApi = vi.hoisted(() => ({
 const ui = vi.hoisted(() => ({
   setBusy: vi.fn(),
   toast: vi.fn(),
+  notify: vi.fn(),
+  resolveNotice: vi.fn(),
   tabs: []
 }))
 

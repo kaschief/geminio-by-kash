@@ -87,17 +87,22 @@ message now shows as on (and inert) instead of being offered again.
 
 ## Workspace & tabs
 
-**A notifications bell.** A message lasted a few seconds on screen, so
-anything that happened while you were in another app — a failed push, a
-rejected commit — was simply missed, and the bell only ever meant GitHub. Now
-the title-bar bell keeps every message, newest first, with its repository and
-time; a dot says something is new, a red number counts unseen errors only (a
-rejected push among three successes is 1, not 4), and the Dock icon shows the
-same number. GitHub items stop lighting the bell once you have looked. The list keeps the last 200 across restarts,
+**A notifications bell.** A message lasted a few seconds on screen, so a
+failed push or a teammate's new commits were simply missed by anyone in another
+app, and the bell only ever meant GitHub. Now the title-bar bell keeps what you
+would act on and could have missed — failures, news from others (your branch
+fell behind, history rewritten), work finished while you were away — and not
+every toast: a fetch that found nothing, or work you watched, is never added.
+Repeated failures collapse into one row (× 5) and resolve when the work next
+succeeds; a failure you watched is kept quietly. A dot means news, a red
+number counts unseen failures only, and the Dock shows the same number. The
+background fetch no longer pops a "Fetched" toast every few minutes. GitHub
+items stop lighting the bell once you have looked. The list keeps the last 200 across restarts,
 with credentials stripped from URLs. **Settings → General → System
 notifications** adds macOS notifications (off by default). The GitHub inbox is
-the list's first row. *Limits:* the app's messages, not every git command —
-that is the operation log; kept per machine.
+the list's first row. *Limits:* a selection, not every git command — that is
+the operation log; "behind" news needs a fetch (auto-fetch, or one finished
+while away); kept per machine.
 ([Notifications](help/notifications.md))
 
 **Sort tabs by what needs you.** Right-click any tab → **Sort tabs**: Manual,

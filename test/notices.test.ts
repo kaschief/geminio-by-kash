@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest'
 import {
   addNotice,
   badgeText,
+  isNews,
+  resolveNotices,
   noticeBadge,
   parseStoredNotices,
   sanitizeNoticeMessage,
@@ -35,6 +37,39 @@ describe('the bell list', () => {
   it('caps the badge text', () => {
     expect(badgeText(7)).toBe('7')
     expect(badgeText(150)).toBe('99+')
+  })
+})
+
+describe('what earns a place, and what counts', () => {
+  const fail = (id: number, extra: Partial<Notice> = {}): Notice => ({ id, kind: 'error', message: 'Push failed', at: id, key: 'push:/r', ...extra })
+
+  it('collapses repeated failures into one row that counts up', () => {
+    let list: Notice[] = []
+    for (let i = 1; i <= 5; i++) list = addNotice(list, fail(i))
+    expect(list).toHaveLength(1)
+    expect(list[0]).toMatchObject({ id: 5, count: 5 })
+  })
+
+  it('replaces news with the latest state instead of piling it up', () => {
+    const behind = (id: number, n: number): Notice => ({ id, kind: 'info', message: `${n} behind`, at: id, key: 'incoming:/r' })
+    const list = addNotice(addNotice([], behind(1, 2)), behind(2, 5))
+    expect(list).toEqual([behind(2, 5)])
+  })
+
+  it('stops counting a failure once a success fixes it, but keeps it in the list', () => {
+    const list = resolveNotices(addNotice([], fail(1)), 'push:/r')
+    expect(list[0].resolved).toBe(true)
+    expect(noticeBadge(list, 0)).toEqual({ unseen: 0, errors: 0 })
+    // A new failure after the fix is a new row, not "× 2".
+    expect(addNotice(list, fail(2))).toHaveLength(2)
+  })
+
+  it('never counts what was raised in front of the person', () => {
+    const list = addNotice([], fail(1, { quiet: true }))
+    expect(isNews(list[0], 0)).toBe(false)
+    expect(unseenErrors(list, 0)).toBe(0)
+    // But a repeat while they were away makes the row count.
+    expect(isNews(addNotice(list, fail(2))[0], 0)).toBe(true)
   })
 })
 

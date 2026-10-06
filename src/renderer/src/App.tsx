@@ -871,7 +871,8 @@ export default function App(): React.JSX.Element {
     if (!activeRepoPath || minutes <= 0) return
     const interval = setInterval(
       () => {
-        if (!useRepoStore.getState().repos[activeRepoPath]?.missingFolder) void repoActions.fetchAll(activeRepoPath, { skipEmpty: true })
+        if (!useRepoStore.getState().repos[activeRepoPath]?.missingFolder)
+          void repoActions.fetchAll(activeRepoPath, { skipEmpty: true, background: true })
       },
       minutes * 60_000
     )

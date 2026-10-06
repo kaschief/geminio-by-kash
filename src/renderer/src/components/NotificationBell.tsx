@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { Bell, CheckCircle2, AlertCircle, Info, ChevronRight, Github } from 'lucide-react'
 import { useUIStore } from '../stores/ui'
 import { useSettingsStore } from '../stores/settings'
-import { badgeText, noticeBadge, type Notice } from '../lib/notices'
+import { badgeText, isNews, noticeBadge, type Notice } from '../lib/notices'
 import { openRepoSwitcherEntries } from '../lib/repositoryMenu'
 import { repoDisplayName } from '../lib/repoAlias'
 import { timeAgo } from '../lib/timeAgo'
@@ -161,14 +161,14 @@ export function NotificationBell({ github }: { github: { show: boolean; unread: 
               {newestFirst.length === 0 && <p className="notice-empty">{t('notices.empty')}</p>}
               {newestFirst.map((n) => {
                 const ago = timeAgo(n.at, now)
-                const unseen = n.id > newSince
+                const unseen = isNews(n, newSince)
                 const Row = n.repoPath ? 'button' : 'div'
                 return (
                   <Row
                     key={n.id}
                     role="listitem"
                     {...(n.repoPath ? { type: 'button' as const, onClick: () => goTo(n), title: t('notices.openRepo') } : {})}
-                    className={`notice-row ${n.kind}${unseen ? ' unseen' : ''}`}
+                    className={`notice-row ${n.kind}${unseen ? ' unseen' : ''}${n.resolved ? ' resolved' : ''}`}
                   >
                     <span className="notice-icon">{KIND_ICON[n.kind]}</span>
                     <span className="notice-body">
@@ -176,6 +176,8 @@ export function NotificationBell({ github }: { github: { show: boolean; unread: 
                       <span className="notice-meta">
                         {n.repoPath && <span className="notice-repo">{repoName(n.repoPath)}</span>}
                         {ago && <span>{interp(t(ago.key), { n: ago.n })}</span>}
+                        {(n.count ?? 1) > 1 && <span className="notice-count">{interp(t('notices.repeated'), { n: n.count ?? 1 })}</span>}
+                        {n.resolved && <span className="notice-resolved">{t('notices.resolved')}</span>}
                       </span>
                     </span>
                   </Row>

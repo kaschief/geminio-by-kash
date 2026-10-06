@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import type { ReactNode } from 'react'
 import type { CiState, DivergedStrategy, KeychainReason, ResetStrategy, SemanticDiff } from '../../../shared/types'
 import type { WorkspaceCandidate } from '../lib/workspacePlan'
-import { addNotice, parseStoredNotices, sanitizeNoticeMessage, type Notice } from '../lib/notices'
+import { addNotice, parseStoredNotices, resolveNotices, sanitizeNoticeMessage, type Notice, type NoticeKind } from '../lib/notices'
 
 export type CiFilter = 'all' | CiState
 
@@ -359,7 +359,8 @@ interface UIState {
   contextMenu: ContextMenuState | null
   modal: ModalSpec | null
   toasts: Toast[]
-  /** Every toast, kept after it leaves the screen — the bell's list (lib/notices). */
+  /** What the bell keeps — failures, news from others, work finished while
+   *  away. Not every toast: see lib/notices for what earns a place. */
   notices: Notice[]
   /** The newest notice id the person has seen in the bell's panel. */
   noticesSeenUpTo: number
@@ -444,7 +445,11 @@ interface UIState {
   setMissionOpen(open: boolean): void
   toggleCommandPalette(): void
   setGithubUnread(n: number): void
-  toast(kind: Toast['kind'], message: string, opts?: { repoPath?: string; remote?: boolean }): void
+  toast(kind: Toast['kind'], message: string, opts?: { repoPath?: string }): void
+  /** Record something in the bell's list (and badge, Dock, system notification). */
+  notify(kind: NoticeKind, message: string, opts?: { repoPath?: string; key?: string; remote?: boolean; quiet?: boolean }): void
+  /** A success that fixes earlier failures with this key: they stop counting. */
+  resolveNotice(key: string): void
   markNoticesSeen(): void
   markGithubSeen(): void
   clearNotices(): void
@@ -583,17 +588,7 @@ export const useUIStore = create<UIState>((set, get) => ({
   toast: (kind, message, opts) => {
     const id = ++toastId
     const repo = opts?.repoPath ? { repoPath: opts.repoPath } : {}
-    set({
-      toasts: [...get().toasts, { id, kind, message, ...repo }],
-      notices: addNotice(get().notices, {
-        id,
-        kind,
-        message: sanitizeNoticeMessage(message),
-        ...repo,
-        ...(opts?.remote ? { remote: true } : {}),
-        at: Date.now()
-      })
-    })
+    set({ toasts: [...get().toasts, { id, kind, message, ...repo }] })
     const dismiss = (): void => {
       setTimeout(() => get().dismissToast(id), kind === 'error' ? 7000 : 3500)
     }
@@ -604,6 +599,25 @@ export const useUIStore = create<UIState>((set, get) => ({
     } else {
       dismiss()
     }
+  },
+  notify: (kind, message, opts) => {
+    const id = ++toastId
+    set({
+      notices: addNotice(get().notices, {
+        id,
+        kind,
+        message: sanitizeNoticeMessage(message),
+        at: Date.now(),
+        ...(opts?.repoPath ? { repoPath: opts.repoPath } : {}),
+        ...(opts?.key ? { key: opts.key } : {}),
+        ...(opts?.remote ? { remote: true } : {}),
+        ...(opts?.quiet ? { quiet: true } : {})
+      })
+    })
+  },
+  resolveNotice: (key) => {
+    const next = resolveNotices(get().notices, key)
+    if (next !== get().notices) set({ notices: next })
   },
   markNoticesSeen: () => {
     const newest = get().notices[get().notices.length - 1]?.id ?? 0
