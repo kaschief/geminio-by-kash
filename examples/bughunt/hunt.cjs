@@ -80,7 +80,7 @@ const ACTIONS = {
   'app-type-draft': { side: 'app', weight: 1, gen: (r) => ({ text: `my words ${Math.floor(r.next() * 1e4)}` }) },
   'app-clear-draft': { side: 'app', weight: 1, gen: () => ({}) },
   // Open a popover, then really click something outside it.
-  'app-click-away': { side: 'app', weight: 3, gen: (r) => ({ popover: r.pick(POPOVERS.map((p) => p.name)) }) }
+  'app-click-away': { side: 'app', weight: 3, gen: (r) => ({ popover: r.pick(POPOVERS.map((p) => p.name)), target: r.pick(['plus', 'titlebar']) }) }
 }
 
 // Popovers that close on an outside press. Each: how to open it, and what
@@ -274,8 +274,18 @@ async function runSequence(label, steps) {
             await page.evaluate(() => window.__shot.ui.getState().closeContextMenu())
             await pop.open(page)
             await page.locator(pop.openSel).first().waitFor({ timeout: 3000 })
-            const box = await page.locator('.tab-add').boundingBox()
-            await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2)
+            // Simulated clicks skip macOS's window-drag handling, so check the
+            // thing that decides it: an open popover must switch the drag off.
+            step.titlebarDrag = await page.evaluate(() => getComputedStyle(document.querySelector('.titlebar')).getPropertyValue('-webkit-app-region').trim())
+            // Either the + button (a click that leaks through opens its menu) or
+            // the empty title bar, which is a window drag handle when nothing is open.
+            const plusBox = await page.locator('.tab-add').boundingBox()
+            if (step.target === 'titlebar') {
+              const right = await page.locator('.profile-switcher').first().boundingBox()
+              await page.mouse.click((plusBox.x + plusBox.width + right.x) / 2, plusBox.y + plusBox.height / 2)
+            } else {
+              await page.mouse.click(plusBox.x + plusBox.width / 2, plusBox.y + plusBox.height / 2)
+            }
             await page.waitForTimeout(250)
             // Recorded for the rule below: did anything other than the dismissal happen?
             step.after = await page.evaluate((sel) => ({
@@ -365,7 +375,8 @@ async function checkInvariants({ page, git, gitOk, after, kind, step, typed, dra
   // 10. A click outside a popover only closes it — it never also presses what
   //     is underneath (here the + button, which would open a menu).
   if (kind === 'app-click-away' && step.after) {
-    if (step.after.stillOpen) out.push(`clicking outside the ${step.popover} did not close it`)
+    if (step.after.stillOpen) out.push(`clicking the ${step.target === 'titlebar' ? 'empty title bar' : '+ button'} outside the ${step.popover} did not close it`)
+    if (step.titlebarDrag === 'drag') out.push(`with the ${step.popover} open the title bar is still a window drag handle — a click on its empty space would move the window instead of closing the ${step.popover}`)
     if (step.after.contextMenu || step.after.modal) out.push(`clicking outside the ${step.popover} also pressed the + button underneath (a ${step.after.modal ?? 'menu'} opened)`)
   }
 

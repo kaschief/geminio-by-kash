@@ -144,6 +144,13 @@ textarea:focus {
   -webkit-app-region: drag;
   padding-inline-end: 8px;
 }
+/* While a menu or popover is open the title bar stops being a window handle:
+   a click on its empty space must reach the page and close the popover, the
+   way it would anywhere else — not be swallowed by macOS as a window drag. */
+html:has(.notice-panel, .branch-picker-popover, .context-menu) .titlebar,
+html:has(.notice-panel, .branch-picker-popover, .context-menu) .cosmos-chrome {
+  -webkit-app-region: no-drag;
+}
 
 /* See ContextMenu: a drag region swallows the click that should dismiss an open menu. */
 :root[data-context-menu-open] .titlebar,
