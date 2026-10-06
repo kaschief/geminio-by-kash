@@ -13,13 +13,10 @@ export function scrollsVertically(overflowY: string): boolean {
 }
 
 /**
- * Whether a scroller can carry the frosted strip, which is a sticky `::after`
- * at the end of its content. Only safe when the element has no `::after` of
- * its own and lays its children out top to bottom — in a row the strip would
- * become a sideways item.
+ * How tall the bottom fade is, in px. A fixed strip that suits a tall panel
+ * swallows a short list, so the fade is a quarter of what is visible, capped
+ * at the look's full size and never so thin it stops reading as "there is more".
  */
-export function canFrost(afterContent: string, display: string, flexDirection: string): boolean {
-  if (afterContent !== 'none' && afterContent !== 'normal') return false
-  if (display === 'block' || display === 'flow-root') return true
-  return (display === 'flex' || display === 'inline-flex') && flexDirection.startsWith('column')
+export function fadeSize(clientHeight: number, max: number): number {
+  return Math.round(Math.min(max, Math.max(12, clientHeight * 0.25)))
 }

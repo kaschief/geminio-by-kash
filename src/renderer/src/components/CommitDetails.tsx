@@ -29,6 +29,7 @@ import { fileListViewMenuItems } from '../lib/fileListMenu'
 import { stepRange, claimRangeKeys, ownsRangeKeys, rangeKeysBlocked, domOrder } from '../lib/rangeSelect'
 import { ChangeSummary } from './ChangeSummary'
 import { ClampedMessage } from './ClampedMessage'
+import { splitCommitMessage } from '../lib/commitMenuCapabilities'
 import { effectiveFilter, filterByBuckets, type BucketFilter } from '../lib/fileStats'
 
 function profileUrl(name: string, email: string, remotes: RemoteInfo[]): string | undefined {
@@ -63,6 +64,22 @@ export function CommitDetails({ repo, hash }: { repo: RepoData; hash: string }):
   const editor = useSettingsStore((s) => s.settings.editor)
   const commit: GraphCommit | undefined = repo.commits.find((c) => c.hash === hash)
   const t = useT()
+
+  // The description below the subject. The log carries only a one-line
+  // preview, so the full message is read once per commit; a stale answer for
+  // a commit no longer selected is dropped by its hash.
+  const [body, setBody] = useState<{ hash: string; text: string } | null>(null)
+  useEffect(() => {
+    let live = true
+    gitApi
+      .getCommitMessage(repo.path, hash)
+      .then((message) => live && setBody({ hash, text: splitCommitMessage(message).description }))
+      .catch(() => undefined)
+    return () => {
+      live = false
+    }
+  }, [repo.path, hash])
+  const description = body?.hash === hash ? body.text : ''
 
   // Multi-select over the commit's file list (⌘/Ctrl-click, Shift-click,
   // Shift+↑/↓), so "restore from this commit" can take several files at once.
@@ -405,13 +422,26 @@ export function CommitDetails({ repo, hash }: { repo: RepoData; hash: string }):
             <FilePenLine size={13} />
           </button>
         </div>
-        <ClampedMessage className="commit-subject" text={commit.subject} resetKey={commit.hash}>
+        <ClampedMessage
+          className={`commit-subject${description ? ' has-body' : ''}`}
+          text={commit.subject}
+          resetKey={commit.hash}
+        >
           {autolink(
             commit.subject,
             remoteWebUrl(repo.remotes.find((r) => r.name === 'origin')?.url ?? repo.remotes[0]?.url),
             repo.config?.config?.links?.tickets
           )}
         </ClampedMessage>
+        {description && (
+          <ClampedMessage className="commit-body" text={description} resetKey={commit.hash}>
+            {autolink(
+              description,
+              remoteWebUrl(repo.remotes.find((r) => r.name === 'origin')?.url ?? repo.remotes[0]?.url),
+              repo.config?.config?.links?.tickets
+            )}
+          </ClampedMessage>
+        )}
 
         {/* Full-bleed like the subject above it, and absent entirely when there
             is nothing to show — an empty box on every commit is noise. */}

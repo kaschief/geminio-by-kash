@@ -1,11 +1,11 @@
 import { useEffect } from 'react'
-import { canFrost, hasMoreBelow, scrollsVertically } from '../lib/scrollFade'
+import { fadeSize, hasMoreBelow, scrollsVertically } from '../lib/scrollFade'
 
 const SCOPE = '[data-scroll-fade]'
 
 /**
  * The "there is more below" fade, for the panels that opt in with
- * `data-scroll-fade`: `frost` in the details panel, `plain` (the original
+ * `data-scroll-fade`: `edge` in the details panel, `plain` (the original
  * short fade) in Settings. Everywhere else
  * scrollbars are simply hidden: a graph or a list you are already scrolling
  * needs no hint.
@@ -23,6 +23,9 @@ export function useScrollFades(): void {
     const measure = (el: HTMLElement): void => {
       const more = String(hasMoreBelow(el.scrollHeight, el.clientHeight, el.scrollTop))
       if (el.dataset.moreBelow !== more) el.dataset.moreBelow = more
+      // The fade scales with the visible height (see fadeSize); styles.css reads it.
+      const size = `${fadeSize(el.clientHeight, el.dataset.fadeLook === 'edge' ? 20 : 28)}px`
+      if (el.style.getPropertyValue('--fade-size') !== size) el.style.setProperty('--fade-size', size)
     }
     const resize = new ResizeObserver((entries) => {
       for (const e of entries) measure(e.target as HTMLElement)
@@ -30,12 +33,8 @@ export function useScrollFades(): void {
     const track = (el: HTMLElement): void => {
       if (tracked.has(el)) return
       tracked.add(el)
-      // `plain` keeps Settings' original short fade; `frost` adds the glass strip.
-      const look = el.closest<HTMLElement>(SCOPE)?.dataset.scrollFade === 'frost' ? 'frost' : 'plain'
-      el.dataset.fadeLook = look
-      const style = getComputedStyle(el)
-      if (look === 'frost' && canFrost(getComputedStyle(el, '::after').content, style.display, style.flexDirection))
-        el.dataset.scrollFrost = ''
+      // `plain` keeps Settings' original short fade; `edge` fades only the cut edge.
+      el.dataset.fadeLook = el.closest<HTMLElement>(SCOPE)?.dataset.scrollFade === 'edge' ? 'edge' : 'plain'
       resize.observe(el)
       measure(el)
     }

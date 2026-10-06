@@ -16,7 +16,7 @@ Midnight, Contrast and Daltonic — each with a light and a dark variant.
 - **Light, dark, or follow the OS**, switched live.
 - **Custom themes**, and **AI-generated** ones from a prompt.
 - Adjustable **code font size**.
-- **No scrollbars.** Trackpad, wheel and keyboard scrolling work as usual. In the details panel and in Settings, a list with more below fades out at its bottom edge, and the fade goes away once you reach the end.
+- **No scrollbars.** Trackpad, wheel and keyboard scrolling work as usual. In the details panel and in Settings, a list with more below fades out at its bottom edge, and the fade goes away once you reach the end. Only the cut edge fades — no blur, and a short list gets a shorter fade — so every row you can see stays fully readable.
 - A separate **graph style**: lane palette, corner style, row density and line
   thickness, plus the ring, haze and bar on each commit row and how unpushed
   commits stand out, all with a live mini-graph preview.
@@ -80,7 +80,8 @@ Monoline (the default), Portal, Deboss, Night slab, Terminal, Crystal, Topo,
 Water, Mercury and Blueprint. Your choice changes the Dock icon immediately. In
 the installed app it also updates the Finder icon, so it stays selected after
 you quit and relaunch. Choose **Monoline** to go back to the icon the app
-shipped with.
+shipped with. The chosen icon wears an accent ring around the icon itself, the
+way iOS and macOS mark a chosen icon.
 
 The icons are fixed artwork, so there are no color options, and the choice is
 macOS-only. The development build changes only its running Dock icon, leaving

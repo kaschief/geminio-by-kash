@@ -104,25 +104,14 @@ textarea:focus {
 ::-webkit-scrollbar {
   display: none;
 }
+/* `--fade-size` scales with the scroller's visible height (lib/scrollFade). */
 [data-fade-look='plain'][data-more-below='true'] {
-  mask-image: linear-gradient(to bottom, #000 0, #000 calc(100% - 28px), transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0, #000 calc(100% - var(--fade-size, 28px)), transparent 100%);
 }
-[data-fade-look='frost'][data-more-below='true'] {
-  mask-image: linear-gradient(to bottom, #000 calc(100% - 56px), transparent 100%);
-}
-/* A light frost under the fade, pinned to the bottom of the visible area. Its
-   negative margin cancels its height, so it never adds scroll length. */
-[data-scroll-frost][data-more-below='true']::after {
-  content: '';
-  position: sticky;
-  bottom: 0;
-  display: block;
-  flex-shrink: 0;
-  height: 56px;
-  margin-top: -56px;
-  pointer-events: none;
-  backdrop-filter: blur(1.5px);
-  mask-image: linear-gradient(to bottom, transparent, #000);
+/* The details panel: only the cut edge fades. Every row in view stays fully
+   readable — a whole row dimmed or blurred reads as disabled, not as "more". */
+[data-fade-look='edge'][data-more-below='true'] {
+  mask-image: linear-gradient(to bottom, #000 calc(100% - var(--fade-size, 20px)), transparent 100%);
 }
 
 /* ─── Layout shell ──────────────────────────────────────────────────────── */
@@ -3769,6 +3758,25 @@ body.col-resizing .node-ava {
   line-height: 1.45;
   user-select: text;
   border-bottom: 1px solid var(--border-soft);
+}
+/* The description sits under the subject, inside the same block. */
+.commit-subject.has-body {
+  padding-bottom: 6px;
+  border-bottom: 0;
+}
+.commit-body {
+  padding: 0 16px 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-1);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  user-select: text;
+  border-bottom: 1px solid var(--border-soft);
+}
+/* A description is read, not skimmed: it stops at eight lines, not four. */
+.commit-body .clamped-message.is-clamped {
+  -webkit-line-clamp: 8;
 }
 
 /* A long commit message (see ClampedMessage) reads as a paragraph: a touch smaller
@@ -17513,11 +17521,23 @@ mark.diff-find-hit.current { background: #ff9632; color: #10121a; }
 @media (prefers-reduced-motion: reduce) { .fv-elastic-body { transition: none; } }
 
 .app-icon-picker { margin: 20px 0 24px; }
-.app-icon-styles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
-.app-icon-choice { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 8px 12px; border: 1px solid var(--border-soft); border-radius: 12px; background: var(--bg-1); color: var(--text-1); cursor: pointer; font-size: 12px; }
-.app-icon-choice img { width: min(100%, 90px); aspect-ratio: 1; }
-.app-icon-choice:hover { background: var(--bg-2); }
-.app-icon-choice.selected { background: color-mix(in srgb, var(--accent) 8%, var(--bg-1)); color: var(--text-0); }
+/* An icon chooser, the way iOS and macOS draw one: no box around each
+   choice, and "chosen" is a ring around the icon itself — never around its
+   label. */
+.app-icon-styles { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 14px 6px; }
+.app-icon-choice { display: flex; flex-direction: column; align-items: center; gap: 7px; padding: 4px 2px; border: 0; border-radius: 10px; background: none; color: var(--text-1); cursor: pointer; font-size: 12px; }
+.app-icon-tile { position: relative; display: block; width: 64px; aspect-ratio: 1; transition: transform 0.12s; }
+.app-icon-tile img { display: block; width: 100%; height: 100%; }
+/* The artwork's squircle covers 64..960 × 80..976 of its 1024px canvas; the ring
+   is drawn on exactly that shape, with macOS's corner radius. */
+.app-icon-tile::after { content: ''; position: absolute; inset: 7.8% 6.25% 4.7% 6.25%; border-radius: 22.5%; outline: 2px solid transparent; outline-offset: 2px; pointer-events: none; transition: outline-color 0.18s, outline-offset 0.18s cubic-bezier(0.2, 0.9, 0.3, 1.3); }
+.app-icon-choice:hover .app-icon-tile { transform: translateY(-1px); }
+.app-icon-choice.selected .app-icon-tile::after { outline-color: var(--accent); outline-offset: 3px; }
+.app-icon-choice.selected .app-icon-label { color: var(--text-0); font-weight: 600; }
+.app-icon-choice:focus-visible { outline: none; }
+.app-icon-choice:focus-visible .app-icon-tile::after { outline: 2px dashed var(--text-1); outline-offset: 3px; }
+.app-icon-choice.selected:focus-visible .app-icon-tile::after { outline-style: solid; outline-color: var(--accent); box-shadow: 0 0 0 7px var(--accent-soft); }
+@media (prefers-reduced-motion: reduce) { .app-icon-tile, .app-icon-tile::after { transition: none; } }
 
 .fv-pull-meter { position: relative; flex: 0 0 48px; width: 48px; height: 48px; }
 .fv-pull-meter > svg:first-child { position: absolute; inset: 0; width: 48px; height: 48px; transform: rotate(-90deg); fill: none; stroke-width: 2.5; }
@@ -17606,7 +17626,6 @@ mark.diff-find-hit.current { background: #ff9632; color: #10121a; }
 .theme-card,
 .onboarding-theme-card,
 .wizard-tool-card,
-.app-icon-choice,
 .group-color-swatch {
   outline: 2px solid transparent;
   outline-offset: 0;
@@ -17616,7 +17635,6 @@ mark.diff-find-hit.current { background: #ff9632; color: #10121a; }
 .theme-card.selected,
 .onboarding-theme-card.selected,
 .wizard-tool-card.active,
-.app-icon-choice.selected,
 .group-color-swatch.selected {
   outline-color: var(--accent);
   outline-offset: 2px;
@@ -17625,7 +17643,6 @@ mark.diff-find-hit.current { background: #ff9632; color: #10121a; }
 .theme-card:focus-visible,
 .onboarding-theme-card:focus-visible,
 .wizard-tool-card:focus-visible,
-.app-icon-choice:focus-visible,
 .group-color-swatch:focus-visible {
   outline: 2px dashed var(--text-1);
   outline-offset: 2px;
@@ -17634,7 +17651,6 @@ mark.diff-find-hit.current { background: #ff9632; color: #10121a; }
 .theme-card.selected:focus-visible,
 .onboarding-theme-card.selected:focus-visible,
 .wizard-tool-card.active:focus-visible,
-.app-icon-choice.selected:focus-visible,
 .group-color-swatch.selected:focus-visible {
   outline-style: solid;
   outline-color: var(--accent);
@@ -17644,7 +17660,6 @@ mark.diff-find-hit.current { background: #ff9632; color: #10121a; }
   .theme-card,
   .onboarding-theme-card,
   .wizard-tool-card,
-  .app-icon-choice,
   .group-color-swatch {
     transition: none;
   }

@@ -21,8 +21,11 @@ export function AppIconPicker(): React.JSX.Element | null {
           <button key={icon} type="button" aria-pressed={current === icon}
             className={`app-icon-choice${current === icon ? ' selected' : ''}`}
             onClick={() => update((s) => ({ ...s, appIcon: { icon } }))}>
-            <img src={artworkUrl(icon)} alt="" />
-            <span>{t(`appIcon.icon.${icon}`)}</span>
+            {/* The tile carries the ring, sized to the squircle inside the artwork. */}
+            <span className="app-icon-tile">
+              <img src={artworkUrl(icon)} alt="" />
+            </span>
+            <span className="app-icon-label">{t(`appIcon.icon.${icon}`)}</span>
           </button>
         ))}
       </div>

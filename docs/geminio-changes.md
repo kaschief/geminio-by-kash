@@ -398,6 +398,15 @@ Settings fade out at the bottom while more content remains.
 
 ## Settings & appearance
 
+**Quieter details panel, clearer icon picker.** A list with more below used to
+end in a blurred, dimmed band as tall as a row and a half — on a short list it
+covered most of the second row and read as disabled. Now only the cut edge
+fades, scaled to the list, and every row in view stays readable. Commit details
+show the commit's description under its subject, as other clients do. The app
+icon picker drops its padded cards: the chosen icon gets a ring around the icon
+itself, not around its label. ([Commit details](help/graph.md#commit-details),
+[App icon](help/themes.md#app-icon))
+
 **One Settings window.** Repository settings are a section of the app's
 Settings window instead of a second window; the duplicate toolbar gear is gone
 and old repo-settings commands redirect there.

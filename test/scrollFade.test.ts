@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { canFrost, hasMoreBelow, scrollsVertically } from '../src/renderer/src/lib/scrollFade'
+import { fadeSize, hasMoreBelow, scrollsVertically } from '../src/renderer/src/lib/scrollFade'
 
 describe('scroll fade', () => {
   it('fades only while content remains below, ignoring sub-pixel leftovers', () => {
@@ -16,11 +16,18 @@ describe('scroll fade', () => {
     expect(scrollsVertically('visible')).toBe(false)
   })
 
-  it('frosts only scrollers that stack top to bottom and have no ::after of their own', () => {
-    expect(canFrost('none', 'block', 'row')).toBe(true)
-    expect(canFrost('none', 'flex', 'column')).toBe(true)
-    expect(canFrost('none', 'flex', 'row')).toBe(false)
-    expect(canFrost('""', 'block', 'row')).toBe(false)
-    expect(canFrost('none', 'grid', 'row')).toBe(false)
+})
+
+describe('fadeSize', () => {
+  it('keeps the full fade on a tall scroller', () => {
+    expect(fadeSize(600, 20)).toBe(20)
+  })
+
+  it('shrinks with a short scroller so its rows stay readable', () => {
+    expect(fadeSize(60, 20)).toBe(15)
+  })
+
+  it('never thins below a visible hint', () => {
+    expect(fadeSize(20, 20)).toBe(12)
   })
 })

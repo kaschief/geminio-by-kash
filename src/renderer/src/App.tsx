@@ -1093,7 +1093,7 @@ export default function App(): React.JSX.Element {
               {(selectedDetailsAvailable || chatOpen) && (
                 <motion.section
                   className="right-panel"
-                  data-scroll-fade="frost"
+                  data-scroll-fade="edge"
                   aria-label={t('chat.panelTabs')}
                   initial={{ width: 0, opacity: 0 }}
                   animate={{ width: layout.panelWidth, opacity: 1 }}

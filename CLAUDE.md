@@ -263,8 +263,10 @@ existing vocabulary rather than inventing its own:
   `components/StateMarks.tsx`, also used by in-page pickers). An on/off:
   `checked` alone — the row's icon tile lights up. A selected card or swatch:
   the accent ring (`.selected` on the card classes near the end of
-  `styles.css`). A submenu parent shows the current value or a dot for what is
-  inside (`lib/menuState.ts` derives it; set `detail` to override).
+  `styles.css`). An icon chooser (the app icon picker) has no cards: the ring
+  goes around the icon itself, never around its label. A submenu parent shows
+  the current value or a dot for what is inside (`lib/menuState.ts` derives
+  it; set `detail` to override).
 - **Every menu row has an icon**, from `mi` in `components/menuIcons.tsx` — one
   icon per meaning, reused, never a new one for an existing verb. Editors use
   `editorGlyph()` from `components/editorGlyphs.tsx`, not app icons.
