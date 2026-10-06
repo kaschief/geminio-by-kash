@@ -136,7 +136,6 @@
       "settings.tabTheme",
       "settings.themeName",
       "theme.livePreview",
-      "themeAi.themeFailed",
       "themeColor.accent",
       "themeColor.bg0",
       "themeColor.bg1",
@@ -625,8 +624,7 @@
       "settings.graphUnpushedRow",
       "settings.paletteName",
       "settings.savePalette",
-      "settings.savedPalette",
-      "themeAi.paletteFailed"
+      "settings.savedPalette"
     ]
   },
   {
@@ -638,8 +636,7 @@
       "common.save",
       "repoSettings.addBranch",
       "repoSettings.protectedBranches",
-      "repoSettings.protectedBranchesHint",
-      "repoSettings.saved"
+      "repoSettings.protectedBranchesHint"
     ]
   },
   {

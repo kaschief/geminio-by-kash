@@ -28,7 +28,6 @@ import {
 import type { ConflictCommit, ConflictRefInfo, ConflictVersions } from '../../../shared/types'
 import { isPbxprojPath, mergePbxproj } from '../../../shared/pbxproj'
 import { lockfileFor } from '../lib/lockfiles'
-import { shortFileName } from '../lib/pathDisplay'
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -399,7 +398,7 @@ export function ConflictResolver({ view }: { view: ConflictViewState }): React.J
     setSaving(true)
     try {
       await gitApi.resolveConflict(repoPath, file, editOutput)
-      toast('success', interp(t('conflict.resolvedFile'), { file: shortFileName(file) }))
+      toast('success', `Resolved ${file}`)
       setConflictView(null, repoPath)
       await refresh(repoPath)
     } catch (err) {

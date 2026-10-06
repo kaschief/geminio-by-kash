@@ -1585,7 +1585,7 @@ function CreateRepoModal({ spec }: { spec: Extract<ModalSpec, { kind: 'create-re
       const path = await gitApi.init(dir.trim(), name.trim())
       closeModal()
       spec.onCreate({ path, name: name.trim() })
-      toast('success', interp(t('initRepo.created'), { name: name.trim() }))
+      toast('success', `Created ${name.trim()}`)
     } catch (e) {
       toast('error', e instanceof Error ? e.message : String(e))
       setCreating(false)

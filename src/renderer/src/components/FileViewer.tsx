@@ -17,7 +17,7 @@ import { DiffViewer, type HunkAction } from './DiffViewer'
 import { ElasticFileNavigation } from './ElasticFileNavigation'
 import { useAiReady } from './useAiReady'
 import { useFollowWipFile } from './useFollowWipFile'
-import { displayPath, shortFileName } from '../lib/pathDisplay'
+import { displayPath } from '../lib/pathDisplay'
 import { SemanticSummary } from './SemanticSummary'
 import { buildQueryRegExp, highlightHtml, type HighlightLayer } from './FileSearchBar'
 import { fileExt, guessLanguage, highlightLine } from '../lib/highlight'
@@ -423,7 +423,7 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
       await shellApi.writeFiles(repoPath, [{ path: file, content: draft }])
       setContent(draft)
       setEditorDirty(false, repoPath)
-      toast('success', interp(t('fileViewer.savedFile'), { file: shortFileName(file) }))
+      toast('success', `Saved ${file.split('/').pop()}`)
     } catch (err) {
       toast('error', err instanceof Error ? err.message : String(err))
     } finally {

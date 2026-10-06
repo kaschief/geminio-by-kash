@@ -98,7 +98,7 @@ function GeneralTab({ repoPath }: { repoPath: string }): React.JSX.Element {
     setSaving(true)
     try {
       await gitApi.setProtectedBranches(repoPath, protectedBranches)
-      toast('success', t('repoSettings.saved'))
+      toast('success', 'Repo settings saved')
       closeModal()
     } catch (err) {
       toast('error', err instanceof Error ? err.message : String(err))
