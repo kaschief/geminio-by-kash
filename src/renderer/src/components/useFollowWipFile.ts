@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { gitApi } from '../infrastructure/api'
 import { useRepoStore } from '../stores/repo'
 import { useUIStore, fileViewKey, type FileViewState } from '../stores/ui'
-import { followCommitFile, followWipFile, headMove, headOf, type HeadSnapshot } from '../lib/wipFileFollow'
+import { followCommitFile, followWipFile, headMove, headOf, nextWipFile, type HeadSnapshot } from '../lib/wipFileFollow'
 
 /**
  * Keeps an open file pointed at where the file actually is, whatever moved it
@@ -32,6 +32,15 @@ export function useFollowWipFile(view: FileViewState, editing: boolean): void {
   // taken on in the log after that commit has been undone.
   const lastSeen = useRef<HeadSnapshot>({ commits: commits ?? [], branches })
   const headCommit = commits ? headOf({ commits, branches })?.hash : undefined
+  // HEAD as of the last time the file was still a working change. When the file
+  // leaves, HEAD having moved since means it was committed (follow it into the
+  // commit); HEAD where it was means it was discarded (close). Without this a
+  // discarded file whose last commit had touched it followed into that commit —
+  // an old change, shown as if it were where the work went.
+  const headWhileWip = useRef<string | undefined>(headCommit)
+  // The status from when the file was last listed: where it stood, so a discard
+  // can move on to its neighbour.
+  const statusWhileWip = useRef(status)
 
   // Was Details showing the working changes? By the time the commit is seen the
   // store has already cleared that selection (an empty WIP has nothing to
@@ -102,16 +111,26 @@ export function useFollowWipFile(view: FileViewState, editing: boolean): void {
 
     if (source.type !== 'wip') return
     const next = followWipFile(source, file, status)
+    if (next.kind !== 'left') {
+      headWhileWip.current = headCommit
+      statusWhileWip.current = status
+    }
     if (next.kind === 'keep') return
     if (next.kind === 'move') {
       ui.setFileView({ ...view, source: next.source })
       return
     }
+    const headBefore = headWhileWip.current
+    const listedBefore = statusWhileWip.current
     void (async () => {
       const head = await headIfItHas()
       if (cancelled || !stillOpen()) return
-      if (!head) {
-        ui.setFileView(null, repoPath)
+      if (!head || head === headBefore) {
+        // Discarded. Other changes left: move on to the next, as Mail does
+        // after a delete. Nothing left: close, back to the graph.
+        const after = listedBefore ? nextWipFile(file, source, listedBefore, status) : null
+        if (after) ui.setFileView({ repoPath, file: after.file, source: after.source, mode: view.mode })
+        else ui.setFileView(null, repoPath)
         return
       }
       ui.setFileView({ ...view, source: { type: 'commit', hash: head } })

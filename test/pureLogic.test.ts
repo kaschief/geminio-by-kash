@@ -15,7 +15,7 @@ import { splitHunkHeader } from '../src/renderer/src/lib/diff'
 import { displayPath, shortFileName } from '../src/renderer/src/lib/pathDisplay'
 import { fitBranchAndGraph } from '../src/renderer/src/lib/graphColumnFit'
 import type { FileEntry } from '../src/shared/types'
-import { followCommitFile, followSelectedCommit, followWipFile, headMove, headOf, isHeadCommit, landedCommit } from '../src/renderer/src/lib/wipFileFollow'
+import { followCommitFile, followSelectedCommit, followWipFile, headMove, headOf, isHeadCommit, landedCommit, nextWipFile } from '../src/renderer/src/lib/wipFileFollow'
 import { redoStillApplies } from '../src/renderer/src/lib/redoGuard'
 import { stackOrder, moveLevel, adoptableBranches, targetFor } from '../src/renderer/src/lib/stackOrder'
 import { planStackSubmit, summariseStackPlan } from '../src/shared/stackPr'
@@ -7441,5 +7441,28 @@ describe('redo guard', () => {
   it('trusts the stack when there is nothing to compare', () => {
     expect(redoStillApplies(null, log('b'))).toBe(true)
     expect(redoStillApplies('a', [])).toBe(true)
+  })
+})
+
+describe('nextWipFile', () => {
+  const f = (path: string, untracked = false): FileEntry => ({ path, status: untracked ? '?' : 'M', ...(untracked ? { untracked } : {}) }) as FileEntry
+  const unstaged = { type: 'wip', staged: false, untracked: false } as const
+  const lists = (u: FileEntry[], s: FileEntry[] = []) => ({ unstaged: u, staged: s, conflicted: [] })
+  it('moves to the file that followed it', () => {
+    const before = lists([f('a'), f('parallax'), f('legilimens')])
+    const now = lists([f('a'), f('legilimens')])
+    expect(nextWipFile('parallax', unstaged, before, now)).toEqual({ file: 'legilimens', source: unstaged })
+  })
+  it('the last in its list falls back to the one before it', () => {
+    const before = lists([f('legilimens'), f('parallax')])
+    expect(nextWipFile('parallax', unstaged, before, lists([f('legilimens')]))?.file).toBe('legilimens')
+  })
+  it('crosses to the other list when its own is empty, untracked kept', () => {
+    const next = nextWipFile('parallax', unstaged, lists([f('parallax')], [f('staged.ts')]), lists([], [f('staged.ts')]))
+    expect(next).toEqual({ file: 'staged.ts', source: { type: 'wip', staged: true, untracked: false } })
+    expect(nextWipFile('x', unstaged, lists([f('x'), f('new.txt', true)]), lists([f('new.txt', true)]))?.source.untracked).toBe(true)
+  })
+  it('nothing left: null, and the view closes', () => {
+    expect(nextWipFile('parallax', unstaged, lists([f('parallax')]), lists([]))).toBeNull()
   })
 })

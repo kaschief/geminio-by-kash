@@ -37,6 +37,39 @@ export function followWipFile(source: WipSource, file: string, status: StatusLis
   return { kind: 'left' }
 }
 
+/**
+ * After an open file is discarded, the working change to show next — the way
+ * Mail moves to the next message after a delete: the one that followed it in
+ * its list, else the one before it, else the first in the other list. Null when
+ * nothing is left (then the view closes). `before` is the status from when the
+ * file was still listed, so its place is known; `now`, what is left.
+ */
+export function nextWipFile(
+  file: string,
+  source: WipSource,
+  before: StatusLists,
+  now: StatusLists
+): { file: string; source: WipSource } | null {
+  const pick = (entry: FileEntry, staged: boolean): { file: string; source: WipSource } => ({
+    file: entry.path,
+    source: { type: 'wip', staged, untracked: !staged && !!entry.untracked }
+  })
+  const listOf = (s: StatusLists, staged: boolean): FileEntry[] => (staged ? s.staged : s.unstaged)
+  const remaining = (staged: boolean): FileEntry[] => listOf(now, staged).filter((f) => f.path !== file)
+  const sameSide = remaining(source.staged)
+  const order = listOf(before, source.staged).map((f) => f.path)
+  const at = order.indexOf(file)
+  if (at >= 0) {
+    // Nearest neighbour still listed: forward first, then back.
+    const still = new Map(sameSide.map((f) => [f.path, f]))
+    for (const path of order.slice(at + 1)) if (still.has(path)) return pick(still.get(path)!, source.staged)
+    for (const path of order.slice(0, at).reverse()) if (still.has(path)) return pick(still.get(path)!, source.staged)
+  }
+  if (sameSide[0]) return pick(sameSide[0], source.staged)
+  const otherSide = remaining(!source.staged)
+  return otherSide[0] ? pick(otherSide[0], !source.staged) : null
+}
+
 export type CommitFollow =
   /** The commit is still in history, or nothing better is known. */
   | { kind: 'keep' }
