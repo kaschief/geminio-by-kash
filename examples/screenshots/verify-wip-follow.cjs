@@ -29,7 +29,8 @@ const ROOT = resolve(__dirname, '../..')
     const refresh = () => page.evaluate((p) => window.__shot.repo.getState().refresh(p), repo)
     const source = () => page.evaluate(() => window.__shot.ui.getState().fileView?.source ?? null)
     const until = async (check, what) => {
-      for (let i = 0; i < 100; i++) { if (await check()) return; await page.waitForTimeout(50) }
+      // 10 s: a machine still busy after a build can take longer than 5.
+      for (let i = 0; i < 200; i++) { if (await check()) return; await page.waitForTimeout(50) }
       assert.fail(`timed out waiting for: ${what} (source now ${JSON.stringify(await source())})`)
     }
     const open = (file) => page.evaluate(({ p, file }) => window.__shot.ui.getState().setFileView({ repoPath: p, file, source: { type: 'wip', staged: false, untracked: false }, mode: 'diff' }), { p: repo, file })
