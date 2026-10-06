@@ -2310,7 +2310,7 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
                           )}
                           {wipStats.modified > 0 && (
                             <span className="wip-stat wip-mod" title={`${wipStats.modified} modified`}>
-                              <Pencil size={10} />
+                              <Pencil size={12} />
                               {wipStats.modified}
                             </span>
                           )}
