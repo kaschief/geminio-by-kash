@@ -510,7 +510,9 @@ export function DiffViewer({
     // A confirm from this menu points at the line, after the menu has closed.
     const row = anchorOf(e.currentTarget as Element)
     const items: MenuItem[] = []
-    if (hunkData && hasHunkActions && !pending) {
+    // While the last action is still landing the rows stay, greyed, saying why.
+    const busyRow = pending ? { disabled: true, title: t('diff.busyRow') } : {}
+    if (hunkData && hasHunkActions) {
       const changed = idxs.filter((i) => lines[i].kind === 'add' || lines[i].kind === 'del')
       const inSelection = changed.some((i) => selected.has(i))
       const target = inSelection ? new Set(selected) : new Set(changed)
@@ -520,6 +522,7 @@ export function DiffViewer({
             label: inSelection ? a.linesLabel(target.size) : a.lineLabel,
             icon: a.icon,
             danger: a.id === 'discard',
+            ...busyRow,
             onClick: () => {
               fire(a.run(buildLinePatch(lines, hunkData.header, target, a.reverse ? 'reverse' : 'forward'), row))
               setSelected(new Set())
@@ -533,6 +536,7 @@ export function DiffViewer({
           label: a.hunkLabel,
           icon: a.hunkIcon,
           danger: a.id === 'discard',
+          ...busyRow,
           onClick: () => fire(a.run(singleHunkPatch(hunkData, first.hunkIdx), row))
         })
       }

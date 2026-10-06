@@ -67,6 +67,8 @@ const ROOT = resolve(__dirname, '../..')
     // 2. Discard "line 5 CHANGED" via its menu, after the confirm.
     const added5 = page.locator('.diff-line.add', { hasText: 'line 5 CHANGED' })
     await added5.waitFor()
+    // The diff has caught up with the staging once its buttons are back on.
+    await page.waitForFunction(() => [...document.querySelectorAll('.diff-stage-hunk')].every((b) => !b.disabled))
     box = await added5.boundingBox()
     await page.mouse.click(box.x + 200, box.y + box.height / 2, { button: 'right' })
     await menu.waitFor()

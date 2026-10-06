@@ -2110,6 +2110,7 @@ export const en = {
   'hunk.discardArmed': 'Discard hunk?',
   'hunk.discardLinesArmed': 'Discard {n} selected?',
   'diff.copyLine': 'Copy line',
+  'diff.busyRow': 'Still applying the last change',
   'diff.copySelection': 'Copy',
   'hunk.doesNotApply': 'These lines no longer match the file, so nothing changed. Reopen the diff and try again.',
   'hunk.mergedWithConflicts': 'Done, but some lines overlap your edits. They are marked with conflict markers in the file.',
