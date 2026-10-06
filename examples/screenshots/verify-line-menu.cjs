@@ -71,10 +71,23 @@ const ROOT = resolve(__dirname, '../..')
     await page.mouse.click(box.x + 200, box.y + box.height / 2, { button: 'right' })
     await menu.waitFor()
     await menu.locator('.menu-item', { hasText: 'Discard this line' }).click()
-    await page.locator('.modal .btn', { hasText: 'Discard' }).last().click()
-    for (let i = 0; i < 100 && (await fs.readFile(join(repo, 'a.txt'), 'utf8')).includes('line 5 CHANGED'); i++) await page.waitForTimeout(50)
-    const file = await fs.readFile(join(repo, 'a.txt'), 'utf8')
-    assert.ok(!file.includes('line 5 CHANGED'), 'the added line went away')
+    // It asks beside the line, without a dialog over the window.
+    const pop = page.locator('.confirm-popover')
+    await pop.waitFor()
+    assert.equal(await page.locator('.modal, .modal-backdrop').count(), 0, 'no dialog, no backdrop')
+    const pb = await pop.boundingBox()
+    const lb = await added5.boundingBox()
+    assert.ok(pb.y >= lb.y + lb.height || pb.y + pb.height <= lb.y, 'the popover does not cover the line it asks about')
+    if (process.env.SHOT_DIR) await page.screenshot({ path: join(process.env.SHOT_DIR, 'discard-line-popover.png') })
+    await pop.locator('.btn.danger').click()
+    const read = () => fs.readFile(join(repo, 'a.txt'), 'utf8')
+    const untilFile = async (test, what) => {
+      for (let i = 0; i < 100; i++) { if (test(await read())) return; await page.waitForTimeout(50) }
+      assert.fail(what)
+    }
+    await untilFile((f) => !f.includes('line 5 CHANGED'), 'the added line went away')
+    await page.locator('.toast-action', { hasText: 'Undo' }).click()
+    await untilFile((f) => f.includes('line 5 CHANGED'), 'Undo in the toast brought the line back')
 
     // 3. Near the bottom of the window the menu opens above the pointer.
     const vh = await page.evaluate(() => window.innerHeight)
@@ -90,7 +103,7 @@ const ROOT = resolve(__dirname, '../..')
     // 4. The file row menu: short, with submenus.
     await fs.writeFile(join(repo, 'b.txt'), 'x\n'); git('add', 'b.txt'); git('commit', '-qm', 'chore: b'); await fs.writeFile(join(repo, 'b.txt'), 'y\n')
     await page.evaluate((p) => window.__shot.repo.getState().refresh(p), repo)
-    const fileRow = page.locator('text=b.txt').first()
+    const fileRow = page.locator('.file-item.wip', { hasText: 'b.txt' }).first()
     await fileRow.waitFor()
     const fb = await fileRow.boundingBox()
     await fileRow.click({ button: 'right' })

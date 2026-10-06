@@ -73,6 +73,18 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
         )}
       </div>
       <div className="toast-actions">
+        {toast.action && (
+          <button
+            className="toast-action"
+            onClick={(e) => {
+              e.stopPropagation()
+              toast.action?.run()
+              onDismiss()
+            }}
+          >
+            {toast.action.label}
+          </button>
+        )}
         {toast.kind === 'error' && toast.repoPath && aiChat && (
           <button
             title={t('toast.fixWithAI')}
@@ -115,8 +127,9 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
 export function Toasts(): React.JSX.Element {
   const { toasts, dismissToast } = useUIStore()
   // In screenshot mode, hide transient toasts so README shots never capture a
-  // stray "error invoking…" popup from background hosting/git calls.
-  const visible = window.api?.shotMode ? [] : toasts
+  // stray "error invoking…" popup from background hosting/git calls. A toast
+  // with an action (Undo) is the deliberate result of a step, so it stays.
+  const visible = window.api?.shotMode ? toasts.filter((x) => x.action) : toasts
   return (
     <div className="toasts" aria-live="polite">
       <AnimatePresence>

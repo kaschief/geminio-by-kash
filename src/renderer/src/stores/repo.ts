@@ -39,7 +39,7 @@ import type {
 import { gitApi, hostingApi } from '../infrastructure/api'
 import { planStackSubmit, buildStackSection } from '../../../shared/stackPr'
 import type { LocalCiVerdict } from '../../../shared/localCi'
-import { useUIStore, type FileViewState } from './ui'
+import { useUIStore, type AnchorRect, type FileViewState } from './ui'
 import { useSettingsStore } from './settings'
 import { worktreeForBranch, worktreeTabName } from '../lib/worktrees'
 import { isSecretFile } from '../lib/secrets'
@@ -146,6 +146,12 @@ export interface UndoEntry {
   label: string
   undo: () => Promise<void>
   redo: () => Promise<void>
+  /** What undoing it did, said plainly ("Restored config.js") — for an undo
+   *  that would otherwise read as a double negative ("Undone: discard …"). */
+  undone?: string
+  /** Runs once the undo has landed and the repository is re-read — e.g. to
+   *  reopen the file a discard had closed. */
+  afterUndo?: () => void
   /** Epoch ms it was pushed — ordered against reflog moves made outside the app. */
   at?: number
 }
@@ -308,8 +314,9 @@ interface RepoStoreState {
   redo(path: string): Promise<void>
 }
 
-const toast = (kind: 'success' | 'error' | 'info', msg: string, opts?: { repoPath?: string }): void =>
+const toast = (kind: 'success' | 'error' | 'info', msg: string, opts?: { repoPath?: string }): void => {
   useUIStore.getState().toast(kind, msg, opts)
+}
 
 /** How a pull reconciles: git's default, refuse-unless-ff, or rebase. */
 export type PullMode = 'default' | 'ff-only' | 'rebase'
@@ -1142,20 +1149,24 @@ export const useRepoStore = create<RepoStoreState>((set, get) => ({
       ui.beginInflight()
       ui.setBusy(interp(t('undo.busy'), { label: entry.label }))
       muteWatcher(path)
+      let undone = false
       try {
         await entry.undo()
+        undone = true
         get().patch(path, {
           undoStack: repo.undoStack.slice(0, -1),
           redoStack: [...repo.redoStack, entry],
           redoHead: await gitApi.resolveRev(path, 'HEAD').catch(() => null)
         })
-        toast('success', interp(t('undo.done'), { label: entry.label }))
+        toast('success', entry.undone ?? interp(t('undo.done'), { label: entry.label }))
       } catch (err) {
         toast('error', err instanceof Error ? err.message : String(err))
       } finally {
         useUIStore.getState().setBusy(null)
         await get().refresh(path)
         useUIStore.getState().endInflight()
+        // After the refresh, so the view it reopens finds its file listed.
+        if (undone) entry.afterUndo?.()
       }
     })
   },
@@ -1745,6 +1756,57 @@ function filesLabel(oneKey: TranslationKey, manyKey: TranslationKey, files: stri
   return files.length === 1
     ? interp(t(oneKey), { name: shortFileName(files[0]) })
     : interp(t(manyKey), { n: files.length })
+}
+
+/**
+ * Where undoing a discard takes the person: back into the change. Details opens
+ * on the working changes — every restored file in view, the broader context the
+ * discard took away — and the file that was open when it ran comes back too, if
+ * the discard is about it (`paths`; null means whatever file was open: a hunk
+ * discard comes from its view) and the discard closed it or moved it to the
+ * file's other side.
+ */
+function reopenAfterUndo(path: string, paths: string[] | null): () => void {
+  const ui = useUIStore.getState()
+  const view = ui.activeRepoPath === path ? ui.fileView : ui.repoViews[path]?.fileView
+  const about = !!view && view.repoPath === path && (!paths || paths.includes(view.file))
+  const again = about && view ? (({ initialScroll: _s, line: _l, ...rest }) => rest)(view) : null
+  return () => {
+    const now = useUIStore.getState()
+    if (now.activeRepoPath !== path) return
+    useRepoStore.getState().select(path, { type: 'wip' })
+    // The discard moved the view on to the next working change, or closed it;
+    // either way, back to the file. Something the person opened themselves since
+    // (a commit's file, say) is left alone.
+    if (!again || (now.fileView && now.fileView.file !== again.file && now.fileView.source.type !== 'wip')) return
+    now.setFileView(again)
+  }
+}
+
+/** "Discarded x · Undo". The toast lives only while that discard is the newest
+ *  thing to undo: undone, redone or followed by anything else, its button would
+ *  no longer mean what it says, so the toast goes. */
+function offerUndo(path: string, message: string): void {
+  const entry = useRepoStore.getState().repos[path]?.undoStack.at(-1)
+  if (!entry) return
+  const id = useUIStore.getState().toast('success', message, {
+    repoPath: path,
+    action: {
+      label: t('toast.undo'),
+      run: () => {
+        const top = useRepoStore.getState().repos[path]?.undoStack.at(-1)
+        if (top?.undo === entry.undo) void useRepoStore.getState().undo(path)
+      }
+    }
+  })
+  const stillNewest = (): boolean => useRepoStore.getState().repos[path]?.undoStack.at(-1)?.undo === entry.undo
+  const unsubscribe = useRepoStore.subscribe(() => {
+    if (stillNewest()) return
+    useUIStore.getState().dismissToast(id)
+    unsubscribe()
+  })
+  // The toast times out on its own; stop watching once it surely has.
+  setTimeout(unsubscribe, 10_000)
 }
 
 /** The `{what}` of an untrack/ignore label when the caller gave none. */
@@ -2802,7 +2864,13 @@ export const repoActions = {
    * throws away work that exists nowhere else; the undo entry (and the WIP
    * snapshot the main process takes) are the second line of defence.
    */
-  applyHunk: (path: string, patch: string, kind: HunkActionKind, ignoreWhitespace = false): Promise<boolean> => {
+  applyHunk: (
+    path: string,
+    patch: string,
+    kind: HunkActionKind,
+    ignoreWhitespace: boolean,
+    confirm: AnchorRect | 'confirmed'
+  ): Promise<boolean> => {
     const op = HUNK_ACTIONS[kind]
     // A working-tree action may have needed the three-way merge; when that left
     // conflict markers, say so after the success toast rather than let it pass
@@ -2818,7 +2886,12 @@ export const repoActions = {
         path,
         t(op.doneKey),
         () => send(op.reverse),
-        { label: t(op.undoKey), undo: () => send(!op.reverse), redo: () => send(op.reverse) },
+        {
+          label: t(op.undoKey),
+          undo: () => send(!op.reverse),
+          redo: () => send(op.reverse),
+          ...(kind === 'discard' ? { undone: t('act.hunkRestored'), afterUndo: reopenAfterUndo(path, null) } : {})
+        },
         null,
         (msg) => {
           if (!/patch does not apply|patch failed/i.test(msg)) return false
@@ -2831,17 +2904,86 @@ export const repoActions = {
           if (ok && conflicts > 0) toast('info', t('hunk.mergedWithConflicts'), { repoPath: path })
           return ok
         })
+    // Discard always asks first. `confirmed` is a button that already asked
+    // in place (it armed on the first click); otherwise the question points at
+    // `anchor`, what was chosen.
     if (kind !== 'discard') return perform()
-    return new Promise((resolve) => {
-      useUIStore.getState().openModal({
-        kind: 'confirm',
-        danger: true,
-        title: t('hunk.discardConfirmTitle'),
-        message: t('hunk.discardConfirmMessage'),
-        confirmLabel: t('hunk.discardConfirmOk'),
-        onConfirm: () => void perform().then(resolve)
+    const discard = (): Promise<boolean> =>
+      perform().then((ok) => {
+        if (ok) offerUndo(path, t('act.hunkDiscarded'))
+        return ok
       })
-    })
+    if (confirm === 'confirmed') return discard()
+    return new Promise((resolve) =>
+      useUIStore.getState().askBeside({
+        anchor: confirm,
+        title: t('discard.linesAsk'),
+        detail: t('discard.undoable'),
+        confirmLabel: t('discard.confirm'),
+        onConfirm: () => void discard().then(resolve),
+        onCancel: () => resolve(false)
+      })
+    )
+  },
+
+  /**
+   * Discard files — one, a folder's worth, or everything with `unstageFirst` —
+   * after asking, next to `anchor` (what was chosen). What is staged and on disk
+   * is saved first, so Undo puts it back exactly, staged parts included; the
+   * question says whether Undo can (it cannot while a merge has conflicts).
+   */
+  discardChanges: async (
+    path: string,
+    files: { path: string; untracked?: boolean }[],
+    opts: { unstageFirst?: boolean; what: string; anchor: AnchorRect; prefer?: 'beside' | 'below' }
+  ): Promise<boolean> => {
+    const paths = files.map((f) => f.path)
+    if (paths.length === 0) return false
+    const saved = await gitApi.captureWork(path).catch(() => null)
+    const perform = async (): Promise<void> => {
+      if (opts.unstageFirst) await gitApi.unstageAll(path)
+      const untracked = files.filter((f) => f.untracked).map((f) => f.path)
+      const tracked = files.filter((f) => !f.untracked).map((f) => f.path)
+      if (tracked.length) await gitApi.discard(path, tracked, false)
+      if (untracked.length) await gitApi.discard(path, untracked, true)
+    }
+    const label = filesLabel('act.discardedOne', 'act.discarded', paths)
+    const reopen = reopenAfterUndo(path, paths)
+    const go = (): Promise<boolean> =>
+      useRepoStore
+        .getState()
+        .run(
+          path,
+          label,
+          perform,
+          saved
+            ? {
+                label: interp(t('undoLabel.discard'), { what: opts.what }),
+                undo: () => gitApi.restoreWork(path, saved, paths),
+                redo: perform,
+                undone: filesLabel('act.restoredOne', 'act.restored', paths),
+                afterUndo: reopen
+              }
+            : undefined,
+          null,
+          undefined,
+          ['status', 'treeStatus']
+        )
+        .then((ok) => {
+          if (ok && saved) offerUndo(path, label)
+          return ok
+        })
+    return new Promise((resolve) =>
+      useUIStore.getState().askBeside({
+        anchor: opts.anchor,
+        prefer: opts.prefer,
+        title: opts.unstageFirst ? t('discard.allAsk') : interp(t('discard.ask'), { what: opts.what }),
+        detail: saved ? t('discard.undoable') : t('discard.permanent'),
+        confirmLabel: t('discard.confirm'),
+        onConfirm: () => void go().then(resolve),
+        onCancel: () => resolve(false)
+      })
+    )
   },
 
   stashDrop: (path: string, index = 0) =>

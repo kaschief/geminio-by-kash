@@ -88,9 +88,13 @@ selection and the menu acts on the whole selection instead ("Stage selected
 inline layout a row is a line's old and new version together, so *this line*
 means both halves of the edit.
 
-Every one of them can be undone. Discard asks first, because the lines it throws
-away exist nowhere else; before it (and before revert and apply) Geminio also
-takes a [WIP snapshot](recovery.md).
+Every one of them can be undone. Discard still asks first, because it throws
+work away: the **Discard hunk** button asks in place — the first click turns it
+solid red ("Discard hunk?"), the second discards — and a discard from the
+right-click menu asks in a small popover beside the line. While an action runs,
+the hunk buttons are off, so nothing is pressed twice on lines that are already
+gone. Before it (and before revert and apply) Geminio also takes a
+[WIP snapshot](recovery.md).
 
 The limits:
 
@@ -114,14 +118,29 @@ The limits:
 
 ## Discarding
 
-Discard works at the same levels, and always asks. Untracked files are deleted;
-tracked ones go back to their staged (or committed) state. The right-click
-entry names what it discards ("Discard changes to kash-os.pine", or "… to 3
-files" for a selection), so it never reads as discarding everything.
+Discard works at the same levels, and always asks — in a small popover that
+points at the file, line or button you used, with no dark overlay, so the file
+stays readable (and scrollable) while you decide. Cancel has the focus, so a
+stray <kbd>Return</kbd> loses nothing; <kbd>Esc</kbd> or a click elsewhere
+cancels. Untracked files are deleted; tracked ones go back to their staged (or
+committed) state. The right-click entry names what it discards ("Discard
+changes to kash-os.pine", or "… to 3 files" for a selection), so it never reads
+as discarding everything.
 
 To throw away everything at once, staged and unstaged, use the red trash
-button at the top-left of the changes panel (**Discard all changes**). It asks
-first, and the files it removes are not recoverable from git.
+button at the top-left of the changes panel (**Discard all changes**).
+
+**Undo brings a discard back.** Before discarding, Geminio saves what was
+staged and what was on disk — new files included — so **Undo** (the toast's
+button, the toolbar, or <kbd>⌘Z</kbd>) puts every discarded file back exactly,
+staged parts staged. If you were looking at the file, it opens again. The
+popover tells you before you confirm: "Undo brings them back."
+
+*Limits:* while a merge still has conflicts, the staged state cannot be saved,
+so that discard is final — the popover says "This cannot be undone." Undo
+restores only the discarded files; anything you changed elsewhere since is left
+alone, and a line or hunk you have edited again since its discard cannot be
+put back (Geminio says so rather than overwrite your edit).
 
 ## Keyboard
 

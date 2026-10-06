@@ -119,7 +119,7 @@ const MORE_WIDTH = 64
 export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
   const t = useT()
   const { undo, redo } = useRepoStore()
-  const { openContextMenu, openModal, toggleTerminal, toggleSidebar, graphFilter, setGraphFilter, busy } = useUIStore()
+  const { openContextMenu, openModal, toggleTerminal, toggleSidebar, graphFilter, setGraphFilter } = useUIStore()
   const terminalOpen = useUIStore((s) => !!s.terminalOpenByRepo[repo.path])
   // The search filters the commit graph. A file viewer covers the graph, so the
   // field would filter something out of sight — greyed out, like GitKraken does.
@@ -679,16 +679,6 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
       </div>
 
       <div className="toolbar-group right">
-        {busy && !busyOp && (
-          <span
-            className="busy-indicator"
-            role="status"
-            aria-live="polite"
-            title={interp(t('toolbar.fetchedAgo'), { when: since(repo.lastFetchAt) })}
-          >
-            <Loader2 size={13} className="spin" /> {busy}
-          </span>
-        )}
         <div
           className={`graph-search${fileViewOpen ? ' is-disabled' : ''}`}
           data-tip={fileViewOpen ? t('toolbar.searchFileViewTitle') : undefined}

@@ -3461,7 +3461,10 @@ function SshKeysCard(): React.JSX.Element {
 
   const upload = (key: SshKey): void => {
     const token = profile.githubToken?.trim()
-    if (!token) return toast('error', t('ssh.needsGithubToken'))
+    if (!token) {
+      toast('error', t('ssh.needsGithubToken'))
+      return
+    }
     openModal({
       kind: 'confirm',
       title: t('confirm.uploadSshKey.title'),

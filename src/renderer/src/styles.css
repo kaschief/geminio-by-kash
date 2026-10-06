@@ -1269,14 +1269,6 @@ html:has(.notice-panel, .branch-picker-popover, .context-menu) .cosmos-chrome {
   opacity: 0.75;
 }
 
-.busy-indicator {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--accent);
-  font-size: 12px;
-}
-
 .graph-search {
   display: flex;
   align-items: center;
@@ -5265,6 +5257,20 @@ body.col-resizing .node-ava {
   flex: 1 1 auto;
   min-width: 0;
 }
+.status-activity {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  max-width: 240px;
+  margin-right: 10px;
+  color: var(--text-2);
+}
+.status-activity-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 @container (max-width: 820px) {
   .status-help-btn > span,
   .status-report-btn > span {
@@ -6427,6 +6433,14 @@ body.col-resizing .node-ava {
 .btn.intent-backward:disabled {
   opacity: 0.45;
 }
+/* Armed: the first click of an ask-twice button. Filled, so the change of state
+   is unmistakable without any words telling you to click again. */
+.btn.intent-backward.is-armed,
+.btn.intent-backward.is-armed:hover:not(:disabled) {
+  color: #fff;
+  background: var(--red);
+  box-shadow: none;
+}
 
 .btn.small {
   padding: 5px 11px;
@@ -6542,6 +6556,82 @@ body.col-resizing .node-ava {
 }
 .toast button:hover {
   color: var(--text-0);
+}
+/* A word, not an icon: the one thing the toast offers to do. */
+.toast button.toast-action {
+  padding: 1px 8px;
+  margin-right: 4px;
+  color: color-mix(in srgb, var(--accent) 55%, var(--text-0));
+  font-weight: 600;
+  border-radius: 5px;
+}
+.toast button.toast-action:hover {
+  color: var(--text-0);
+  background: var(--accent-soft);
+}
+.toast button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+/* ─── Confirm popover ───────────────────────────────────────────────────── */
+/* Asks next to what was chosen, without a backdrop: the rest of the window
+   stays readable (and scrollable) while the question is open. */
+.confirm-popover {
+  position: fixed;
+  z-index: 1002;
+  width: 280px;
+  padding: 12px 14px;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  font-size: 12.5px;
+  color: var(--text-0);
+}
+.confirm-popover-title {
+  font-weight: 600;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.confirm-popover-detail {
+  margin-top: 4px;
+  color: var(--text-1);
+  line-height: 1.45;
+}
+.confirm-popover-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 12px;
+}
+/* The arrow: a rotated square sharing the popover's fill and border. */
+.confirm-popover-arrow {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  transform: rotate(45deg);
+}
+.confirm-popover[data-side='below'] .confirm-popover-arrow {
+  top: -6px;
+  border-right: none;
+  border-bottom: none;
+}
+.confirm-popover[data-side='above'] .confirm-popover-arrow {
+  bottom: -6px;
+  border-left: none;
+  border-top: none;
+}
+.confirm-popover[data-side='left'] .confirm-popover-arrow {
+  right: -6px;
+  border-left: none;
+  border-bottom: none;
+}
+.confirm-popover[data-side='right'] .confirm-popover-arrow {
+  left: -6px;
+  border-right: none;
+  border-top: none;
 }
 
 /* ─── Welcome ───────────────────────────────────────────────────────────── */

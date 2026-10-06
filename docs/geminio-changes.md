@@ -311,10 +311,26 @@ tree) and Sort by choices are also on file right-click menus in commit details
 and stashes; both places write the same setting.
 ([Path, tree, and order](help/staging.md#path-tree-and-order))
 
-**Discarding is explicit.** **Discard All Changes** sits at the top-left of the
-changes panel and asks first. Right-click discard names its target ("Discard
-changes to kash-os.pine"), so it never reads as discarding everything.
+**Discarding is explicit, and undoable.** Every discard asks first, as
+GitKraken does — but in a popover pointing at what you chose instead of a
+dialog over the window, so the file stays readable while you decide (Cancel
+focused, <kbd>Esc</kbd> cancels). The hunk and selection Discard buttons ask in
+place instead: the first click turns them solid red, the second discards. Then
+Undo (the toast's button, the toolbar, <kbd>⌘Z</kbd>) brings any discard back
+exactly — a file's staged and unstaged parts, new files, Discard all — and
+reopens the file if you were looking at it; it says "Restored config.js", not
+"Undone: discard". **Discard All Changes** sits at the top-left of the changes
+panel, and right-click discard names its target ("Discard changes to
+kash-os.pine"). Discard all now removes newly added files too; it used to leave
+them behind as untracked. *Limit:* while a merge has conflicts the staged state
+cannot be saved, and the popover says that discard is final.
 ([Discarding](help/staging.md#discarding))
+
+**Progress in the status bar, only when it takes a while.** The spinner and
+label for a running operation moved from beside the search box to the status
+bar, and appear only after half a second — so stage, discard and undo never
+flash a label, and a slow rebase or checkout still shows that it is working.
+Pull and push keep their spinners on their buttons.
 
 **Know there are changes from anywhere.** While looking at a commit or stash, a
 banner says how many files have uncommitted changes, with a way back; the

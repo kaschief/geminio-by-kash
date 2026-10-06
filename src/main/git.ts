@@ -152,7 +152,8 @@ import type {
   PrPreviewResult,
   PrRefProbe,
   PreparedRepoChatFileAction,
-  RepoFileBatchResult
+  RepoFileBatchResult,
+  SavedWork
 } from '../shared/types'
 import { FILE_TOO_LARGE_PREFIX } from '../shared/types'
 import { prRefCandidates } from '../shared/prRefs'
@@ -3503,6 +3504,55 @@ export const gitService = {
     if (untracked.length) await git.raw(['restore', '--source', `${sha}^3`, '--worktree', '--', ...untracked])
   },
 
+  /**
+   * Save what is staged and what is on disk as two trees, before a discard, so
+   * `restoreWork` can undo it exactly. Writes objects only: no ref, the real
+   * index untouched. Null when there is nothing to save, or when the index
+   * cannot be written as a tree (a merge still has conflicts).
+   */
+  async captureWork(repoPath: string): Promise<SavedWork | null> {
+    const index = (await runGit(repoPath, ['write-tree']).catch(() => '')).trim()
+    if (!index) return null
+    const gitDir = (await runGit(repoPath, ['rev-parse', '--absolute-git-dir'])).trim()
+    const tmpIndex = join(gitDir, `geminio-save-${process.pid}-${Date.now()}`)
+    const env = { GIT_INDEX_FILE: tmpIndex }
+    try {
+      // Seeded from the real index, so `add -A` only hashes what changed on disk.
+      await runGit(repoPath, ['read-tree', index], env)
+      await runGit(repoPath, ['add', '-A'], env)
+      const worktree = (await runGit(repoPath, ['write-tree'], env)).trim()
+      return worktree ? { index, worktree } : null
+    } catch {
+      return null
+    } finally {
+      await unlink(tmpIndex).catch(() => {})
+    }
+  },
+
+  /**
+   * Put `paths` back as `captureWork` saved them: their staged version into the
+   * index, their file on disk. Only those paths — anything else may have moved
+   * on since, and is left alone. A path that did not exist then is removed.
+   */
+  async restoreWork(repoPath: string, saved: SavedWork, paths: string[]): Promise<void> {
+    const root = resolvePath(repoPath)
+    const entry = async (tree: string, path: string): Promise<{ mode: string; sha: string } | null> => {
+      const line = (await runGit(repoPath, ['ls-tree', tree, '--', path]).catch(() => '')).trim()
+      const m = /^(\d+) blob ([0-9a-f]+)\t/.exec(line)
+      return m ? { mode: m[1], sha: m[2] } : null
+    }
+    for (const path of paths) {
+      const full = resolvePath(repoPath, path)
+      if (!full.startsWith(root + sep)) throw new Error(`Refusing to restore outside the repository: ${path}`)
+      const staged = await entry(saved.index, path)
+      if (staged) await runGit(repoPath, ['update-index', '--add', '--cacheinfo', `${staged.mode},${staged.sha},${path}`])
+      else await runGit(repoPath, ['update-index', '--force-remove', '--', path]).catch(() => '')
+      const onDisk = await entry(saved.worktree, path)
+      if (onDisk) await runGit(repoPath, ['restore', '--source', saved.worktree, '--worktree', '--', path])
+      else await rm(full, { force: true })
+    }
+  },
+
   /** Overwrite the working copies of `paths` with their content at `hash` —
    *  "take these changes" from a commit without touching HEAD or the index. */
   async restoreFromCommit(repoPath: string, hash: string, paths: string[]): Promise<void> {
@@ -4399,7 +4449,15 @@ export const gitService = {
       } catch {
         /* not in HEAD — staged-new */
       }
-      await git.raw(['rm', '-f', '--', f]).catch(() => {})
+      // Staged-new: out of the index and off the disk. If it is no longer in the
+      // index either (Discard all unstages first), it is a file git never had —
+      // remove it the way discarding an untracked file would.
+      const removed = await git.raw(['rm', '-f', '--', f]).then(() => true, () => false)
+      if (!removed) {
+        const root = resolvePath(repoPath)
+        const full = resolvePath(repoPath, f)
+        if (full.startsWith(root + sep)) await rm(full, { force: true })
+      }
     }
   },
 

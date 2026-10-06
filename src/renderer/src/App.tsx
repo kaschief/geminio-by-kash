@@ -33,6 +33,8 @@ import { DevToolsPage } from './components/DevToolsPage'
 import { useProblemsStore } from './stores/problems'
 import { countBySeverity } from './lib/problems'
 import { DebugToolbar } from './components/DebugToolbar'
+import { ConfirmPopover } from './components/ConfirmPopover'
+import { StatusActivity } from './components/StatusActivity'
 import { ContextMenu } from './components/ContextMenu'
 import { ModalHost } from './components/ModalHost'
 import { CommandPalette } from './components/CommandPalette'
@@ -1154,7 +1156,9 @@ export default function App(): React.JSX.Element {
                   >
                     {!(activeRightPanelTab === 'chat' && chatAvailable) &&
                       !forceConflictPanel &&
-                      (repo.selected?.type === 'commit' || repo.selected?.type === 'stash') && (
+                      (repo.selected?.type === 'commit' || repo.selected?.type === 'stash') &&
+                      // Already looking at a working change: no need to point the way to them.
+                      !(fileView?.repoPath === repo.path && fileView.source.type === 'wip') && (
                         <WorkingChangesBanner path={repo.path} />
                       )}
                     {activeRightPanelTab === 'chat' && chatAvailable ? (
@@ -1274,6 +1278,7 @@ export default function App(): React.JSX.Element {
               {repo.path}
             </button>
             <span className="status-right">
+              <StatusActivity />
               <ZoomControl compact />
               <span className="status-sep" />
               <TodoStatusChip path={repo.path} />
@@ -1348,6 +1353,7 @@ export default function App(): React.JSX.Element {
       )}
 
       <ContextMenu />
+      <ConfirmPopover />
       <ModalHost />
       <CommandPalette />
       <Toasts />

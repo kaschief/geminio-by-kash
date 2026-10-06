@@ -12,6 +12,44 @@ export interface Toast {
   message: string
   /** Repository the message came from — lets an error toast offer "Fix with AI". */
   repoPath?: string
+  /** One button on the toast (Undo). It stays up longer, to be reachable. */
+  action?: ToastAction
+}
+
+export interface ToastAction {
+  label: string
+  run: () => void
+}
+
+/** Where on screen something is, as plain numbers (a DOMRect does not survive
+ *  being copied). */
+export interface AnchorRect {
+  left: number
+  top: number
+  width: number
+  height: number
+}
+
+export function anchorOf(el: Element): AnchorRect {
+  const r = el.getBoundingClientRect()
+  return { left: r.left, top: r.top, width: r.width, height: r.height }
+}
+
+/**
+ * A confirm asked next to what was chosen — the file row, the hunk's button —
+ * instead of a dialog over the whole window. No backdrop: what would be lost
+ * stays readable while the question is open.
+ */
+export interface ConfirmPopoverSpec {
+  anchor: AnchorRect
+  /** `beside` for a row in a narrow list, `below` for a button or wide row. */
+  prefer?: 'beside' | 'below'
+  title: string
+  detail?: string
+  confirmLabel: string
+  danger?: boolean
+  onConfirm: () => void
+  onCancel?: () => void
 }
 
 export interface MenuItem {
@@ -358,6 +396,7 @@ function loadLayout(): PanelLayout {
 interface UIState {
   contextMenu: ContextMenuState | null
   modal: ModalSpec | null
+  confirmPopover: ConfirmPopoverSpec | null
   toasts: Toast[]
   /** What the bell keeps — failures, news from others, work finished while
    *  away. Not every toast: see lib/notices for what earns a place. */
@@ -445,7 +484,10 @@ interface UIState {
   setMissionOpen(open: boolean): void
   toggleCommandPalette(): void
   setGithubUnread(n: number): void
-  toast(kind: Toast['kind'], message: string, opts?: { repoPath?: string }): void
+  /** Returns the toast's id, for a caller that may need to take it down early. */
+  toast(kind: Toast['kind'], message: string, opts?: { repoPath?: string; action?: ToastAction }): number
+  askBeside(spec: ConfirmPopoverSpec): void
+  closeConfirmPopover(): void
   /** Record something in the bell's list (and badge, Dock, system notification). */
   notify(kind: NoticeKind, message: string, opts?: { repoPath?: string; key?: string; remote?: boolean; quiet?: boolean }): void
   /** A success that fixes earlier failures with this key: they stop counting. */
@@ -520,7 +562,7 @@ export const useUIStore = create<UIState>((set, get) => ({
       delete next.fileView.initialScroll
       delete next.fileView.line
     }
-    return { ...next, activeRepoPath, repoViews, fileSearch: null, editorDirty: false, contextMenu: null }
+    return { ...next, activeRepoPath, repoViews, fileSearch: null, editorDirty: false, contextMenu: null, confirmPopover: null }
   }),
   patchRepoView: (repoPath, patch) => set((s) => {
     if (repoPath === s.activeRepoPath) return patch
@@ -536,6 +578,7 @@ export const useUIStore = create<UIState>((set, get) => ({
   rememberGraphScroll: (repoPath, scroll) => set((s) => ({ graphScrollByRepo: { ...s.graphScrollByRepo, [repoPath]: scroll } })),
   contextMenu: null,
   modal: null,
+  confirmPopover: null,
   toasts: [],
   notices: storedNotices.notices,
   noticesSeenUpTo: storedNotices.seenUpTo,
@@ -588,9 +631,10 @@ export const useUIStore = create<UIState>((set, get) => ({
   toast: (kind, message, opts) => {
     const id = ++toastId
     const repo = opts?.repoPath ? { repoPath: opts.repoPath } : {}
-    set({ toasts: [...get().toasts, { id, kind, message, ...repo }] })
+    const action = opts?.action ? { action: opts.action } : {}
+    set({ toasts: [...get().toasts, { id, kind, message, ...repo, ...action }] })
     const dismiss = (): void => {
-      setTimeout(() => get().dismissToast(id), kind === 'error' ? 7000 : 3500)
+      setTimeout(() => get().dismissToast(id), kind === 'error' || opts?.action ? 7000 : 3500)
     }
     // An error raised while the window is in the background would time out
     // unseen: its countdown starts when the person comes back.
@@ -599,6 +643,7 @@ export const useUIStore = create<UIState>((set, get) => ({
     } else {
       dismiss()
     }
+    return id
   },
   notify: (kind, message, opts) => {
     const id = ++toastId
@@ -626,6 +671,8 @@ export const useUIStore = create<UIState>((set, get) => ({
   clearNotices: () => set({ notices: [] }),
   markGithubSeen: () => set({ githubSeenUnread: get().githubUnread }),
   dismissToast: (id) => set({ toasts: get().toasts.filter((t) => t.id !== id) }),
+  askBeside: (confirmPopover) => set({ confirmPopover, contextMenu: null }),
+  closeConfirmPopover: () => set({ confirmPopover: null }),
 
   toggleTerminal: (repoPath) =>
     set((s) => ({ terminalOpenByRepo: { ...s.terminalOpenByRepo, [repoPath]: !s.terminalOpenByRepo[repoPath] } })),

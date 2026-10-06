@@ -7,7 +7,7 @@ import { shortFileName } from '../lib/pathDisplay'
 import { type CodeSearchHit, type FileEntry, type CommitStyle } from '../../../shared/types'
 import { gitApi, aiApi, shellApi, diffToolApi } from '../infrastructure/api'
 import { repoActions, useRepoStore, type RepoData } from '../stores/repo'
-import { useUIStore, type MenuItem } from '../stores/ui'
+import { useUIStore, anchorOf, type MenuItem } from '../stores/ui'
 import { useSettingsStore } from '../stores/settings'
 import { FileListView } from './FileListView'
 import { MatchSummary, matchesByFile } from './SearchMatches'
@@ -678,6 +678,9 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
     const targets = pathsFor(list, file)
     const targetFiles = files.filter((f) => targets.includes(f.path))
     const label = targets.length > 1 ? interp(t('composer.nFiles'), { n: targets.length }) : `"${file.path}"`
+    // The confirm points at the row that was right-clicked, after the menu closes.
+    const row = anchorOf(e.currentTarget as Element)
+    const what = targets.length > 1 ? interp(t('composer.nFiles'), { n: targets.length }) : shortFileName(file.path)
     useUIStore.getState().openContextMenu(e.clientX, e.clientY, [
       list === 'staged'
         ? { label: targets.length > 1 ? interp(t('composer.unstageFiles'), { n: targets.length }) : t('composer.unstageFile'), icon: mi.unstage(), onClick: () => void repoActions.unstage(path, targets) }
@@ -690,20 +693,7 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
             : interp(t('composer.discardFileNamed'), { name: file.path.split('/').pop() ?? file.path }),
         icon: mi.discard(),
         danger: true,
-        onClick: () =>
-          useUIStore.getState().openModal({
-            kind: 'confirm',
-            title: t('composer.discardChanges'),
-            message: interp(t('composer.discardMsg'), { file: label }),
-            danger: true,
-            confirmLabel: t('composer.discardConfirm'),
-            onConfirm: async () => {
-              const untracked = targetFiles.filter((f) => f.untracked).map((f) => f.path)
-              const tracked = targetFiles.filter((f) => !f.untracked).map((f) => f.path)
-              if (tracked.length) await repoActions.discard(path, tracked, false)
-              if (untracked.length) await repoActions.discard(path, untracked, true)
-            }
-          })
+        onClick: () => void repoActions.discardChanges(path, targetFiles, { what, anchor: row, prefer: 'beside' })
       },
       {
         label: targets.length > 1 ? interp(t('composer.stashFiles'), { n: targets.length }) : t('composer.stashFile'),
@@ -746,6 +736,7 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
     const inFolder = files.filter((f) => f.path === folderPath || f.path.startsWith(`${folderPath}/`))
     const targets = inFolder.map((f) => f.path)
     if (targets.length === 0) return
+    const row = anchorOf(e.currentTarget as Element)
     useUIStore.getState().openContextMenu(e.clientX, e.clientY, [
       list === 'staged'
         ? { label: interp(t('composer.unstageFolderN'), { n: targets.length }), icon: mi.unstage(), onClick: () => void repoActions.unstage(path, targets) }
@@ -758,20 +749,7 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
         label: t('composer.discardFolder'),
         icon: mi.discard(),
         danger: true,
-        onClick: () =>
-          useUIStore.getState().openModal({
-            kind: 'confirm',
-            title: t('composer.discardChanges'),
-            message: interp(t('composer.discardFolderMsg'), { folder: `${folderPath}/` }),
-            danger: true,
-            confirmLabel: t('composer.discardConfirm'),
-            onConfirm: async () => {
-              const untracked = inFolder.filter((f) => f.untracked).map((f) => f.path)
-              const tracked = inFolder.filter((f) => !f.untracked).map((f) => f.path)
-              if (tracked.length) await repoActions.discard(path, tracked, false)
-              if (untracked.length) await repoActions.discard(path, untracked, true)
-            }
-          })
+        onClick: () => void repoActions.discardChanges(path, inFolder, { what: `${folderPath}/`, anchor: row, prefer: 'beside' })
       },
       ...buildIgnoreMenu(inFolder, `"${folderPath}/"`, folderPath)
     ])
@@ -961,26 +939,15 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
     ? { flex: '0 0 auto' }
     : { flex: bothExpanded ? `${1 - ratio} 1 0` : '1 1 0' }
 
-  // Throw away every change, staged and unstaged — after a confirm, since none
-  // of it exists anywhere else. Lives at the top of the panel (where GitKraken
-  // puts it) with a label, so it is found quickly and never mistaken for a
-  // single-file discard.
-  const confirmDiscardAll = (): void =>
-    useUIStore.getState().openModal({
-      kind: 'confirm',
-      title: t('composer.discardAllTitle'),
-      message: t('composer.discardAllMsg'),
-      danger: true,
-      confirmLabel: t('composer.discardAllConfirm'),
-      onConfirm: async () => {
-        await gitApi.unstageAll(path).catch(() => undefined)
-        const all = [...staged, ...unstaged]
-        const untracked = all.filter((fl) => fl.untracked).map((fl) => fl.path)
-        const tracked = all.filter((fl) => !fl.untracked).map((fl) => fl.path)
-        if (tracked.length) await repoActions.discard(path, tracked, false)
-        if (untracked.length) await repoActions.discard(path, untracked, true)
-      }
-    })
+  // Throw away every change, staged and unstaged. Lives at the top of the panel
+  // (where GitKraken puts it) with a label, so it is found quickly and never
+  // mistaken for a single-file discard. Undo brings all of it back.
+  const confirmDiscardAll = (e: React.MouseEvent): void => {
+    const all = [...staged, ...unstaged]
+    // A file both staged and changed again is listed twice; discard it once.
+    const files = [...new Map(all.map((f) => [f.path, f])).values()]
+    void repoActions.discardChanges(path, files, { unstageFirst: true, what: t('discard.allChanges'), anchor: anchorOf(e.currentTarget) })
+  }
 
   return (
     <div className="composer">

@@ -17,7 +17,7 @@ import { highlightHtml, buildQueryRegExp, type HighlightLayer } from './FileSear
 import { highlightLine } from '../lib/highlight'
 import { maskSecretLine } from '../lib/secrets'
 import { useT, interp, type TranslationKey } from '../i18n'
-import { useUIStore, type MenuItem } from '../stores/ui'
+import { useUIStore, anchorOf, type AnchorRect, type MenuItem } from '../stores/ui'
 import { mi } from './menuIcons'
 import { buildLinePatch, extractHunks, singleHunkPatch } from '../lib/hunkPatch'
 import { useAiReady } from './useAiReady'
@@ -103,8 +103,21 @@ export interface HunkAction {
   /** Colour by direction: forward moves work ahead (green), backward takes it
    *  back or away (red); neutral touches no files. */
   intent: 'forward' | 'backward'
-  run: (patch: string) => void
+  /**
+   * The action loses work, so its buttons ask twice in place: the first click
+   * arms the button (filled red, these labels), the second does it.
+   */
+  armed?: { hunk: string; lines: (n: number) => string }
+  /** `confirmed` once a button asked in place; otherwise the host asks beside
+   *  the anchor, when the action needs asking at all. Resolves true when it
+   *  changed something (false when cancelled or refused). */
+  run: (patch: string, confirm: AnchorRect | 'confirmed') => Promise<boolean>
 }
+
+/** How long an armed button waits for its second click. */
+const ARMED_MS = 3000
+/** Longest the buttons stay off after an action, if the diff never changes. */
+const PENDING_FALLBACK_MS = 2000
 
 /**
  * One display toggle. Inside a host toolbar it is icon-only, matching the
@@ -406,10 +419,11 @@ export function DiffViewer({
           <button
             key={a.id}
             type="button"
-            className={`btn ghost tiny diff-stage-hunk intent-${a.intent}`}
-            onClick={() => a.run(singleHunkPatch(hunkData, hunkIdx))}
+            className={`btn ghost tiny diff-stage-hunk intent-${a.intent}${isArmed(a, `hunk:${hunkIdx}`) ? ' is-armed' : ''}`}
+            disabled={pending}
+            onClick={() => press(a, `hunk:${hunkIdx}`, () => fire(a.run(singleHunkPatch(hunkData, hunkIdx), 'confirmed')))}
           >
-            {a.hunkLabel}
+            {isArmed(a, `hunk:${hunkIdx}`) ? a.armed?.hunk : a.hunkLabel}
           </button>
         ))}
       </span>
@@ -446,10 +460,44 @@ export function DiffViewer({
       return next
     })
 
+  // From the click until the diff on screen reflects it, every action button is
+  // off: a second press would act on lines that are already gone (or, between
+  // stage and refresh, stage what was just discarded). Cleared by the new diff,
+  // or at once when nothing changed (cancelled, refused).
+  const [pending, setPending] = useState(false)
+  useEffect(() => setPending(false), [diff])
+  const fire = (result: Promise<boolean>): void => {
+    setPending(true)
+    void result.then(
+      (ok) => {
+        if (!ok) setPending(false)
+        // A change that leaves the diff text identical still has to let go.
+        else setTimeout(() => setPending(false), PENDING_FALLBACK_MS)
+      },
+      () => setPending(false)
+    )
+  }
+
   const runOnSelection = (action: HunkAction): void => {
     if (!hunkData || selected.size === 0) return
-    action.run(buildLinePatch(lines, hunkData.header, selected, action.reverse ? 'reverse' : 'forward'))
+    fire(action.run(buildLinePatch(lines, hunkData.header, selected, action.reverse ? 'reverse' : 'forward'), 'confirmed'))
     setSelected(new Set())
+  }
+
+  // Ask-twice buttons: which one is armed, by action and place. Disarms on its
+  // own after a moment, and whenever the diff changes under it.
+  const [armedKey, setArmedKey] = useState<string | null>(null)
+  useEffect(() => {
+    if (!armedKey) return
+    const timer = setTimeout(() => setArmedKey(null), ARMED_MS)
+    return () => clearTimeout(timer)
+  }, [armedKey])
+  useEffect(() => setArmedKey(null), [diff])
+  const isArmed = (a: HunkAction, where: string): boolean => !!a.armed && armedKey === `${a.id}:${where}`
+  const press = (a: HunkAction, where: string, go: () => void): void => {
+    if (a.armed && !isArmed(a, where)) return setArmedKey(`${a.id}:${where}`)
+    setArmedKey(null)
+    go()
   }
 
   // Right-click on a line, as in GitKraken: act on that line — or on the
@@ -459,8 +507,10 @@ export function DiffViewer({
     const first = lines[idxs[0]]
     if (!first) return
     e.preventDefault()
+    // A confirm from this menu points at the line, after the menu has closed.
+    const row = anchorOf(e.currentTarget as Element)
     const items: MenuItem[] = []
-    if (hunkData && hasHunkActions) {
+    if (hunkData && hasHunkActions && !pending) {
       const changed = idxs.filter((i) => lines[i].kind === 'add' || lines[i].kind === 'del')
       const inSelection = changed.some((i) => selected.has(i))
       const target = inSelection ? new Set(selected) : new Set(changed)
@@ -471,7 +521,7 @@ export function DiffViewer({
             icon: a.icon,
             danger: a.id === 'discard',
             onClick: () => {
-              a.run(buildLinePatch(lines, hunkData.header, target, a.reverse ? 'reverse' : 'forward'))
+              fire(a.run(buildLinePatch(lines, hunkData.header, target, a.reverse ? 'reverse' : 'forward'), row))
               setSelected(new Set())
             }
           })
@@ -483,7 +533,7 @@ export function DiffViewer({
           label: a.hunkLabel,
           icon: a.hunkIcon,
           danger: a.id === 'discard',
-          onClick: () => a.run(singleHunkPatch(hunkData, first.hunkIdx))
+          onClick: () => fire(a.run(singleHunkPatch(hunkData, first.hunkIdx), row))
         })
       }
       items.push({ separator: true })
@@ -564,10 +614,11 @@ export function DiffViewer({
             <button
               key={a.id}
               type="button"
-              className={`btn ghost tiny intent-${a.intent}`}
-              onClick={() => runOnSelection(a)}
+              className={`btn ghost tiny intent-${a.intent}${isArmed(a, 'selection') ? ' is-armed' : ''}`}
+              disabled={pending}
+              onClick={() => press(a, 'selection', () => runOnSelection(a))}
             >
-              {a.linesLabel(selected.size)}
+              {isArmed(a, 'selection') ? a.armed?.lines(selected.size) : a.linesLabel(selected.size)}
             </button>
           ))}
         </div>

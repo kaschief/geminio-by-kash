@@ -390,6 +390,18 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
       document.removeEventListener('visibilitychange', onVisible)
     }
   }, [source.type, editing])
+  // …and whenever the repository's status is re-read: after an undo or redo, a
+  // change from a terminal or another app, anything that may have rewritten the
+  // file under the open diff. Without it, undoing a discarded hunk left the diff
+  // without the lines it had just brought back.
+  const repoStatus = useRepoStore((s) => s.repos[repoPath]?.status)
+  const seenStatus = useRef(repoStatus)
+  useEffect(() => {
+    if (seenStatus.current === repoStatus) return
+    seenStatus.current = repoStatus
+    if (source.type !== 'wip' || editing) return
+    setRefreshKey((k) => k + 1)
+  }, [repoStatus, source.type, editing])
   const lang = guessLanguage(file)
   const fileIsImage = isImage(file)
   const pvKind = previewKind(file)
@@ -732,8 +744,14 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
       // Forward (stage, apply) is green; anything that takes work back or away
       // (unstage, revert, discard) is red — one rule, whatever the undo story.
       intent: kind === 'stage' || kind === 'apply' ? 'forward' : 'backward',
-      run: (patch) =>
-        void repoActions.applyHunk(repoPath, patch, kind, ignoreWs).then(() => setRefreshKey((k) => k + 1))
+      // Discard asks twice in place on its buttons; from the line menu it asks
+      // beside the line. Undo can bring it back either way.
+      armed: kind === 'discard' ? { hunk: t('hunk.discardArmed'), lines: (n) => interp(t('hunk.discardLinesArmed'), { n }) } : undefined,
+      run: (patch, confirm) =>
+        repoActions.applyHunk(repoPath, patch, kind, ignoreWs, confirm).then((ok) => {
+          if (ok) setRefreshKey((k) => k + 1)
+          return ok
+        })
     })
     if (source.type === 'wip' && !source.untracked) {
       return source.staged

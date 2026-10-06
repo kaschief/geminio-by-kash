@@ -56,7 +56,9 @@ export function ExportModal({
     return out
   }, [repo?.branches])
 
-  const fail = (err: unknown): void => toast('error', err instanceof Error ? err.message : String(err))
+  const fail = (err: unknown): void => {
+    toast('error', err instanceof Error ? err.message : String(err))
+  }
 
   // ── Bundle ────────────────────────────────────────────────────────────────
   const [scope, setScope] = useState<'all' | 'ref' | 'range'>('all')
