@@ -16,6 +16,7 @@ import { displayPath, shortFileName } from '../src/renderer/src/lib/pathDisplay'
 import { fitBranchAndGraph } from '../src/renderer/src/lib/graphColumnFit'
 import type { FileEntry } from '../src/shared/types'
 import { followCommitFile, followSelectedCommit, followWipFile, headMove, headOf, isHeadCommit, landedCommit } from '../src/renderer/src/lib/wipFileFollow'
+import { redoStillApplies } from '../src/renderer/src/lib/redoGuard'
 import { stackOrder, moveLevel, adoptableBranches, targetFor } from '../src/renderer/src/lib/stackOrder'
 import { planStackSubmit, summariseStackPlan } from '../src/shared/stackPr'
 import { groupPrStacks, stackRowStates } from '../src/renderer/src/lib/prStacks'
@@ -7423,5 +7424,22 @@ describe('Details following HEAD as it is committed, undone and amended', () => 
   it('leaves an older commit, and HEAD moving on top, alone', () => {
     expect(followSelectedCommit('a', headMove(before, on('a', c('a', [], true))), true)).toBeNull()
     expect(followSelectedCommit('b', headMove(before, on('c', c('c', ['b'], true), c('b', ['a']), base)), true)).toBeNull()
+  })
+})
+
+describe('redo guard', () => {
+  const log = (head: string) => [{ hash: head, refs: ['HEAD -> main'] }, { hash: 'old', refs: [] }]
+
+  it('offers Redo while HEAD is where the undo left it', () => {
+    expect(redoStillApplies('a', log('a'))).toBe(true)
+  })
+
+  it('withdraws Redo once new work has moved HEAD', () => {
+    expect(redoStillApplies('a', log('b'))).toBe(false)
+  })
+
+  it('trusts the stack when there is nothing to compare', () => {
+    expect(redoStillApplies(null, log('b'))).toBe(true)
+    expect(redoStillApplies('a', [])).toBe(true)
   })
 })

@@ -175,6 +175,21 @@ search is disabled while a file covers the graph. ([Keyboard](help/keyboard.md))
 
 ## Staging, diffs & files
 
+**Commit and undo keep their context.** Undoing a commit used to leave
+Details on "Commit not found" and throw the message away; committing closed
+Details, then opened it again a moment later. Now committing moves Details
+straight to the new commit — closing any file you had open, so the commit and
+all its files are what you see — undoing moves it to the working changes with the
+message and description back in the composer (never over text you typed), and
+undoing an amend returns to the commit before the amend instead of dropping it.
+A commit taken off outside the app is offered on Redo, by name, not on Undo;
+Redo is withdrawn once new work moves `HEAD`, instead of failing with "try
+again"; and a change an agent makes in the second after one of Geminio's own
+writes is no longer mistaken for Geminio's, so it can be undone.
+*Limits:* only the commit that was HEAD is followed; an older commit that
+leaves history keeps its view. ([Committing](help/committing.md#amend),
+[Recovery](help/recovery.md#changes-made-outside-geminio))
+
 **Commit hints that know your repository.** The composer's hints used to say
 "Capitalize the subject" in a repository whose commitlint rejects capitals, and
 appeared on the first keystroke; a rejected commit said only that the hook

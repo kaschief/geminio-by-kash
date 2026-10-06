@@ -8,6 +8,7 @@ import { noteAppWrite, wasAppWrite } from '../src/main/appWrites'
 import { parseReflog } from '../src/shared/refMoves'
 import type { RecentRefMoves, RefMove } from '../src/shared/types'
 import {
+  externalRedo,
   externalUndoFirst,
   externalUndoLabel,
   planExternalUndo,
@@ -65,6 +66,56 @@ describe('planExternalUndo', () => {
     expect(reset).toMatchObject({ kind: 'reset', undo: { mode: 'restore', target: A } })
     const pull = planExternalUndo(onBranch([move(A, B, 'pull: Fast-forward')]), new Set())
     expect(pull).toMatchObject({ kind: 'move', undo: { mode: 'keep', target: A } })
+  })
+
+  it('offers a commit taken off by `reset HEAD~1` as a Redo that puts it back', () => {
+    const plan = planExternalUndo(
+      onBranch([move(B, A, 'reset: moving to HEAD~1', 2000), move(A, B, 'commit: feat: add ring', 1000)]),
+      new Set()
+    )
+    expect(plan).toMatchObject({
+      kind: 'uncommit',
+      subject: 'feat: add ring',
+      expectedHead: A,
+      undo: { type: 'reset', mode: 'soft', target: B }
+    })
+    expect(externalRedo(plan)).toBe(plan)
+    expect(externalUndoFirst(plan, undefined)).toBe(false)
+    expect(externalUndoLabel(plan!)).toEqual({ key: 'extUndo.label.commit', vars: { subject: 'feat: add ring' } })
+  })
+
+  it('recognises an uncommit by what it did, however the tool worded it', () => {
+    // Real reflog lines: the terminal, Geminio, and GitKraken.
+    for (const message of ['reset: moving to HEAD~1', 'reset: moving to HEAD^', `reset: moving to ${A}`, 'undo: commit: feat(parallax): x'])
+      expect(planExternalUndo(onBranch([move(B, A, message, 2), move(A, B, 'commit: feat(parallax): x', 1)]), new Set()))
+        .toMatchObject({ kind: 'uncommit', subject: 'feat(parallax): x' })
+  })
+
+  it('recognises an uncommit when other moves came between it and the commit', () => {
+    // Commit B on A, amend it to C, undo the amend back to B, then undo B.
+    const plan = planExternalUndo(
+      onBranch([
+        move(B, A, 'reset: moving to HEAD~1', 4),
+        move(C, B, `reset: moving to ${B}`, 3),
+        move(B, C, 'commit (amend): y', 2),
+        move(A, B, 'commit: chore: drop session', 1)
+      ]),
+      new Set()
+    )
+    expect(plan).toMatchObject({ kind: 'uncommit', subject: 'chore: drop session' })
+  })
+
+  it('does not mistake other moves for an uncommit', () => {
+    // Back further than the commit's parent.
+    expect(planExternalUndo(onBranch([move(B, ZERO.replace(/0/g, 'd'), 'reset: moving to HEAD~2', 2), move(A, B, 'commit: x', 1)]), new Set())?.kind)
+      .toBe('reset')
+    // Undoing an amend returns to the pre-amend commit, not an uncommit.
+    expect(planExternalUndo(onBranch([move(B, A, 'reset: moving to HEAD@{1}', 2), move(A, B, 'commit (amend): x', 1)]), new Set())?.kind)
+      .toBe('reset')
+    // A redo's reset after an undo's reset: neither is a commit.
+    expect(planExternalUndo(onBranch([move(A, B, `reset: moving to ${B}`, 3), move(B, A, `reset: moving to ${A}`, 2)]), new Set())?.kind)
+      .toBe('reset')
+    expect(externalRedo(planExternalUndo(onBranch([move(A, B, 'commit: x')]), new Set()))).toBeNull()
   })
 
   it('undoes a checkout by checking the previous ref out again', () => {
@@ -195,14 +246,6 @@ describe('recentRefMoves against a real repository', () => {
     expect(git(repo, ['diff', '--cached', '--name-only'])).toBe('a.txt')
   })
 
-  it('sees a terminal checkout', async () => {
-    const repo = initRepo()
-    commitFile(repo, 'a.txt', 'one\n', 'base')
-    git(repo, ['checkout', '-q', '-b', 'dev'])
-    const plan = planExternalUndo(await gitService.recentRefMoves(repo), new Set())
-    expect(plan).toMatchObject({ kind: 'checkout', from: 'main', to: 'dev' })
-  })
-})
   it('sees a terminal uncommit and offers to put the commit back', async () => {
     const repo = initRepo()
     commitFile(repo, 'a.txt', 'one\n', 'base')
@@ -229,3 +272,11 @@ describe('recentRefMoves against a real repository', () => {
     }
   })
 
+  it('sees a terminal checkout', async () => {
+    const repo = initRepo()
+    commitFile(repo, 'a.txt', 'one\n', 'base')
+    git(repo, ['checkout', '-q', '-b', 'dev'])
+    const plan = planExternalUndo(await gitService.recentRefMoves(repo), new Set())
+    expect(plan).toMatchObject({ kind: 'checkout', from: 'main', to: 'dev' })
+  })
+})

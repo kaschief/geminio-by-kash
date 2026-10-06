@@ -65,7 +65,8 @@ import { useRepoStore, repoActions, type RepoData } from '../stores/repo'
 import { useUIStore } from '../stores/ui'
 import { useSettingsStore } from '../stores/settings'
 import { repoChatAvailable } from '../lib/repoChatUI'
-import { externalUndoFirst, externalUndoLabel } from '../lib/externalUndo'
+import { externalRedo, externalUndoFirst, externalUndoLabel } from '../lib/externalUndo'
+import { redoStillApplies } from '../lib/redoGuard'
 import { mi } from './menuIcons'
 import { useT, interp, type TranslationKey } from '../i18n'
 import { timeAgo, isStale } from '../lib/timeAgo'
@@ -396,7 +397,16 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
     : appUndo
       ? interp(t('toolbar.undoNext'), { label: appUndo.label })
       : t('toolbar.undoTitle')
-  const nextRedo = repo.redoStack[repo.redoStack.length - 1]
+  // A redo whose repository has moved on is not offered at all.
+  const nextRedo = redoStillApplies(repo.redoHead, repo.commits) ? repo.redoStack[repo.redoStack.length - 1] : undefined
+  // A commit taken off outside the app comes back through Redo, and goes first.
+  const reflogRedo = externalRedo(repo.externalUndo)
+  const reflogRedoLabel = reflogRedo ? externalUndoLabel(reflogRedo) : null
+  const redoTitle = reflogRedoLabel
+    ? interp(t('toolbar.redoNextReflog'), { label: interp(t(reflogRedoLabel.key), reflogRedoLabel.vars) })
+    : nextRedo
+      ? interp(t('toolbar.redoNext'), { label: nextRedo.label })
+      : t('toolbar.redo')
   const items: BarItem[] = [
     {
       id: 'undo',
@@ -410,10 +420,10 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
     {
       id: 'redo',
       label: t('toolbar.redo'),
-      title: nextRedo ? interp(t('toolbar.redoNext'), { label: nextRedo.label }) : t('toolbar.redo'),
+      title: redoTitle,
       icon: <Redo2 size={17} />,
       menuIcon: <Redo2 size={15} strokeWidth={1.75} />,
-      disabled: repo.redoStack.length === 0 || inflight,
+      disabled: (!nextRedo && !reflogRedo) || inflight,
       run: () => void redo(path)
     },
     { id: 'sep-1', sep: true },

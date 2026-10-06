@@ -148,6 +148,24 @@ the preview says so too. A toast confirms the result, or reports git's refusal.
 Press Undo again to keep walking back through earlier changes made outside
 the app.
 
+**An undone commit comes back through Redo.** If the last thing that happened
+outside the app was a commit being taken off — by `git reset HEAD~1`, another
+Geminio window, GitKraken's Undo, in any mode — reversing it puts the commit
+back. It is recognised by what happened (HEAD went from a commit straight back
+to where that commit was made, even with other moves — an amend and its undo —
+in between), not by how the tool worded it, and its message
+returns to the composer as it does for Geminio's own Undo. That is a redo, so it is offered
+on **Redo**, named by the commit's subject ("Redo commit “feat: add ring”"),
+with the same preview first. Undo does not claim it. This is also what you see
+in a second Geminio window on the same repository: the window that pressed
+Undo has its own Redo, and the other one reads the same step from the reflog.
+
+**Redo goes away once new work lands.** As in any editor, a Redo only applies
+to the repository as the undo left it. If a commit, reset or checkout moves
+`HEAD` after you undo — from a terminal, an agent, another window — Redo is
+withdrawn, and pressing it says the repository has moved on rather than
+failing.
+
 **What it cannot do.** The reflog only records *ref moves*. Staging, stashing,
 editing files, creating or deleting branches and tags all leave HEAD where it
 was, so Undo cannot reverse them when they happen outside Geminio.

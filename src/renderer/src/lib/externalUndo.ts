@@ -147,7 +147,8 @@ export function planExternalUndo(moves: RecentRefMoves | null, skip: ReadonlySet
  * commit; timestamps settle it.
  */
 export function externalUndoFirst(plan: ExternalUndoPlan | null, appTopAt: number | undefined): boolean {
-  if (!plan) return false
+  // Reversing an uncommit is offered as Redo, never as Undo.
+  if (!plan || plan.kind === 'uncommit') return false
   return appTopAt === undefined || appTopAt <= plan.move.date * 1000
 }
 
@@ -197,4 +198,9 @@ export function externalUndoEffect(plan: ExternalUndoPlan): { key: TranslationKe
 /** A detached checkout names a full sha; abbreviate it like the rest of the UI. */
 function shortRef(ref: string): string {
   return /^[0-9a-f]{40,64}$/.test(ref) ? ref.slice(0, 7) : ref
+}
+
+/** The commit a Redo would put back, when the newest outside change took one off. */
+export function externalRedo(plan: ExternalUndoPlan | null): ExternalUndoPlan | null {
+  return plan?.kind === 'uncommit' ? plan : null
 }

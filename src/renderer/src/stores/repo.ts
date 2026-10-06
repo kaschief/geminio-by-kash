@@ -54,6 +54,7 @@ import { workingChangeCount } from '../lib/workingChanges'
 import { splitCommitMessage } from '../lib/commitMenuCapabilities'
 import { followSelectedCommit, headMove, landedCommit } from '../lib/wipFileFollow'
 import {
+  externalRedo,
   externalUndoEffect,
   externalUndoFirst,
   externalUndoLabel,
@@ -168,6 +169,9 @@ export interface RepoData {
   maxCount: number
   undoStack: UndoEntry[]
   redoStack: UndoEntry[]
+  /** Where HEAD stood when the redo stack last changed — Redo applies only while
+   *  it still does (lib/redoGuard). Null when there is nothing to compare. */
+  redoHead: string | null
   remoteTagNames: string[]
   /** Epoch ms of the last successful view refresh (local read of repo state). */
   lastRefreshAt: number | null
@@ -228,6 +232,7 @@ const emptyRepo = (path: string): RepoData => ({
   maxCount: useSettingsStore.getState().settings.initialCommitCount ?? 400,
   undoStack: [],
   redoStack: [],
+  redoHead: null,
   remoteTagNames: [],
   lastRefreshAt: null,
   lastFetchAt: null,
@@ -1047,7 +1052,8 @@ export const useRepoStore = create<RepoStoreState>((set, get) => ({
           if (repo) {
             get().patch(path, {
               undoStack: [...repo.undoStack, { ...undoEntry, at: Date.now() }].slice(-30),
-              redoStack: []
+              redoStack: [],
+              redoHead: null
             })
           }
         }
@@ -1101,7 +1107,8 @@ export const useRepoStore = create<RepoStoreState>((set, get) => ({
         await entry.undo()
         get().patch(path, {
           undoStack: repo.undoStack.slice(0, -1),
-          redoStack: [...repo.redoStack, entry]
+          redoStack: [...repo.redoStack, entry],
+          redoHead: await gitApi.resolveRev(path, 'HEAD').catch(() => null)
         })
         toast('success', interp(t('undo.done'), { label: entry.label }))
       } catch (err) {
@@ -1114,12 +1121,32 @@ export const useRepoStore = create<RepoStoreState>((set, get) => ({
     })
   },
 
-  redo: (path) => {
+  redo: async (path) => {
+    // An outside reset that took the last commit off is the newest thing at
+    // HEAD, so putting that commit back comes before any older redo of ours.
+    const plan = await gitApi
+      .recentRefMoves(path)
+      .then((moves) => planExternalUndo(moves, skipFor(path)))
+      .catch(() => null)
+    get().patch(path, { externalUndo: plan })
+    const reflogRedo = externalRedo(plan)
+    if (reflogRedo) {
+      await previewExternalRedo(path, reflogRedo)
+      return
+    }
     const repo = get().repos[path]
     const entry = repo?.redoStack[repo.redoStack.length - 1]
     if (!repo || !entry) {
       toast('info', t('undo.nothingToRedo'))
-      return Promise.resolve()
+      return
+    }
+    // New work landed since the undo: the step no longer applies. Drop it,
+    // and say so — "try again" would only fail again.
+    const head = await gitApi.resolveRev(path, 'HEAD').catch(() => null)
+    if (repo.redoHead && head && head !== repo.redoHead) {
+      get().patch(path, { redoStack: [], redoHead: null })
+      toast('info', t('redo.movedOn'))
+      return
     }
     return enqueue(path, async () => {
       const ui = useUIStore.getState()
@@ -1130,6 +1157,7 @@ export const useRepoStore = create<RepoStoreState>((set, get) => ({
         await entry.redo()
         get().patch(path, {
           redoStack: repo.redoStack.slice(0, -1),
+          redoHead: await gitApi.resolveRev(path, 'HEAD').catch(() => null),
           undoStack: [...repo.undoStack, { ...entry, at: Date.now() }]
         })
         toast('success', interp(t('redo.done'), { label: entry.label }))
@@ -1446,7 +1474,7 @@ function pushUndo(path: string, entry: UndoEntry): void {
   const store = useRepoStore.getState()
   const repo = store.repos[path]
   if (!repo) return
-  store.patch(path, { undoStack: [...repo.undoStack, { ...entry, at: Date.now() }].slice(-30), redoStack: [] })
+  store.patch(path, { undoStack: [...repo.undoStack, { ...entry, at: Date.now() }].slice(-30), redoStack: [], redoHead: null })
 }
 
 // ─── Undo for changes made outside the app ─────────────────────────────────
@@ -1547,8 +1575,65 @@ function runExternalUndo(path: string, plan: ExternalUndoPlan): Promise<void> {
         }
       }
       const repo = useRepoStore.getState().repos[path]
-      if (repo) useRepoStore.getState().patch(path, { redoStack: [...repo.redoStack, entry].slice(-30) })
+      if (repo) useRepoStore.getState().patch(path, { redoStack: [...repo.redoStack, entry].slice(-30), redoHead: afterUndo })
       toast('success', interp(t('undo.done'), { label }))
+    } catch (err) {
+      toast('error', readableGitError(err instanceof Error ? err.message : String(err)), { repoPath: path })
+    } finally {
+      useUIStore.getState().setBusy(null)
+      await useRepoStore.getState().refresh(path)
+      useUIStore.getState().endInflight()
+    }
+  })
+}
+
+/** Confirm putting back a commit that was taken off outside the app. */
+async function previewExternalRedo(path: string, plan: ExternalUndoPlan): Promise<void> {
+  const label = externalLabel(plan)
+  const ago = timeAgo(plan.move.date * 1000, Date.now())
+  const effect = externalUndoEffect(plan)
+  useUIStore.getState().openModal({
+    kind: 'confirm',
+    title: interp(t('extRedo.title'), { label }),
+    message: [
+      interp(t('extRedo.source'), {
+        when: ago ? interp(t(ago.key), { n: ago.n }) : new Date(plan.move.date * 1000).toLocaleString(),
+        actor: plan.move.actor
+      }),
+      interp(t(effect.key), effect.vars)
+    ].join('\n\n'),
+    confirmLabel: t('extRedo.confirm'),
+    autoFocusConfirm: true,
+    onConfirm: () => void runExternalRedo(path, plan)
+  })
+}
+
+/** Put the commit back, and make taking it off again an ordinary Undo. */
+function runExternalRedo(path: string, plan: ExternalUndoPlan): Promise<void> {
+  const label = externalLabel(plan)
+  return enqueue(path, async () => {
+    const ui = useUIStore.getState()
+    ui.beginInflight()
+    ui.setBusy(interp(t('redo.busy'), { label }))
+    muteWatcher(path)
+    try {
+      let restored = await stepExternal(path, plan, plan.undo, plan.expectedHead)
+      await clearRestoredCommitMessageOf(path, plan.move.old)
+      const entry: UndoEntry = {
+        label,
+        at: Date.now(),
+        undo: async () => {
+          await stepExternal(path, plan, plan.redo, restored)
+          await restoreCommitMessageOf(path, plan.move.old)
+        },
+        redo: async () => {
+          restored = await stepExternal(path, plan, plan.undo, plan.expectedHead)
+          await clearRestoredCommitMessageOf(path, plan.move.old)
+        }
+      }
+      const repo = useRepoStore.getState().repos[path]
+      if (repo) useRepoStore.getState().patch(path, { undoStack: [...repo.undoStack, entry].slice(-30) })
+      toast('success', interp(t('redo.done'), { label }))
     } catch (err) {
       toast('error', readableGitError(err instanceof Error ? err.message : String(err)), { repoPath: path })
     } finally {
