@@ -44,7 +44,7 @@ import { useSettingsStore } from './settings'
 import { worktreeForBranch, worktreeTabName } from '../lib/worktrees'
 import { isSecretFile } from '../lib/secrets'
 import { isProtectedBranch } from '../lib/repoConfig'
-import { commitHookFailureHint } from '../lib/commitLint'
+import { commitHookProblems } from '../lib/commitLint'
 import { isLockErrorMessage, lockRepairPlan } from '../lib/gitLocks'
 import { overwrittenLocalChanges, readableGitError, summarizePaths } from '../lib/gitErrors'
 import { parseRouteConflict } from '../lib/stackOrder'
@@ -2586,9 +2586,9 @@ export const repoActions = {
       },
       null,
       (error) => {
-        const hint = commitHookFailureHint(error)
-        if (!hint) return false
-        toast('error', t(hint))
+        const problems = commitHookProblems(error)
+        if (!problems) return false
+        toast('error', problems.map((p) => (p.vars ? interp(t(p.key), p.vars) : t(p.key))).join('\n'))
         return true
       },
       ['log', 'status', 'branches']

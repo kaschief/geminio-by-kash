@@ -13,7 +13,7 @@ import { useSettingsStore } from '../stores/settings'
 import { FileListView } from './FileListView'
 import { MatchSummary, matchesByFile } from './SearchMatches'
 import { Avatar } from './Avatar'
-import { lintCommit, subjectCounterLevel, SUBJECT_IDEAL_LEN, CC_TYPES, parseCcPrefix, applyCcType, applyCcScope, currentCcScope, GITMOJIS, parseGitmojiPrefix, applyGitmoji, parseTicketPrefix, ticketFromBranch } from '../lib/commitLint'
+import { inferCommitStyle, lintCommit, subjectCounterLevel, SUBJECT_IDEAL_LEN, CC_TYPES, parseCcPrefix, applyCcType, applyCcScope, currentCcScope, GITMOJIS, parseGitmojiPrefix, applyGitmoji, parseTicketPrefix, ticketFromBranch } from '../lib/commitLint'
 import { appendTrailers, configTrailers } from '../lib/repoConfig'
 import { isSecretFile } from '../lib/secrets'
 import { isBuildNoise, ignoreLineFor } from '../lib/buildNoise'
@@ -124,7 +124,14 @@ export function CommitComposer({ repo }: { repo: RepoData }): React.JSX.Element 
     }
     return out
   }, [repo.commits])
-  const lintHints = useMemo(() => lintCommit(summary, description), [summary, description])
+  // The hints follow the repository's own habits, read from its history — and
+  // a profile set to Conventional Commits counts even before the history does.
+  const conventionalProfile = useSettingsStore((s) => s.activeProfile().ai.commitStyle === 'conventional')
+  const messageStyle = useMemo(() => {
+    const inferred = inferCommitStyle(repo.commits.map((c) => c.subject))
+    return conventionalProfile ? { ...inferred, conventional: true } : inferred
+  }, [repo.commits, conventionalProfile])
+  const lintHints = useMemo(() => lintCommit(summary, description, messageStyle), [summary, description, messageStyle])
   const subjLevel = subjectCounterLevel(summary.trim().length)
   const currentCcType = parseCcPrefix(summary).type
   const applyCcTypeToDraft = (ty: string): void => {

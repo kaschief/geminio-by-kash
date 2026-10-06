@@ -42,8 +42,29 @@ Pick one in Settings; the composer adapts to it.
 ## The linter
 
 A live, non-blocking check: subject length (with a character counter), a
-trailing period, a non-imperative or lowercase subject, over-wide body lines.
-Hints, never a gate — it will not stop you committing.
+trailing period, the mood of the first word, over-wide body lines. Hints, never
+a gate — it will not stop you committing.
+
+Each hint names the one thing to change, judged by **the repository's own
+habits**, read from its recent commits. Where most subjects start with a
+Conventional type, a subject without one is asked for a type, never for a
+capital; where the text after the type is lower case, `feat: Add …` is pointed
+at, because commitlint's `subject-case` would reject it (an acronym too:
+`feat: add API docs` passes, `feat: API docs` does not). A profile set to
+Conventional Commits counts even before the history shows it.
+
+A word is judged only once it is finished — after the space that follows it.
+Typing `t` on the way to `test:` is not a mistake, and nothing appears until
+the first word is done.
+
+When a commit hook rejects the message, the error names the rule that failed
+— "the hook wants the text after the type in lower case", "use one of: feat,
+fix, docs" — instead of a general "rejected". A rule Geminio does not know
+keeps commitlint's own words.
+
+*Limits:* the style is inferred, not read from your commitlint config, so a
+repository with very little history gets the general hints. A trailing period
+is flagged as you type it, even mid-number.
 
 ## Amend
 

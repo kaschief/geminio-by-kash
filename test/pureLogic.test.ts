@@ -27,7 +27,7 @@ import { acceleratorFromCombo, isMenuRole } from '../src/shared/menu'
 import { MAIN_WINDOW_STATE, showMainWindow } from '../src/main/windowState'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
-import { commitHookFailureHint, lintCommit, subjectCounterLevel, parseCcPrefix, applyCcType, parseGitmojiPrefix, applyGitmoji, parseTicketPrefix, applyTicket, ticketFromBranch } from '../src/renderer/src/lib/commitLint'
+import { commitHookProblems, inferCommitStyle, lintCommit, subjectCounterLevel, parseCcPrefix, applyCcType, parseGitmojiPrefix, applyGitmoji, parseTicketPrefix, applyTicket, ticketFromBranch } from '../src/renderer/src/lib/commitLint'
 import { isSecretFile, maskSecretLine } from '../src/renderer/src/lib/secrets'
 import { isBundleDir } from '../src/renderer/src/lib/bundleDirs'
 import { parsePbxproj, mergePbxproj, isaOf, isPbxprojPath } from '../src/shared/pbxproj'
@@ -564,14 +564,87 @@ describe('commit lint', () => {
   })
 })
 
-describe('commit hook failure hint', () => {
+describe('commit hook problems', () => {
+  const commitlint = (lines: string[]): string =>
+    ['⧗   input: Feat: Add thing', ...lines, '', '✖   found 2 problems, 0 warnings'].join('\n')
+
   it('explains how to fix a missing Conventional Commit type', () => {
-    expect(commitHookFailureHint('subject may not be empty [subject-empty]\ntype may not be empty [type-empty]'))
-      .toBe('commitLint.hookNeedsType')
+    expect(commitHookProblems('subject may not be empty [subject-empty]\ntype may not be empty [type-empty]')).toEqual([
+      { level: 'error', key: 'commitLint.hookNeedsType' }
+    ])
+  })
+
+  it('names each rule commitlint rejected, not a generic failure', () => {
+    const out = commitlint([
+      '✖   subject must not be sentence-case, start-case, pascal-case, upper-case [subject-case]',
+      '✖   header must not be longer than 100 characters, current length is 120 [header-max-length]'
+    ])
+    expect(commitHookProblems(out)).toEqual([
+      { level: 'error', key: 'commitLint.rule.subjectCase' },
+      { level: 'error', key: 'commitLint.rule.headerMax', vars: { max: '100' } }
+    ])
+  })
+
+  it('lists the allowed types when the type is not one of them', () => {
+    const out = commitlint(['✖   type must be one of [feat, fix, docs] [type-enum]'])
+    expect(commitHookProblems(out)).toEqual([{ level: 'error', key: 'commitLint.rule.typeEnum', vars: { types: 'feat, fix, docs' } }])
+  })
+
+  it('keeps commitlint’s own words for a rule it does not know', () => {
+    const out = commitlint(['✖   references may not be empty [references-empty]'])
+    expect(commitHookProblems(out)).toEqual([
+      { level: 'error', key: 'commitLint.rule.other', vars: { reason: 'references may not be empty' } }
+    ])
+  })
+
+  it('falls back to a general message for a commitlint failure it cannot parse', () => {
+    expect(commitHookProblems('husky - commit-msg script failed (code 1)')).toEqual([{ level: 'error', key: 'commitLint.hookRejected' }])
   })
 
   it('ignores unrelated git failures', () => {
-    expect(commitHookFailureHint('fatal: unable to write new index file')).toBeNull()
+    expect(commitHookProblems('fatal: unable to write new index file')).toBeNull()
+  })
+})
+
+describe('commit style inferred from history', () => {
+  const conventionalLower = ['feat(parallax): add ring', 'fix: guard empty repo', 'docs: update help', 'chore: bump deps']
+
+  it('recognises a lower-case Conventional Commits repository', () => {
+    expect(inferCommitStyle(conventionalLower)).toEqual({ conventional: true, lowerDescription: true })
+  })
+
+  it('treats a plain history as plain, and too little history as no evidence', () => {
+    expect(inferCommitStyle(['Add ring', 'Fix crash', 'Update docs'])).toEqual({ conventional: false, lowerDescription: false })
+    expect(inferCommitStyle(['feat: add ring'])).toEqual({ conventional: false, lowerDescription: false })
+  })
+
+  it('never asks a Conventional repository to capitalise', () => {
+    const style = inferCommitStyle(conventionalLower)
+    expect(lintCommit('feat(parallax): add Daily Ring outline', '', style)).toEqual([])
+    expect(lintCommit('add ring', '', style).map((h) => h.key)).toEqual(['commitLint.needsType'])
+  })
+
+  it('names the upper-case description a lower-case repository would reject', () => {
+    const style = inferCommitStyle(conventionalLower)
+    expect(lintCommit('feat: Add ring', '', style).map((h) => h.key)).toEqual(['commitLint.lowercaseDescription'])
+  })
+
+  it('says nothing while the first word is still being typed', () => {
+    const style = inferCommitStyle(conventionalLower)
+    for (const partial of ['t', 'te', 'test', 'f', 'feat(', 'feat(ui)', 'feat:', 'feat: Ad'])
+      expect(lintCommit(partial, '', style)).toEqual([])
+    expect(lintCommit('add', '')).toEqual([])
+  })
+
+  it('flags a leading acronym too, as commitlint’s subject-case does', () => {
+    const style = inferCommitStyle(conventionalLower)
+    expect(lintCommit('docs: API reference', '', style).map((h) => h.key)).toEqual(['commitLint.lowercaseDescription'])
+    expect(lintCommit('docs: add API reference', '', style)).toEqual([])
+  })
+
+  it('checks the mood of the words after the type', () => {
+    const style = inferCommitStyle(conventionalLower)
+    expect(lintCommit('feat: added ring', '', style).map((h) => h.key)).toEqual(['commitLint.imperative'])
   })
 })
 

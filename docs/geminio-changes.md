@@ -175,6 +175,14 @@ search is disabled while a file covers the graph. ([Keyboard](help/keyboard.md))
 
 ## Staging, diffs & files
 
+**Commit hints that know your repository.** The composer's hints used to say
+"Capitalize the subject" in a repository whose commitlint rejects capitals, and
+appeared on the first keystroke; a rejected commit said only that the hook
+rejected it. Now the hints follow the style the repository's history shows,
+wait until a word is finished, and a hook rejection names each rule that
+failed. *Limits:* the style is inferred from history, not read from the
+commitlint config. ([The linter](help/committing.md#the-linter))
+
 **Hunk and line actions on every diff.** Stage or Discard (unstaged), Unstage
 (staged), Revert (a commit) and Apply (a stash) — on a whole hunk or on
 selected lines, in unified and split view, each with an undo entry. Discard
