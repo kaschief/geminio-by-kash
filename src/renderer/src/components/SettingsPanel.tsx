@@ -1391,7 +1391,7 @@ function GraphStyleTab(): React.JSX.Element {
       setAiPrompt('')
       setShowEditor(true)
     } catch (err) {
-      toast('error', err instanceof Error ? err.message : 'AI palette generation failed.')
+      toast('error', err instanceof Error ? err.message : t('themeAi.paletteFailed'))
     } finally {
       setGenerating(false)
     }
@@ -1669,7 +1669,7 @@ function ThemesPage({ initialTab, searchTab }: { initialTab?: 'theme' | 'graph';
       setAppAIPrompt('')
       setShowAppEditor(true)
     } catch (err) {
-      toast('error', err instanceof Error ? err.message : 'AI theme generation failed.')
+      toast('error', err instanceof Error ? err.message : t('themeAi.themeFailed'))
     } finally {
       setGeneratingApp(false)
     }
@@ -1687,7 +1687,7 @@ function ThemesPage({ initialTab, searchTab }: { initialTab?: 'theme' | 'graph';
       setCodeAIPrompt('')
       setShowCodeEditor(true)
     } catch (err) {
-      toast('error', err instanceof Error ? err.message : 'AI theme generation failed.')
+      toast('error', err instanceof Error ? err.message : t('themeAi.themeFailed'))
     } finally {
       setGeneratingCode(false)
     }

@@ -2222,14 +2222,14 @@ export const repoActions = {
   batch: async (paths: string[], op: 'fetch' | 'pull', mode: PullMode = 'default') => {
     if (paths.length === 0) return
     const ui = useUIStore.getState()
-    const verb = op === 'fetch' ? 'Fetching' : 'Pulling'
+    const busyKey: TranslationKey = op === 'fetch' ? 'busy.syncFetching' : 'busy.syncPulling'
     let done = 0
     let failed = 0
     for (const path of paths) {
       const before = new Set((useRepoStore.getState().repos[path]?.commits ?? []).map((c) => c.hash))
       let synced = false
       ui.setBusy(
-        `${verb} ${path.split('/').pop()} (${done + failed + 1}/${paths.length})`,
+        interp(t(busyKey), { name: path.split('/').pop() ?? path, n: done + failed + 1, total: paths.length }),
         op === 'fetch' ? 'fetch' : 'pull'
       )
       try {
