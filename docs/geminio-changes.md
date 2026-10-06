@@ -91,8 +91,9 @@ message now shows as on (and inert) instead of being offered again.
 anything that happened while you were in another app — a failed push, a
 rejected commit — was simply missed, and the bell only ever meant GitHub. Now
 the title-bar bell keeps every message, newest first, with its repository and
-time; a dot says something is new, a red count that something failed, and the
-Dock icon counts unseen errors. The list keeps the last 200 across restarts,
+time; a dot says something is new, a red number counts unseen errors only (a
+rejected push among three successes is 1, not 4), and the Dock icon shows the
+same number. GitHub items stop lighting the bell once you have looked. The list keeps the last 200 across restarts,
 with credentials stripped from URLs. **Settings → General → System
 notifications** adds macOS notifications (off by default). The GitHub inbox is
 the list's first row. *Limits:* the app's messages, not every git command —

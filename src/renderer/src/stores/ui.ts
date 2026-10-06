@@ -363,6 +363,9 @@ interface UIState {
   notices: Notice[]
   /** The newest notice id the person has seen in the bell's panel. */
   noticesSeenUpTo: number
+  /** GitHub's unread count when the person last looked (bell or inbox). Only
+   *  items beyond it are news; GitHub's own count is "unread", not "unseen". */
+  githubSeenUnread: number
   /** Cmd/Ctrl+K command palette — fuzzy jump to branches, commits, files, actions. */
   commandPaletteOpen: boolean
   /**
@@ -443,6 +446,7 @@ interface UIState {
   setGithubUnread(n: number): void
   toast(kind: Toast['kind'], message: string, opts?: { repoPath?: string; remote?: boolean }): void
   markNoticesSeen(): void
+  markGithubSeen(): void
   clearNotices(): void
   dismissToast(id: number): void
   toggleTerminal(repoPath: string): void
@@ -530,6 +534,7 @@ export const useUIStore = create<UIState>((set, get) => ({
   toasts: [],
   notices: storedNotices.notices,
   noticesSeenUpTo: storedNotices.seenUpTo,
+  githubSeenUnread: 0,
   commandPaletteOpen: false,
   missionOpen: false,
   githubUnread: 0,
@@ -571,7 +576,9 @@ export const useUIStore = create<UIState>((set, get) => ({
   setCommandPalette: (commandPaletteOpen) => set({ commandPaletteOpen }),
   setMissionOpen: (missionOpen) => set({ missionOpen }),
   toggleCommandPalette: () => set({ commandPaletteOpen: !get().commandPaletteOpen }),
-  setGithubUnread: (githubUnread) => set({ githubUnread }),
+  // Items read elsewhere lower the count; "seen" follows it down, so the next
+  // new item is news again.
+  setGithubUnread: (githubUnread) => set({ githubUnread, githubSeenUnread: Math.min(get().githubSeenUnread, githubUnread) }),
 
   toast: (kind, message, opts) => {
     const id = ++toastId
@@ -603,6 +610,7 @@ export const useUIStore = create<UIState>((set, get) => ({
     if (newest > get().noticesSeenUpTo) set({ noticesSeenUpTo: newest })
   },
   clearNotices: () => set({ notices: [] }),
+  markGithubSeen: () => set({ githubSeenUnread: get().githubUnread }),
   dismissToast: (id) => set({ toasts: get().toasts.filter((t) => t.id !== id) }),
 
   toggleTerminal: (repoPath) =>

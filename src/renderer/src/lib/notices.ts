@@ -32,8 +32,9 @@ export function addNotice(list: readonly Notice[], notice: Notice): Notice[] {
 export interface NoticeBadge {
   /** Messages not yet seen in the panel. */
   unseen: number
-  /** At least one of them is an error — the badge turns red. */
-  error: boolean
+  /** How many of them are errors. Red means "failed", so the red number
+   *  counts failures only — never the successes alongside them. */
+  errors: number
 }
 
 /** Unseen errors — the count on the Dock icon. */
@@ -43,13 +44,13 @@ export function unseenErrors(list: readonly Notice[], seenUpTo: number): number 
 
 export function noticeBadge(list: readonly Notice[], seenUpTo: number): NoticeBadge {
   let unseen = 0
-  let error = false
+  let errors = 0
   for (const n of list) {
     if (n.id <= seenUpTo) continue
     unseen++
-    if (n.kind === 'error') error = true
+    if (n.kind === 'error') errors++
   }
-  return { unseen, error }
+  return { unseen, errors }
 }
 
 /**

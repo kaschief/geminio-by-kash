@@ -20,7 +20,7 @@ The **bell** in the title bar keeps them.
 | You see | It means |
 |---------|----------|
 | A small dot on the bell | Something new, nothing wrong — a push finished, a fetch ran |
-| A red number on the bell | That many unseen messages, at least one an error |
+| A red number on the bell | That many unseen errors — successes never add to it |
 | A red number on the Dock icon | Unseen errors — visible from any other app |
 
 Opening the bell clears both badges. An error raised while Geminio is in the
@@ -38,7 +38,11 @@ overnight is still there in the morning. Before anything is saved, a password
 or token inside a URL is removed from the text.
 
 Your **GitHub inbox**, when GitHub is connected, is the first row of the list;
-it opens the inbox page (see [Hosting](hosting.md#notifications--github)).
+it opens the inbox page (see [Hosting](hosting.md#notifications--github)). Its
+number is GitHub's own unread count, the same as on github.com: it goes down as
+you read items, not when you glance at the list. The bell treats GitHub like
+everything else — once you have opened the bell or the inbox, those items stop
+lighting the dot, and only newer ones do.
 
 ## System notifications
 

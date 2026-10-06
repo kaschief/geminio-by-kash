@@ -68,6 +68,10 @@ function timeLabel(sec: number): string {
 export function NotificationsPage(): React.JSX.Element {
   const t = useT()
   const toast = useUIStore((s) => s.toast)
+  // Looking at the inbox is seeing what is in it: the bell stops calling it
+  // news. GitHub's unread count is untouched — reading an item is what clears it.
+  const githubUnread = useUIStore((s) => s.githubUnread)
+  useEffect(() => useUIStore.getState().markGithubSeen(), [githubUnread])
   const token = useSettingsStore((s) => s.activeProfile().githubToken) ?? ''
 
   const [items, setItems] = useState<GitHubNotification[]>([])

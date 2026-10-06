@@ -54,7 +54,8 @@ const ROOT = resolve(__dirname, '../..')
     //    (the test window is in the background, and the setting is "Errors only").
     await toast('error', 'fatal: unable to access https://kash:ghp_secret@github.com/a/b.git')
     await page.locator('.notif-badge').waitFor()
-    assert.equal(await page.locator('.notif-badge').innerText(), '2')
+    // One error among two messages: the red number counts the error, not both.
+    assert.equal(await page.locator('.notif-badge').innerText(), '1')
     assert.equal(await dock(), '1')
     const sent = await page.evaluate(() => window.__sent)
     assert.equal(sent.length, 1, 'only the error was announced')
@@ -76,6 +77,26 @@ const ROOT = resolve(__dirname, '../..')
     assert.equal(await page.locator('.notice-panel').count(), 0)
     assert.equal(await page.evaluate(() => !!window.__shot.ui.getState().contextMenu), false)
 
+    // 4b. GitHub: unread items light the dot until you look, not until you read
+    //     them on GitHub. The row keeps GitHub's own count; newer items light it again.
+    // With no GitHub account in this profile the app's own poll resets the count
+    // to 0; hold the simulated count against it so the step is deterministic.
+    await page.evaluate(() => {
+      const real = window.__shot.ui.getState().setGithubUnread
+      window.__shot.ui.setState({ setGithubUnread: (n) => real(window.__gh ?? n) })
+    })
+    const ghUnread = (n) => page.evaluate((n) => { window.__gh = n; window.__shot.ui.getState().setGithubUnread(n) }, n)
+    await ghUnread(3)
+    await page.locator('.notif-dot').waitFor()
+    await page.locator('.notif-bell').click()
+    await page.locator('.notice-github-count', { hasText: '3' }).waitFor()
+    await page.keyboard.press('Escape')
+    assert.equal(await page.locator('.notif-dot, .notif-badge').count(), 0, 'seen GitHub items no longer light the bell')
+    await ghUnread(4)
+    await page.locator('.notif-dot').waitFor()
+    await page.locator('.notif-bell').click()
+    await page.keyboard.press('Escape')
+
     // 5. The list survives a restart, without the credential.
     await app.close(); app = null
     ;({ app, page } = await launch())
@@ -86,7 +107,7 @@ const ROOT = resolve(__dirname, '../..')
     // Seen stays seen across the restart.
     assert.equal(await page.locator('.notif-badge, .notif-dot').count(), 0)
 
-    console.log('PASS dot for successes, red count for errors; list clears the badge and the Dock; background error notified; click-away only closes; history survives a restart without credentials')
+    console.log('PASS dot for successes, red count for errors; list clears the badge and the Dock; background error notified; click-away only closes; history survives a restart without credentials; GitHub items stop lighting the bell once seen')
   } finally {
     await app?.close()
     await fs.rm(tmp, { recursive: true, force: true })

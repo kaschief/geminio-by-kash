@@ -38,8 +38,11 @@ export function NotificationBell({ github }: { github: { show: boolean; unread: 
   // Ticks while the panel is open, so "2 minutes ago" stays true.
   const [now, setNow] = useState(() => Date.now())
 
+  const githubSeen = useUIStore((s) => s.githubSeenUnread)
   const badge = noticeBadge(notices, seenUpTo)
-  const count = badge.unseen + github.unread
+  // Anything new lights the dot — GitHub items only once, until you look; only
+  // failures earn the red number.
+  const anythingNew = badge.unseen > 0 || github.unread > githubSeen
   const close = (): void => setPosition(null)
 
   useEffect(() => {
@@ -61,8 +64,10 @@ export function NotificationBell({ github }: { github: { show: boolean; unread: 
 
   // Seen means seen in the open panel — including anything arriving while it is open.
   useEffect(() => {
-    if (position) useUIStore.getState().markNoticesSeen()
-  }, [position, notices])
+    if (!position) return
+    useUIStore.getState().markNoticesSeen()
+    useUIStore.getState().markGithubSeen()
+  }, [position, notices, github.unread])
 
   const toggle = (): void => {
     if (position) return close()
@@ -90,7 +95,13 @@ export function NotificationBell({ github }: { github: { show: boolean; unread: 
   }
 
   const label =
-    count === 1 ? t('notices.bellUnreadOne') : count > 1 ? interp(t('notices.bellUnread'), { n: count }) : t('titlebar.notifications')
+    badge.errors === 1
+      ? t('notices.bellErrorsOne')
+      : badge.errors > 1
+        ? interp(t('notices.bellErrors'), { n: badge.errors })
+        : anythingNew
+          ? t('notices.bellNew')
+          : t('titlebar.notifications')
   const newestFirst = [...notices].reverse()
 
   return (
@@ -105,10 +116,10 @@ export function NotificationBell({ github }: { github: { show: boolean; unread: 
         onClick={toggle}
       >
         <Bell size={16} />
-        {badge.error ? (
-          <span className="notif-badge">{badgeText(count)}</span>
+        {badge.errors > 0 ? (
+          <span className="notif-badge">{badgeText(badge.errors)}</span>
         ) : (
-          count > 0 && <span className="notif-dot" aria-hidden="true" />
+          anythingNew && <span className="notif-dot" aria-hidden="true" />
         )}
       </button>
 

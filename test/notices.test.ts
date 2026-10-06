@@ -20,11 +20,12 @@ describe('the bell list', () => {
     expect(list[0].id).toBe(6)
   })
 
-  it('counts unseen messages, and turns red only for an unseen error', () => {
-    const list = [n(1, 'error'), n(2), n(3, 'info')]
-    expect(noticeBadge(list, 0)).toEqual({ unseen: 3, error: true })
-    expect(noticeBadge(list, 1)).toEqual({ unseen: 2, error: false })
-    expect(noticeBadge(list, 3)).toEqual({ unseen: 0, error: false })
+  it('counts unseen messages, and errors among them separately', () => {
+    const list = [n(1, 'error'), n(2), n(3, 'info'), n(4, 'error')]
+    // One rejected push among three other messages is "1 error", not "4".
+    expect(noticeBadge(list, 0)).toEqual({ unseen: 4, errors: 2 })
+    expect(noticeBadge(list, 1)).toEqual({ unseen: 3, errors: 1 })
+    expect(noticeBadge(list, 4)).toEqual({ unseen: 0, errors: 0 })
   })
 
   it('counts unseen errors for the Dock icon', () => {
