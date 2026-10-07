@@ -75,10 +75,10 @@ are looking at:
 
 | Diff | Actions | What happens |
 |---|---|---|
-| Unstaged changes | **Stage hunk**, **Discard hunk** | Stage copies the change into the index. Discard puts the lines back as they are staged (or committed) |
-| Staged changes | **Unstage hunk** | Takes the change out of the index. The file on disk is untouched |
-| A commit | **Revert hunk** | Undoes that part of the commit in your working tree, as an uncommitted change. No commit is made |
-| A stash | **Apply hunk** | Brings just that part of the stash into your working tree. The stash is kept |
+| Unstaged changes | **Stage Hunk**, **Discard Hunk** | Stage copies the change into the index. Discard puts the lines back as they are staged (or committed) |
+| Staged changes | **Unstage Hunk** | Takes the change out of the index. The file on disk is untouched |
+| A commit | **Revert Hunk** | Undoes that part of the commit in your working tree, as an uncommitted change. No commit is made |
+| A stash | **Apply Hunk** | Brings just that part of the stash into your working tree. The stash is kept |
 
 **Right-click a line** for the same actions without selecting first: *Stage
 this line* or *Discard this line* (or Unstage, Revert, Apply, depending on the
@@ -89,8 +89,8 @@ inline layout a row is a line's old and new version together, so *this line*
 means both halves of the edit.
 
 Every one of them can be undone. Discard still asks first, because it throws
-work away: the **Discard hunk** button asks in place — the first click turns it
-solid red ("Discard hunk?"), the second discards — and a discard from the
+work away: the **Discard Hunk** button asks in place — the first click turns it
+solid red ("Discard Hunk?"), the second discards — and a discard from the
 right-click menu asks in a small popover beside the line. While an action runs,
 the hunk buttons are off, so nothing is pressed twice on lines that are already
 gone. Before it (and before revert and apply) Geminio also takes a
@@ -117,7 +117,7 @@ The limits:
   moved lines never do. Unified view keeps every −/+ line separate, for the rare
   time you want just one half.
 - **New untracked files** have no hunks to pick from. Stage or discard the whole
-  file. (A stash's untracked files are the exception: Apply hunk creates them.)
+  file. (A stash's untracked files are the exception: Apply Hunk creates them.)
 - **Conflicted files** show git's combined diff, which hunk actions cannot
   read. Resolve them in the conflict view.
 
