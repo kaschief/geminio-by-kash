@@ -99,6 +99,8 @@ import type { DetectedEditor, EditorSetting } from '../../../shared/editors'
 import type { SshKey, SshStatus, SshTest } from '../../../shared/sshKeys'
 import type { DiffToolConfig, DiffToolInfo } from '../../../shared/diffTools'
 import type { RerereStatus } from '../../../shared/types'
+import type { DiffScale } from '../../../shared/types'
+import { DIFF_SCALES } from '../lib/diffScale'
 import { AI_PROVIDERS, emptyAnalytics, defaultGraphStyle, type AIProvider, type Analytics, type AIUsageStat, type ActivityEvent, type RepoStats, type AppSettings, type BranchNamingStyle, type CommitStyle, type ConflictStyle, type ExplainStyle, type Profile, type SigningConfig, type SettingsBundle, type GraphStyle, type GraphPalette, type GraphEdgeStyle, type GraphDensity, type GraphLineWidth, type GraphNodeStyle, type GraphTopology, type GraphFocus, type GraphRowAccent, type GraphRingWidth, type GraphCommit, type ConnectedAccount } from '../../../shared/types'
 import { hasSettingsSecrets, stripSettingsSecrets } from '../../../shared/secrets'
 import { tabActiveRepoPath } from '../../../shared/types'
@@ -2633,6 +2635,27 @@ function GraphPage(): React.JSX.Element {
   )
 }
 
+const DIFF_SCALE_NAMES = { 1: 'default', 0.9: 'compact', 0.8: 'smaller', 0.7: 'smallest' } as const satisfies Record<DiffScale, string>
+
+/** Two diff rows, a removal and its replacement, drawn with the diff's own
+ *  classes and colours at the given scale. Decorative: the card's label names the choice. */
+function DiffScaleSample({ scale }: { scale: DiffScale }): React.JSX.Element {
+  return (
+    <span className="diff-scale-sample hljs" aria-hidden="true" style={{ '--diff-scale': scale } as React.CSSProperties}>
+      <span className="diff-line del">
+        <span className="diff-gutter">12</span>
+        <span className="diff-sign">-</span>
+        <span className="diff-text">{'size = 12' /* i18n-ignore code sample */}</span>
+      </span>
+      <span className="diff-line add">
+        <span className="diff-gutter">12</span>
+        <span className="diff-sign">+</span>
+        <span className="diff-text">{'size = 10' /* i18n-ignore code sample */}</span>
+      </span>
+    </span>
+  )
+}
+
 /** Settings → Files & Diffs: how files and their changes are shown. */
 function FilesPage(): React.JSX.Element {
   const settings = useSettingsStore((s) => s.settings)
@@ -2753,6 +2776,31 @@ function FilesPage(): React.JSX.Element {
               </button>
             ))}
           </div>
+        </div>
+      </div>
+      <div className="settings-field">
+        <span className="settings-field-label">{t('settings.diffScale')}</span>
+        <span className="settings-hint">{t('settings.diffScaleHint')}</span>
+        {/* Each card draws the same two diff rows at its own scale, so the size is chosen by eye. */}
+        <div className="layout-segmented four" role="radiogroup" aria-label={t('settings.diffScale')}>
+          {DIFF_SCALES.map((scale) => {
+            const on = (settings.diffScale ?? 1) === scale
+            return (
+              <button
+                key={scale}
+                type="button"
+                role="radio"
+                aria-checked={on}
+                className={`layout-seg-btn ${on ? 'active' : ''}`}
+                onClick={() => update((s) => ({ ...s, diffScale: scale }))}
+              >
+                <strong>
+                  {t(`settings.diffScale.${DIFF_SCALE_NAMES[scale]}`)} · {Math.round(scale * 100)}%
+                </strong>
+                <DiffScaleSample scale={scale} />
+              </button>
+            )
+          })}
         </div>
       </div>
       <div className="settings-field">

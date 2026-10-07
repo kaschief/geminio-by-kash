@@ -17843,3 +17843,23 @@ button.notice-row:hover { background: var(--bg-2); }
   width: 1px;
   background: var(--border);
 }
+
+/* Settings → Files & diffs → Diff size. Applied to the rows rather than the
+   viewer, so the find bar and the diff toolbar keep their size while code,
+   line numbers, @@ bars and hunk buttons shrink together. */
+.diff-viewer > :is(.diff-line, .diff-split) { zoom: var(--diff-scale, 1); }
+
+/* The live sample on each Diff size card: real diff colours, drawn at the
+   card's own scale. */
+.diff-scale-sample {
+  display: block;
+  margin-top: 4px;
+  overflow: hidden;
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: var(--code-font-size, 12px);
+  line-height: 1.55;
+}
+.diff-scale-sample > .diff-line { zoom: var(--diff-scale, 1); }
+.layout-seg-btn .diff-scale-sample .diff-gutter { width: 22px; font-size: 10px; color: var(--text-2); }
+.layout-seg-btn .diff-scale-sample :is(.diff-sign, .diff-text) { font-size: inherit; color: inherit; line-height: inherit; }

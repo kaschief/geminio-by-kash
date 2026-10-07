@@ -202,6 +202,13 @@ search is disabled while a file covers the graph. ([Keyboard](help/keyboard.md))
 
 ## Staging, diffs & files
 
+**A smaller diff, from Settings.** Fitting more of a change on screen used to
+mean zooming the whole app or shrinking code everywhere, and neither touched
+the hunk buttons. **Settings → Files & diffs → Diff size** now draws every diff
+at 90%, 80% or 70%, with code, line numbers, `@@` bars and hunk buttons
+shrinking together; each card previews its size. *Limits:* nothing above
+100%; the diff toolbar and find bar keep their size. ([Diff size](help/diffs.md#diff-size))
+
 **Commit and undo keep their context.** Undoing a commit used to leave
 Details on "Commit not found" and throw the message away; committing closed
 Details, then opened it again a moment later. Now committing moves Details

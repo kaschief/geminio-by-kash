@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { normalizeDiffScale } from '../lib/diffScale'
 import { migrateSharedLayout, updateSharedLayout } from '../../../shared/sharedLayout'
 import { migrateAIConfig, needsAccountsNotice, resolveAI } from '../../../shared/aiAccounts'
 import {
@@ -378,6 +379,7 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
     settings.fileListView = settings.fileListView ?? sd.fileListView
     settings.fileListSort = settings.fileListSort ?? sd.fileListSort
     settings.diffHunkContext = settings.diffHunkContext ?? sd.diffHunkContext
+    settings.diffScale = normalizeDiffScale(settings.diffScale)
     settings.pathDepth = settings.pathDepth ?? sd.pathDepth
     settings.graphShowBody = settings.graphShowBody ?? sd.graphShowBody
     settings.groupBranches = settings.groupBranches ?? sd.groupBranches

@@ -258,6 +258,7 @@ export function DiffViewer({
     }
   })
   const showHunkContext = useSettingsStore((s) => s.settings.diffHunkContext ?? true)
+  const diffScale = useSettingsStore((s) => s.settings.diffScale ?? 1)
   // The @@ bar's label: line ranges, then — quieter, and optional — the code
   // git found around the hunk.
   const hunkLabel = (text: string): React.JSX.Element => {
@@ -737,6 +738,7 @@ export function DiffViewer({
         lines.length > HUGE_LINES ? 'is-huge' : ''
       } ${hoverArmed ? 'hover-armed' : ''}`}
       ref={viewerRef}
+      style={{ '--diff-scale': diffScale } as React.CSSProperties}
       tabIndex={0}
       onKeyDown={onViewerKeyDown}
       {...hoverProps}

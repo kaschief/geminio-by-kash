@@ -2850,6 +2850,10 @@ export interface Workspace {
 /** How the change counts above a file list are drawn (`components/ChangeSummary.tsx`). */
 export type ChangeCountStyle = 'stat' | 'capsule'
 
+/** How much smaller diffs are drawn than everything else. Never above 1: the
+ *  setting exists to fit more of a change on screen, not to enlarge it. */
+export type DiffScale = 1 | 0.9 | 0.8 | 0.7
+
 /** What the tab strip can be ordered by. See `lib/tabSort.ts`. */
 export type TabSortKey = 'attention' | 'unpushed' | 'changes' | 'behind' | 'name' | 'recent'
 
@@ -2925,6 +2929,8 @@ export interface AppSettings {
   fileListSort: 'git' | 'alpha'
   /** Show the enclosing code git finds for each hunk (`@@ … @@ if x`) after its line ranges. */
   diffHunkContext: boolean
+  /** Scale for diff rows (code, line numbers, @@ bars, hunk buttons). 1 = as drawn. */
+  diffScale: DiffScale
   /** Global wheel gesture for moving between files. */
   elasticFileNavigation?: boolean
   elasticFileNavigationFeel?: 'fast' | 'quick' | 'balanced' | 'deliberate'
@@ -3411,6 +3417,7 @@ export function defaultSettings(): AppSettings {
     fileListView: 'path',
     fileListSort: 'git',
     diffHunkContext: true,
+    diffScale: 1,
     elasticFileNavigation: true,
     elasticFileNavigationFeel: 'balanced',
     pathDepth: 'all',

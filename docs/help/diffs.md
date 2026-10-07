@@ -3,7 +3,7 @@ title: Diffs & previews
 category: Reading changes
 order: 20
 summary: Unified, split and inline layouts, word-level highlighting, moved code, image diffs and file previews.
-keywords: diff split side-by-side unified inline word level whitespace ignore whitespace moved code color-moved image diff preview markdown docx pdf change gutter minimap
+keywords: diff size smaller compact shrink scale diff split side-by-side unified inline word level whitespace ignore whitespace moved code color-moved image diff preview markdown docx pdf change gutter minimap
 ---
 
 # Diffs & previews
@@ -111,6 +111,17 @@ selected mode and enabled toggles retain their purple highlight.
 
 The header controls scroll horizontally when the pane is narrow. Find and
 selected-line actions float within the viewer without moving the code.
+
+### Diff size
+
+To fit more of a change on screen, pick a smaller size in **Settings → Files &
+diffs → File viewer → Diff size**: **Default** (100%), **Compact** (90%),
+**Smaller** (80%) or **Smallest** (70%). Each choice shows two sample diff rows
+at that size. Code, line numbers, `@@` bars and the **Revert hunk** / **Stage
+hunk** buttons shrink together; the diff toolbar and the find bar keep their
+size so they stay easy to hit. The size applies to every diff in the app and
+sits on top of the code font size in **Settings → Appearance**, which still
+sizes code everywhere else. There is no size above Default.
 
 ## When the file changes under you
 
