@@ -2504,6 +2504,16 @@ body.col-resizing .node-ava {
 .graph-row.selected:hover .row-date .date-abs {
   --row-tint: var(--accent-soft);
 }
+/* As the last column the exact date would run past the row's edge, making the
+   graph scroll sideways with the row's tint stopping short of it. Anchored to
+   the column's end, it opens leftwards over the column beside it instead. */
+.graph-row:hover .row-date.is-last .date-abs {
+  position: absolute;
+  inset-inline-end: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  padding-inline: 9px;
+}
 .row-date {
   color: var(--text-2);
   font-size: 11px;

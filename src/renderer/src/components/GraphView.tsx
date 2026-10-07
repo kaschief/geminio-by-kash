@@ -642,6 +642,9 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
     () => (isGitHub ? columnOrderRaw : columnOrderRaw.filter((id) => id !== 'deployment')),
     [columnOrderRaw, isGitHub]
   )
+  // The hovered row's exact date runs on past its column; as the last column it
+  // has nothing beside it to run over, so it opens leftwards instead.
+  const lastFlowColumn = columnOrder.filter((id) => columns[id].visible).at(-1)
   const graphStyle = useSettingsStore((s) => s.settings.graphStyle ?? defaultGraphStyle())
   const customGraphPalettes = useSettingsStore((s) => s.settings.customGraphPalettes ?? [])
   const updateRepoLayout = useSettingsStore((s) => s.updateRepoLayout)
@@ -2384,7 +2387,7 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
                     return (
                       <span
                         key="date"
-                        className="row-date"
+                        className={`row-date${lastFlowColumn === 'date' ? ' is-last' : ''}`}
                         style={{ flex: `0 0 ${columns.date.width}px`, width: columns.date.width }}
                       >
                         {!isWip &&
