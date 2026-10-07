@@ -470,6 +470,13 @@ Settings fade out at the bottom while more content remains.
 
 ## Settings & appearance
 
+**Eleven new themes, light and dark.** The built-in themes sat mostly in one
+cool blue-purple range. Ember, Canyon, Forest, Synthwave, Phosphor, Abyss,
+Velvet, Aurora, Sakura, Ink and Glacier add warm, neon, rich and minimal
+looks, each with a light and a dark side (so Auto follows macOS) and a code
+theme to match. Text, accents and syntax colours are held to WCAG AA in both
+sides by a test. ([Themes](help/themes.md))
+
 **Quieter details panel, clearer icon picker.** A list with more below used to
 end in a blurred, dimmed band as tall as a row and a half — on a short list it
 covered most of the second row and read as disabled. Now only the cut edge

@@ -8,8 +8,23 @@ keywords: scrollbar scrollbars scroll fade theme themes dark light appearance co
 
 # Themes & appearance
 
-Built-in themes — Geminio, Nord, Dracula, Solarized, GitHub, Monokai,
-Midnight, Contrast and Daltonic — each with a light and a dark variant.
+Twenty built-in themes, each with a light and a dark variant and a matching
+code theme:
+
+- **The originals:** Geminio, Nord, Dracula, Solarized, GitHub, Monokai,
+  Midnight, Contrast and Daltonic.
+- **Warm and earthy:** Ember (coals on charcoal, or burnt orange on
+  parchment), Canyon (terracotta and ochre) and Forest (moss with amber, or
+  pine on sage paper).
+- **Bold and neon:** Synthwave (hot pink and cyan), Phosphor (a green CRT in
+  the dark, e-ink in the light) and Abyss (deep-sea teal and violet).
+- **Rich and dramatic:** Velvet (oxblood and gold), Aurora (polar night with
+  northern-lights green and violet) and Sakura (plum and cherry blossom).
+- **Minimal:** Ink (greyscale with one red accent) and Glacier (quiet steel
+  and frost blue).
+
+Every one of the new themes keeps text, accents and syntax colours at WCAG AA
+contrast in both variants.
 
 ![Switching from light to dark](../screenshots/clip-themes.webp)
 

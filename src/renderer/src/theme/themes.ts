@@ -1,5 +1,6 @@
 import { contrastText } from '../lib/contrast'
 import type { AppTheme, CodeTheme, ThemeMode, AppThemeColors, CodeThemeColors, StatusDotColors } from '../../../shared/types'
+import { EXTRA_APP_THEMES, EXTRA_CODE_THEMES } from './extraThemes'
 
 // ─── Built-in app themes ─────────────────────────────────────────────────────
 // Every built-in theme ships a light and a dark palette. The active palette is
@@ -358,7 +359,8 @@ export const APP_THEMES: AppTheme[] = [
       yellow: '#e69f00',
       purple: '#cc79a7'
     }
-  }
+  },
+  ...EXTRA_APP_THEMES
 ]
 
 // ─── Built-in code (syntax) themes ───────────────────────────────────────────
@@ -714,7 +716,8 @@ export const CODE_THEMES: CodeTheme[] = [
       operator: '#b5bdc9',
       meta: '#7a8494'
     }
-  }
+  },
+  ...EXTRA_CODE_THEMES
 ]
 
 // ─── Apply helpers ───────────────────────────────────────────────────────────
