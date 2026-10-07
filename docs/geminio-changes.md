@@ -389,10 +389,7 @@ confirms. With a detached HEAD the row is disabled and says why.
 mode switches and headings were all in sentence case ("File view", "Copy path"),
 which reads unlike every other Mac app. They now follow Apple's convention:
 Title Case for controls and titles ("File View", "Copy Path"), sentence case for
-tooltips, hints, messages, checkboxes and option cards. Headings that were in
-ALL CAPS (sidebar sections, graph columns, Settings field labels, Details' Refs
-and Message) are Title Case too; small badges such as NEW and MERGED keep their
-capitals. *Limits:* English only;
+tooltips, hints, messages, checkboxes and option cards. *Limits:* English only;
 other languages keep their own capitalization rules.
 
 **A click outside a picker only closes it.** Clicking away from the

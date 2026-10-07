@@ -255,7 +255,7 @@ export function Welcome(): React.JSX.Element {
           onCreate={createRepo}
           onCreateGroup={createGroup}
           items={recentItems}
-          listTitle={recentItems.length > 0 ? t('welcome.recent') : undefined}
+          listTitle={recentItems.length > 0 ? t('welcome.recent').toUpperCase() : undefined}
         />
       </motion.div>
     </div>
