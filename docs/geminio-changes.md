@@ -244,7 +244,9 @@ conflict markers and a notice, and a hunk that no longer applies says so instead
 of reporting success. Hunk buttons stick to the visible edge so long lines
 cannot hide them. Right-click any diff line for *Stage this line* / *Discard
 this line* (or the selection it is part of), its hunk, and *Copy line*, as in
-GitKraken. *Limits:* new untracked files have no hunks, and conflicted
+GitKraken. In split view an edited line's old and new sides act as one, so
+staging either side stages the whole edit instead of leaving the other half
+unstaged. *Limits:* new untracked files have no hunks, and conflicted
 files' combined diffs take no hunk actions.
 ([Hunk and line actions](help/staging.md#hunk-and-line-actions))
 

@@ -110,7 +110,12 @@ The limits:
   review it before it goes anywhere. If git no longer has the version the hunk
   came from, or the hunk is already undone, nothing changes and you are told so.
 - **Line selection works in both views.** Click changed lines in unified or
-  split view; one selection carries across if you switch.
+  split view; one selection carries across if you switch. In split view an
+  edited line is one edit: clicking or right-clicking either its old or its new
+  side takes both, so staging it never leaves half the edit behind. Only runs
+  that pair one to one join up (three lines replaced by five stay separate), and
+  moved lines never do. Unified view keeps every −/+ line separate, for the rare
+  time you want just one half.
 - **New untracked files** have no hunks to pick from. Stage or discard the whole
   file. (A stash's untracked files are the exception: Apply hunk creates them.)
 - **Conflicted files** show git's combined diff, which hunk actions cannot

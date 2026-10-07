@@ -28,6 +28,7 @@ import {
   parseDiff,
   wordRangesByLine,
   buildSplitRows,
+  splitEditPartners,
   splitHunkHeader,
   type DiffLine,
   type Range,
@@ -176,6 +177,7 @@ const LAYOUTS: { id: DiffLayout; labelKey: TranslationKey; titleKey: Translation
 const MOVE_ARROW: Record<MovedMark['dir'], string> = { up: '↑', down: '↓' }
 const NO_MOVES = new Map<number, MovedMark>()
 const NO_PAIRS = new Map<number, InlinePair>()
+const NO_PARTNERS = new Map<number, number>()
 
 export function DiffViewer({
   diff,
@@ -306,6 +308,12 @@ export function DiffViewer({
   const splitRows = useMemo(() => buildSplitRows(lines), [lines])
 
   const allMoved = useMemo(() => findMovedLines(lines), [lines])
+  // An edited line in split view is one edit across two cells: clicking or
+  // right-clicking either side acts on both, as the inline view's single row does.
+  const splitPartners = useMemo(
+    () => (layout === 'split' ? splitEditPartners(lines, new Set(allMoved.keys())) : NO_PARTNERS),
+    [layout, lines, allMoved]
+  )
   const moved = movedOn ? allMoved : NO_MOVES
   // Inline pairs never include moved lines — their partner is elsewhere — and a
   // masked secret file stays in plain −/+ form, which masks line by line.
@@ -379,14 +387,16 @@ export function DiffViewer({
   // `idx` points into the same `lines`, so one selection serves both views.
   const splitCell = (c: SplitCell | undefined, key: string): React.JSX.Element => {
     const selectable = hasHunkActions && !!c && c.kind !== 'ctx'
+    const partner = c ? splitPartners.get(c.idx) : undefined
+    const idxs = c ? (partner === undefined ? [c.idx] : [c.idx, partner].sort((a, b) => a - b)) : []
     return (
     <div
       key={key}
       className={`diff-split-cell ${c ? c.kind : 'empty'} ${selectable ? 'selectable' : ''} ${
         c && selected.has(c.idx) ? 'line-selected' : ''
       }${c ? movedClass(c.idx) : ''}`}
-      onClick={selectable && c ? () => toggleLine(c.idx) : undefined}
-      onContextMenu={c ? (e) => openLineMenu(e, [c.idx], c.text) : undefined}
+      onClick={selectable ? () => toggleLines(idxs) : undefined}
+      onContextMenu={c ? (e) => openLineMenu(e, idxs, c.text) : undefined}
       title={selectable ? t('diff.selectLineTitle') : undefined}
     >
       {c && moved.has(c.idx) ? (
@@ -447,18 +457,19 @@ export function DiffViewer({
       else next.add(i)
       return next
     })
-  // An inline line is its − and its + at once: selecting it selects both, so a
-  // line action stages (or discards) the whole edit the line shows.
-  const togglePair = (p: InlinePair): void =>
+  // An edit's − and + select together, so a line action stages (or discards)
+  // the whole edit: the inline view's one row, or a split row's two cells.
+  const toggleLines = (idxs: number[]): void =>
     setSelected((prev) => {
       const next = new Set(prev)
-      const on = next.has(p.del) && next.has(p.add)
-      for (const i of [p.del, p.add]) {
+      const on = idxs.every((i) => next.has(i))
+      for (const i of idxs) {
         if (on) next.delete(i)
         else next.add(i)
       }
       return next
     })
+  const togglePair = (p: InlinePair): void => toggleLines([p.del, p.add])
 
   // From the click until the diff on screen reflects it, every action button is
   // off: a second press would act on lines that are already gone (or, between

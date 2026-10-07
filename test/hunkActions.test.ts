@@ -4,7 +4,7 @@ import { execFileSync } from 'node:child_process'
 import { join } from 'node:path'
 import { gitService, previewBody } from '../src/main/git'
 import { cloneFixture, cleanupFixtures } from './fixtures'
-import { parseDiff } from '../src/renderer/src/lib/diff'
+import { parseDiff, splitEditPartners } from '../src/renderer/src/lib/diff'
 import { buildLinePatch, extractHunks, singleHunkPatch } from '../src/renderer/src/lib/hunkPatch'
 import { buildInlinePairs } from '../src/renderer/src/lib/inlineDiff'
 
@@ -163,6 +163,26 @@ describe('hunk actions', () => {
     expect(staged).toContain('+  retries: 5,')
     expect(staged).not.toContain('+  timeout: 2000,')
     expect(git(R, 'diff')).toContain('+  timeout: 2000,')
+  })
+
+  it('stages both halves of an edited split row from either side', async () => {
+    const R = cloneFixture('line-staging')
+    git(R, 'checkout', '-q', '--', 'config.js')
+    writeFileSync(join(R, 'config.js'), config(R).replace('  retries: 3,', '  retries: 5,').replace('  timeout: 1000,', '  timeout: 2000,'))
+    const diff = await gitService.diffFile(R, 'config.js', false, false)
+    const lines = parseDiff(diff)
+    const add = lines.findIndex((l) => l.kind === 'add' && l.text.includes('retries'))
+    const partner = splitEditPartners(lines).get(add)
+    expect(partner).toBeDefined()
+
+    // Right-clicking only the new cell targets the cell and the old one opposite it.
+    const patch = buildLinePatch(lines, extractHunks(diff).header, new Set([add, partner!]), 'forward')
+    await gitService.applyHunkPatch(R, patch, 'index', false)
+
+    const staged = git(R, 'diff', '--cached')
+    expect(staged).toContain('-  retries: 3,')
+    expect(staged).toContain('+  retries: 5,')
+    expect(git(R, 'diff')).not.toMatch(/^[-+]  retries/m)
   })
 
   it('fails without touching the file when the hunk no longer matches', async () => {
