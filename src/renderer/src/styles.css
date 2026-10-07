@@ -9549,6 +9549,10 @@ body.col-resizing .node-ava {
 
 .theme-mode-switch {
   display: inline-flex;
+  /* Wrap inside the column rather than run under the graph preview beside it
+     when the window is narrow or the app is zoomed. */
+  flex-wrap: wrap;
+  max-width: 100%;
   gap: 4px;
   margin-top: 10px;
   padding: 4px;
@@ -9559,6 +9563,7 @@ body.col-resizing .node-ava {
 .theme-mode-btn {
   display: inline-flex;
   align-items: center;
+  white-space: nowrap;
   gap: 7px;
   padding: 7px 14px;
   border: none;
