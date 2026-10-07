@@ -1,5 +1,47 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Read",
+      "Edit",
+      "Write",
+      "Glob",
+      "Grep",
+      "Bash(npm run *)",
+      "Bash(npm install*)",
+      "Bash(npm test*)",
+      "Bash(npx vitest *)",
+      "Bash(node scripts/*)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git show*)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git pull*)",
+      "Bash(git fetch*)",
+      "Bash(git push)",
+      "Bash(git push origin *)",
+      "Bash(git switch *)",
+      "Bash(git branch)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(grep *)",
+      "Bash(find *)"
+    ],
+    "ask": [
+      "Bash(npm run install:mac*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git push origin --force*)",
+      "Bash(git push origin -f*)",
+      "Bash(git push origin +*)",
+      "Bash(git switch -f*)",
+      "Bash(git switch --discard-changes*)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean *)"
+    ]
+  },
   "hooks": {
     "PostToolUse": [
       {
