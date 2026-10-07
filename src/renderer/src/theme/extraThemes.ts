@@ -198,9 +198,9 @@ export const EXTRA_APP_THEMES: AppTheme[] = [
       bg4: '#0a380e',
       border: '#0c4511',
       borderSoft: '#07270a',
-      text0: '#b7ffb0',
-      text1: '#6fd36a',
-      text2: '#46a043',
+      text0: '#e4ede3',
+      text1: '#aebcac',
+      text2: '#76857a',
       accent: '#39ff6a',
       green: '#39ff6a',
       red: '#ff5e4a',
@@ -631,7 +631,7 @@ export const EXTRA_CODE_THEMES: CodeTheme[] = [
     dark: {
       bg: 'transparent',
       text: '#dcefd9',
-      comment: '#46a043',
+      comment: '#76857a',
       keyword: '#ffb000',
       string: '#4af2ff',
       number: '#ff79c6',
@@ -642,8 +642,8 @@ export const EXTRA_CODE_THEMES: CodeTheme[] = [
       builtin: '#e7ff4a',
       attr: '#ff79c6',
       tag: '#ff8a5e',
-      operator: '#6fd36a',
-      meta: '#46a043'
+      operator: '#aebcac',
+      meta: '#76857a'
     }
   },
   {
