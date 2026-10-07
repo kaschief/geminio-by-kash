@@ -176,6 +176,8 @@ repository's old layout is adopted. ([The commit graph](help/graph.md))
 
 **Dates and descriptions your way.** A date format setting (relative, date &
 time, ISO); in relative mode the hovered row shows the exact date in place.
+When the date is the last column, that longer date opens leftwards over the
+row instead of running past the window edge.
 Optionally, the start of each commit's description follows its title in a
 quieter shade, with trailers like `Co-authored-by` left out.
 ([The commit graph](help/graph.md))
@@ -185,7 +187,8 @@ a dashed avatar ring and dotted bar, with an optional ↑ badge and row tint.
 Commit-row accents (Off, Ring, Ring + bar, Full; lane or custom colour) and the
 avatar ring thickness (Thin by default, Normal, Thick) are adjustable with a
 live preview. *Limits:* "unpushed" is as of your last fetch, and a repository
-with no remote marks nothing. ([Commit rows](help/themes.md#commit-rows))
+with no remote marks nothing. Tinted unpushed rows still deepen on hover, like
+every other row. ([Commit rows](help/themes.md#commit-rows))
 
 **Calmer rows.** A whole-row hover tint replaces the subject pop-out, and WIP
 and stash rows keep the same minimum width as commits so columns stay aligned.
