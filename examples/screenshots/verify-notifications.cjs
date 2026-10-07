@@ -6,7 +6,7 @@
 //  1. a background fetch with nothing new says nothing at all
 //  2. commits from a teammate arriving in the background: news (a dot, no red)
 //  3. a background fetch failing three times: one row "× 3", red 1, Dock 1, a
-//     system notification ("Errors only")
+//     system notification ("Errors Only")
 //  4. the next fetch that works resolves it: the red count goes
 //  5. a fetch you start and watch: a toast, nothing kept
 //  6. a push that fails while you watch: kept quietly, no badge

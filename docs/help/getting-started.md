@@ -15,7 +15,7 @@ review changes and work with your GitHub account.
 
 ## Open a repository
 
-- **Drag a folder** onto the window, or use **Open repository** on the welcome
+- **Drag a folder** onto the window, or use **Open Repository** on the welcome
   screen.
 - **Clone** one from a URL or straight from your host — see [cloning](cloning.md)
   for the options that make a huge repository quick to clone.

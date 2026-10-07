@@ -45,13 +45,13 @@ OS was told otherwise. "It worked yesterday" is usually this.
 
 | Action | What it runs |
 |--------|--------------|
-| **Copy public key** | Puts the `.pub` line on the clipboard, ready to paste into any host |
-| **Add to agent** | `ssh-add` (with `--apple-use-keychain` on macOS, so it survives a reboot) |
+| **Copy Public Key** | Puts the `.pub` line on the clipboard, ready to paste into any host |
+| **Add to Agent** | `ssh-add` (with `--apple-use-keychain` on macOS, so it survives a reboot) |
 | **Upload to GitHub** | `POST /user/keys` with this profile's token |
-| **Generate key** | `ssh-keygen -t ed25519`, commented with your git email |
-| **Test connection** | `ssh -T git@<host>`, translated into a sentence |
+| **Generate Key** | `ssh-keygen -t ed25519`, commented with your git email |
+| **Test Connection** | `ssh -T git@<host>`, translated into a sentence |
 
-**Test connection** exists because ssh's own answer is misleading: GitHub
+**Test Connection** exists because ssh's own answer is misleading: GitHub
 authenticates you successfully and *then* exits with a failure code, since it
 does not offer a shell. Geminio reads the message rather than the exit code, and
 shows the raw output underneath so you can check its reading.

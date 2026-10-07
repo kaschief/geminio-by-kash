@@ -16,8 +16,8 @@ read locally. Open it from the repo-settings gear next to the toolbar tools.
 | Panel | What it tells you |
 |---|---|
 | **Summary cards** | Commits per day, contributors, files touched, lines changed |
-| **Weekly churn** | Additions against deletions, week by week |
-| **Top contributors** | By commits and by lines |
+| **Weekly Churn** | Additions against deletions, week by week |
+| **Top Contributors** | By commits and by lines |
 | **File hotspots** | The most-changed files — click one to jump into its history |
 
 Filter the whole thing by **30 days / 90 days / 1 year / all time**.

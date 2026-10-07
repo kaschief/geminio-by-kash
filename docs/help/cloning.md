@@ -43,7 +43,7 @@ fills the history back in.
 
 ### Picking the branch
 
-Type a branch name, or press **List branches** to ask the remote what it has
+Type a branch name, or press **List Branches** to ask the remote what it has
 (`git ls-remote --heads`) and choose from a dropdown. That is one network round
 trip, made only when you press the button — nothing is queried while you type.
 

@@ -36,6 +36,6 @@ Right-click a file → **Ignore**, and choose:
 
 The rule goes into the **closest folder's** `.gitignore`, or the repository
 root, with a live preview of the line before you commit to it. Already-tracked
-files get an **Ignore & untrack** in the same dialog.
+files get an **Ignore & Untrack** in the same dialog.
 
 **See also:** [Security & secrets](security.md) · [Staging](staging.md)

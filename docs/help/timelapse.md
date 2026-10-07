@@ -27,7 +27,7 @@ commit/file/author counts sit on top, with a progress bar along the bottom.
 
 ## Export video
 
-**Export video** records the canvas end to end and asks where to save a `.webm`.
+**Export Video** records the canvas end to end and asks where to save a `.webm`.
 
 The recording happens in the page itself (`MediaRecorder`) — there is no encoder
 to install, no ffmpeg, and nothing is uploaded anywhere. Nothing is written to

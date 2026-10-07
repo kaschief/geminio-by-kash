@@ -154,7 +154,7 @@ whether your commits are *good* — only that they exist here and not there.
 
 The sidebar's Remotes section is where remotes are added, edited, fetched and
 removed. Fetch, pull or push on a repository that has none opens that same
-**Add remote** dialog — paste a URL or create the repo on the host — instead of
+**Add Remote** dialog — paste a URL or create the repo on the host — instead of
 doing nothing. See [fetching, pulling & pushing](syncing.md).
 
 **See also:** [Merging & rebasing](merging.md) · [Worktrees](worktrees.md)

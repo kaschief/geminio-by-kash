@@ -114,7 +114,7 @@ touched last. *Limits:* activity is your unpushed commits, your edits to
 changed files and the last fetch — opening a repository alone does not count.
 ([Sorting tabs](help/workspaces.md#sorting-tabs))
 
-**Sort tabs by what needs you.** Right-click any tab → **Sort tabs**: Manual,
+**Sort tabs by what needs you.** Right-click any tab → **Sort Tabs**: Manual,
 Needs attention (conflicts, then unpushed commits, then uncommitted changes),
 Unpushed commits, Uncommitted changes, Behind remote, Name, or Recently opened.
 A chosen order is *held*: it re-applies when a tab opens or closes and when the
@@ -153,9 +153,9 @@ gauge are replaced by one small dashboard icon that opens Mission Control;
 workspace management lives in Settings → Workspaces. In macOS fullscreen the
 gap reserved for window buttons is removed. ([Mission control](help/mission-control.md))
 
-**Filing repositories in folders.** In a group's **Move to folder** and **Move
+**Filing repositories in folders.** In a group's **Move to Folder** and **Move
 folder to** menus, the current location is shown as the chosen option and
-disabled with an "Already here" tooltip. Before, **Move folder to** offered the
+disabled with an "Already here" tooltip. Before, **Move Folder To** offered the
 folder's current parent as an ordinary destination — a move that did nothing.
 ([Workspaces, tabs & groups](help/workspaces.md#groups))
 
@@ -263,7 +263,7 @@ shows a small edit as one line with removed words struck through and added
 words lit. Pairs that would not read well inline (over half the line changed,
 whitespace-only, runs that do not pair one to one) stay as −/+. Selecting an
 inline line for a line action selects both halves; copying it copies the new
-text. **Moved code**, on by default, tints blocks that were only moved within
+text. **Moved Code**, on by default, tints blocks that were only moved within
 the file in blue, with arrows toward the other end, in every layout. **Ignore
 whitespace** is now remembered across files and sessions, and hunk actions
 keep working with it on, leaving the hidden whitespace changes in place.
@@ -384,6 +384,13 @@ confirms. With a detached HEAD the row is disabled and says why.
 ([Cherry-pick, revert, reset](help/merging.md#cherry-pick-revert-reset))
 
 ## Menus & interaction design
+
+**Title Case for controls, the Mac way.** Buttons, menu items, commands, tabs,
+mode switches and headings were all in sentence case ("File view", "Copy path"),
+which reads unlike every other Mac app. They now follow Apple's convention:
+Title Case for controls and titles ("File View", "Copy Path"), sentence case for
+tooltips, hints, messages, checkboxes and option cards. *Limits:* English only;
+other languages keep their own capitalization rules.
 
 **A click outside a picker only closes it.** Clicking away from the
 repository or branch picker closed it and also pressed whatever was under the

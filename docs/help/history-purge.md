@@ -14,7 +14,7 @@ still one `git show` away.
 
 That matters twice — when the file was a credential, and when it was 400 MB.
 
-`⌘K` → **Remove file from history**, or right-click the file — in the project
+`⌘K` → **Remove File from History**, or right-click the file — in the project
 tree, in a commit's file list, or in the commit composer. The commit that
 *deleted* a file is usually where someone realises it is still in history, so
 the way out is in that menu too.
@@ -26,7 +26,7 @@ Two ways in, because they answer different questions.
 **Type it** — repository-relative, no leading slash — when you already know what
 you came to remove.
 
-**Browse history** when you do not. It lists every path that has ever been
+**Browse History** when you do not. It lists every path that has ever been
 committed, heaviest first, with how many versions each one has and whether it is
 still tracked. Deleted paths are marked as such and are usually the ones you
 want: a file that is gone from the working tree but still in every clone is
@@ -83,7 +83,7 @@ reachable, so git will not collect them.
 | Action | Effect |
 |--------|--------|
 | **Restore** | Every branch and tag returns to its pre-purge commit; the file comes back with them |
-| **Drop backup** | Deletes the backup refs, expires the reflog, runs `git gc --prune=now` — space returned, purge now permanent |
+| **Drop Backup** | Deletes the backup refs, expires the reflog, runs `git gc --prune=now` — space returned, purge now permanent |
 
 Two steps rather than one, because the first is the recoverable half and the
 second is not.

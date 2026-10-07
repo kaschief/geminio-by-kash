@@ -18,7 +18,7 @@ that brings it back.
 That is why it is the operation people run in a terminal and regret. Geminio's
 version shows the whole list before anything happens.
 
-`⌘K` → **Remove untracked files**.
+`⌘K` → **Remove Untracked Files**.
 
 ![Untracked and ignored paths listed separately, each sized, before anything is removed](../screenshots/clean.webp)
 

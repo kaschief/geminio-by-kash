@@ -253,11 +253,17 @@ Match the file you are editing. The house style, briefly:
 The owner holds the app to "how Apple would do it". New UI follows the
 existing vocabulary rather than inventing its own:
 
-- **Sentence case** for every label — menus, buttons, titles, settings, command
-  names: "Copy file path", not "Copy File Path". Proper nouns and acronyms keep
-  their capitals (GitHub, Git, SHA, PR, LFS). The one exception is the native
-  macOS menu bar (`lib/appMenu.ts`), which is Title Case as Apple's convention
-  — it uses its own `menu.*` keys, never the app's sentence-case labels.
+- **Capitalization follows the Mac convention.** Title Case for controls and
+  titles: buttons, menu and context-menu items, command names, tabs, segmented
+  modes ("File View", "Diff View"), pop-up options, and window, dialog and
+  section headings: "Copy File Path". Sentence case for everything descriptive:
+  tooltips, hints, toasts, status and empty states, placeholders, checkbox,
+  toggle and radio/option-card labels, and confirm questions. Small words stay
+  lower inside a title (a, an, the, and, or, for, to, of, in, on, at, by, as,
+  vs, via, from, into, with, onto); phrasal-verb particles do not (Check Out,
+  Sign In, Clean Up). Proper nouns, acronyms and code tokens keep their own
+  casing (GitHub, SHA, PR, LFS, `--force`). The native macOS menu bar
+  (`lib/appMenu.ts`) has its own `menu.*` keys.
 - **No tick marks for state.** One choice among several: `checked` + `radio`
   on a `MenuItem`, which draws the lit accent dot (`ChoiceDot` in
   `components/StateMarks.tsx`, also used by in-page pickers). An on/off:

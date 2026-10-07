@@ -18,7 +18,7 @@ are not, and picking the wrong one is the whole reason this page exists.
 | Later | You can fetch from it again, merge, keep working | Nothing. It is a snapshot |
 | Use for | Moving work to a machine with no network | "Send me the source at v2.1" |
 
-`⌘K` → **Bundle the repository** or **Export an archive**.
+`⌘K` → **Bundle the Repository** or **Export an Archive**.
 
 ![Bundling a repository into a single file, with the range option ready](../screenshots/export.webp)
 
@@ -46,7 +46,7 @@ last received, the commit you both branched from.
 
 ### Receiving one
 
-**Import a bundle…** reads the file, lists what it holds, and says up front
+**Import a Bundle…** reads the file, lists what it holds, and says up front
 whether this repository can use it — if prerequisites are missing, it tells you
 how many rather than failing later with git's own wording.
 

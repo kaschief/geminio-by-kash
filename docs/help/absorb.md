@@ -19,7 +19,7 @@ Absorb does the honest thing for you.
 ## How it works
 
 1. Stage the fixes.
-2. Tools → **Absorb staged changes…** (or <kbd>⌘K</kbd>).
+2. Tools → **Absorb Staged Changes…** (or <kbd>⌘K</kbd>).
 3. Geminio blames the lines each staged hunk touches, finds which of **your
    unpushed commits** introduced them, and shows you the plan before doing
    anything.
@@ -30,8 +30,8 @@ absorbed into, so it stays staged for you to commit normally.
 
 | Button | What happens |
 |---|---|
-| **Create fixups** | One `fixup!` commit per target. Nothing is rebased. |
-| **Create fixups & rebase** | The same, then an autosquash rebase folds them in. |
+| **Create Fixups** | One `fixup!` commit per target. Nothing is rebased. |
+| **Create Fixups & Rebase** | The same, then an autosquash rebase folds them in. |
 
 ## The rules it plays by
 

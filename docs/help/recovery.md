@@ -35,7 +35,7 @@ Three things take one:
 |---------|------|
 | **Guard** | Automatically, right before a destructive action — discard, clean, hard reset, restore from a commit. On by default; toggle it in the snapshots dialog. |
 | **Timer** | Every 5 / 15 / 30 minutes while the repo is open. |
-| **By hand** | The **Snapshot now** button. |
+| **By hand** | The **Snapshot Now** button. |
 
 The guard is the one that matters: the moment work is usually lost forever is
 the second after a discard you didn't mean. With the guard on, that state is a
@@ -61,7 +61,7 @@ questions from the answer or ten.
 
 ### Let a command decide
 
-Once the range is seeded, **Let a command decide** hands the whole search to
+Once the range is seeded, **Let a Command Decide** hands the whole search to
 `git bisect run`. Git checks out each candidate, runs your command, and reads
 its exit code:
 

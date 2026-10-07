@@ -13,7 +13,7 @@ seeing the model: **four kinds of object, and pointers**. Once you can click a
 commit, land on its tree, and find that your file *is* a blob with a name given
 to it by a tree, the porcelain stops being magic.
 
-`⌘K` → **Object explorer**. Nothing on this page can change a byte — every call
+`⌘K` → **Object Explorer**. Nothing on this page can change a byte — every call
 behind it is a read.
 
 ![A commit's fields, with its tree and parents as links, beside the ref list](../screenshots/objects.webp)

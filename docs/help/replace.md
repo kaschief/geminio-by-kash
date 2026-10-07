@@ -18,7 +18,7 @@ everything before it drops out of the log, the graph and every clone made from
 there — while still being stored, still being fetchable, and one deleted ref
 away from coming back.
 
-`⌘K` → **Replace & graft**.
+`⌘K` → **Replace & Graft**.
 
 ![Existing replacements, and the graft form beneath them](../screenshots/replace.webp)
 

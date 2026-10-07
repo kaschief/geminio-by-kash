@@ -21,7 +21,7 @@ The third one is nobody's idea of a feature until it goes wrong, and then it
 produces the two most common complaints in git: *why is it asking me again?* and
 *why is it still sending the token I revoked?*
 
-`⌘K` → **Credential helper**.
+`⌘K` → **Credential Helper**.
 
 ![The configured helper, per-host rules, and the plaintext-file warning](../screenshots/credentials.webp)
 
@@ -39,7 +39,7 @@ Each is checked against your machine:
 | **not installed** | Configured, but the program is missing — every prompt falls through to typing it again |
 | **passwords in a plain file** | The `store` helper (see below) |
 
-**Rules for specific hosts** lists `credential.<url>.*` sections. These beat the
+**Rules for Specific Hosts** lists `credential.<url>.*` sections. These beat the
 plain setting for the URLs they match, and are usually the answer to "why does
 this one host behave differently".
 

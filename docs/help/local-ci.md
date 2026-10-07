@@ -48,7 +48,7 @@ its result in the dialog but marks nothing.
 
 ## Test a commit or range — without leaving your branch
 
-The dialog's **Test a commit or range** section runs a workflow against commits
+The dialog's **Test a Commit or Range** section runs a workflow against commits
 you are *not* on. Each commit is checked out **detached into a throwaway
 worktree** under the system temp directory, act runs there, and the worktree is
 removed however the run ends — your working tree and your branch never move.

@@ -45,7 +45,7 @@ If the command is not on your `PATH`, type its full path on the account.
 
 ### Which account answers what
 
-Under **Which account answers what**, each feature — commit messages, chat,
+Under **Which Account Answers What**, each feature — commit messages, chat,
 explain, PR review, conflict resolution, wiki, themes — can point at its own
 account and model. Leave a row on the default to follow the default account.
 Cheap model for commit messages, strong one for chat, is the common setup.
@@ -81,7 +81,7 @@ outcome is "No AI API key configured".
 
 | Feature | What you get |
 |---|---|
-| **Commit message** | Summary (and optional body) from your staged diff, in your chosen style |
+| **Commit Message** | Summary (and optional body) from your staged diff, in your chosen style |
 | **Hover to explain** | Hold <kbd>⇧</kbd> and point at an identifier for a one-line explanation, plus the lines it drew on |
 | **Conflict resolution** | Proposes a merge into the editable output — never auto-applies |
 | **PR review** | Summarises a diff and flags risks, each anchored to a real `path:line` |

@@ -1,4 +1,4 @@
-// "Needs attention" end to end, in the real app. Run after npm run build:
+// "Needs Attention" end to end, in the real app. Run after npm run build:
 // node examples/screenshots/verify-tab-attention.cjs
 //  - with the order held, a file edited from outside in a repository that is not
 //    the active tab moves that tab up promptly when the window comes back

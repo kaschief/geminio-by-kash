@@ -34,9 +34,9 @@ in **Settings → Themes → Graph** shows each change as you make it.
 | Setting | Choices |
 |---------|---------|
 | Avatar ring | **Thin** (the default), **Normal** or **Thick**. Sits under *Node style*, since the ring belongs to the avatar |
-| Commit rows | **Off**, **Ring**, **Ring + bar**, or **Full** (ring, bar and haze) |
+| Commit rows | **Off**, **Ring**, **Ring + Bar**, or **Full** (ring, bar and haze) |
 | Row color | **Lane** (each row follows its lane) or **Custom** (one color for every row) |
-| Unpushed commits | **Off**, **Dashed** (dashed ring, dotted bar), or **Dashed + arrow** (adds a small ↑ badge on the avatar) |
+| Unpushed commits | **Off**, **Dashed** (dashed ring, dotted bar), or **Dashed + Arrow** (adds a small ↑ badge on the avatar) |
 | Tint the row | Also washes the whole row of an unpushed commit |
 
 "Unpushed" means no remote-tracking branch contains the commit, as of your

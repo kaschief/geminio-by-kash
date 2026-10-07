@@ -136,7 +136,7 @@ counter and the same commit-message hints the composer shows.
 
 The important part is the word **waiting**: git is blocked on that dialog. So
 
-- **Save & continue** writes the file back and git carries on.
+- **Save & Continue** writes the file back and git carries on.
 - **Cancel** writes an empty file, which git reads as *abort*.
 - Closing the dialog any other way — Escape, the backdrop, quitting Geminio —
   counts as Cancel. A terminal that waits forever would be a far worse

@@ -26,7 +26,7 @@ with a hundred.
 - Commits that arrived in your **last fetch or pull** are flagged as new. Ones
   that have not joined the checked-out branch yet stay slightly translucent
   until a pull brings them in.
-- Right-click a commit for **Amend**, **Undo**, **Reset to commit…** and
+- Right-click a commit for **Amend**, **Undo**, **Reset to Commit…** and
   **View on GitHub**, plus checkout, cherry-pick, revert, branch, tag and
   copy. Unsafe actions stay visible and disable.
 - **On GitHub.** In the details panel the short hash under the author is a
@@ -40,7 +40,7 @@ with a hundred.
 
 ## Making it show what you want
 
-- **Graph focus** decides how much history is drawn — Settings → Appearance →
+- **Graph Focus** decides how much history is drawn — Settings → Appearance →
   **Graph**, or the gear menu in the graph header. *Everything* draws it all;
   *Linear history* (first-parent) leaves only the trunk; *Hide merged branches*
   keeps the trunk plus the branches that are still unmerged; *Solo* keeps your

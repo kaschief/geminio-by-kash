@@ -16,7 +16,7 @@ Each collapses, and each remembers whether you left it open.
 ## Knowing there are changes
 
 While you look at a commit or a stash, a banner at the top of the details panel
-says how many files have uncommitted changes, with **View changes** to go to
+says how many files have uncommitted changes, with **View Changes** to go to
 them. The status bar shows the same count as a small ✎ next to the branch name,
 in every view. Both are hidden when the tree is clean, and both stay visible
 with a file open over the graph, which hides the WIP row.
@@ -118,7 +118,7 @@ The limits:
   time you want just one half.
 - **New untracked files** have no hunks to pick from. Stage or discard the whole
   file. (A stash's untracked files are the exception: Apply Hunk creates them.)
-- **Conflicted files** show git's combined diff, which hunk actions cannot
+- **Conflicted Files** show git's combined diff, which hunk actions cannot
   read. Resolve them in the conflict view.
 
 ## Discarding
@@ -157,8 +157,8 @@ discard everything in it at once.
 
 ## Copying paths
 
-Right-click an uncommitted file for **Copy file path** (absolute, with the
-platform's separators) and **Copy relative file path** (`src/index.ts`, no
+Right-click an uncommitted file for **Copy File Path** (absolute, with the
+platform's separators) and **Copy Relative File Path** (`src/index.ts`, no
 leading `./`). Several selected files copy one path per line, in list order.
 Deleted files stay enabled — those actions only copy text. Folders still copy
 the folder path.

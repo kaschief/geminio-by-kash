@@ -23,7 +23,7 @@ its PR number once submitted.
 **Nothing runs until you press Apply.** Picking a branch, moving a stop, taking
 one off the route — all of it edits a list on screen. The real operation rebases
 branches and checks them out, which is not something an exploratory click should
-do. When the route reads right, **Apply route** performs it as one undoable
+do. When the route reads right, **Apply Route** performs it as one undoable
 step; **Discard** puts the drawing back to what the repository actually says.
 
 The route is drawn in merge order: the branch on top merges into the one below
@@ -35,7 +35,7 @@ it, down to the branch the stack lands on.
 | A **stop's** field | Swaps which branch occupies that position. The branch that leaves is untracked, never deleted. |
 | **↑ / ↓** | Moves a stop one place along the route. |
 | **✕** | Takes the stop off the route; its neighbours join up. |
-| **Add stop** | Pick a branch you already have and it joins the top of the route — or type a name that does not exist yet, and Apply creates it on the tip of the stop below. |
+| **Add Stop** | Pick a branch you already have and it joins the top of the route — or type a name that does not exist yet, and Apply creates it on the tip of the stop below. |
 | The arrow button | Checks that stop out. This one is immediate — it is a checkout, not a route edit. |
 
 Every field is a typeahead: type to filter, ↑/↓ and Enter to pick, and anything
@@ -65,14 +65,14 @@ the new ones are the same work with different parents.
 
 ## Push all
 
-**Push all** pushes every level with `--force-with-lease` and stops there — `gh
-stack push` without opening anything. **Submit stack as PRs** below does the
-same push and then the PR work; use **Push all** when you want the branches on
+**Push All** pushes every level with `--force-with-lease` and stops there — `gh
+stack push` without opening anything. **Submit Stack as PRs** below does the
+same push and then the PR work; use **Push All** when you want the branches on
 the remote but are not ready for review.
 
 ## Submit the stack as chained PRs
 
-**Submit stack as PRs** opens a screen of its own, because opening pull requests
+**Submit Stack as PRs** opens a screen of its own, because opening pull requests
 is public and awkward to take back. It shows the plan first — how many it will
 open, how many it will retarget, on which remote, and the `branch → base` line
 for each — then runs in place, naming each step as it goes, and finishes on the

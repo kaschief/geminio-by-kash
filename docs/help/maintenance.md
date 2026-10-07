@@ -16,7 +16,7 @@ command would have fixed it.
 This panel is the missing readout: where the space went, how much of it is
 reclaimable, and what each job does before you run it.
 
-`⌘K` → **Repository maintenance**.
+`⌘K` → **Repository Maintenance**.
 
 ![Disk usage split into packed, loose and unreachable, with the maintenance jobs beneath](../screenshots/maintenance.webp)
 
@@ -43,20 +43,20 @@ back a commit you reset away. Git keeps them for two weeks on purpose.
 | Button | Runs | Cost |
 |--------|------|------|
 | **Optimise** | `git gc` | Seconds to a minute. The right answer nearly always |
-| **Repack from scratch** | `git gc --aggressive` | Minutes on a large repository. Recomputes every delta |
-| **Rebuild commit graph** | `git commit-graph write --reachable` | Fast. Makes log and graph walks noticeably quicker |
-| **Check integrity** | `git fsck --dangling` | Slow on a big repository, changes nothing |
-| **Drop unreachable now** | `git gc --prune=now` | Destroys the reflog's safety net |
+| **Repack from Scratch** | `git gc --aggressive` | Minutes on a large repository. Recomputes every delta |
+| **Rebuild Commit Graph** | `git commit-graph write --reachable` | Fast. Makes log and graph walks noticeably quicker |
+| **Check Integrity** | `git fsck --dangling` | Slow on a big repository, changes nothing |
+| **Drop Unreachable Now** | `git gc --prune=now` | Destroys the reflog's safety net |
 
 **Optimise** is the one to reach for. It packs loose objects, drops what has
 been unreachable for over two weeks, and leaves recent history recoverable.
 
-**Repack from scratch** is oversold. It throws away every existing delta and
+**Repack from Scratch** is oversold. It throws away every existing delta and
 recomputes from nothing, which takes minutes and usually saves a few percent
 over a plain gc. Worth doing once after importing a huge history; not worth
 doing routinely.
 
-**Drop unreachable now** asks first, and the confirmation says how many objects
+**Drop Unreachable Now** asks first, and the confirmation says how many objects
 and how much space. After it, a commit you reset away an hour ago is
 unrecoverable — the reflog entry may still be listed, but the object behind it
 is gone.

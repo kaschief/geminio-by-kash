@@ -55,7 +55,7 @@ The most recent 200 messages are kept, across restarts — so a push that failed
 overnight is still there in the morning. Before anything is saved, a password
 or token inside a URL is removed from the text.
 
-Your **GitHub inbox**, when GitHub is connected, is the first row of the list;
+Your **GitHub Inbox**, when GitHub is connected, is the first row of the list;
 it opens the inbox page (see [Hosting](hosting.md#notifications--github)). Its
 number is GitHub's own unread count, the same as on github.com: it goes down as
 you read items, not when you glance at the list. The bell treats GitHub like
@@ -70,8 +70,8 @@ notification while Geminio is in the background:
 | Choice | Notifies you of |
 |--------|-----------------|
 | **Off** (the default) | Nothing — the Dock icon and the bell only |
-| **Errors only** | Anything that fails |
-| **Errors and updates** | Failures, new commits from others, and work that finished while you were away |
+| **Errors Only** | Anything that fails |
+| **Errors and Updates** | Failures, new commits from others, and work that finished while you were away |
 
 It is off until you choose, so macOS never asks for permission unprompted.
 Clicking a notification brings Geminio forward.

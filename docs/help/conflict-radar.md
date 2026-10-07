@@ -39,7 +39,7 @@ most files — goes to the top.
 
 ## Contested files
 
-Underneath, **Contested files** ranks paths by how many branches are rewriting
+Underneath, **Contested Files** ranks paths by how many branches are rewriting
 them. Two branches fighting over one file is a conversation to have now; five is
 a design problem.
 

@@ -32,7 +32,7 @@ of a single list.
 | One per saved workspace | That workspace's tabs, so you can jump into a different workspace without switching to it first |
 | All repositories | Every repository the registry knows about, open or not |
 
-The toolbar above the list is one strip: **Collapse all** and **Expand all**,
+The toolbar above the list is one strip: **Collapse All** and **Expand All**,
 then a search field that takes the rest of the width, then the WIP summary
 toggle.
 
@@ -53,9 +53,9 @@ orientation, not decoration: with a workspace section per project and five
 built-in sections above them, a scrolled list stops telling you where you are,
 and a tint makes a header recognisable before you have read it.
 
-To change one, use the **⋮** on its header: **Change colour…** opens the same
+To change one, use the **⋮** on its header: **Change Colour…** opens the same
 [colour picker](workspaces.md) used for group tabs and folders — ten preset
-swatches plus a free hex value. **Reset colour** appears once you have
+swatches plus a free hex value. **Reset Colour** appears once you have
 overridden a section, and puts it back to its assigned default.
 
 Three things worth knowing:
@@ -129,7 +129,7 @@ Your code folder already encodes the grouping you want. If `~/Code` holds
 `client-a`, `client-b` and `personal`, those are contexts you switch between —
 and a [workspace](workspaces.md) is exactly that, with its own tab strip.
 
-**Add scan folder…** offers to build them. After the scan has indexed what it
+**Add Scan Folder…** offers to build them. After the scan has indexed what it
 found, a dialog lists the folders **directly inside** the one you picked, with
 how many repositories each holds. Tick the ones you want; each becomes a
 workspace containing **one tab per repository**.
@@ -164,8 +164,8 @@ like any other; nothing about them stays special.
 
 ## Closing everything that is open
 
-The **Open repositories** header carries a close button — **Close repository**
-when one is open, **Close all tabs** when several are. It is disabled when
+The **Open Repositories** header carries a close button — **Close Repository**
+when one is open, **Close All Tabs** when several are. It is disabled when
 nothing is open.
 
 It closes the tabs that hold repositories and **leaves page tabs alone**, so the
@@ -210,7 +210,7 @@ which kind of pull you want.
 
 ## The action bar
 
-**Open folder…**, **Clone…**, and **Add scan folder…** — three ways to bring a
+**Open Folder…**, **Clone…**, and **Add Scan Folder…** — three ways to bring a
 repository into Geminio's registry, from the same page you use to find one
 that is already there.
 

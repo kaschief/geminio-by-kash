@@ -33,7 +33,7 @@ keypress after <kbd>⌘W</kbd> cannot close work you were still holding.
 ### Sorting tabs
 
 With a dozen repositories open, the one waiting on a push is easy to lose.
-Right-click any tab and open **Sort tabs**. It is one choice, and a lit dot
+Right-click any tab and open **Sort Tabs**. It is one choice, and a lit dot
 marks the active one: **Manual** (the default — tabs stay where
 you drag them) or one of these orders, which the strip then keeps:
 
@@ -48,7 +48,7 @@ you drag them) or one of these orders, which the strip then keeps:
 
 ![Sorting the tab strip by Needs attention](../screenshots/clip-tab-sort.webp)
 
-**Needs attention** weighs what is waiting in each repository — a conflict
+**Needs Attention** weighs what is waiting in each repository — a conflict
 (100), unpushed commits (50), uncommitted changes (35), being behind its remote
 (15), added up — by how fresh it is: the weight halves for every three days
 since the last activity there (your newest unpushed commit, your newest edit to
@@ -67,7 +67,7 @@ slide a tab out from under the cursor while you work. Coming back first
 re-reads the status of every open repository, so an edit you made in another
 one from your editor or terminal counts straight away, not once you happen to
 open its tab. Dragging a tab by hand
-switches back to Manual. While an order is held, the **Sort tabs** row names it
+switches back to Manual. While an order is held, the **Sort Tabs** row names it
 (for example *Needs attention*), so you can tell without opening the flyout.
 
 At launch the strip opens in the order it had when you quit, and waits until
@@ -106,8 +106,8 @@ tab is kept until you reconnect or close it.
 ## Fetch and pull
 
 The repository toolbar has one **Pull** button with a dropdown. Choose its
-default action: **Fetch all**, **Pull (fast-forward if possible)**,
-**Pull (fast-forward only)** or **Pull (rebase)**. Choosing an option saves the
+default action: **Fetch All**, **Pull (Fast-Forward If Possible)**,
+**Pull (Fast-Forward Only)** or **Pull (rebase)**. Choosing an option saves the
 preference; click the main button to run it. It reads **Fetch** when Fetch all
 is selected. Fetch updates remote history without changing your files.
 
@@ -117,7 +117,7 @@ is selected. Fetch updates remote history without changing your files.
 
 Bundle related repositories into a named, colour-coded **group tab**. Inside a
 group you get a second row with one chip per repository, and the group itself
-can **Fetch all** or **Pull all** in one go.
+can **Fetch All** or **Pull all** in one go.
 
 ![A group tab with several repositories](../screenshots/repo-groups.webp)
 

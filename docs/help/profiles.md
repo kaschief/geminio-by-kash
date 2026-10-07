@@ -8,7 +8,7 @@ keywords: profile profiles identity git user email tokens accounts switch
 
 # Profiles
 
-A profile bundles a **Git identity** (name and email) with its **integration
+A profile bundles a **Git Identity** (name and email) with its **integration
 tokens**. Switch profiles and both change together — commits are authored
 correctly and API calls use the right account.
 

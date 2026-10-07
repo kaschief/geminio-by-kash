@@ -20,11 +20,11 @@ commit details panel opens the same editor.
 Pick any commit that is an ancestor of `HEAD` — linear history or not. The
 modal shows its files and message; edit either. Two things happen from there:
 
-1. **Preview cascade** replays every commit above the edited one *in memory*
+1. **Preview Cascade** replays every commit above the edited one *in memory*
    (a chain of `merge-tree` cherry-picks — no checkout, no working tree, no
    refs). Each descendant shows up green or red, so you know **before anything
    moves** whether the edit ripples cleanly or collides with a later change.
-2. **Rewrite history** does it for real: the same chain is built with plumbing,
+2. **Rewrite History** does it for real: the same chain is built with plumbing,
    then the branch moves with `reset --keep` — your uncommitted changes are
    carried over, or the reset aborts and nothing has happened. A
    [guard snapshot](recovery.md) is taken first, and undo restores the old

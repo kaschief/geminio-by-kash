@@ -34,7 +34,7 @@ The gear next to the toolbar tools → **Config**. That editor writes the file
 into your working tree; it is not saved anywhere else, so **commit it** to
 share the rules with the team.
 
-If the repository has none, **Read the repository** proposes one from what is
+If the repository has none, **Read the Repository** proposes one from what is
 already there — a `.nvmrc` or `engines.node`, a `.gitmodules`, `filter=lfs` in
 `.gitattributes`, an `.env.example` with no `.env` next to it, the branches you
 already protect locally, and the commit scopes the last 500 subjects have been
@@ -86,7 +86,7 @@ does the same thing (see [the command line](cli.md)).
 `requires` is the part that answers *"I cloned it and it does not run."* Geminio
 checks it when you open the repository and shows a stethoscope chip in the
 status bar when something is off. Clicking the chip opens the Config tab at the
-doctor rows; **Check again** re-runs them.
+doctor rows; **Check Again** re-runs them.
 
 | Check | Passes when | Offers to fix by |
 |---|---|---|

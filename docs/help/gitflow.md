@@ -13,7 +13,7 @@ is five rules and a lot of bookkeeping. The rules are easy; the bookkeeping is
 what people get wrong at 6pm on a release day — merging a hotfix into `main` and
 forgetting `develop`, or tagging the wrong branch.
 
-`⌘K` → **Git flow** does the bookkeeping.
+`⌘K` → **Git Flow** does the bookkeeping.
 
 ![The git flow dialog on a release branch: start a branch above, finish it below](../screenshots/gitflow.webp)
 
@@ -33,9 +33,9 @@ someone already ran `git flow init` on is recognised immediately, and a
 repository set up here works with the CLI afterwards. Geminio runs plain git
 commands throughout — the CLI does not need to be installed.
 
-**Set up** writes those keys and, if the integration branch does not exist yet,
+**Set Up** writes those keys and, if the integration branch does not exist yet,
 creates it from the released branch. Nothing else is touched. You can change any
-name or prefix later from **Edit layout**.
+name or prefix later from **Edit Layout**.
 
 ## Starting
 

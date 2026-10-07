@@ -28,8 +28,8 @@ from whether the remote already carries the branch:
 
 | | |
 |---|---|
-| **It is on the remote** | **Link & pull** — sets the upstream to `<remote>/<branch>`, then runs the pull you asked for. **Undoable with ⌘Z**, which unsets the tracking again. |
-| **It is not there yet** | **Push branch** — an ordinary push, which sets the upstream as it goes. |
+| **It is on the remote** | **Link & Pull** — sets the upstream to `<remote>/<branch>`, then runs the pull you asked for. **Undoable with ⌘Z**, which unsets the tracking again. |
+| **It is not there yet** | **Push Branch** — an ordinary push, which sets the upstream as it goes. |
 
 The remote offered is `origin` when there is one, otherwise the first in the
 list. Which case you are in is read from the remote-tracking refs rather than
@@ -47,7 +47,7 @@ asks for confirmation (list in the repo-settings gear).
 
 Push, pull and fetch need somewhere to go. A repository with none — a fresh
 `git init`, a clone whose origin was removed — used to make those buttons do
-nothing, or succeed with an empty fetch. They now open **Add remote** instead,
+nothing, or succeed with an empty fetch. They now open **Add Remote** instead,
 with a warning, so you can paste a URL or create the repo on the host. Adding
 it finishes the action you started: a push publishes the current branch, a
 pull fetches then pulls, a fetch just fetches.
@@ -62,9 +62,9 @@ offers, once a repository has more than one remote:
 
 | | |
 |---|---|
-| **Push to one remote** | Pick a single remote — a fork, a mirror, a deploy target |
+| **Push to One Remote** | Pick a single remote — a fork, a mirror, a deploy target |
 | **Push to all N remotes** | One push per remote, in order |
-| **Push all tags to** | `git push <remote> --tags`, every local tag at once |
+| **Push All Tags To** | `git push <remote> --tags`, every local tag at once |
 
 The same two actions sit on each remote's own row in the sidebar, which is
 usually where you are when the question comes up.

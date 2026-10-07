@@ -17,7 +17,7 @@ The important part: it is committed. A rule you add fixes the problem for
 everyone who clones, on every OS, forever — unlike a setting in your own config,
 which fixes it for you and leaves your colleagues to discover it the hard way.
 
-`⌘K` → **File attributes**.
+`⌘K` → **File Attributes**.
 
 ![The rules a repository already carries, the presets, the path checker and the diff drivers](../screenshots/attributes.webp)
 
@@ -58,7 +58,7 @@ about the project. Geminio lists them all and says which is which.
 ## What applies to a path?
 
 Rules come from several files, the more specific one wins, and reading them to
-work out the answer is guesswork. **What applies to a path?** runs
+work out the answer is guesswork. **What Applies to a Path?** runs
 `git check-attr` and shows what git itself concludes — the only answer that
 counts.
 

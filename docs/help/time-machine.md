@@ -41,6 +41,6 @@ does not exist here, and **keeps your selection**. Scrub forward and the file
 comes back with its old content. That is the point — you are moving the
 repository, not your cursor.
 
-**Open this version** hands the file to the normal file view at that commit.
+**Open This Version** hands the file to the normal file view at that commit.
 
 **See also:** [Timelapse](timelapse.md) · [Blame & history](blame.md)

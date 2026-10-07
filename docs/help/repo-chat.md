@@ -85,7 +85,7 @@ touch an excluded path are dropped from that diff, not the whole commit.
 | **Let chat propose remote actions** | Off by default. On adds fetch, pull, push, opening a pull request and submitting a stack to what chat may propose — see [Actions that leave the machine](#actions-that-leave-the-machine) |
 | **How proposed actions run** | The approval mode — see [Approval modes](#approval-modes). Destructive actions confirm regardless |
 
-Which account and model answers chat is set under **Which account answers what**
+Which account and model answers chat is set under **Which Account Answers What**
 on the same page — see [AI features](ai.md#which-account-answers-what).
 Questions are cheaper than reviews, so a smaller model is often enough.
 
@@ -106,9 +106,9 @@ hooks) for this repository. See [AI features](ai.md).
 ## Working with messages
 
 Messages are ordinary text. Select any part of one and copy it, or right-click
-a bubble: **Copy** takes the selection, **Copy message** the whole message —
+a bubble: **Copy** takes the selection, **Copy Message** the whole message —
 an answer is copied as its Markdown source — and, when the click landed on a
-link, **Copy link** takes its address.
+link, **Copy Link** takes its address.
 
 Links open in your default browser, never inside Geminio — Markdown links in
 answers and plain `https://` addresses in your own messages alike.
@@ -193,18 +193,18 @@ than from inside it.
 
 A plan is approved as a batch, so it is undone as a batch. Before the first
 action that can change anything, Geminio records where the branch was and takes
-a snapshot of the working tree; a finished card then offers **Undo plan**. It
+a snapshot of the working tree; a finished card then offers **Undo Plan**. It
 moves the branch back to that commit and restores the tree, which throws away
 whatever the plan produced, so it confirms first and names the commit it is
 returning to. Pull requests the plan opened stay open — a remote is not
 something a local snapshot can take back.
 
-With **Auto-run all actions**, a valid file change runs immediately and the
+With **Auto-Run All Actions**, a valid file change runs immediately and the
 card records the completed action:
 
 ![Automatically completed repository chat file action](../screenshots/repo-chat-file-action-auto-run.webp)
 
-With **Always ask**, the same kind of change remains pending until you choose
+With **Always Ask**, the same kind of change remains pending until you choose
 **Run** or **Dismiss**:
 
 ![Repository chat file action awaiting approval](../screenshots/repo-chat-file-action-approval.webp)
@@ -222,9 +222,9 @@ chat**) decides how a card runs:
 
 | Mode | Runs |
 |---|---|
-| **Always ask** | Nothing until you press **Run** on the card |
-| **Auto-run safe actions** | Proposals made only of reversible bookkeeping — stage, unstage, ignore, branch, tag — run on arrival; anything else waits for the button |
-| **Auto-run all actions** | File changes and ordinary Git actions run on arrival; destructive Git operations still ask |
+| **Always Ask** | Nothing until you press **Run** on the card |
+| **Auto-Run Safe Actions** | Proposals made only of reversible bookkeeping — stage, unstage, ignore, branch, tag — run on arrival; anything else waits for the button |
+| **Auto-Run All Actions** | File changes and ordinary Git actions run on arrival; destructive Git operations still ask |
 
 A proposal that would **discard uncommitted changes always asks first**, in
 every mode, and the confirmation names the files that would be lost. The card

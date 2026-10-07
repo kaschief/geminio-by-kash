@@ -11,7 +11,7 @@ keywords: merge rebase fast-forward compare refs drag drop branch onto graph ref
 ## From the sidebar
 
 Right-click a branch for **Merge into current** or **Rebase onto** — or
-**Merge with options…** when the plain merge is the one that keeps going wrong;
+**Merge with Options…** when the plain merge is the one that keeps going wrong;
 see [merge options](merge-options.md).
 
 ## Drag one ref onto another
@@ -61,7 +61,7 @@ Reachable from the sidebar (compare with the current branch), the Tools menu, or
 ## Cherry-pick, revert, reset
 
 Cherry-pick and revert live on the graph's context menu, as they always have.
-**Reset** is one entry — **Reset to commit…** — instead of three raw
+**Reset** is one entry — **Reset to Commit…** — instead of three raw
 soft/mixed/hard items that contradicted each other.
 
 Amend, undo and reset sit at the top of the single-commit menu and stay

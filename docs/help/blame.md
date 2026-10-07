@@ -20,7 +20,7 @@ of shared history are obvious at a glance.
 
 - **Follow the line into the diff**: jump from a blame line straight to the
   change that produced it.
-- **Reblame before this commit**: right-click a line to blame the file as it was
+- **Reblame Before This Commit**: right-click a line to blame the file as it was
   *before* that commit — the way you walk a line's history backwards without
   leaving the view.
 

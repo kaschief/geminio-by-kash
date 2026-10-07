@@ -14,9 +14,9 @@ someone reindented, the vendored project whose paths do not line up. Git has had
 switches for all three for years; they are just buried in a manual page nobody
 opens mid-conflict.
 
-Right-click a branch → **Merge with options…** — in the sidebar's branch and
+Right-click a branch → **Merge with Options…** — in the sidebar's branch and
 remote rows *and* on the coloured ref badges in the graph, which share one menu
-block — or `⌘K` → **Merge with options**.
+block — or `⌘K` → **Merge with Options**.
 
 ![Merge options, with the exact git command spelled out underneath](../screenshots/merge-options.webp)
 
@@ -92,7 +92,7 @@ added"; the subtree strategy works out the path shift first. See
 
 ## Why this conflicts
 
-Inside the [conflict resolver](conflicts.md) there is a **Why this conflicts**
+Inside the [conflict resolver](conflicts.md) there is a **Why This Conflicts**
 button. It runs `git log --merge` for the file in front of you and lists, per
 side, the commits that touched it since the branches parted.
 

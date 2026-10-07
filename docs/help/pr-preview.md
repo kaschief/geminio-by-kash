@@ -42,12 +42,12 @@ forge works as long as it follows one of these conventions.
 **Remote** — the repository the pull request was opened *against*, normally
 `origin`. Not the fork.
 
-**Pull request** — the number, or a pasted browser URL. `7`, `#7` and
+**Pull Request** — the number, or a pasted browser URL. `7`, `#7` and
 `https://github.com/owner/repo/pull/7` all work; so do the GitLab, Bitbucket
 and Azure DevOps URL shapes. Press **Find** and Geminio reports the ref it
 resolved and the commit it points at, before anything is fetched.
 
-**Remote branch** — the second tab, for when there is no PR ref to find: a host
+**Remote Branch** — the second tab, for when there is no PR ref to find: a host
 that does not publish them, or a branch you simply want to try. Give the branch
 name as it exists on the remote.
 

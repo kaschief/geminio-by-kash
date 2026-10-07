@@ -26,7 +26,7 @@ todo for you.
 
 ## Autosquash, one click
 
-- **Fixup staged changes into this commit** creates the `fixup!` for you.
+- **Fixup Staged Changes into This Commit** creates the `fixup!` for you.
 - **Autosquash from here** folds every `fixup!` / `squash!` into its target.
 
 If you have a pile of review fixes rather than one, [absorb](absorb.md) works

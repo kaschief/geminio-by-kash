@@ -23,7 +23,7 @@ reverted, which release it shipped in.
 ## Writing one
 
 Select a commit. Under the message there is a **Note** section: *Add a note*,
-type, **Save note**. Multi-line is fine.
+type, **Save Note**. Multi-line is fine.
 
 ![Writing a note under a pushed commit's message, then saving it](../screenshots/clip-commit-note.webp)
 

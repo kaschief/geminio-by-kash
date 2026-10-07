@@ -30,7 +30,7 @@ The second group holds the toggles, which apply to any layout:
 |---|---|
 | **Ignore whitespace** | Hides reindentation so the real change surfaces |
 | **Word-level** | Highlights just the changed tokens inside an edited line — red on the old, green on the new |
-| **Moved code** (on by default) | Tints blocks that were only moved, not changed, in blue |
+| **Moved Code** (on by default) | Tints blocks that were only moved, not changed, in blue |
 | **Wrap** | Folds long lines inside their row (or column, in split view) instead of scrolling the diff sideways |
 | **Linked** (split, wrap off) | Scrolls both halves together, vertically and sideways — off, each column scrolls on its own |
 | **Find** / <kbd>⌘F</kbd> | Find inside the diff, with next/previous stepping; <kbd>Esc</kbd> closes it |
@@ -74,7 +74,7 @@ Find matches the old words too, since they are on screen.
 ### Moved code
 
 A block that was cut from one place and pasted in another shows up in a diff
-as a deletion and an unrelated-looking addition. **Moved code** recognises
+as a deletion and an unrelated-looking addition. **Moved Code** recognises
 the pair, after git's own `--color-moved`: a run of deleted lines that
 reappears, line for line, as a run of added lines elsewhere in the same file's
 diff. Both ends get a blue tint, and the margin shows an arrow pointing at the
@@ -207,7 +207,7 @@ between before and after.
 
 ## Change gutter & minimap
 
-The **File view** of a working-tree file — staged or not, tracked or brand new
+The **File View** of a working-tree file — staged or not, tracked or brand new
 — carries a colored bar next to every line touched since HEAD (or the index,
 for staged files): green for an insertion, blue for a modification, a small
 red wedge where lines were removed without replacement. Click a bar to see
@@ -265,7 +265,7 @@ happens when two branches both edit one, see
 
 Previews and the file view load a file fully into memory, so both refuse files
 past a size cap (32 MB for previews, 16 MB for text) and tell you how big the
-file is instead. **Load anyway** overrides the cap for that one file — nothing
+file is instead. **Load Anyway** overrides the cap for that one file — nothing
 is off limits, big loads are just opt-in. Files and diffs past a few thousand
 lines still render completely, but rows scrolled out of view are no longer
 laid out and painted, so a giant lockfile diff stops costing a laptop's worth

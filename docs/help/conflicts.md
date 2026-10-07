@@ -16,7 +16,7 @@ stopped and **between what** — "merging `feature/x` into `main`", not just
 
 ## Why this conflicts
 
-**Why this conflicts** in the header lists, per side, the commits that touched
+**Why This Conflicts** in the header lists, per side, the commits that touched
 this file since the branches parted — `git log --merge`, which git has shipped
 forever and nobody finds.
 
@@ -117,7 +117,7 @@ stitched to half of another is a graph nobody solved: it may not install, and if
 it does, it installs something neither branch tested.
 
 So when the conflicted file is a lockfile, the band names the tool that owns it,
-offers **Keep ours** and **Keep theirs** right there, and gives you the command
+offers **Keep Ours** and **Keep Theirs** right there, and gives you the command
 that regenerates it afterwards. Taking a side is not a compromise here — it is
 the whole method, and the regeneration is what makes it correct.
 
@@ -143,7 +143,7 @@ conflict and replays that answer the next time the identical one appears.
 way.
 
 When git has answered for you, the resolver says so instead of showing an empty
-"no conflict markers" screen, and offers **Forget this resolution** — which drops
+"no conflict markers" screen, and offers **Forget This Resolution** — which drops
 the memory *and* brings the conflict back, so you can settle it differently.
 
 Two things worth knowing:
@@ -155,10 +155,10 @@ Two things worth knowing:
 
   This is why a replayed file **stays in Conflicted files**: git wrote the
   content but the index still holds it as unmerged, and only staging settles
-  that. **Stage as-is** in the resolver, or **Mark all resolved** in the list,
+  that. **Stage As-Is** in the resolver, or **Mark All Resolved** in the list,
   is what moves it.
 - **rerere does not understand every conflict.** Add/add and delete/modify
   conflicts get no preimage, so they always come back raw. The count in Settings
-  is how many it actually holds, and **Forget all** empties it.
+  is how many it actually holds, and **Forget All** empties it.
 
 **See also:** [Conflict radar](conflict-radar.md) · [Merging & rebasing](merging.md)

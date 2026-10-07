@@ -448,7 +448,7 @@ export const shots = [
     height: 1024,
     drive: async (page) => {
       await page.evaluate(() => window.__shot.ui.getState().openModal({ kind: 'settings', page: 'general' }))
-      await page.locator('.settings-profiles').getByRole('button', { name: 'Files & diffs', exact: true }).click()
+      await page.locator('.settings-profiles').getByRole('button', { name: 'Files & Diffs', exact: true }).click()
     }
   },
   {
@@ -626,7 +626,7 @@ export const shots = [
   },
   {
     // The size-cap refusal: a file past the in-memory cap shows its size and
-    // an opt-in "Load anyway" instead of silently allocating hundreds of MB.
+    // an opt-in "Load Anyway" instead of silently allocating hundreds of MB.
     out: 'file-too-large',
     repos: ['binary-images-unicode'],
     themes: ['dark'],
@@ -2430,10 +2430,10 @@ export const shots = [
       await page.evaluate(() => {
         window.__shot.ui.getState().openModal({
           kind: 'confirm',
-          title: 'Force-push a protected branch?',
+          title: 'Force-Push a Protected Branch?',
           message:
             '"main" is a protected branch. Force-pushing rewrites history others may have pulled. Continue?',
-          confirmLabel: 'Force push',
+          confirmLabel: 'Force Push',
           danger: true,
           onConfirm: () => {}
         })
@@ -2557,7 +2557,7 @@ export const shots = [
       await page.fill('input[placeholder="*.secret"]', '*.secret')
       await page.fill('input[placeholder="vault"]', 'vault')
       await page.fill('input[placeholder*="clean command"]', "sed 's/api_key=.*/api_key=REDACTED/'")
-      await page.click('button:has-text("Dry run")')
+      await page.click('button:has-text("Dry Run")')
       await page.waitForTimeout(900)
       await page.evaluate(() => {
         document.querySelector('.attrs-check')?.scrollIntoView({ block: 'center' })
@@ -2745,7 +2745,7 @@ export const shots = [
         repo
       )
       await page.waitForTimeout(500)
-      // Press "Browse history" by its label, since the list is loaded on demand.
+      // Press "Browse History" by its label, since the list is loaded on demand.
       await page.evaluate(() => {
         const button = [...document.querySelectorAll('.purge-modal button')].find((b) =>
           /browse|explorar/i.test(b.textContent ?? '')
@@ -2959,9 +2959,9 @@ export const clips = [
         await page.waitForTimeout(1200)
         await page.locator('.tab', { hasText: 'gitflow' }).click({ button: 'right' })
         await page.waitForTimeout(700)
-        await page.locator('.context-menu .menu-item', { hasText: 'Sort tabs' }).hover()
+        await page.locator('.context-menu .menu-item', { hasText: 'Sort Tabs' }).hover()
         await page.waitForTimeout(700)
-        await page.locator('.context-menu.submenu .menu-item', { hasText: 'Needs attention' }).click()
+        await page.locator('.context-menu.submenu .menu-item', { hasText: 'Needs Attention' }).click()
       }
     }
   },

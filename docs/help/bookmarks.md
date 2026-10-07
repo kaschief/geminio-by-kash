@@ -10,7 +10,7 @@ keywords: bookmark bookmarks mark line note place code navigation sidebar moved 
 
 A place you want to come back to: the line where the bug lives, the function you
 are half way through renaming, the thing to delete once the refactor lands.
-Right-click a line in the file viewer and pick **Bookmark this line**; it appears
+Right-click a line in the file viewer and pick **Bookmark This Line**; it appears
 in the sidebar, and clicking takes you back.
 
 ![Bookmarks in the sidebar](../screenshots/bookmarks.webp)

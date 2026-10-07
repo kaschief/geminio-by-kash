@@ -27,8 +27,9 @@ Import from `'../i18n'`. The locale files are data; `index.ts` is the interface.
    Removing or renaming a key is the exception: delete it from **every** locale
    file, or `test/i18n.test.ts` fails on the key English no longer has. The
    same goes for a renamed `{placeholder}`.
-2. Write the value in sentence case ("Copy file path"), keeping proper nouns
-   and acronyms (GitHub, SHA). Key naming: `feature.thing` in lowerCamel
+2. Capitalize by role (CLAUDE.md §6): Title Case for a control or title
+   ("Copy File Path"), sentence case for descriptive copy ("Path copied"),
+   keeping proper nouns and acronyms (GitHub, SHA). Key naming: `feature.thing` in lowerCamel
    (`titlebar.closeTab`, `act.checkedOut`). Group by feature; put a shared word
    under `common.`.
 3. Render it:
