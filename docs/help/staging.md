@@ -52,7 +52,7 @@ it again to show everything. See [Commit details](graph.md#commit-details).
 Deep paths never push the file name off the row. When space runs out, folders
 give way from the left (`…/code/indicator/revelio.pine`). To keep paths short
 even when there is room, set **Folders shown in paths** in Settings →
-Files & diffs: all of them, the last three, two or one, or none at all. A
+Files & Diffs: all of them, the last three, two or one, or none at all. A
 shortened path starts with `…/`, and hovering it shows the whole path.
 
 ![Files and diff display settings](../screenshots/settings-files.webp)

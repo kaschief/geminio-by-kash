@@ -115,7 +115,7 @@ selected-line actions float within the viewer without moving the code.
 ### Diff size
 
 To fit more of a change on screen, pick a smaller size in **Settings → Files &
-diffs → File Viewer → Diff size**: **Default** (100%), **Compact** (90%),
+Diffs → File Viewer → Diff size**: **Default** (100%), **Compact** (90%),
 **Smaller** (80%) or **Smallest** (70%). Each choice shows two sample diff rows
 at that size. Code, line numbers, `@@` bars and the **Revert Hunk** / **Stage
 hunk** buttons shrink together; the diff toolbar and the find bar keep their
