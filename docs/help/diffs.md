@@ -3,7 +3,7 @@ title: Diffs & previews
 category: Reading changes
 order: 20
 summary: Unified, split and inline layouts, word-level highlighting, moved code, image diffs and file previews.
-keywords: diff size smaller compact shrink scale diff split side-by-side unified inline word level whitespace ignore whitespace moved code color-moved image diff preview markdown docx pdf change gutter minimap
+keywords: pine pinescript tradingview syntax highlighting diff size smaller compact shrink scale diff split side-by-side unified inline word level whitespace ignore whitespace moved code color-moved image diff preview markdown docx pdf change gutter minimap
 ---
 
 # Diffs & previews

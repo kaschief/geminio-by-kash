@@ -1,4 +1,9 @@
 import hljs from 'highlight.js'
+import { pineScript } from './pineScript'
+
+// Languages highlight.js does not ship. Registered here, the one module every
+// highlighting call site imports, so they are known before the first line.
+hljs.registerLanguage('pinescript', pineScript)
 
 /** Lowercase file extension (no dot), or '' when none. */
 export function fileExt(name: string): string {
@@ -22,7 +27,8 @@ export function guessLanguage(filename: string): string {
     html: 'xml', htm: 'xml', vue: 'xml', css: 'css', scss: 'scss', less: 'less',
     md: 'markdown', markdown: 'markdown', yml: 'yaml', yaml: 'yaml',
     toml: 'ini', ini: 'ini', sql: 'sql', r: 'r', dart: 'dart', lua: 'lua',
-    pl: 'perl', dockerfile: 'dockerfile', makefile: 'makefile'
+    pl: 'perl', dockerfile: 'dockerfile', makefile: 'makefile',
+    pine: 'pinescript', pinescript: 'pinescript'
   }
   return map[ext] || ''
 }

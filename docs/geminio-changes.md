@@ -205,6 +205,14 @@ search is disabled while a file covers the graph. ([Keyboard](help/keyboard.md))
 
 ## Staging, diffs & files
 
+**Pine Script is coloured.** TradingView `.pine` files showed as plain text in
+diffs, the file viewer, code search and the conflict resolver, because the
+highlighter ships no Pine grammar. Geminio now has one: keywords, types,
+`//@version` annotations, `ta.` / `math.` / `request.` namespaces, function
+calls, strings, numbers and `#RRGGBB` colours each take the code theme's
+colours. *Limits:* built-ins outside the common set are coloured as plain
+code. ([Diffs & previews](help/diffs.md))
+
 **A smaller diff, from Settings.** Fitting more of a change on screen used to
 mean zooming the whole app or shrinking code everywhere, and neither touched
 the hunk buttons. **Settings → Files & Diffs → Diff size** now draws every diff

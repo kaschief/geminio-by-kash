@@ -28,20 +28,13 @@ import {
 import type { ConflictCommit, ConflictRefInfo, ConflictVersions } from '../../../shared/types'
 import { isPbxprojPath, mergePbxproj } from '../../../shared/pbxproj'
 import { lockfileFor } from '../lib/lockfiles'
+import { guessLanguage } from '../lib/highlight'
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-function guessLanguage(filename: string): string {
-  const ext = filename.split('.').pop()?.toLowerCase() || ''
-  const map: Record<string, string> = {
-    js: 'javascript', jsx: 'javascript', ts: 'typescript', tsx: 'typescript',
-    py: 'python', rb: 'ruby', go: 'go', rs: 'rust', java: 'java',
-    cpp: 'cpp', c: 'c', cs: 'csharp', php: 'php', swift: 'swift',
-    kt: 'kotlin', scala: 'scala', sh: 'bash', json: 'json', xml: 'xml',
-    html: 'html', css: 'css', scss: 'scss', md: 'markdown', yml: 'yaml',
-    yaml: 'yaml', toml: 'toml', sql: 'sql', r: 'r',
-  }
-  return map[ext] || 'plaintext'
+/** highlight.js language for a file, or plain text when it has none. */
+function languageFor(filename: string): string {
+  return guessLanguage(filename) || 'plaintext'
 }
 
 /** Live pixel size of an element, so ratio-based splits can drive ResizeHandle. */
@@ -117,7 +110,7 @@ export function ConflictResolver({ view }: { view: ConflictViewState }): React.J
 
   const { repoPath, file } = view
   const showHistory = whyFile === file
-  const lang = guessLanguage(file)
+  const lang = languageFor(file)
   const sideRatio = clampRatio(layout.conflictSideRatio)
   const filesRatio = clampRatio(layout.conflictFilesRatio)
 
