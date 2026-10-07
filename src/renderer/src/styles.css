@@ -2286,6 +2286,18 @@ body.col-resizing .node-ava {
     transparent
   );
 }
+/* The wash would otherwise replace the hover tint, leaving only the date to
+   answer the pointer; hover stacks the tint on top of it. */
+.graph-row.row-unpushed:where(:not(.selected):not(.multi-selected)):hover {
+  background:
+    linear-gradient(color-mix(in srgb, var(--text-0) 6%, transparent), color-mix(in srgb, var(--text-0) 6%, transparent)),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--row-accent, var(--accent)) 11%, transparent),
+      color-mix(in srgb, var(--row-accent, var(--accent)) 3%, transparent) 55%,
+      transparent
+    );
+}
 
 /* Branch preview: commits outside the hovered branch's history fade back. */
 .graph-row.ghosted {
