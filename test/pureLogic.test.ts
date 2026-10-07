@@ -1,4 +1,3 @@
-import { DIFF_ZOOM_MAX, DIFF_ZOOM_MIN, parseDiffZoom, stepDiffZoom } from '../src/renderer/src/lib/diffZoom'
 import { describe, it, expect } from 'vitest'
 import { readdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -7465,26 +7464,5 @@ describe('nextWipFile', () => {
   })
   it('nothing left: null, and the view closes', () => {
     expect(nextWipFile('parallax', unstaged, lists([f('parallax')]), lists([]))).toBeNull()
-  })
-})
-
-describe('diff zoom', () => {
-  it('steps through the ladder and stops at both ends', () => {
-    expect(stepDiffZoom(1, -1)).toBe(0.9)
-    expect(stepDiffZoom(1, 1)).toBe(1.1)
-    expect(stepDiffZoom(DIFF_ZOOM_MIN, -1)).toBe(DIFF_ZOOM_MIN)
-    expect(stepDiffZoom(DIFF_ZOOM_MAX, 1)).toBe(DIFF_ZOOM_MAX)
-  })
-  it('moves an off-ladder value to the next level in that direction', () => {
-    expect(stepDiffZoom(0.95, -1)).toBe(0.9)
-    expect(stepDiffZoom(0.95, 1)).toBe(1)
-  })
-  it('reads a stored value safely', () => {
-    expect(parseDiffZoom(null)).toBe(1)
-    expect(parseDiffZoom('nonsense')).toBe(1)
-    expect(parseDiffZoom('0')).toBe(1)
-    expect(parseDiffZoom('0.8')).toBe(0.8)
-    expect(parseDiffZoom('9')).toBe(DIFF_ZOOM_MAX)
-    expect(parseDiffZoom('0.1')).toBe(DIFF_ZOOM_MIN)
   })
 })

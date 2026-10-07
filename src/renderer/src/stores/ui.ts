@@ -3,7 +3,6 @@ import type { ReactNode } from 'react'
 import type { CiState, DivergedStrategy, KeychainReason, ResetStrategy, SemanticDiff } from '../../../shared/types'
 import type { WorkspaceCandidate } from '../lib/workspacePlan'
 import { addNotice, parseStoredNotices, resolveNotices, sanitizeNoticeMessage, type Notice, type NoticeKind } from '../lib/notices'
-import { parseDiffZoom } from '../lib/diffZoom'
 
 export type CiFilter = 'all' | CiState
 
@@ -369,7 +368,6 @@ export interface PanelLayout {
 
 const LAYOUT_KEY = 'gitcito-layout'
 const SIDEBAR_KEY = 'gitcito-sidebar-collapsed'
-const DIFF_ZOOM_KEY = 'gitcito-diff-zoom'
 const DEFAULT_LAYOUT: PanelLayout = {
   sidebarWidth: 248,
   panelWidth: 420,
@@ -427,10 +425,6 @@ interface UIState {
   /** Left sidebar (branches/files) collapsed. Global workspace preference —
    *  hides the sidebar column so the graph gets the full width. */
   sidebarCollapsed: boolean
-  /** Zoom of every diff pane, apart from the app zoom. One value for all of
-   *  them, so a diff opened elsewhere reads at the size just chosen. */
-  diffZoom: number
-  setDiffZoom: (zoom: number) => void
   /** Which sidebar tab is showing. Lives here rather than in the component
    *  because the refresh cycle reads it: the file tree's per-path badges cost a
    *  second full `git status` walk, and nothing displays them until this is
@@ -601,22 +595,6 @@ export const useUIStore = create<UIState>((set, get) => ({
       return false
     }
   })(),
-  diffZoom: (() => {
-    try {
-      return parseDiffZoom(localStorage.getItem(DIFF_ZOOM_KEY))
-    } catch {
-      return 1
-    }
-  })(),
-  setDiffZoom: (zoom) => {
-    const diffZoom = parseDiffZoom(String(zoom))
-    set({ diffZoom })
-    try {
-      localStorage.setItem(DIFF_ZOOM_KEY, String(diffZoom))
-    } catch {
-      /* ignore quota errors */
-    }
-  },
   chatPanelOpen: false,
   rightPanelTab: 'details',
   chatPrompt: null,

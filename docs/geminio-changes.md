@@ -202,13 +202,6 @@ search is disabled while a file covers the graph. ([Keyboard](help/keyboard.md))
 
 ## Staging, diffs & files
 
-**A zoom for the diff alone.** Making a diff smaller to see more of it meant
-zooming the whole app or shrinking code everywhere, and neither touched the
-hunk buttons. The diff toolbar now has its own **− 100% +** (and <kbd>⌘</kbd> +
-scroll), which scales the rows, gutters, `@@` bars and hunk buttons together
-and leaves the rest of the window alone. *Limits:* one level for every diff;
-the find bar and toggles keep their size. ([Diff zoom](help/diffs.md#diff-zoom))
-
 **Commit and undo keep their context.** Undoing a commit used to leave
 Details on "Commit not found" and throw the message away; committing closed
 Details, then opened it again a moment later. Now committing moves Details
