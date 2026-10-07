@@ -1,5 +1,6 @@
 import { defaultGraphRowAccent, type GraphRowAccent } from '../../../shared/types'
 import type {
+  AppThemeColors,
   GraphPalette,
   GraphRingWidth,
   GraphRowStyle,
@@ -15,6 +16,8 @@ import { GRAPH_COLORS } from './layout'
 
 export const GRAPH_PALETTES: GraphPalette[] = [
   { id: 'classic', name: 'Classic', builtin: true, colors: [...GRAPH_COLORS] },
+  // Resolved at render time from the active app theme; see paletteColors().
+  { id: 'theme', name: 'Theme', builtin: true, colors: [] },
   {
     id: 'neon',
     name: 'Neon',
@@ -68,6 +71,38 @@ export function findGraphPalette(id: string, custom: GraphPalette[]): GraphPalet
   return allGraphPalettes(custom).find((p) => p.id === id) ?? GRAPH_PALETTES[0]
 }
 
+// ─── Colours that follow the app theme ──────────────────────────────────────
+
+/** The lane palette whose colours come from the active app theme. */
+export const THEME_PALETTE_ID = 'theme'
+/** The row colour that follows the active theme's accent. */
+export const ROW_COLOR_THEME = 'theme'
+
+/** Halfway between two `#rrggbb` colours. */
+function mixHex(a: string, b: string): string {
+  const ch = (h: string, i: number): number => parseInt(h.slice(1 + i * 2, 3 + i * 2), 16)
+  return `#${[0, 1, 2].map((i) => Math.round((ch(a, i) + ch(b, i)) / 2).toString(16).padStart(2, '0')).join('')}`
+}
+
+/** Ten lane colours drawn from a theme: its five signal colours, then the
+ *  midpoints between them, so neighbouring lanes stay distinct. */
+export function themeLanePalette(c: Pick<AppThemeColors, 'accent' | 'purple' | 'green' | 'yellow' | 'red'>): string[] {
+  return [
+    c.accent, c.purple, c.green, c.yellow, c.red,
+    mixHex(c.accent, c.purple), mixHex(c.green, c.purple), mixHex(c.yellow, c.red), mixHex(c.accent, c.green), mixHex(c.red, c.purple)
+  ]
+}
+
+/** A palette's lane colours, with the theme palette filled in from `theme`. */
+export function paletteColors(palette: GraphPalette, theme: AppThemeColors): string[] {
+  return palette.id === THEME_PALETTE_ID ? themeLanePalette(theme) : palette.colors
+}
+
+/** The single row colour to draw, or null to follow each lane. */
+export function resolveRowColor(color: string | null, themeAccent: string): string | null {
+  return color === ROW_COLOR_THEME ? themeAccent : color
+}
+
 /** Build a lane→colour resolver for a palette's colour list. */
 export function colorForPalette(colors: string[]): (index: number) => string {
   const safe = colors.length > 0 ? colors : GRAPH_COLORS
@@ -97,7 +132,7 @@ export function normalizeRowAccent(raw: unknown): GraphRowAccent {
   if (!raw || typeof raw !== 'object') return d
   const r = raw as Record<string, unknown>
   return {
-    color: typeof r.color === 'string' && /^#[0-9a-f]{6}$/i.test(r.color) ? r.color : null,
+    color: r.color === ROW_COLOR_THEME || (typeof r.color === 'string' && /^#[0-9a-f]{6}$/i.test(r.color)) ? (r.color as string) : null,
     style: ROW_STYLES.includes(r.style as GraphRowStyle) ? (r.style as GraphRowStyle) : d.style,
     unpushed: UNPUSHED_MARKS.includes(r.unpushed as GraphRowAccent['unpushed'])
       ? (r.unpushed as GraphRowAccent['unpushed'])

@@ -105,7 +105,8 @@ import { AI_PROVIDERS, emptyAnalytics, defaultGraphStyle, type AIProvider, type 
 import { hasSettingsSecrets, stripSettingsSecrets } from '../../../shared/secrets'
 import { tabActiveRepoPath } from '../../../shared/types'
 import type { HoverModifier, KeychainConsent } from '../../../shared/types'
-import { allGraphPalettes, findGraphPalette, colorForPalette, edgePath, spurPath, DENSITY_ROW_H, LINE_WIDTH_PX, GRAPH_PALETTES, normalizeRowAccent, ringWidthPx, rowAccentParts, withAlpha, ROW_HAZE_ALPHA, ROW_BAR_PX } from '../graph/style'
+import { allGraphPalettes, findGraphPalette, paletteColors, resolveRowColor, colorForPalette, edgePath, spurPath, DENSITY_ROW_H, LINE_WIDTH_PX, GRAPH_PALETTES, normalizeRowAccent, ringWidthPx, rowAccentParts, withAlpha, ROW_HAZE_ALPHA, ROW_BAR_PX } from '../graph/style'
+import { useThemeColors } from '../theme/useThemeColors'
 import { GRAPH_FOCUS_MODES, focusedHashes, type FocusInput } from '../lib/graphFocus'
 import { layoutGraph } from '../graph/layout'
 import type {
@@ -1211,7 +1212,9 @@ function GraphMiniPreview({
   // A stub of each row's message, so ring / haze / bar settings show here live.
   const width = graphW + 46
   const parts = rowAccentParts(accent.style)
-  const accentOf = (lane: number): string => accent.color ?? cf(lane)
+  const themeAccent = useThemeColors().accent
+  const rowColor = resolveRowColor(accent.color, themeAccent)
+  const accentOf = (lane: number): string => rowColor ?? cf(lane)
   // The newest two commits play "not pushed yet".
   const unpushed = new Set(accent.unpushed === 'off' ? [] : commits.filter((c) => !PREVIEW_SPURS.has(c.hash)).slice(0, 2).map((c) => c.hash))
   const avaSize = 17
@@ -1340,10 +1343,12 @@ function GraphStyleTab(): React.JSX.Element {
   const customPalettes = settings.customGraphPalettes ?? []
   const palettes = allGraphPalettes(customPalettes)
   const current = findGraphPalette(style.paletteId, customPalettes)
+  const themeColors = useThemeColors()
+  const currentColors = paletteColors(current, themeColors)
   const aiEnabled = useAiReady('theme')
 
   const [showEditor, setShowEditor] = useState(false)
-  const [draft, setDraft] = useState<string[]>(() => toSlots(current.colors))
+  const [draft, setDraft] = useState<string[]>(() => toSlots(currentColors))
   const [name, setName] = useState('My palette')
   const [showAIPrompt, setShowAIPrompt] = useState(false)
   const [aiPrompt, setAiPrompt] = useState('')
@@ -1355,7 +1360,7 @@ function GraphStyleTab(): React.JSX.Element {
   const selectPalette = (id: string): void => setStyle({ paletteId: id })
 
   const openCreate = (): void => {
-    setDraft(toSlots(current.colors))
+    setDraft(toSlots(currentColors))
     setName('My palette')
     setShowAIPrompt(false)
     setShowEditor((v) => !v)
@@ -1434,7 +1439,7 @@ function GraphStyleTab(): React.JSX.Element {
                 onClick={() => selectPalette(p.id)}
                 onKeyDown={(e) => e.key === 'Enter' && selectPalette(p.id)}
               >
-                <PaletteSwatch colors={p.colors} />
+                <PaletteSwatch colors={paletteColors(p, themeColors)} />
                 <div className="theme-card-label">
                   <span>{p.name}</span>
                 </div>
@@ -1556,7 +1561,7 @@ function GraphStyleTab(): React.JSX.Element {
         <div className="graph-style-preview">
           <div className="code-preview-head">{t('settings.graphPreview')}</div>
           <div className="graph-mini-stage">
-            <GraphMiniPreview colors={current.colors} edgeStyle={style.edgeStyle} rowH={rowH} lineW={lineW} nodeStyle={style.nodeStyle} topology={style.topology ?? 'full'} focus={style.focus ?? 'all'} accent={normalizeRowAccent(style.rowAccent)} ringPx={ringWidthPx(style.ringWidth)} />
+            <GraphMiniPreview colors={currentColors} edgeStyle={style.edgeStyle} rowH={rowH} lineW={lineW} nodeStyle={style.nodeStyle} topology={style.topology ?? 'full'} focus={style.focus ?? 'all'} accent={normalizeRowAccent(style.rowAccent)} ringPx={ringWidthPx(style.ringWidth)} />
           </div>
         </div>
       </div>

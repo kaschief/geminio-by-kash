@@ -34,7 +34,9 @@ contrast in both variants.
 - **No scrollbars.** Trackpad, wheel and keyboard scrolling work as usual. In the details panel and in Settings, a list with more below fades out at its bottom edge, and the fade goes away once you reach the end. Only the cut edge fades — no blur, and a short list gets a shorter fade — so every row you can see stays fully readable.
 - A separate **graph style**: lane palette, corner style, row density and line
   thickness, plus the ring, haze and bar on each commit row and how unpushed
-  commits stand out, all with a live mini-graph preview.
+  commits stand out, all with a live mini-graph preview. Pick the **Theme**
+  lane palette and the rails are drawn from the app theme's own colours, so the
+  graph changes along with the theme, in light and dark.
 
 ![Theme settings](../screenshots/settings-themes.webp)
 
@@ -50,7 +52,7 @@ in **Settings → Themes → Graph** shows each change as you make it.
 |---------|---------|
 | Avatar ring | **Thin** (the default), **Normal** or **Thick**. Sits under *Node style*, since the ring belongs to the avatar |
 | Commit rows | **Off**, **Ring**, **Ring + Bar**, or **Full** (ring, bar and haze) |
-| Row color | **Lane** (each row follows its lane) or **Custom** (one color for every row) |
+| Row color | **Lane** (each row follows its lane), **Theme** (every row takes the app theme's accent and changes with it) or **Custom** (one color you pick for every row) |
 | Unpushed commits | **Off**, **Dashed** (dashed ring, dotted bar), or **Dashed + Arrow** (adds a small ↑ badge on the avatar) |
 | Tint the row | Also washes the whole row of an unpushed commit |
 

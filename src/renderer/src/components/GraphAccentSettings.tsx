@@ -6,7 +6,7 @@ import {
   type GraphUnpushedMark,
   type StatusDotColors
 } from '../../../shared/types'
-import { normalizeRowAccent } from '../graph/style'
+import { normalizeRowAccent, ROW_COLOR_THEME } from '../graph/style'
 import { GRAPH_COLORS } from '../graph/layout'
 import { useSettingsStore } from '../stores/settings'
 import { useT, type TranslationKey } from '../i18n'
@@ -63,6 +63,8 @@ export function GraphRowAccentControls(): React.JSX.Element {
   const update = useSettingsStore((s) => s.update)
   const raw = useSettingsStore((s) => s.settings.graphStyle?.rowAccent)
   const accent = normalizeRowAccent(raw)
+  const customColor = accent.color && accent.color !== ROW_COLOR_THEME ? accent.color : null
+  const rowColorChoice = accent.color === ROW_COLOR_THEME ? 'theme' : customColor ? 'custom' : 'lane'
   const set = (patch: Partial<GraphRowAccent>): void =>
     update((s) => {
       const style = s.graphStyle ?? defaultGraphStyle()
@@ -79,17 +81,20 @@ export function GraphRowAccentControls(): React.JSX.Element {
         <Switch
           options={[
             { id: 'lane', labelKey: 'settings.graphRowColorLane' },
+            { id: 'theme', labelKey: 'settings.graphRowColorTheme' },
             { id: 'custom', labelKey: 'settings.graphRowColorCustom' }
           ]}
-          value={accent.color ? 'custom' : 'lane'}
-          onChange={(v) => set({ color: v === 'lane' ? null : accent.color ?? GRAPH_COLORS[0] })}
+          value={rowColorChoice}
+          onChange={(v) =>
+            set({ color: v === 'lane' ? null : v === 'theme' ? ROW_COLOR_THEME : customColor ?? GRAPH_COLORS[0] })
+          }
           label={t('settings.graphRowColor')}
         />
-        {accent.color && (
+        {customColor && (
           <input
             type="color"
             className="swatch-input"
-            value={accent.color}
+            value={customColor}
             aria-label={t('settings.graphRowColorCustom')}
             onChange={(e) => set({ color: e.target.value })}
           />

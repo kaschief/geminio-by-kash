@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest'
+import { findGraphPalette, normalizeRowAccent, paletteColors, resolveRowColor, ROW_COLOR_THEME, THEME_PALETTE_ID, themeLanePalette } from '../src/renderer/src/graph/style'
 import { EXTRA_APP_THEMES, EXTRA_CODE_THEMES } from '../src/renderer/src/theme/extraThemes'
 import { APP_THEMES, CODE_THEMES } from '../src/renderer/src/theme/themes'
 
@@ -44,4 +45,34 @@ describe('extra themes', () => {
       })
     }
   }
+})
+
+describe('graph colours that follow the theme', () => {
+  const colors = EXTRA_APP_THEMES[0].dark
+
+  it('builds ten distinct lane colours from the theme', () => {
+    const lanes = themeLanePalette(colors)
+    expect(lanes).toHaveLength(10)
+    expect(lanes.slice(0, 5)).toEqual([colors.accent, colors.purple, colors.green, colors.yellow, colors.red])
+    for (const c of lanes) expect(c).toMatch(/^#[0-9a-f]{6}$/)
+  })
+
+  it('fills in only the theme palette', () => {
+    const theme = findGraphPalette(THEME_PALETTE_ID, [])
+    expect(paletteColors(theme, colors)).toEqual(themeLanePalette(colors))
+    const classic = findGraphPalette('classic', [])
+    expect(paletteColors(classic, colors)).toBe(classic.colors)
+  })
+
+  it('resolves the theme row colour to the accent and keeps the others', () => {
+    expect(resolveRowColor(ROW_COLOR_THEME, '#123456')).toBe('#123456')
+    expect(resolveRowColor('#abcdef', '#123456')).toBe('#abcdef')
+    expect(resolveRowColor(null, '#123456')).toBeNull()
+  })
+
+  it('keeps a saved theme row colour and drops anything unknown', () => {
+    expect(normalizeRowAccent({ color: 'theme' }).color).toBe('theme')
+    expect(normalizeRowAccent({ color: '#a1b2c3' }).color).toBe('#a1b2c3')
+    expect(normalizeRowAccent({ color: 'purple' }).color).toBeNull()
+  })
 })

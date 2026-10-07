@@ -13,7 +13,8 @@ import { defaultGraphColumns, defaultGraphColumnOrder, defaultGraphStyle } from 
 import { GraphHeaderFilter, type FilterOption } from './GraphHeaderFilter'
 import { layoutGraph } from '../graph/layout'
 import { contrastText } from '../lib/contrast'
-import { edgePath, spurPath, colorForPalette, findGraphPalette, DENSITY_ROW_H, LINE_WIDTH_PX, ringWidthPx, ROW_BAR_PX, ROW_HAZE_ALPHA, rowAccentParts, normalizeRowAccent, withAlpha } from '../graph/style'
+import { edgePath, spurPath, colorForPalette, findGraphPalette, paletteColors, resolveRowColor, DENSITY_ROW_H, LINE_WIDTH_PX, ringWidthPx, ROW_BAR_PX, ROW_HAZE_ALPHA, rowAccentParts, normalizeRowAccent, withAlpha } from '../graph/style'
+import { useThemeColors } from '../theme/useThemeColors'
 import { useRepoStore, repoActions, type RepoData } from '../stores/repo'
 import { useUIStore, type MenuItem } from '../stores/ui'
 import { useSettingsStore } from '../stores/settings'
@@ -664,13 +665,15 @@ export function GraphView({ repo }: { repo: RepoData }): React.JSX.Element {
   const edgeStyle = graphStyle.edgeStyle
   // Compact mode draws commits as dots instead of author avatars.
   const compact = (graphStyle.nodeStyle ?? 'normal') === 'compact'
+  const themeColors = useThemeColors()
   const colorFor = useMemo(
-    () => colorForPalette(findGraphPalette(graphStyle.paletteId, customGraphPalettes).colors),
-    [graphStyle.paletteId, customGraphPalettes]
+    () => colorForPalette(paletteColors(findGraphPalette(graphStyle.paletteId, customGraphPalettes), themeColors)),
+    [graphStyle.paletteId, customGraphPalettes, themeColors]
   )
   // Ring, haze and bar: the lane colour unless the user picked one colour for all.
   const accent = useMemo(() => normalizeRowAccent(graphStyle.rowAccent), [graphStyle.rowAccent])
-  const accentFor = (lane: number): string => accent.color ?? colorFor(lane)
+  const rowColor = resolveRowColor(accent.color, themeColors.accent)
+  const accentFor = (lane: number): string => rowColor ?? colorFor(lane)
   const unpushedSet = useMemo(() => new Set(repo.unpushed ?? []), [repo.unpushed])
   const parts = rowAccentParts(accent.style)
   const ringPx = ringWidthPx(graphStyle.ringWidth)

@@ -1867,6 +1867,7 @@ export const en = {
   'settings.graphRowFull': 'Full',
   'settings.graphRowColor': 'Row Color',
   'settings.graphRowColorLane': 'Lane',
+  'settings.graphRowColorTheme': 'Theme',
   'settings.graphRowColorCustom': 'Custom',
   'settings.graphUnpushed': 'Unpushed Commits',
   'settings.graphUnpushedDashed': 'Dashed',

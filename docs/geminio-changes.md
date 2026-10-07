@@ -477,6 +477,12 @@ looks, each with a light and a dark side (so Auto follows macOS) and a code
 theme to match. Text, accents and syntax colours are held to WCAG AA in both
 sides by a test. ([Themes](help/themes.md))
 
+**A graph that follows the theme.** Row rings, haze and bars were either each
+lane's colour or one fixed colour, so a custom purple stayed purple on every
+theme. **Row Color** gains **Theme**, which takes the app theme's accent, and
+the lane palettes gain **Theme**, which draws the rails from the theme's own
+colours. Both switch with light, dark and Auto. ([Themes](help/themes.md))
+
 **Quieter details panel, clearer icon picker.** A list with more below used to
 end in a blurred, dimmed band as tall as a row and a half — on a short list it
 covered most of the second row and read as disabled. Now only the cut edge

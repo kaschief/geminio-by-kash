@@ -80,8 +80,8 @@ with a hundred.
   the start of each commit's description after its title, in a quieter shade.
   Trailers such as `Co-authored-by:` are left out, and only the first 160
   characters are loaded, so large repositories stay fast.
-- **Style**: Settings → Appearance → **Graph** — lane palette (8 built-ins, custom,
-  or AI-generated), corner style, row density and line thickness, with a live
+- **Style**: Settings → Appearance → **Graph** — lane palette (8 built-ins, a Theme palette that follows the
+  app theme, custom, or AI-generated), corner style, row density and line thickness, with a live
   mini-graph preview.
 
 ![Graph style settings with live preview](../screenshots/settings-graph.webp)

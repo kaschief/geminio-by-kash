@@ -3164,7 +3164,8 @@ export type GraphUnpushedMark = 'off' | 'dashed' | 'dashed-arrow'
 
 /** The decoration that ties a commit row to its lane. */
 export interface GraphRowAccent {
-  /** One colour for every row, or null to follow each commit's lane colour. */
+  /** One `#rrggbb` colour for every row, `'theme'` for the app theme's accent,
+   *  or null to follow each commit's lane colour. */
   color: string | null
   style: GraphRowStyle
   unpushed: GraphUnpushedMark

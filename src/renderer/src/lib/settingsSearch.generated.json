@@ -618,6 +618,7 @@
       "settings.graphRowColor",
       "settings.graphRowColorCustom",
       "settings.graphRowColorLane",
+      "settings.graphRowColorTheme",
       "settings.graphRowFull",
       "settings.graphRowOff",
       "settings.graphRowRing",
