@@ -22,7 +22,7 @@ stay exactly where it is while the scan runs.
 
 ## Using it
 
-Open it from the tools menu, <kbd>⌘K</kbd> → *Conflict radar*, or right-click a
+Open it from the tools menu, <kbd>⌘K</kbd> → *Conflict Radar*, or right-click a
 branch to scan everything against **that** branch.
 
 It scans as soon as it opens, using your current branch as the base.

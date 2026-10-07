@@ -63,7 +63,7 @@ Four ways to pin, all landing in the same chip row above the message box:
 | Click a suggestion chip | The file open in the viewer, or the commit selected in the graph |
 | Drag a row from the **Files** tab | That file |
 | Drag a row from the **commit graph** | That commit — its message, and its diff as hunks |
-| **+** → *Choose a file…*, or drag from Finder/Explorer | Any file on disk, including outside the repository |
+| **+** → *Choose a File…*, or drag from Finder/Explorer | Any file on disk, including outside the repository |
 
 Chips stay pinned for follow-up questions, so a conversation keeps its footing;
 `×` on a chip removes it, and clearing the conversation drops them all. Eight
@@ -74,7 +74,7 @@ touch an excluded path are dropped from that diff, not the whole commit.
 
 ## Settings
 
-**Settings → AI → Repository chat**:
+**Settings → AI → Repository Chat**:
 
 | Setting | Does |
 |---|---|

@@ -115,7 +115,7 @@ selected-line actions float within the viewer without moving the code.
 ### Diff size
 
 To fit more of a change on screen, pick a smaller size in **Settings → Files &
-diffs → File viewer → Diff size**: **Default** (100%), **Compact** (90%),
+diffs → File Viewer → Diff size**: **Default** (100%), **Compact** (90%),
 **Smaller** (80%) or **Smallest** (70%). Each choice shows two sample diff rows
 at that size. Code, line numbers, `@@` bars and the **Revert Hunk** / **Stage
 hunk** buttons shrink together; the diff toolbar and the find bar keep their
@@ -175,7 +175,7 @@ It works in unified and split diffs, and in read-only File view. Horizontal
 scrolling, zooming, and editing a file do not switch files. Press **Esc** to
 cancel a pull. Scrolling inside the newly opened file works immediately.
 
-In **Settings → Files & diffs**, turn **Pull between files** on or off and
+In **Settings → Files & Diffs**, turn **Pull between files** on or off and
 choose **Fast**, **Quick**, **Balanced**, or **Deliberate** under **Pull feel**. Balanced
 is the default. Fast is a little lighter and quicker than Quick. Quick needs a shorter pull and switches faster; Deliberate
 keeps the longer stretch and slower transition. These settings apply across
@@ -193,7 +193,7 @@ shown on each side. The text after them is the code git found enclosing the
 change, usually the function or block it belongs to. Git guesses it from the
 indentation and keywords, so in some languages it is the nearest line that
 merely looks like a heading. To show only the line numbers, turn off **Code
-context in hunk headers** in Settings → Files & diffs.
+context in hunk headers** in Settings → Files & Diffs.
 
 Above every diff sits the [semantic summary](semantic-diff.md) — what changed,
 symbol by symbol, rather than line by line.
@@ -219,7 +219,7 @@ lines, with next/previous to step through every change in the file.
 The **minimap**, off by default, adds a scaled overview of the whole file at
 the right edge — click or drag it to jump around, the way a scrollbar would if
 it could also show you the shape of the file. Both are per-machine toggles
-under **Settings → Files & diffs → File viewer**.
+under **Settings → Files & Diffs → File Viewer**.
 
 Neither reads history: switch to Diff, Blame or an older commit and the gutter
 disappears — those views already show every change directly.

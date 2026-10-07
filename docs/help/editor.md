@@ -17,7 +17,7 @@ file or blame view and it opens there, at that line.
 
 ## Choosing one
 
-**Settings → General → External editor.** The dropdown lists the editors Geminio
+**Settings → General → External Editor.** The dropdown lists the editors Geminio
 can find on this machine — it looks for each editor's command first, then, on
 macOS, for the application bundle in `/Applications` and `~/Applications`. The
 scan runs each time you open Settings, so an editor installed five minutes ago

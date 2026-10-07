@@ -123,7 +123,7 @@ count by kind, coloured like the glyphs on the rows. `#123` references and
 
 The counts read like `git diff --stat`: `~7 +3 −1` for modified, added and
 deleted, `→` for renamed, `!` for conflicted — drawn as one capsule, or as
-loose numbers (Settings → Files & diffs → **Change counts**).
+loose numbers (Settings → Files & Diffs → **Change counts**).
 
 Those counts are also the list's filter. Click one (say **+3**) to show only
 added files; click it again, the total at the start of the counts, or press <kbd>Esc</kbd>

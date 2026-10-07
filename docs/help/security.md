@@ -47,7 +47,7 @@ permission dialog can appear, Geminio explains what is being stored, what it
 cannot do (an app only ever reads back the entry it created — your other
 passwords are unreachable), and that saying no is fine: tokens then live in
 memory for the session only, the vault stays closed, and you can turn it on
-later in **Settings → Security → OS keychain**.
+later in **Settings → Security → OS Keychain**.
 
 A fresh install makes **zero** keychain calls until something actually needs
 storing.

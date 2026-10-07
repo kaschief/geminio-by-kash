@@ -57,13 +57,13 @@ A repository tab says what is waiting in it, most urgent first:
 A folder of tabs adds up the commits of everything inside it. A group chip
 keeps its own `↑` / `↓` counts.
 
-**Settings → Themes → Theme → Tab status dots** picks a color for **Changes**,
+**Settings → Themes → Theme → Tab Status Dots** picks a color for **Changes**,
 **Conflict** and **Push**. The reset button next to each hands it back to the
 theme.
 
 ## Active repository
 
-**Settings → Appearance → Active repository** adds a thin accent outline around
+**Settings → Appearance → Active Repository** adds a thin accent outline around
 the selected repository tab. It follows the theme by default. Pick a **Custom color**
 for a fixed outline color, or choose **Theme accent** to follow the theme again.
 Choose **Subtle** to return to the understated border.
@@ -75,7 +75,7 @@ This preference applies across repositories, including repositories inside group
 
 ## App icon
 
-On macOS, **Settings → Appearance → App icon** offers ten illustrated icons:
+On macOS, **Settings → Appearance → App Icon** offers ten illustrated icons:
 Monoline (the default), Portal, Deboss, Night slab, Terminal, Crystal, Topo,
 Water, Mercury and Blueprint. Your choice changes the Dock icon immediately. In
 the installed app it also updates the Finder icon, so it stays selected after

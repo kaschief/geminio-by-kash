@@ -8,7 +8,7 @@ keywords: ssh key keys agent ssh-add ssh-keygen ed25519 publickey permission den
 
 # SSH keys
 
-**Settings → Security → SSH keys.**
+**Settings → Security → SSH Keys.**
 
 ## Why this exists next to the tokens
 

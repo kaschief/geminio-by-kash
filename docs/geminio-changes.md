@@ -204,7 +204,7 @@ search is disabled while a file covers the graph. ([Keyboard](help/keyboard.md))
 
 **A smaller diff, from Settings.** Fitting more of a change on screen used to
 mean zooming the whole app or shrinking code everywhere, and neither touched
-the hunk buttons. **Settings → Files & diffs → Diff size** now draws every diff
+the hunk buttons. **Settings → Files & Diffs → Diff size** now draws every diff
 at 90%, 80% or 70%, with code, line numbers, `@@` bars and hunk buttons
 shrinking together; each card previews its size. *Limits:* nothing above
 100%; the diff toolbar and find bar keep their size. ([Diff size](help/diffs.md#diff-size))
@@ -281,7 +281,7 @@ written — a one-line message is not reflowed into a list.
 
 **Filter by kind of change.** The counts above a file list — working
 changes, a commit, a stash — read like `git diff --stat` (`~7 +3 −1 →1`),
-drawn as one capsule or as loose numbers (Settings → Files & diffs), and are
+drawn as one capsule or as loose numbers (Settings → Files & Diffs), and are
 also its filter:
 click one to show only that kind, click it again, the total at the start, or <kbd>Esc</kbd> to clear,
 <kbd>⌘</kbd>/<kbd>Ctrl</kbd>-click to combine kinds. The filter stays as you
@@ -419,10 +419,6 @@ set (`components/menuIcons.tsx`), so "copy", "discard" or "reveal" wears the
 same icon in every menu and can be recognised without reading. Editors get
 outline versions of their own marks at the same stroke weight, instead of
 full-colour app icons in a monochrome list.
-
-**Sentence case.** Labels across the app — menus, buttons, titles, command
-names — read "Copy file path", "Open with…", "Reset to commit…" rather than
-Title Case. Proper nouns and acronyms keep their capitals (GitHub, SHA, PR).
 
 **Disabled rows say why.** Hovering a greyed row explains it: the branch is
 already checked out, Git cannot delete the branch you are on, no branch is

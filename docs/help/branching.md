@@ -106,7 +106,7 @@ three branches. See [fetching, pulling & pushing](syncing.md).
 ## Pinned branches
 
 Star the branches you keep coming back to — hover the row and click ★, or
-right-click → *Pin branch*. They surface in a **Pinned** group at the top of the
+right-click → *Pin Branch*. They surface in a **Pinned** group at the top of the
 Local section, remembered per repository, while staying in their normal place
 below.
 

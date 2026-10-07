@@ -29,8 +29,8 @@ advance for this to work.
 - **A fetch that finds rewritten history tells you.** A toast names the branch,
   and its row under Remotes gains a **⟳** you can click to open the comparison
   at exactly the commit it used to point at.
-- Right-click any branch → *What changed since…*
-- <kbd>⌘K</kbd> → *What changed since*
+- Right-click any branch → *What Changed Since…*
+- <kbd>⌘K</kbd> → *What Changed Since*
 
 ## Previous positions
 

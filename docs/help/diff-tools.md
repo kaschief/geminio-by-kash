@@ -13,7 +13,7 @@ most days. Some days they do not: a 4,000-line generated file, a merge where you
 need to see four columns at once, or simply the tool you have used for a decade
 and read faster than any new one.
 
-**Settings → General → External diff & merge tools.**
+**Settings → General → External Diff & Merge Tools.**
 
 ## It is git's list, not ours
 

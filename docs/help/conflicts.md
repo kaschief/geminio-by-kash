@@ -138,7 +138,7 @@ Rebase a long-lived branch and you meet the same conflict every time. `rerere`
 — *reuse recorded resolution* — is git's answer: it memorises how you settled a
 conflict and replays that answer the next time the identical one appears.
 
-**Settings → General → Remember conflict resolutions.** It writes
+**Settings → General → Remember Conflict Resolutions.** It writes
 `rerere.enabled` to your global git config, so the command line behaves the same
 way.
 
