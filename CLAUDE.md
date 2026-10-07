@@ -264,6 +264,8 @@ existing vocabulary rather than inventing its own:
   Sign In, Clean Up). Proper nouns, acronyms and code tokens keep their own
   casing (GitHub, SHA, PR, LFS, `--force`). The native macOS menu bar
   (`lib/appMenu.ts`) has its own `menu.*` keys.
+  No ALL CAPS headings: section headings and field labels are Title Case, and
+  `text-transform: uppercase` is for small badges and pills only (NEW, MERGED).
 - **No tick marks for state.** One choice among several: `checked` + `radio`
   on a `MenuItem`, which draws the lit accent dot (`ChoiceDot` in
   `components/StateMarks.tsx`, also used by in-page pickers). An on/off:
