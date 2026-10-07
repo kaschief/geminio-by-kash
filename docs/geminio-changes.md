@@ -484,8 +484,9 @@ Velvet, Aurora, Sakura, Ink and Glacier add warm, neon, rich and minimal
 looks, each with a light and a dark side (so Auto follows macOS) and a code
 theme to match. Text, accents and syntax colours are held to WCAG AA in both
 sides by a test. On these themes, diff rows and changed words take the
-theme's own green and red, and each changed word gets a solid underline, so
-edits stay easy to find on the tinted panels. ([Themes](help/themes.md))
+theme's own green and red, each changed word gets a solid underline, and
+added and removed lines carry a solid edge bar with the sign and line numbers
+in their colour, so edits stay easy to find on the tinted panels. ([Themes](help/themes.md))
 
 **A graph that follows the theme.** Row rings, haze and bars were either each
 lane's colour or one fixed colour, so a custom purple stayed purple on every
