@@ -24,7 +24,9 @@ code theme:
   and frost blue).
 
 Every one of the new themes keeps text, accents and syntax colours at WCAG AA
-contrast in both variants.
+contrast in both variants. Their diffs use the theme's own green and red, and every
+changed word is underlined in that colour so it stands out on the tinted
+background.
 
 ![Switching from light to dark](../screenshots/clip-themes.webp)
 

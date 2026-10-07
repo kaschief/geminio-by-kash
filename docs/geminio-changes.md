@@ -475,7 +475,9 @@ cool blue-purple range. Ember, Canyon, Forest, Synthwave, Phosphor, Abyss,
 Velvet, Aurora, Sakura, Ink and Glacier add warm, neon, rich and minimal
 looks, each with a light and a dark side (so Auto follows macOS) and a code
 theme to match. Text, accents and syntax colours are held to WCAG AA in both
-sides by a test. ([Themes](help/themes.md))
+sides by a test. On these themes, diff rows and changed words take the
+theme's own green and red, and each changed word gets a solid underline, so
+edits stay easy to find on the tinted panels. ([Themes](help/themes.md))
 
 **A graph that follows the theme.** Row rings, haze and bars were either each
 lane's colour or one fixed colour, so a custom purple stayed purple on every

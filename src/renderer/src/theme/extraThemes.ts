@@ -12,6 +12,7 @@ export const EXTRA_APP_THEMES: AppTheme[] = [
     id: 'ember',
     name: 'Ember',
     builtin: true,
+    tintedDiffs: true,
     light: {
       bg0: '#f4d7c2',
       bg1: '#f9eade',
@@ -51,6 +52,7 @@ export const EXTRA_APP_THEMES: AppTheme[] = [
     id: 'canyon',
     name: 'Canyon',
     builtin: true,
+    tintedDiffs: true,
     light: {
       bg0: '#efd1c8',
       bg1: '#f6e6e1',
@@ -90,6 +92,7 @@ export const EXTRA_APP_THEMES: AppTheme[] = [
     id: 'forest',
     name: 'Forest',
     builtin: true,
+    tintedDiffs: true,
     light: {
       bg0: '#d6e7d0',
       bg1: '#e9f2e6',
@@ -129,6 +132,7 @@ export const EXTRA_APP_THEMES: AppTheme[] = [
     id: 'synthwave',
     name: 'Synthwave',
     builtin: true,
+    tintedDiffs: true,
     light: {
       bg0: '#dfc2f4',
       bg1: '#eedef9',
@@ -168,6 +172,7 @@ export const EXTRA_APP_THEMES: AppTheme[] = [
     id: 'phosphor',
     name: 'Phosphor',
     builtin: true,
+    tintedDiffs: true,
     light: {
       bg0: '#dfdfd8',
       bg1: '#eeeeea',
@@ -207,6 +212,7 @@ export const EXTRA_APP_THEMES: AppTheme[] = [
     id: 'abyss',
     name: 'Abyss',
     builtin: true,
+    tintedDiffs: true,
     light: {
       bg0: '#cbe9eb',
       bg1: '#e3f3f4',
@@ -246,6 +252,7 @@ export const EXTRA_APP_THEMES: AppTheme[] = [
     id: 'velvet',
     name: 'Velvet',
     builtin: true,
+    tintedDiffs: true,
     light: {
       bg0: '#eaccd1',
       bg1: '#f4e4e7',
@@ -285,6 +292,7 @@ export const EXTRA_APP_THEMES: AppTheme[] = [
     id: 'aurora',
     name: 'Aurora',
     builtin: true,
+    tintedDiffs: true,
     light: {
       bg0: '#c6cef1',
       bg1: '#e0e5f7',
@@ -324,6 +332,7 @@ export const EXTRA_APP_THEMES: AppTheme[] = [
     id: 'sakura',
     name: 'Sakura',
     builtin: true,
+    tintedDiffs: true,
     light: {
       bg0: '#f4c2db',
       bg1: '#f9deec',
@@ -363,6 +372,7 @@ export const EXTRA_APP_THEMES: AppTheme[] = [
     id: 'ink',
     name: 'Ink',
     builtin: true,
+    tintedDiffs: true,
     light: {
       bg0: '#dbdbdb',
       bg1: '#ececec',
@@ -402,6 +412,7 @@ export const EXTRA_APP_THEMES: AppTheme[] = [
     id: 'glacier',
     name: 'Glacier',
     builtin: true,
+    tintedDiffs: true,
     light: {
       bg0: '#c8ddef',
       bg1: '#e1edf6',

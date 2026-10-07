@@ -17890,3 +17890,9 @@ button.notice-row:hover { background: var(--bg-2); }
 .diff-scale-sample > .diff-line { zoom: var(--diff-scale, 1); }
 .layout-seg-btn .diff-scale-sample .diff-gutter { width: 22px; font-size: 10px; color: var(--text-2); }
 .layout-seg-btn .diff-scale-sample :is(.diff-sign, .diff-text) { font-size: inherit; color: inherit; line-height: inherit; }
+
+/* Themes with tinted panels (AppTheme.tintedDiffs): a solid underline in the
+   theme's green or red under each changed word, so the change stays easy to
+   find where a fill alone would blend into the panel. */
+:root[data-diff-tint] .diff-text mark:is(.word-add, .inl-add) { box-shadow: inset 0 -2px 0 var(--diff-add-line); }
+:root[data-diff-tint] .diff-text mark:is(.word-del, .inl-del) { box-shadow: inset 0 -2px 0 var(--diff-del-line); }

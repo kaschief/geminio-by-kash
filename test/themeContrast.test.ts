@@ -76,3 +76,10 @@ describe('graph colours that follow the theme', () => {
     expect(normalizeRowAccent({ color: 'purple' }).color).toBeNull()
   })
 })
+
+describe('diff colours on tinted themes', () => {
+  it('draws diffs from the theme on every new theme and leaves the originals alone', () => {
+    for (const t of EXTRA_APP_THEMES) expect(t.tintedDiffs).toBe(true)
+    for (const t of APP_THEMES.filter((a) => !EXTRA_APP_THEMES.includes(a))) expect(t.tintedDiffs).toBeUndefined()
+  })
+})

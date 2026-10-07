@@ -3298,6 +3298,10 @@ export interface AppTheme {
   id: string
   name: string
   builtin?: boolean
+  /** Draw diff tints, changed-word marks and their underlines from this
+   *  theme's own green and red instead of the app's fixed mint and pink. For
+   *  themes whose tinted panels would swallow the fixed colours. */
+  tintedDiffs?: boolean
   light: AppThemeColors
   dark: AppThemeColors
 }

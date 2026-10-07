@@ -768,6 +768,7 @@ export function applyAppTheme(theme: AppTheme, mode: ThemeMode): void {
   r.style.setProperty('--red', c.red)
   r.style.setProperty('--yellow', c.yellow)
   r.style.setProperty('--purple', c.purple)
+  applyDiffTint(theme.tintedDiffs ? c : null, resolved)
 }
 
 /** Tab status dot overrides; clearing a colour hands it back to the stylesheet. */
@@ -835,4 +836,42 @@ export function findAppTheme(id: string, custom: AppTheme[]): AppTheme {
 
 export function findCodeTheme(id: string, custom: CodeTheme[]): CodeTheme {
   return allCodeThemes(custom).find((t) => t.id === id) ?? CODE_THEMES[0]
+}
+
+// ─── Diff colours from the theme ─────────────────────────────────────────────
+
+const DIFF_TINT_VARS = [
+  '--diff-add-bg', '--diff-del-bg', '--word-add-bg', '--word-del-bg',
+  '--diff-add-fg', '--diff-del-fg', '--diff-add-line', '--diff-del-line'
+] as const
+
+/** Halfway-and-beyond blend of two `#rrggbb` colours: `t` of `a`, the rest `b`. */
+function blendHex(a: string, b: string, t: number): string {
+  const ch = (h: string, i: number): number => parseInt(h.slice(1 + i * 2, 3 + i * 2), 16)
+  return `#${[0, 1, 2].map((i) => Math.round(ch(a, i) * t + ch(b, i) * (1 - t)).toString(16).padStart(2, '0')).join('')}`
+}
+
+/**
+ * Diff rows, changed words and their underlines in the theme's own green and
+ * red, or the stylesheet's fixed defaults when `c` is null. The fills stay
+ * moderate so code on them keeps its contrast; the solid underline is what
+ * keeps a changed word findable on a strongly tinted panel.
+ */
+function applyDiffTint(c: AppThemeColors | null, mode: 'light' | 'dark'): void {
+  const root = document.documentElement
+  if (!c) {
+    delete root.dataset.diffTint
+    for (const v of DIFF_TINT_VARS) root.style.removeProperty(v)
+    return
+  }
+  const dark = mode === 'dark'
+  root.dataset.diffTint = ''
+  root.style.setProperty('--diff-add-bg', hexToRgba(c.green, 0.14))
+  root.style.setProperty('--diff-del-bg', hexToRgba(c.red, dark ? 0.13 : 0.12))
+  root.style.setProperty('--word-add-bg', hexToRgba(c.green, dark ? 0.32 : 0.26))
+  root.style.setProperty('--word-del-bg', hexToRgba(c.red, dark ? 0.3 : 0.22))
+  root.style.setProperty('--diff-add-fg', blendHex(c.green, c.text0, 0.35))
+  root.style.setProperty('--diff-del-fg', blendHex(c.red, c.text0, 0.35))
+  root.style.setProperty('--diff-add-line', c.green)
+  root.style.setProperty('--diff-del-line', c.red)
 }
