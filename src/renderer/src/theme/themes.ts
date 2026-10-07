@@ -1,4 +1,4 @@
-import { contrastText } from '../lib/contrast'
+import { blendHex, contrastText } from '../lib/contrast'
 import type { AppTheme, CodeTheme, ThemeMode, AppThemeColors, CodeThemeColors, StatusDotColors } from '../../../shared/types'
 import { EXTRA_APP_THEMES, EXTRA_CODE_THEMES } from './extraThemes'
 
@@ -840,38 +840,43 @@ export function findCodeTheme(id: string, custom: CodeTheme[]): CodeTheme {
 
 // ─── Diff colours from the theme ─────────────────────────────────────────────
 
-const DIFF_TINT_VARS = [
-  '--diff-add-bg', '--diff-del-bg', '--word-add-bg', '--word-del-bg',
-  '--diff-add-fg', '--diff-del-fg', '--diff-add-line', '--diff-del-line'
-] as const
+/** Fill strengths for theme-coloured diffs. Moderate on purpose: the code on
+ *  them keeps WCAG AA (test/themeContrast.test.ts); the underline and edge bar
+ *  do the work of making a change findable. */
+export const DIFF_TINT_ALPHA = {
+  dark: { addRow: 0.14, delRow: 0.13, addWord: 0.28, delWord: 0.28 },
+  light: { addRow: 0.14, delRow: 0.12, addWord: 0.26, delWord: 0.22 }
+} as const
 
-/** Halfway-and-beyond blend of two `#rrggbb` colours: `t` of `a`, the rest `b`. */
-function blendHex(a: string, b: string, t: number): string {
-  const ch = (h: string, i: number): number => parseInt(h.slice(1 + i * 2, 3 + i * 2), 16)
-  return `#${[0, 1, 2].map((i) => Math.round(ch(a, i) * t + ch(b, i) * (1 - t)).toString(16).padStart(2, '0')).join('')}`
+/** Share of the diff's green or red in its text colour; the rest is text0. */
+export const DIFF_TINT_FG_SHARE = 0.35
+
+/** The CSS variables a tinted theme sets for its diffs. */
+export function diffTintVars(c: AppThemeColors, mode: 'light' | 'dark'): Record<string, string> {
+  const a = DIFF_TINT_ALPHA[mode]
+  return {
+    '--diff-add-bg': hexToRgba(c.green, a.addRow),
+    '--diff-del-bg': hexToRgba(c.red, a.delRow),
+    '--word-add-bg': hexToRgba(c.green, a.addWord),
+    '--word-del-bg': hexToRgba(c.red, a.delWord),
+    '--diff-add-fg': blendHex(c.green, c.text0, DIFF_TINT_FG_SHARE),
+    '--diff-del-fg': blendHex(c.red, c.text0, DIFF_TINT_FG_SHARE),
+    '--diff-add-line': c.green,
+    '--diff-del-line': c.red
+  }
 }
 
 /**
  * Diff rows, changed words and their underlines in the theme's own green and
- * red, or the stylesheet's fixed defaults when `c` is null. The fills stay
- * moderate so code on them keeps its contrast; the solid underline is what
- * keeps a changed word findable on a strongly tinted panel.
+ * red, or the stylesheet's fixed defaults when `c` is null.
  */
 function applyDiffTint(c: AppThemeColors | null, mode: 'light' | 'dark'): void {
   const root = document.documentElement
-  if (!c) {
-    delete root.dataset.diffTint
-    for (const v of DIFF_TINT_VARS) root.style.removeProperty(v)
-    return
+  const vars = c ? diffTintVars(c, mode) : null
+  for (const name of ['--diff-add-bg', '--diff-del-bg', '--word-add-bg', '--word-del-bg', '--diff-add-fg', '--diff-del-fg', '--diff-add-line', '--diff-del-line']) {
+    if (vars) root.style.setProperty(name, vars[name])
+    else root.style.removeProperty(name)
   }
-  const dark = mode === 'dark'
-  root.dataset.diffTint = ''
-  root.style.setProperty('--diff-add-bg', hexToRgba(c.green, 0.14))
-  root.style.setProperty('--diff-del-bg', hexToRgba(c.red, dark ? 0.13 : 0.12))
-  root.style.setProperty('--word-add-bg', hexToRgba(c.green, dark ? 0.32 : 0.26))
-  root.style.setProperty('--word-del-bg', hexToRgba(c.red, dark ? 0.3 : 0.22))
-  root.style.setProperty('--diff-add-fg', blendHex(c.green, c.text0, 0.35))
-  root.style.setProperty('--diff-del-fg', blendHex(c.red, c.text0, 0.35))
-  root.style.setProperty('--diff-add-line', c.green)
-  root.style.setProperty('--diff-del-line', c.red)
+  if (vars) root.dataset.diffTint = ''
+  else delete root.dataset.diffTint
 }

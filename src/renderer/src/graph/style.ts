@@ -9,6 +9,7 @@ import type {
   GraphLineWidth
 } from '../../../shared/types'
 import { GRAPH_COLORS } from './layout'
+import { blendHex } from '../lib/contrast'
 
 // ─── Built-in graph palettes ─────────────────────────────────────────────────
 // `classic` mirrors the historical hard-coded rails so existing repos look
@@ -78,18 +79,12 @@ export const THEME_PALETTE_ID = 'theme'
 /** The row colour that follows the active theme's accent. */
 export const ROW_COLOR_THEME = 'theme'
 
-/** Halfway between two `#rrggbb` colours. */
-function mixHex(a: string, b: string): string {
-  const ch = (h: string, i: number): number => parseInt(h.slice(1 + i * 2, 3 + i * 2), 16)
-  return `#${[0, 1, 2].map((i) => Math.round((ch(a, i) + ch(b, i)) / 2).toString(16).padStart(2, '0')).join('')}`
-}
-
 /** Ten lane colours drawn from a theme: its five signal colours, then the
  *  midpoints between them, so neighbouring lanes stay distinct. */
 export function themeLanePalette(c: Pick<AppThemeColors, 'accent' | 'purple' | 'green' | 'yellow' | 'red'>): string[] {
   return [
     c.accent, c.purple, c.green, c.yellow, c.red,
-    mixHex(c.accent, c.purple), mixHex(c.green, c.purple), mixHex(c.yellow, c.red), mixHex(c.accent, c.green), mixHex(c.red, c.purple)
+    blendHex(c.accent, c.purple, 0.5), blendHex(c.green, c.purple, 0.5), blendHex(c.yellow, c.red, 0.5), blendHex(c.accent, c.green, 0.5), blendHex(c.red, c.purple, 0.5)
   ]
 }
 

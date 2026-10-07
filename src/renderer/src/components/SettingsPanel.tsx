@@ -1437,7 +1437,11 @@ function GraphStyleTab(): React.JSX.Element {
                 aria-pressed={p.id === style.paletteId}
                 className={`theme-card ${p.id === style.paletteId ? 'selected' : ''}`}
                 onClick={() => selectPalette(p.id)}
-                onKeyDown={(e) => e.key === 'Enter' && selectPalette(p.id)}
+                onKeyDown={(e) => {
+                  if (e.key !== 'Enter' && e.key !== ' ') return
+                  e.preventDefault()
+                  selectPalette(p.id)
+                }}
               >
                 <PaletteSwatch colors={paletteColors(p, themeColors)} />
                 <div className="theme-card-label">
@@ -1653,6 +1657,9 @@ function ThemesPage({ initialTab, searchTab }: { initialTab?: 'theme' | 'graph';
   const [codeName, setCodeName] = useState('My code theme')
   const [codeOther, setCodeOther] = useState<CodeThemeColors | null>(null)
   const [showAppEditor, setShowAppEditor] = useState(false)
+  // A theme made from a tinted one (or by the AI, whose themes are usually
+  // tinted) keeps theme-coloured diffs; see AppTheme.tintedDiffs.
+  const [appDraftTinted, setAppDraftTinted] = useState(false)
   const [showCodeEditor, setShowCodeEditor] = useState(false)
 
   const [showAppAIPrompt, setShowAppAIPrompt] = useState(false)
@@ -1674,6 +1681,7 @@ function ThemesPage({ initialTab, searchTab }: { initialTab?: 'theme' | 'graph';
       setAppName(result.name)
       setShowAppAIPrompt(false)
       setAppAIPrompt('')
+      setAppDraftTinted(true)
       setShowAppEditor(true)
     } catch (err) {
       toast('error', err instanceof Error ? err.message : 'AI theme generation failed.')
@@ -1714,6 +1722,7 @@ function ThemesPage({ initialTab, searchTab }: { initialTab?: 'theme' | 'graph';
     const theme: AppTheme = {
       id: `custom-app-${uid()}`,
       name: appName || 'Custom',
+      ...(appDraftTinted ? { tintedDiffs: true } : {}),
       light: mode === 'dark' ? (appOther ?? appDraft) : appDraft,
       dark: mode === 'dark' ? appDraft : (appOther ?? appDraft)
     }
@@ -1804,7 +1813,7 @@ function ThemesPage({ initialTab, searchTab }: { initialTab?: 'theme' | 'graph';
           <button
             className="theme-icon-btn"
             title={t('settings.createAppTheme')}
-            onClick={() => { setAppDraft(resolveAppColors(currentApp, mode)); setAppOther(null); setShowAppEditor((v) => !v) }}
+            onClick={() => { setAppDraft(resolveAppColors(currentApp, mode)); setAppOther(null); setAppDraftTinted(currentApp.tintedDiffs === true); setShowAppEditor((v) => !v) }}
           >
             <Plus size={14} />
           </button>

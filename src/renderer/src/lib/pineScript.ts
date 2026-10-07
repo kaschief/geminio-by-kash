@@ -31,7 +31,8 @@ export function pineScript(hljs: HLJSApi): Language {
       // Colour literals: #RRGGBB and #RRGGBBAA.
       { scope: 'number', match: /#[0-9a-fA-F]{6}(?:[0-9a-fA-F]{2})?\b/ },
       hljs.C_NUMBER_MODE,
-      { scope: 'title.function', match: /\b[A-Za-z_]\w*(?=\s*\()/ },
+      // A call is a name before `(`, unless the name is a keyword: `if (x)` is control flow.
+      { scope: 'title.function', match: /\b(?!(?:if|else|for|to|by|in|while|switch|and|or|not|var|varip|import|export|method|type|enum|as|break|continue)\b)[A-Za-z_]\w*(?=\s*\()/ },
       { scope: 'operator', match: /=>|:=|[-+*/%]=|==|!=|<=|>=|\?|:/ }
     ]
   }

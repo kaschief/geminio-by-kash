@@ -24,6 +24,7 @@ describe('Pine Script highlighting', () => {
     expect(pine('// LEVEL DRAWING METHODS')).toContain('hljs-comment')
     expect(pine('if not na(this.upper) and x == true')).toMatch(/hljs-keyword">if<.*hljs-keyword">not<.*hljs-title function_">na<.*hljs-keyword">and<.*hljs-literal">true</)
     expect(pine('this.lblUpper := na')).toContain('<span class="hljs-literal">na</span>')
+    for (const kw of ['if', 'while', 'switch', 'not']) expect(pine(`${kw} (x)`)).toContain(`hljs-keyword">${kw}<`)
     expect(pine('var color c = #ff8800AA')).toContain('<span class="hljs-number">#ff8800AA</span>')
   })
 })

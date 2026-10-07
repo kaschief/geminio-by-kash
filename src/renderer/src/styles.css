@@ -17900,8 +17900,9 @@ button.notice-row:hover { background: var(--bg-2); }
 /* Tinted themes: a fill strong enough to read on a coloured panel would cost
    the code on it its contrast, so added and removed lines are marked by
    structure instead — a solid edge bar, and the sign and line numbers in the
-   line's own green or red. Selection keeps its accent edge. */
-:root[data-diff-tint] :is(.diff-line, .diff-split-cell).add:not(.line-selected) { box-shadow: inset 3px 0 0 var(--diff-add-line); }
-:root[data-diff-tint] :is(.diff-line, .diff-split-cell).del:not(.line-selected) { box-shadow: inset 3px 0 0 var(--diff-del-line); }
-:root[data-diff-tint] :is(.diff-line, .diff-split-cell).add :is(.diff-sign, .diff-gutter) { color: var(--diff-add-line); opacity: 1; }
-:root[data-diff-tint] :is(.diff-line, .diff-split-cell).del :is(.diff-sign, .diff-gutter) { color: var(--diff-del-line); opacity: 1; }
+   line's own green or red. Selection keeps its accent edge, and moved code
+   keeps its own blue marking. */
+:root[data-diff-tint] :is(.diff-line, .diff-split-cell).add:not(.line-selected, .moved) { box-shadow: inset 3px 0 0 var(--diff-add-line); }
+:root[data-diff-tint] :is(.diff-line, .diff-split-cell).del:not(.line-selected, .moved) { box-shadow: inset 3px 0 0 var(--diff-del-line); }
+:root[data-diff-tint] :is(.diff-line, .diff-split-cell).add:not(.moved) :is(.diff-sign, .diff-gutter) { color: var(--diff-add-line); opacity: 1; }
+:root[data-diff-tint] :is(.diff-line, .diff-split-cell).del:not(.moved) :is(.diff-sign, .diff-gutter) { color: var(--diff-del-line); opacity: 1; }

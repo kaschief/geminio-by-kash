@@ -1,4 +1,6 @@
 import { describe, it, expect } from 'vitest'
+import { DIFF_TINT_ALPHA, DIFF_TINT_FG_SHARE } from '../src/renderer/src/theme/themes'
+import { blendHex } from '../src/renderer/src/lib/contrast'
 import { findGraphPalette, normalizeRowAccent, paletteColors, resolveRowColor, ROW_COLOR_THEME, THEME_PALETTE_ID, themeLanePalette } from '../src/renderer/src/graph/style'
 import { EXTRA_APP_THEMES, EXTRA_CODE_THEMES } from '../src/renderer/src/theme/extraThemes'
 import { APP_THEMES, CODE_THEMES } from '../src/renderer/src/theme/themes'
@@ -82,4 +84,26 @@ describe('diff colours on tinted themes', () => {
     for (const t of EXTRA_APP_THEMES) expect(t.tintedDiffs).toBe(true)
     for (const t of APP_THEMES.filter((a) => !EXTRA_APP_THEMES.includes(a))) expect(t.tintedDiffs).toBeUndefined()
   })
+})
+
+describe('theme-coloured diff text', () => {
+  const rgb = (hex: string): number[] => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16))
+  const toHex = (c: number[]): string => `#${c.map((v) => Math.round(v).toString(16).padStart(2, '0')).join('')}`
+  const over = (fg: string, alpha: number, bg: string): string => {
+    const [f, b] = [rgb(fg), rgb(bg)]
+    return toHex(f.map((v, i) => v * alpha + b[i] * (1 - alpha)))
+  }
+
+  for (const app of EXTRA_APP_THEMES) {
+    for (const mode of ['light', 'dark'] as const) {
+      it(`${app.name} ${mode} keeps added and removed text readable on a changed word`, () => {
+        const c = app[mode]
+        const a = DIFF_TINT_ALPHA[mode]
+        for (const [base, row, word] of [[c.green, a.addRow, a.addWord], [c.red, a.delRow, a.delWord]] as const) {
+          const fill = over(base, word, over(base, row, c.bg1))
+          expect(contrast(blendHex(base, c.text0, DIFF_TINT_FG_SHARE), fill)).toBeGreaterThanOrEqual(4.5)
+        }
+      })
+    }
+  }
 })
