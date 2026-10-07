@@ -10,6 +10,8 @@ import {
   WrapText,
   Link2,
   Unlink2,
+  Minus,
+  Plus,
   X
 } from 'lucide-react'
 import { InlineGlyph, SplitGlyph, UnifiedGlyph } from './diffLayoutGlyphs'
@@ -36,6 +38,7 @@ import {
   type SplitRow
 } from '../lib/diff'
 import { findMovedLines, type MovedMark } from '../lib/movedLines'
+import { DIFF_ZOOM_MAX, DIFF_ZOOM_MIN, stepDiffZoom } from '../lib/diffZoom'
 import {
   buildInlinePairs,
   inlineText,
@@ -335,6 +338,32 @@ export function DiffViewer({
 
   // ── In-diff find (⌘F) ──
   const viewerRef = useRef<HTMLDivElement>(null)
+
+  // The diff's own zoom, apart from the app's: everything in the rows scales
+  // (code, gutters, @@ bars, hunk buttons) while the toolbar stays put.
+  const diffZoom = useUIStore((s) => s.diffZoom)
+  const setDiffZoom = useUIStore((s) => s.setDiffZoom)
+  const zoomDiff = (dir: 1 | -1): void => setDiffZoom(stepDiffZoom(useUIStore.getState().diffZoom, dir))
+  const hasDiff = diff.trim() !== ''
+  // Cmd/Ctrl + scroll, and a trackpad pinch (which arrives as a ctrl wheel),
+  // zoom the diff under the pointer. Deltas are summed so a pinch's many
+  // small events take one step at a time rather than racing to the end.
+  useEffect(() => {
+    const el = viewerRef.current
+    if (!el) return
+    let acc = 0
+    const onWheel = (e: WheelEvent): void => {
+      if (!(e.ctrlKey || e.metaKey)) return
+      e.preventDefault()
+      acc += e.deltaY
+      if (Math.abs(acc) < 40) return
+      zoomDiff(acc < 0 ? 1 : -1)
+      acc = 0
+    }
+    el.addEventListener('wheel', onWheel, { passive: false })
+    return () => el.removeEventListener('wheel', onWheel)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasDiff])
   const findInputRef = useRef<HTMLInputElement>(null)
   const [findOpen, setFindOpen] = useState(false)
   const [findQuery, setFindQuery] = useState('')
@@ -660,6 +689,37 @@ export function DiffViewer({
       ))}
     </div>
   )
+  // Plain buttons rather than DiffToggle: these are actions, not on/off state,
+  // and floating they stay icon-only instead of spelling out three labels.
+  const zoomBtn = hosted ? 'diff-tool' : 'diff-word-toggle'
+  const zoomPct = interp(t('diff.zoomLevel'), { n: Math.round(diffZoom * 100) })
+  const zoomChoice = (
+    <div className={hosted ? 'diff-tools diff-zoom' : 'diff-zoom'} role="group" aria-label={t('diff.zoomLabel')}>
+      <button
+        type="button"
+        className={zoomBtn}
+        aria-label={t('diff.zoomOut')}
+        aria-disabled={diffZoom <= DIFF_ZOOM_MIN + 0.001 || undefined}
+        data-tip={t('diff.zoomOutTitle')}
+        onClick={() => zoomDiff(-1)}
+      >
+        <Minus size={hosted ? 13 : 12} />
+      </button>
+      <button type="button" className={`${zoomBtn} diff-zoom-level`} data-tip={t('diff.zoomResetTitle')} onClick={() => setDiffZoom(1)}>
+        {zoomPct}
+      </button>
+      <button
+        type="button"
+        className={zoomBtn}
+        aria-label={t('diff.zoomIn')}
+        aria-disabled={diffZoom >= DIFF_ZOOM_MAX - 0.001 || undefined}
+        data-tip={t('diff.zoomInTitle')}
+        onClick={() => zoomDiff(1)}
+      >
+        <Plus size={hosted ? 13 : 12} />
+      </button>
+    </div>
+  )
   const options = (
     <div className={hosted ? 'diff-tools' : 'diff-toggles'} role="toolbar" aria-label={t('diff.toolsLabel')}>
       {!hosted && layoutChoice}
@@ -716,6 +776,7 @@ export function DiffViewer({
       >
         <Search size={hosted ? 13 : 12} />
       </DiffToggle>
+      {!hosted && zoomChoice}
     </div>
   )
   // In a host toolbar the layout is its own segmented group beside the
@@ -724,6 +785,7 @@ export function DiffViewer({
     <>
       {layoutChoice}
       {options}
+      {zoomChoice}
     </>
   ) : (
     options
@@ -737,6 +799,7 @@ export function DiffViewer({
         lines.length > HUGE_LINES ? 'is-huge' : ''
       } ${hoverArmed ? 'hover-armed' : ''}`}
       ref={viewerRef}
+      style={{ '--diff-zoom': diffZoom } as React.CSSProperties}
       tabIndex={0}
       onKeyDown={onViewerKeyDown}
       {...hoverProps}

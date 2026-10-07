@@ -17843,3 +17843,12 @@ button.notice-row:hover { background: var(--bg-2); }
   width: 1px;
   background: var(--border);
 }
+
+/* The diff's own zoom. On the rows, not the viewer, so the find bar and the
+   floating toggles keep their size while the code, gutters, @@ bars and hunk
+   buttons all scale together. */
+.diff-viewer > :is(.diff-line, .diff-split) { zoom: var(--diff-zoom, 1); }
+.diff-zoom-level { min-width: 4.5ch; font-size: 11px; font-variant-numeric: tabular-nums; }
+.diff-zoom:not(.diff-tools) { display: inline-flex; gap: 2px; }
+.diff-zoom:not(.diff-tools) .diff-word-toggle { padding: 3px 6px; }
+.diff-word-toggle[aria-disabled='true'] { opacity: 0.35; cursor: default; }

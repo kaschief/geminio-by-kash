@@ -3,7 +3,7 @@ title: Diffs & previews
 category: Reading changes
 order: 20
 summary: Unified, split and inline layouts, word-level highlighting, moved code, image diffs and file previews.
-keywords: diff split side-by-side unified inline word level whitespace ignore whitespace moved code color-moved image diff preview markdown docx pdf change gutter minimap
+keywords: diff zoom font size smaller larger shrink diff split side-by-side unified inline word level whitespace ignore whitespace moved code color-moved image diff preview markdown docx pdf change gutter minimap
 ---
 
 # Diffs & previews
@@ -48,6 +48,21 @@ above column 90 on the right. Unlink them when the sides have drifted apart —
 an indented block against an unindented one, a rename that shifted every line —
 or when you want to compare two distant regions of the same file, and park each
 half where its own content is.
+
+### Diff zoom
+
+The last group, **− 100% +**, zooms the diff on its own. Shrink it to fit more
+of a change on screen — code, line numbers, `@@` bars and the **Revert hunk** /
+**Stage hunk** buttons all scale together, as if you had zoomed the app, while
+the rest of the window stays the size it was. <kbd>⌘</kbd> + scroll (or a
+trackpad pinch) over the diff does the same; click the percentage to go back
+to 100%.
+
+The level runs from 50% to 200%, is shared by every diff in the app and is
+remembered across sessions. It sits on top of the app zoom in the status bar
+and the code font size in Settings, rather than replacing them: those still
+size everything else. *Limits:* the find bar and the toggles themselves keep
+their size, so they stay easy to hit at 50%.
 
 ### Inline layout
 
