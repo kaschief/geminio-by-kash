@@ -31,6 +31,7 @@ import { FileMinimap } from './FileMinimap'
 import { computeGutterChanges, gutterMarksByLine, type GutterChange } from '../lib/diff'
 import { previewKind, isBinaryKind } from '../preview/registry'
 import { GRAPH_COLORS } from '../graph/layout'
+import { ClearButton } from './ClearButton'
 
 const MODES: { id: FileViewMode; labelKey: TranslationKey }[] = [
   { id: 'preview', labelKey: 'fileViewer.modePreview' },
@@ -892,6 +893,7 @@ export function FileViewer({ view }: { view: FileViewState }): React.JSX.Element
                   }
                 }}
               />
+              <ClearButton show={!!find.query} onClear={() => setFind((f) => ({ ...f, query: '' }))} />
               <div className="fv-find-toggles">
                 <button
                   className={`fs-toggle${find.caseSensitive ? ' active' : ''}`}

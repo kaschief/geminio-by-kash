@@ -36,6 +36,7 @@ import type { RepoTodo, TodoPriority, TodoStatus } from '../../../shared/types'
 import { TodoPriorityIcon } from './TodoPriorityIcon'
 import { TodoStatusIcon, TODO_STATUS_LABEL } from './TodoStatusIcon'
 import { useT, interp, type TranslationKey } from '../i18n'
+import { ClearButton } from './ClearButton'
 
 /** Priority chips, in the order they read as a scale. Keys, not strings, so a
  *  language switch repaints them (see CLAUDE.md §3 rule 4). */
@@ -386,6 +387,7 @@ export function TodosModal({ repoPath, focusId }: { repoPath: string; focusId?: 
             placeholder={t('todos.searchPlaceholder')}
             onChange={(e) => setQuery(e.target.value)}
           />
+          <ClearButton show={!!query} onClear={() => setQuery('')} />
         </span>
         {view === 'list' && (
           <label className="todos-toggle">

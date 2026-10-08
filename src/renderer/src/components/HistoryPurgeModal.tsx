@@ -5,6 +5,7 @@ import { useUIStore } from '../stores/ui'
 import { useRepoStore } from '../stores/repo'
 import type { HistoryPathEntry, HistoryPurgeBackup, HistoryPurgePreview } from '../../../shared/types'
 import { useT, interp } from '../i18n'
+import { ClearButton } from './ClearButton'
 
 /** Human-readable byte size. */
 function fmtBytes(n: number): string {
@@ -204,12 +205,15 @@ export function HistoryPurgeModal({
         <div className="purge-picker">
           <div className="purge-picker-search">
             <Search size={13} />
-            <input
-              className="modal-input"
-              value={entryFilter}
-              placeholder={t('purge.filterPlaceholder')}
-              onChange={(e) => setEntryFilter(e.target.value)}
-            />
+            <span className="clearable purge-picker-field">
+              <input
+                className="modal-input"
+                value={entryFilter}
+                placeholder={t('purge.filterPlaceholder')}
+                onChange={(e) => setEntryFilter(e.target.value)}
+              />
+              <ClearButton show={!!entryFilter} onClear={() => setEntryFilter('')} />
+            </span>
           </div>
           <p className="settings-hint">{t('purge.browseHint')}</p>
           <div className="purge-picker-list">

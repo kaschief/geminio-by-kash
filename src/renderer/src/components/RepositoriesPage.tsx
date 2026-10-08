@@ -38,6 +38,7 @@ import { tabRepos, type RepoPulse } from '../../../shared/types'
 import { useT, interp, type TranslationKey } from '../i18n'
 import { openRepositoryDialog } from '../appCommands'
 import { planWorkspaces } from '../lib/workspacePlan'
+import { ClearButton } from './ClearButton'
 
 /** Section headings live here as keys, not strings: a module-level constant
  *  holding translated text freezes at whatever language was active on import. */
@@ -392,6 +393,7 @@ export function RepositoriesPage(): React.JSX.Element {
             placeholder={t('repos.search')}
             aria-label={t('repos.search')}
           />
+          <ClearButton show={!!query} onClear={() => setQuery('')} />
         </div>
         <label className={`repos-wip-toggle${wip ? ' is-on' : ''}`} title={t('repos.wipTitle')}>
           <input type="checkbox" checked={wip} onChange={(e) => toggleWip(e.target.checked)} />

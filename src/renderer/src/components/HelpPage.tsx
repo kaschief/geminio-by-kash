@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { ArrowLeft, ExternalLink, LifeBuoy, Search, X } from 'lucide-react'
+import { ArrowLeft, ExternalLink, LifeBuoy, Search } from 'lucide-react'
 import { renderMarkdown } from '../preview/markdown'
 import {
   HELP_PAGES,
@@ -9,6 +9,7 @@ import {
   searchHelp
 } from '../help/pages'
 import { useT } from '../i18n'
+import { ClearButton } from './ClearButton'
 
 const ISSUES_URL = 'https://github.com/kaschief/geminio-by-kash/issues/new'
 
@@ -86,7 +87,7 @@ export function HelpPage({ initialPage }: { initialPage?: string }): React.JSX.E
   return (
     <div className="help-root">
       <aside className="help-nav">
-        <div className="help-search">
+        <div className="help-search clearable">
           <Search size={13} className="help-search-icon" />
           <input
             ref={searchRef}
@@ -100,11 +101,7 @@ export function HelpPage({ initialPage }: { initialPage?: string }): React.JSX.E
               if (e.key === 'Enter' && results[0]) go(results[0].id)
             }}
           />
-          {query && (
-            <button className="help-search-clear" onClick={() => setQuery('')}>
-              <X size={12} />
-            </button>
-          )}
+          <ClearButton show={!!query} onClear={() => setQuery('')} />
         </div>
 
         {query ? (

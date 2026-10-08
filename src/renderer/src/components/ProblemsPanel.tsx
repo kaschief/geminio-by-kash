@@ -8,6 +8,7 @@ import { useSettingsStore } from '../stores/settings'
 import { useUIStore } from '../stores/ui'
 import { useT, interp } from '../i18n'
 import { baseName, countBySeverity, dirName, filterProblems, groupByFile } from '../lib/problems'
+import { ClearButton } from './ClearButton'
 
 /** Severity glyphs, the same three the counter in the status bar uses. */
 export function severityIcon(severity: ProblemSeverity, size = 13): React.JSX.Element {
@@ -145,6 +146,7 @@ function AnalyzerView({ repoPath }: { repoPath: string }): React.JSX.Element {
             onChange={(e) => setQuery(e.target.value)}
             aria-label={t('problems.search')}
           />
+          <ClearButton show={!!query} onClear={() => setQuery('')} />
         </span>
         <button
           className={`prob-toggle ${changedOnly ? 'on' : ''}`}

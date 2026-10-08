@@ -34,6 +34,7 @@ import {
   type PulseSort
 } from '../lib/missionControl'
 import { useT, interp } from '../i18n'
+import { ClearButton } from './ClearButton'
 
 /** How often the dashboard re-reads the repos while it is on screen. */
 const AUTO_REFRESH_MS = 30_000
@@ -306,20 +307,23 @@ export function MissionControlPage(): React.JSX.Element {
           {levelChip('pending', t('mission.pending'))}
           {levelChip('clean', t('mission.clean'))}
         </span>
-        <input
-          ref={filterRef}
-          className="modal-input mc-filter"
-          value={filter}
-          placeholder={t('mission.filter')}
-          spellCheck={false}
-          onChange={(e) => setFilter(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') {
-              setFilter('')
-              e.currentTarget.blur()
-            }
-          }}
-        />
+        <span className="clearable mc-filter">
+          <input
+            ref={filterRef}
+            className="modal-input"
+            value={filter}
+            placeholder={t('mission.filter')}
+            spellCheck={false}
+            onChange={(e) => setFilter(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') {
+                setFilter('')
+                e.currentTarget.blur()
+              }
+            }}
+          />
+          <ClearButton show={!!filter} onClear={() => setFilter('')} />
+        </span>
         <div className="mc-sorts">
           {SORTS.map((s) => (
             <button key={s} className={`mc-sort ${sort === s ? 'active' : ''}`} onClick={() => setSort(s)}>

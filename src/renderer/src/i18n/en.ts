@@ -3125,6 +3125,7 @@ export const en = {
   'sidebar.newIssue': 'New issue',
   'common.expand': 'Expand',
   'common.collapse': 'Collapse',
+  'common.clearSearch': 'Clear search',
   'terminal.showList': 'Show terminals',
   'terminal.listTitle': 'Terminals',
   'terminal.new': 'New Terminal',

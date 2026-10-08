@@ -135,6 +135,7 @@ import madLogo from '../assets/mad-high.png'
 import { RepoSettingsModal } from './RepoSettingsModal'
 import { ArrowUp, FolderGit2 } from 'lucide-react'
 import { ChoiceDot } from './StateMarks'
+import { ClearButton } from './ClearButton'
 
 type SettingsPage =
   | 'repository'
@@ -4289,7 +4290,7 @@ export function SettingsPanel({ initialPage, initialThemeTab, repoPath, initialR
           <input ref={searchRef} type="search" value={query} placeholder={t('settings.search')} aria-label={t('settings.search')}
             onChange={(e) => changeQuery(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Escape' && query) { e.preventDefault(); e.stopPropagation(); changeQuery('') } }} />
-          {query && <button className="icon-btn" aria-label={t('settings.searchClear')} onClick={() => { changeQuery(''); searchRef.current?.focus() }}><X size={13} /></button>}
+          <ClearButton show={!!query} label={t('settings.searchClear')} onClear={() => changeQuery('')} />
         </div>
       </div>
       {searching && !matches.length && <p className="settings-search-empty" role="status">{t('settings.searchEmpty')}</p>}

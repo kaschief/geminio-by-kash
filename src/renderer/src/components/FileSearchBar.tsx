@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, ChevronRight } from 'lucide-react'
 import { useT } from '../i18n'
+import { ClearButton } from './ClearButton'
 
 export type SearchMode = 'content' | 'name'
 
@@ -193,6 +194,7 @@ export function FileSearchBar({
             spellCheck={false}
             onChange={(e) => set({ query: e.target.value })}
           />
+          <ClearButton show={!!value.query} onClear={() => set({ query: '' })} />
           <div className="fs-toggles">
             <button
               className={`fs-toggle${value.caseSensitive ? ' active' : ''}`}

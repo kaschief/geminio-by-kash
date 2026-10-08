@@ -403,6 +403,13 @@ Title Case for controls and titles ("File View", "Copy Path"), sentence case for
 tooltips, hints, messages, checkboxes and option cards. *Limits:* English only;
 other languages keep their own capitalization rules.
 
+**Every search field has a clear button.** Only the graph search, Help and
+Settings had an ✕ to empty the field; the sidebar filter, file search, find bars,
+the command palette and the other search and filter fields made you select and
+delete the text. They all share one ✕ now, shown while the field has text, and
+clicking it keeps focus in the field. *Limits:* plain form fields (names,
+messages, paths) have none, as on the Mac.
+
 **A click outside a picker only closes it.** Clicking away from the
 repository or branch picker closed it and also pressed whatever was under the
 pointer — a tab, the + button. Menus and pickers now swallow that click, as

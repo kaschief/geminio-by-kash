@@ -1314,7 +1314,9 @@ input.is-invalid {
   padding: 0;
   box-shadow: none !important;
 }
-.graph-search-clear {
+/* The x in a search or filter field (ClearButton). In a bordered wrapper it is
+   a row item; in .clearable it floats over the end of a bordered input. */
+.input-clear {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1329,13 +1331,25 @@ input.is-invalid {
   color: var(--text-2);
   cursor: pointer;
 }
-.graph-search-clear:hover {
+.input-clear:hover {
   color: var(--text-0);
   background: var(--bg-3);
 }
-.graph-search-clear:focus-visible {
+.input-clear:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 1px;
+}
+.clearable {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+.clearable > input { flex: 1 1 auto; min-width: 0; padding-inline-end: 26px; }
+.clearable > .input-clear {
+  position: absolute;
+  inset-inline-end: 8px;
+  margin: 0;
 }
 
 /* ─── Sidebar ───────────────────────────────────────────────────────────── */
@@ -11195,15 +11209,6 @@ input[type='range']:focus-visible {
 .help-search { position: relative; display: flex; align-items: center; margin-bottom: 10px; }
 .help-search-icon { position: absolute; left: 8px; color: var(--text-3); }
 .help-search-input { width: 100%; padding: 5px 24px 5px 26px; font-size: 12px; }
-.help-search-clear {
-  position: absolute;
-  inset-inline-end: 5px;
-  display: flex;
-  border: 0;
-  background: transparent;
-  color: var(--text-3);
-  cursor: pointer;
-}
 .help-section { display: flex; flex-direction: column; gap: 1px; margin-bottom: 12px; }
 .help-section-title {
   font-size: 10px;
@@ -11324,7 +11329,8 @@ input[type='range']:focus-visible {
 .mc-pill.action { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
 .mc-pill.pending { background: color-mix(in srgb, var(--warn, #d29922) 18%, transparent); color: var(--warn, #d29922); }
 .mc-pill.clean { background: var(--bg-3); color: var(--text-3); }
-.mc-filter { margin-inline-start: auto; max-width: 200px; font-size: 12px; padding: 4px 9px; }
+.mc-filter { margin-inline-start: auto; max-width: 200px; }
+.mc-filter > input { font-size: 12px; padding-block: 4px; padding-inline-start: 9px; }
 .mc-sorts { display: flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
 .mc-sort {
   background: transparent;
@@ -14754,6 +14760,7 @@ mark.find-hit.active {
 }
 .purge-picker-search { display: flex; align-items: center; gap: 7px; }
 .purge-picker-search svg { flex-shrink: 0; color: var(--text-2); }
+.purge-picker-field { flex: 1; }
 .purge-picker-list { max-height: 240px; overflow-y: auto; margin-top: 8px; }
 .purge-picker-row {
   display: flex;

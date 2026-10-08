@@ -66,6 +66,7 @@ import { getFrecency, frecencyScore, bumpFrecency } from '../lib/frecency'
 import { repoIsGitHub } from '../lib/hosting'
 import { openInEditor } from '../lib/editorOpen'
 import { useT, interp, type TranslationKey } from '../i18n'
+import { ClearButton } from './ClearButton'
 
 // Display label for a group id (groups stay English internally for sorting).
 const GROUP_KEYS: Record<string, TranslationKey> = {
@@ -508,6 +509,7 @@ export function CommandPalette(): React.JSX.Element {
                 onKeyDown={onKeyDown}
                 disabled={!repo && commands.length === 0}
               />
+              <ClearButton show={!!query} onClear={() => setQuery('')} />
               <kbd className="cmdp-kbd">esc</kbd>
             </div>
             <div className="cmdp-list" id="cmdp-listbox" role="listbox" ref={listRef}>

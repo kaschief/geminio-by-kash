@@ -14,6 +14,7 @@ import {
   type TodoGroupBy
 } from '../lib/codeTodos'
 import { DockTabs } from './ProblemsPanel'
+import { ClearButton } from './ClearButton'
 
 /** Labels for the group-by control — the key, never the string (§3.4). */
 const GROUP_LABELS: Record<TodoGroupBy, TranslationKey> = {
@@ -116,6 +117,7 @@ export function CodeTodosView({ repoPath }: { repoPath: string }): React.JSX.Ele
             onChange={(e) => setQuery(e.target.value)}
             aria-label={t('ctodo.search')}
           />
+          <ClearButton show={!!query} onClear={() => setQuery('')} />
         </span>
         <span className="todo-groupby" role="group" aria-label={t('ctodo.groupBy')}>
           {TODO_GROUP_BYS.map((by) => (

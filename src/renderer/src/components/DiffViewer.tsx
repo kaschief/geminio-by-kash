@@ -45,6 +45,7 @@ import {
   type DiffLayout,
   type InlinePair
 } from '../lib/inlineDiff'
+import { ClearButton } from './ClearButton'
 
 /**
  * Wrap the given decoded-character ranges in <mark class> within an HTML string
@@ -765,6 +766,7 @@ export function DiffViewer({
               }
             }}
           />
+          <ClearButton show={!!findQuery} onClear={() => setFindQuery('')} />
           <span className="diff-find-count" role="status" aria-live="polite">
             {matchCount
               ? interp(t('find.position'), { i: matchIdx + 1, n: matchCount })

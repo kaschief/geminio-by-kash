@@ -7,6 +7,7 @@ import { buildQueryRegExp, highlightHtml, type HighlightLayer } from './FileSear
 import { guessLanguage, highlightLine } from '../lib/highlight'
 import type { CodeSearchHit, HistorySearchHit } from '../../../shared/types'
 import { useT } from '../i18n'
+import { ClearButton } from './ClearButton'
 
 type Tab = 'files' | 'history'
 
@@ -107,13 +108,16 @@ export function CodeSearchModal({ repoPath, query: initial }: { repoPath: string
 
       <div className="codesearch-input-row">
         <Search size={15} className="codesearch-icon" />
-        <input
-          ref={inputRef}
-          className="modal-input codesearch-input"
-          placeholder={tab === 'files' ? t('search.filesPlaceholder') : t('search.historyPlaceholder')}
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
+        <span className="clearable codesearch-input">
+          <input
+            ref={inputRef}
+            className="modal-input"
+            placeholder={tab === 'files' ? t('search.filesPlaceholder') : t('search.historyPlaceholder')}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+          <ClearButton show={!!query} onClear={() => setQuery('')} />
+        </span>
         <div className="codesearch-opts">
           <button
             className={`codesearch-opt ${caseSensitive ? 'on' : ''}`}

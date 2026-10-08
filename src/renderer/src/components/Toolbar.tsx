@@ -72,6 +72,7 @@ import { useT, interp, type TranslationKey } from '../i18n'
 import { timeAgo, isStale } from '../lib/timeAgo'
 import { BranchStatusPicker } from './BranchStatusPicker'
 import { RepoStatusPicker } from './RepoStatusPicker'
+import { ClearButton } from './ClearButton'
 
 /**
  * One slot on the action bar. Everything between the repo pill and the search
@@ -702,20 +703,11 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
               else e.currentTarget.blur()
             }}
           />
-          {graphFilter && !fileViewOpen && (
-            <button
-              type="button"
-              className="graph-search-clear"
-              data-tip={t('toolbar.searchClear')}
-              aria-label={t('toolbar.searchClear')}
-              onClick={() => {
-                setGraphFilter('')
-                searchRef.current?.focus()
-              }}
-            >
-              <X size={12} />
-            </button>
-          )}
+          <ClearButton
+            show={!!graphFilter && !fileViewOpen}
+            label={t('toolbar.searchClear')}
+            onClear={() => setGraphFilter('')}
+          />
         </div>
         <button
           className="tool-btn icon-only"

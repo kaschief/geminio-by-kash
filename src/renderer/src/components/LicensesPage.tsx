@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { Scale, Search, ExternalLink, ChevronRight } from 'lucide-react'
 import { dependencyLicenses } from '../licenses'
 import { useT, interp } from '../i18n'
+import { ClearButton } from './ClearButton'
 
 const REPO_LICENSE = 'https://github.com/kaschief/geminio-by-kash/blob/geminio-home/LICENSE'
 
@@ -60,6 +61,7 @@ export function LicensesPage(): React.JSX.Element {
             placeholder={t('licenses.filter')}
             aria-label={t('licenses.filter')}
           />
+          <ClearButton show={!!query} onClear={() => setQuery('')} />
         </div>
 
         {shown.length === 0 ? (

@@ -73,6 +73,7 @@ import { useT, interp } from '../i18n'
 import { defaultOptionIndex, isPickInput, normalizeOptions } from '../lib/launchInputs'
 import { AIAccountsNotice } from './AIAccountsNotice'
 import { ChoiceDot } from './StateMarks'
+import { ClearButton } from './ClearButton'
 
 /**
  * After a scan, offer the folder tree as workspaces. Up-to-date rows stay
@@ -580,6 +581,7 @@ function RepoPicker({
         <div className="repo-search">
           <Search size={13} />
           <input value={search} placeholder={t('modal.repoFilterPlaceholder')} onChange={(e) => setSearch(e.target.value)} />
+          <ClearButton show={!!search} onClear={() => setSearch('')} />
         </div>
       )}
 
