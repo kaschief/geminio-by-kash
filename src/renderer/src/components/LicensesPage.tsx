@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
-import { Scale, Search, ExternalLink, ChevronRight } from 'lucide-react'
+import { Scale, ExternalLink, ChevronRight } from 'lucide-react'
 import { dependencyLicenses } from '../licenses'
 import { useT, interp } from '../i18n'
-import { ClearButton } from './ClearButton'
+import { SearchField } from './SearchField'
 
 const REPO_LICENSE = 'https://github.com/kaschief/geminio-by-kash/blob/geminio-home/LICENSE'
 
@@ -53,16 +53,7 @@ export function LicensesPage(): React.JSX.Element {
 
         <p className="licenses-lead">{t('licenses.lead')}</p>
 
-        <div className="licenses-search">
-          <Search size={14} />
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder={t('licenses.filter')}
-            aria-label={t('licenses.filter')}
-          />
-          <ClearButton show={!!query} onClear={() => setQuery('')} />
-        </div>
+        <SearchField className="licenses-search" value={query} placeholder={t('licenses.filter')} onChange={setQuery} />
 
         {shown.length === 0 ? (
           <p className="licenses-empty">{interp(t('licenses.noMatch'), { query: query.trim() })}</p>

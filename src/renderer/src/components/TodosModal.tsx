@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   CheckSquare,
   Plus,
-  Search,
   Trash2,
   GitBranch,
   Flag,
@@ -36,7 +35,7 @@ import type { RepoTodo, TodoPriority, TodoStatus } from '../../../shared/types'
 import { TodoPriorityIcon } from './TodoPriorityIcon'
 import { TodoStatusIcon, TODO_STATUS_LABEL } from './TodoStatusIcon'
 import { useT, interp, type TranslationKey } from '../i18n'
-import { ClearButton } from './ClearButton'
+import { SearchField } from './SearchField'
 
 /** Priority chips, in the order they read as a scale. Keys, not strings, so a
  *  language switch repaints them (see CLAUDE.md §3 rule 4). */
@@ -380,15 +379,7 @@ export function TodosModal({ repoPath, focusId }: { repoPath: string; focusId?: 
             <Columns3 size={12} /> {t('todos.viewBoard')}
           </button>
         </div>
-        <span className="todos-search">
-          <Search size={12} />
-          <input
-            value={query}
-            placeholder={t('todos.searchPlaceholder')}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-          <ClearButton show={!!query} onClear={() => setQuery('')} />
-        </span>
+        <SearchField className="todos-search" value={query} placeholder={t('todos.searchPlaceholder')} onChange={setQuery} />
         {view === 'list' && (
           <label className="todos-toggle">
             <input type="checkbox" checked={showDone} onChange={(e) => setShowDone(e.target.checked)} />

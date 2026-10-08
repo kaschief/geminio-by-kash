@@ -22,7 +22,6 @@ import { NumberField } from './NumberField'
 import { useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import {
-  Search,
   Plus,
   Copy,
   Terminal,
@@ -135,7 +134,7 @@ import madLogo from '../assets/mad-high.png'
 import { RepoSettingsModal } from './RepoSettingsModal'
 import { ArrowUp, FolderGit2 } from 'lucide-react'
 import { ChoiceDot } from './StateMarks'
-import { ClearButton } from './ClearButton'
+import { SearchField } from './SearchField'
 
 type SettingsPage =
   | 'repository'
@@ -4285,13 +4284,15 @@ export function SettingsPanel({ initialPage, initialThemeTab, repoPath, initialR
     <div className="settings" data-scroll-fade="plain">
       <div className="settings-heading">
         <h3>{t('settings.title')}</h3>
-        <div className="settings-search">
-          <Search size={15} aria-hidden="true" />
-          <input ref={searchRef} type="search" value={query} placeholder={t('settings.search')} aria-label={t('settings.search')}
-            onChange={(e) => changeQuery(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Escape' && query) { e.preventDefault(); e.stopPropagation(); changeQuery('') } }} />
-          <ClearButton show={!!query} label={t('settings.searchClear')} onClear={() => changeQuery('')} />
-        </div>
+        <SearchField
+          className="settings-search"
+          inputRef={searchRef}
+          type="search"
+          value={query}
+          placeholder={t('settings.search')}
+          clearLabel={t('settings.searchClear')}
+          onChange={changeQuery}
+        />
       </div>
       {searching && !matches.length && <p className="settings-search-empty" role="status">{t('settings.searchEmpty')}</p>}
       <div className="settings-body">

@@ -21,7 +21,7 @@ import type {
   SecureSharePreviewEntry,
   SecureShareError
 } from '../../../shared/types'
-import { ClearButton } from './ClearButton'
+import { SearchField } from './SearchField'
 
 // Export a chosen set of repo files (typically .env and friends) as a
 // password-encrypted .gitcito bundle, or import one into this repo — files
@@ -184,16 +184,7 @@ export function SecureShareModal({
       {mode === 'export' ? (
         <>
           <p className="settings-hint">{t('share.exportHint')}</p>
-          <span className="clearable">
-            <input
-              className="modal-input"
-              placeholder={t('share.filter')}
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-              spellCheck={false}
-            />
-            <ClearButton show={!!filter} onClear={() => setFilter('')} />
-          </span>
+          <SearchField value={filter} placeholder={t('share.filter')} onChange={setFilter} />
           {!candidates ? (
             <div className="share-loading">
               <Loader2 size={15} className="spin" />

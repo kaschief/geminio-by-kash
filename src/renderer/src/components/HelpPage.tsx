@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { ArrowLeft, ExternalLink, LifeBuoy, Search } from 'lucide-react'
+import { ArrowLeft, ExternalLink, LifeBuoy } from 'lucide-react'
 import { renderMarkdown } from '../preview/markdown'
 import {
   HELP_PAGES,
@@ -9,7 +9,7 @@ import {
   searchHelp
 } from '../help/pages'
 import { useT } from '../i18n'
-import { ClearButton } from './ClearButton'
+import { SearchField } from './SearchField'
 
 const ISSUES_URL = 'https://github.com/kaschief/geminio-by-kash/issues/new'
 
@@ -87,22 +87,16 @@ export function HelpPage({ initialPage }: { initialPage?: string }): React.JSX.E
   return (
     <div className="help-root">
       <aside className="help-nav">
-        <div className="help-search clearable">
-          <Search size={13} className="help-search-icon" />
-          <input
-            ref={searchRef}
-            className="modal-input help-search-input"
-            value={query}
-            placeholder={t('help.search')}
-            spellCheck={false}
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Escape') setQuery('')
-              if (e.key === 'Enter' && results[0]) go(results[0].id)
-            }}
-          />
-          <ClearButton show={!!query} onClear={() => setQuery('')} />
-        </div>
+        <SearchField
+          className="help-search"
+          inputRef={searchRef}
+          value={query}
+          placeholder={t('help.search')}
+          onChange={setQuery}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && results[0]) go(results[0].id)
+          }}
+        />
 
         {query ? (
           <div className="help-results">

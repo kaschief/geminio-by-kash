@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react'
-import { RefreshCw, X, Search, GitCompareArrows, Loader, Folder, User, Tag, FileCode } from 'lucide-react'
+import { RefreshCw, X, GitCompareArrows, Loader, Folder, User, Tag, FileCode } from 'lucide-react'
 import type { CodeTodo } from '../../../shared/types'
 import { useProblemsStore } from '../stores/problems'
 import { useRepoStore } from '../stores/repo'
@@ -14,7 +14,7 @@ import {
   type TodoGroupBy
 } from '../lib/codeTodos'
 import { DockTabs } from './ProblemsPanel'
-import { ClearButton } from './ClearButton'
+import { SearchField } from './SearchField'
 
 /** Labels for the group-by control — the key, never the string (§3.4). */
 const GROUP_LABELS: Record<TodoGroupBy, TranslationKey> = {
@@ -109,16 +109,7 @@ export function CodeTodosView({ repoPath }: { repoPath: string }): React.JSX.Ele
             </button>
           ))}
         </span>
-        <span className="problems-search">
-          <Search size={12} />
-          <input
-            value={query}
-            placeholder={t('ctodo.search')}
-            onChange={(e) => setQuery(e.target.value)}
-            aria-label={t('ctodo.search')}
-          />
-          <ClearButton show={!!query} onClear={() => setQuery('')} />
-        </span>
+        <SearchField className="problems-search" value={query} placeholder={t('ctodo.search')} onChange={setQuery} />
         <span className="todo-groupby" role="group" aria-label={t('ctodo.groupBy')}>
           {TODO_GROUP_BYS.map((by) => (
             <button

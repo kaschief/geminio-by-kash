@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Search, Loader2, FileText, GitCommit, CaseSensitive, WholeWord, Regex } from 'lucide-react'
+import { Loader2, FileText, GitCommit, CaseSensitive, WholeWord, Regex } from 'lucide-react'
 import { gitApi } from '../infrastructure/api'
 import { useUIStore } from '../stores/ui'
 import { useRepoStore } from '../stores/repo'
@@ -7,7 +7,7 @@ import { buildQueryRegExp, highlightHtml, type HighlightLayer } from './FileSear
 import { guessLanguage, highlightLine } from '../lib/highlight'
 import type { CodeSearchHit, HistorySearchHit } from '../../../shared/types'
 import { useT } from '../i18n'
-import { ClearButton } from './ClearButton'
+import { SearchField } from './SearchField'
 
 type Tab = 'files' | 'history'
 
@@ -106,18 +106,13 @@ export function CodeSearchModal({ repoPath, query: initial }: { repoPath: string
         </button>
       </div>
 
-      <div className="codesearch-input-row">
-        <Search size={15} className="codesearch-icon" />
-        <span className="clearable codesearch-input">
-          <input
-            ref={inputRef}
-            className="modal-input"
-            placeholder={tab === 'files' ? t('search.filesPlaceholder') : t('search.historyPlaceholder')}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-          <ClearButton show={!!query} onClear={() => setQuery('')} />
-        </span>
+      <SearchField
+        className="codesearch-field"
+        inputRef={inputRef}
+        placeholder={tab === 'files' ? t('search.filesPlaceholder') : t('search.historyPlaceholder')}
+        value={query}
+        onChange={setQuery}
+      >
         <div className="codesearch-opts">
           <button
             className={`codesearch-opt ${caseSensitive ? 'on' : ''}`}
@@ -143,7 +138,7 @@ export function CodeSearchModal({ repoPath, query: initial }: { repoPath: string
             <Regex size={15} />
           </button>
         </div>
-      </div>
+      </SearchField>
 
       <div className="codesearch-meta">
         {loading ? (

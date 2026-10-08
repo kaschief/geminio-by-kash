@@ -53,7 +53,6 @@ import {
   Lock,
   Users,
   FlaskConical,
-  X,
   Cloud,
   FastForward,
   Layers2,
@@ -72,7 +71,7 @@ import { useT, interp, type TranslationKey } from '../i18n'
 import { timeAgo, isStale } from '../lib/timeAgo'
 import { BranchStatusPicker } from './BranchStatusPicker'
 import { RepoStatusPicker } from './RepoStatusPicker'
-import { ClearButton } from './ClearButton'
+import { SearchField } from './SearchField'
 
 /**
  * One slot on the action bar. Everything between the repo pill and the search
@@ -680,35 +679,21 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
       </div>
 
       <div className="toolbar-group right">
-        <div
-          className={`graph-search${fileViewOpen ? ' is-disabled' : ''}`}
-          data-tip={fileViewOpen ? t('toolbar.searchFileViewTitle') : undefined}
-        >
-          <Search size={13} aria-hidden="true" />
-          <input
-            ref={searchRef}
-            disabled={fileViewOpen}
-            placeholder={t('toolbar.searchPlaceholder')}
-            aria-label={t('toolbar.searchPlaceholder')}
-            aria-keyshortcuts="Meta+F Control+F"
-            value={graphFilter}
-            onChange={(e) => setGraphFilter(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key !== 'Escape') return
-              // First Escape clears the query, the next one leaves the field —
-              // so a mistyped search is one key from gone without losing focus.
-              e.preventDefault()
-              e.stopPropagation()
-              if (graphFilter) setGraphFilter('')
-              else e.currentTarget.blur()
-            }}
-          />
-          <ClearButton
-            show={!!graphFilter && !fileViewOpen}
-            label={t('toolbar.searchClear')}
-            onClear={() => setGraphFilter('')}
-          />
-        </div>
+        <SearchField
+          className="graph-search"
+          inputRef={searchRef}
+          disabled={fileViewOpen}
+          tip={fileViewOpen ? t('toolbar.searchFileViewTitle') : undefined}
+          placeholder={t('toolbar.searchPlaceholder')}
+          clearLabel={t('toolbar.searchClear')}
+          aria-keyshortcuts="Meta+F Control+F"
+          value={graphFilter}
+          onChange={setGraphFilter}
+          onKeyDown={(e) => {
+            // The first Escape empties the field (SearchField); the next leaves it.
+            if (e.key === 'Escape' && !graphFilter) e.currentTarget.blur()
+          }}
+        />
         <button
           className="tool-btn icon-only"
           title={interp(t('toolbar.refreshTitle'), { time: since(repo.lastRefreshAt) })}

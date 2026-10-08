@@ -169,7 +169,7 @@ export const shots = [
     clipTo: '.settings',
     drive: async (page) => {
       await page.evaluate(() => window.__shot.ui.getState().openModal({ kind: 'settings', page: 'general' }))
-      await page.getByRole('searchbox', { name: 'Search settings…' }).fill('minimap')
+      await page.getByRole('searchbox', { name: 'Search settings' }).fill('minimap')
       await page.locator('.settings-search-hit').first().waitFor()
     }
   },

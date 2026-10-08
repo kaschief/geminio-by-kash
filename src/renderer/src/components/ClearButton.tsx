@@ -1,10 +1,9 @@
 import { X } from 'lucide-react'
 import { useT } from '../i18n'
 
-// The x inside a search or filter field. Shown only while the field holds text,
-// and it hands focus back to the field so the next keystroke starts a new query.
-// Inside a bordered wrapper it sits in the row; around a bare bordered input,
-// wrap both in `.clearable` and it floats over the input's end instead.
+// The x inside a search or filter field. It keeps its slot while the field is
+// empty (hidden, not removed), so typing the first letter never widens the field
+// and shifts the controls beside it. Clicking it hands focus back to the field.
 export function ClearButton({
   show,
   onClear,
@@ -13,16 +12,18 @@ export function ClearButton({
   show: boolean
   onClear: () => void
   label?: string
-}): React.JSX.Element | null {
+}): React.JSX.Element {
   const t = useT()
-  if (!show) return null
   const tip = label ?? t('common.clearSearch')
   return (
     <button
       type="button"
-      className="input-clear"
-      data-tip={tip}
+      className={`input-clear${show ? '' : ' is-idle'}`}
+      data-tip={show ? tip : undefined}
       aria-label={tip}
+      aria-hidden={!show}
+      tabIndex={show ? 0 : -1}
+      disabled={!show}
       // Keep focus in the field rather than moving it to the button and back.
       onMouseDown={(e) => e.preventDefault()}
       onClick={(e) => {

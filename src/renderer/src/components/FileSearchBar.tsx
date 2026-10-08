@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Search, ChevronRight } from 'lucide-react'
+import { ChevronRight } from 'lucide-react'
 import { useT } from '../i18n'
-import { ClearButton } from './ClearButton'
+import { SearchField } from './SearchField'
 
 export type SearchMode = 'content' | 'name'
 
@@ -185,16 +185,12 @@ export function FileSearchBar({
         >
           <ChevronRight size={13} className={`chevron${expanded ? ' open' : ''}`} />
         </button>
-        <div className="fs-input-wrap">
-          <Search size={13} className="fs-search-icon" />
-          <input
-            className="fs-input"
-            placeholder={t('fileSearch.searchPlaceholder')}
-            value={value.query}
-            spellCheck={false}
-            onChange={(e) => set({ query: e.target.value })}
-          />
-          <ClearButton show={!!value.query} onClear={() => set({ query: '' })} />
+        <SearchField
+          className="fs-input-wrap"
+          placeholder={t('fileSearch.searchPlaceholder')}
+          value={value.query}
+          onChange={(query) => set({ query })}
+        >
           <div className="fs-toggles">
             <button
               className={`fs-toggle${value.caseSensitive ? ' active' : ''}`}
@@ -218,7 +214,7 @@ export function FileSearchBar({
               .*
             </button>
           </div>
-        </div>
+        </SearchField>
       </div>
       <AnimatePresence initial={false}>
         {expanded && (

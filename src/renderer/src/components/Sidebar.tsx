@@ -11,7 +11,6 @@ import {
   GitPullRequestArrow,
   CircleDot,
   Milestone,
-  Search,
   RefreshCw,
   Check,
   FolderGit2,
@@ -121,7 +120,7 @@ const SECTION_ICON: Record<string, () => React.JSX.Element> = {
   submodules: mi.submodule
 }
 import { ChoiceDot } from './StateMarks'
-import { ClearButton } from './ClearButton'
+import { SearchField } from './SearchField'
 
 // Keyboard activation for clickable non-button elements: Enter/Space runs the
 // same onClick handler the mouse uses, so every row and icon is reachable.
@@ -2878,11 +2877,7 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
       {tab === 'git' ? (
         <>
           <div className="sb-filter-row">
-            <div className="sb-filter">
-              <Search size={13} />
-              <input placeholder={t('sidebar.filter')} value={filter} onChange={(e) => setFilter(e.target.value)} />
-              <ClearButton show={!!filter} onClear={() => setFilter('')} />
-            </div>
+            <SearchField className="sb-filter" placeholder={t('sidebar.filter')} value={filter} onChange={setFilter} />
             <span
               className="icon-btn sb-sections-btn"
               role="button"

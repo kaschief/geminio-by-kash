@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react'
-import { CircleX, TriangleAlert, Info, RefreshCw, X, Search, GitCompareArrows, Loader } from 'lucide-react'
+import { CircleX, TriangleAlert, Info, RefreshCw, X, GitCompareArrows, Loader } from 'lucide-react'
 import type { Problem, ProblemSeverity } from '../../../shared/types'
 import { useProblemsStore } from '../stores/problems'
 import { CodeTodosView } from './CodeTodosPanel'
@@ -8,7 +8,7 @@ import { useSettingsStore } from '../stores/settings'
 import { useUIStore } from '../stores/ui'
 import { useT, interp } from '../i18n'
 import { baseName, countBySeverity, dirName, filterProblems, groupByFile } from '../lib/problems'
-import { ClearButton } from './ClearButton'
+import { SearchField } from './SearchField'
 
 /** Severity glyphs, the same three the counter in the status bar uses. */
 export function severityIcon(severity: ProblemSeverity, size = 13): React.JSX.Element {
@@ -138,16 +138,7 @@ function AnalyzerView({ repoPath }: { repoPath: string }): React.JSX.Element {
           {severityChip('warning', counts.warning, t('problems.warnings'))}
           {severityChip('info', counts.info, t('problems.infos'))}
         </span>
-        <span className="problems-search">
-          <Search size={12} />
-          <input
-            value={query}
-            placeholder={t('problems.search')}
-            onChange={(e) => setQuery(e.target.value)}
-            aria-label={t('problems.search')}
-          />
-          <ClearButton show={!!query} onClear={() => setQuery('')} />
-        </span>
+        <SearchField className="problems-search" value={query} placeholder={t('problems.search')} onChange={setQuery} />
         <button
           className={`prob-toggle ${changedOnly ? 'on' : ''}`}
           title={t('problems.changedOnlyTitle')}
