@@ -198,6 +198,8 @@ html:has(.notice-panel, .branch-picker-popover, .context-menu) .cosmos-chrome {
   min-width: 0;
   overflow-x: auto;
   scrollbar-width: none;
+  /* The tabs' offsetParent, so TitleBar can measure them against the strip. */
+  position: relative;
   /* No bar: whichever edge hides tabs fades instead, as the File View control
      row does. TitleBar sets each side's width from how much is hidden there. */
   mask-image: linear-gradient(

@@ -40,6 +40,15 @@ export function edgeFades(
 }
 
 /**
+ * How far a sideways strip's content reaches, in px, from its children's
+ * layout boxes. Not scrollWidth: that also counts a tab mid-slide in an open,
+ * close or reorder animation, and would fade an edge that hides nothing.
+ */
+export function layoutExtent(items: { left: number; width: number }[]): number {
+  return items.reduce((far, item) => Math.max(far, item.left + item.width), 0)
+}
+
+/**
  * The scrollLeft that brings an item fully clear of the edge fades, or null
  * when it already is. Offsets are relative to the strip's visible left edge.
  */

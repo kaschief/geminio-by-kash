@@ -29,7 +29,7 @@ import { activeTabSortKey, tabsSettled } from '../lib/tabSort'
 import { confirmRemoveRepoFromGroup, repositoryMenuItems, requestCloseTab } from '../lib/repositoryMenuItems'
 import { mi } from './menuIcons'
 import { useT, interp } from '../i18n'
-import { edgeFades, revealOffset } from '../lib/scrollFade'
+import { edgeFades, layoutExtent, revealOffset } from '../lib/scrollFade'
 
 /** The widest the tab strip's edge fade grows, in px. */
 const TAB_FADE = 32
@@ -1088,7 +1088,14 @@ export function TitleBar(): React.JSX.Element {
   const measureTabFades = (): void => {
     const el = tabsRef.current
     if (!el) return
-    const { start, end } = edgeFades(Math.abs(el.scrollLeft), el.clientWidth, el.scrollWidth, TAB_FADE)
+    // Measured from layout, not scrollWidth: tabs slide in, out and around with
+    // a transform, and scrollWidth counts a sliding tab as overflow. Measured
+    // mid-slide, that left the far edge fading over tabs that all fit.
+    const extent =
+      getComputedStyle(el).direction === 'rtl'
+        ? el.scrollWidth
+        : layoutExtent(Array.from(el.children as HTMLCollectionOf<HTMLElement>, (c) => ({ left: c.offsetLeft, width: c.offsetWidth })))
+    const { start, end } = edgeFades(Math.abs(el.scrollLeft), el.clientWidth, extent, TAB_FADE)
     el.style.setProperty('--fade-start', `${start}px`)
     el.style.setProperty('--fade-end', `${end}px`)
   }
@@ -1099,7 +1106,7 @@ export function TitleBar(): React.JSX.Element {
     ro.observe(el)
     // Opening, closing or expanding a tab widens the content, not the strip.
     const mo = new MutationObserver(measureTabFades)
-    mo.observe(el, { childList: true, subtree: true })
+    mo.observe(el, { childList: true, subtree: true, characterData: true })
     measureTabFades()
     return () => {
       ro.disconnect()
@@ -1119,9 +1126,13 @@ export function TitleBar(): React.JSX.Element {
       tab.scrollIntoView({ block: 'nearest', inline: 'nearest' })
       return
     }
-    const strip = el.getBoundingClientRect()
-    const box = tab.getBoundingClientRect()
-    const to = revealOffset(box.left - strip.left, box.width, el.scrollLeft, el.clientWidth, TAB_FADE)
+    // Layout offsets again, so a tab still sliding into place is revealed where
+    // it will land rather than where it is mid-animation.
+    let left = 0
+    for (let node: HTMLElement | null = tab; node && node !== el; node = node.offsetParent as HTMLElement | null) {
+      left += node.offsetLeft
+    }
+    const to = revealOffset(left - el.scrollLeft, tab.offsetWidth, el.scrollLeft, el.clientWidth, TAB_FADE)
     if (to != null) el.scrollTo({ left: to, behavior: 'smooth' })
   }, [activeKey])
 

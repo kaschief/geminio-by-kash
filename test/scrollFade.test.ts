@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { edgeFades, fadeSize, hasMoreBelow, revealOffset, scrollsVertically } from '../src/renderer/src/lib/scrollFade'
+import { edgeFades, fadeSize, hasMoreBelow, layoutExtent, revealOffset, scrollsVertically } from '../src/renderer/src/lib/scrollFade'
 
 describe('scroll fade', () => {
   it('fades only while content remains below, ignoring sub-pixel leftovers', () => {
@@ -66,5 +66,21 @@ describe('revealOffset', () => {
 
   it('scrolls a tab under the end fade fully into view', () => {
     expect(revealOffset(420, 120, 0, 500, 32)).toBe(72)
+  })
+})
+
+describe('layoutExtent', () => {
+  it('reaches as far as the furthest child box', () => {
+    expect(layoutExtent([{ left: 0, width: 120 }, { left: 121, width: 140 }, { left: 262, width: 0 }])).toBe(262)
+  })
+
+  it('is zero for an empty strip', () => {
+    expect(layoutExtent([])).toBe(0)
+  })
+
+  it('fades nothing when tabs fit, even if a tab mid-slide inflates scrollWidth', () => {
+    const extent = layoutExtent([{ left: 0, width: 200 }, { left: 201, width: 99 }])
+    expect(edgeFades(0, 300, extent, 32)).toEqual({ start: 0, end: 0 })
+    expect(edgeFades(0, 300, 350, 32).end).toBe(32)
   })
 })
