@@ -41,6 +41,26 @@ that puts the tab back where it was. A clean tab just goes. Removing a
 repository from a [group](#groups) works the same way. Reopening covers the
 last ten tabs closed in this session.
 
+### Going to a repository
+
+With ten or more repositories open, finding one in the strip means scrolling,
+and <kbd>⌘1</kbd>–<kbd>⌘9</kbd> stop at the ninth tab. Press <kbd>⌘J</kbd> /
+<kbd>Ctrl+J</kbd> (or **View → Go to Repository…**) and type a few letters of
+its name, folder or branch, then <kbd>Enter</kbd>.
+
+The list holds only open repositories, group members included, in the order
+you last looked at them. The one you just left is first, so <kbd>⌘J</kbd>
+<kbd>Enter</kbd> takes you back to it. Each row carries what its tab shows:
+the branch, the uncommitted, unpushed and conflict marks, the group it lives
+in, and its <kbd>⌘1</kbd>–<kbd>⌘9</kbd> key when it has one. The repository on
+screen sits dimmed at the bottom. Nothing dims behind the switcher; a click
+outside or <kbd>Esc</kbd> closes it.
+
+When nothing open matches, the last row, **Find in All Repositories**, carries
+your search to the [Repositories](repositories.md) page. *Limits:* the order
+is remembered for this session only, so after a relaunch it starts from tab
+order. A repository open in two tabs is listed once, at its first tab.
+
 ### Sorting tabs
 
 With a dozen repositories open, the one waiting on a push is easy to lose.

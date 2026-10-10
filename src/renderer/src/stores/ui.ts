@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import type { CiState, DivergedStrategy, KeychainReason, ResetStrategy, SemanticDiff } from '../../../shared/types'
 import type { WorkspaceCandidate } from '../lib/workspacePlan'
 import { addNotice, parseStoredNotices, resolveNotices, sanitizeNoticeMessage, type Notice, type NoticeKind } from '../lib/notices'
+import { touchMru } from '../lib/repoSwitcher'
 
 export type CiFilter = 'all' | CiState
 
@@ -408,6 +409,12 @@ interface UIState {
   githubSeenUnread: number
   /** Cmd/Ctrl+K command palette — fuzzy jump to branches, commits, files, actions. */
   commandPaletteOpen: boolean
+  /** Cmd/Ctrl+J repository switcher. */
+  repoSwitcherOpen: boolean
+  /** Open repositories, most recently shown first — session-only, for the switcher. */
+  repoMru: string[]
+  /** A search the switcher hands to the Repositories page; it takes it once. */
+  repositoriesQuery: string | null
   /**
    * Mission control is showing. It is a view, not a tab: the title-bar button
    * swaps the whole workspace body for the dashboard and swaps it back, so no
@@ -483,6 +490,9 @@ interface UIState {
   setCommandPalette(open: boolean): void
   setMissionOpen(open: boolean): void
   toggleCommandPalette(): void
+  setRepoSwitcher(open: boolean): void
+  touchRepoMru(path: string): void
+  setRepositoriesQuery(query: string | null): void
   setGithubUnread(n: number): void
   /** Returns the toast's id, for a caller that may need to take it down early. */
   toast(kind: Toast['kind'], message: string, opts?: { repoPath?: string; action?: ToastAction }): number
@@ -584,6 +594,9 @@ export const useUIStore = create<UIState>((set, get) => ({
   noticesSeenUpTo: storedNotices.seenUpTo,
   githubSeenUnread: 0,
   commandPaletteOpen: false,
+  repoSwitcherOpen: false,
+  repoMru: [],
+  repositoriesQuery: null,
   missionOpen: false,
   githubUnread: 0,
   terminalOpenByRepo: {},
@@ -624,6 +637,12 @@ export const useUIStore = create<UIState>((set, get) => ({
   setCommandPalette: (commandPaletteOpen) => set({ commandPaletteOpen }),
   setMissionOpen: (missionOpen) => set({ missionOpen }),
   toggleCommandPalette: () => set({ commandPaletteOpen: !get().commandPaletteOpen }),
+  setRepoSwitcher: (repoSwitcherOpen) => set({ repoSwitcherOpen }),
+  setRepositoriesQuery: (repositoriesQuery) => set({ repositoriesQuery }),
+  touchRepoMru: (path) => {
+    const next = touchMru(get().repoMru, path)
+    if (next !== get().repoMru) set({ repoMru: next })
+  },
   // Items read elsewhere lower the count; "seen" follows it down, so the next
   // new item is news again.
   setGithubUnread: (githubUnread) => set({ githubUnread, githubSeenUnread: Math.min(get().githubSeenUnread, githubUnread) }),

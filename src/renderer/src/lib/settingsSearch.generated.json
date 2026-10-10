@@ -510,6 +510,7 @@
       "sc.closeTab",
       "sc.commandPalette",
       "sc.findInFile",
+      "sc.goToRepository",
       "sc.keyboardShortcuts",
       "sc.navigateCommits",
       "sc.newTab",

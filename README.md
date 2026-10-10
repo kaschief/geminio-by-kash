@@ -40,6 +40,7 @@ solves and where its limits are — and it is updated with each change.
 **Tabs and workspace**
 
 - **Nothing missed, nothing noisy.** The title-bar bell keeps only what you would act on — failures, commits from others, work done while you were away — with a dot for news, a red count and Dock badge for failures, and optional macOS notifications. [Notifications](docs/help/notifications.md)
+- **Jump to any open repository.** ⌘J, a few letters, Enter — most recently used first, with each tab's status. [Going to a repository](docs/help/workspaces.md#going-to-a-repository)
 - **Sort tabs by what needs you.** Conflicts, unpushed commits, changes, behind, name or recency — held, and re-applied without moving tabs mid-work. [Sorting tabs](docs/help/workspaces.md#sorting-tabs)
 - **Unpushed counts on tabs.** A solid number for commits only this machine has, beside the changes dot. [Tab status dots](docs/help/themes.md#tab-status-dots)
 - **Separate working views.** Each repository keeps its open commit or file, viewer mode, scroll, filters and unsaved edits across tab switches. [Workspaces](docs/help/workspaces.md#working-in-several-repositories)

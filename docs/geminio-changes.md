@@ -87,6 +87,17 @@ message now shows as on (and inert) instead of being offered again.
 
 ## Workspace & tabs
 
+**Go to any open repository with ⌘J.** With ten or more repositories open,
+reaching one meant scrolling the tab strip, ⌘1–⌘9 stopped at the ninth tab, and
+the palette buried open repositories among every action. ⌘J opens a small
+switcher under the tab bar listing only open repositories, group members
+included, most recently used first, so ⌘J ⏎ goes back to the last one. Rows
+show the branch and the tab's status marks; typing matches name, folder or
+branch, and a search with no open match carries over to the Repositories page.
+*Limits:* recency lasts for the session, so a relaunch starts from tab order.
+Rebindable in Settings → Shortcuts.
+([Going to a repository](help/workspaces.md#going-to-a-repository))
+
 **Closing a tab no longer asks.** Every close opened a centered dialog that
 dimmed the app to ask "Close this tab?", even though closing a tab loses
 nothing: changes and merges stay on disk, and undo history comes back on

@@ -116,6 +116,10 @@ export function runAppCommand(id: string): boolean {
     case 'command-palette':
       ui.toggleCommandPalette()
       return true
+    case 'repo-switcher':
+      ui.setCommandPalette(false)
+      ui.setRepoSwitcher(!ui.repoSwitcherOpen)
+      return true
     case 'code-search': {
       const repo = activeGitRepo()
       if (!repo) return false
