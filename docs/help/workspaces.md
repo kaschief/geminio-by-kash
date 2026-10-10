@@ -48,6 +48,8 @@ and <kbd>⌘1</kbd>–<kbd>⌘9</kbd> stop at the ninth tab. Press <kbd>⌘J</kb
 <kbd>Ctrl+J</kbd> (or **View → Go to Repository…**) and type a few letters of
 its name, folder or branch, then <kbd>Enter</kbd>.
 
+![The repository switcher, most recently used first](../screenshots/repo-switcher.webp)
+
 The list holds only open repositories, group members included, in the order
 you last looked at them. The one you just left is first, so <kbd>⌘J</kbd>
 <kbd>Enter</kbd> takes you back to it. Each row carries what its tab shows:
