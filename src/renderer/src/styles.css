@@ -192,10 +192,34 @@ html:has(.notice-panel, .branch-picker-popover, .context-menu) .cosmos-chrome {
   align-items: flex-end;
   height: 100%;
   gap: 1px;
-  flex: 1;
+  /* Only as wide as its tabs, so the + sits right after the last one; past
+     that it shrinks and scrolls, and the gap after the + takes the rest. */
+  flex: 0 1 auto;
   min-width: 0;
   overflow-x: auto;
   scrollbar-width: none;
+  /* No bar: whichever edge hides tabs fades instead, as the File View control
+     row does. TitleBar sets each side's width from how much is hidden there. */
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 var(--fade-start, 0px),
+    #000 calc(100% - var(--fade-end, 0px)),
+    transparent 100%
+  );
+}
+:root[dir='rtl'] .tabs {
+  mask-image: linear-gradient(
+    to left,
+    transparent 0,
+    #000 var(--fade-start, 0px),
+    #000 calc(100% - var(--fade-end, 0px)),
+    transparent 100%
+  );
+}
+.titlebar-gap {
+  flex: 1 1 0;
+  min-width: 12px;
 }
 .tabs::-webkit-scrollbar {
   display: none;
@@ -357,7 +381,8 @@ html:has(.notice-panel, .branch-picker-popover, .context-menu) .cosmos-chrome {
   height: 26px;
   border-radius: 6px;
   color: var(--text-2);
-  margin-inline-start: 4px;
+  flex: none;
+  margin-inline-start: 8px;
   transition: background 0.15s, color 0.15s, transform 0.15s;
 }
 

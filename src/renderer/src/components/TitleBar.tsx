@@ -29,6 +29,10 @@ import { activeTabSortKey, tabsSettled } from '../lib/tabSort'
 import { confirmRemoveRepoFromGroup, repositoryMenuItems, requestCloseTab } from '../lib/repositoryMenuItems'
 import { mi } from './menuIcons'
 import { useT, interp } from '../i18n'
+import { edgeFades, revealOffset } from '../lib/scrollFade'
+
+/** The widest the tab strip's edge fade grows, in px. */
+const TAB_FADE = 32
 
 export { requestCloseTab }
 
@@ -1078,6 +1082,49 @@ export function TitleBar(): React.JSX.Element {
     )
   }
 
+  // The strip fades whichever edge hides tabs, each fade as wide as what is
+  // hidden that side (up to TAB_FADE), so it melts away as you reach an end.
+  // Written straight to CSS variables: a scroll must not re-render the strip.
+  const measureTabFades = (): void => {
+    const el = tabsRef.current
+    if (!el) return
+    const { start, end } = edgeFades(Math.abs(el.scrollLeft), el.clientWidth, el.scrollWidth, TAB_FADE)
+    el.style.setProperty('--fade-start', `${start}px`)
+    el.style.setProperty('--fade-end', `${end}px`)
+  }
+  useEffect(() => {
+    const el = tabsRef.current
+    if (!el) return
+    const ro = new ResizeObserver(measureTabFades)
+    ro.observe(el)
+    // Opening, closing or expanding a tab widens the content, not the strip.
+    const mo = new MutationObserver(measureTabFades)
+    mo.observe(el, { childList: true, subtree: true })
+    measureTabFades()
+    return () => {
+      ro.disconnect()
+      mo.disconnect()
+    }
+  }, [])
+
+  // Switching tabs brings the active one fully clear of the fades, so the tab
+  // you are on is never half hidden at the edge of the strip.
+  const activeTab = settings.tabs.find((tab) => tab.id === settings.activeTabId)
+  const activeKey = `${settings.activeTabId}:${activeTab && activeTab.kind !== 'page' ? activeTab.activeRepoPath ?? '' : ''}`
+  useEffect(() => {
+    const el = tabsRef.current
+    const tab = el?.querySelector<HTMLElement>('.tab.active')
+    if (!el || !tab) return
+    if (getComputedStyle(el).direction === 'rtl') {
+      tab.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+      return
+    }
+    const strip = el.getBoundingClientRect()
+    const box = tab.getBoundingClientRect()
+    const to = revealOffset(box.left - strip.left, box.width, el.scrollLeft, el.clientWidth, TAB_FADE)
+    if (to != null) el.scrollTo({ left: to, behavior: 'smooth' })
+  }, [activeKey])
+
   // ── render ───────────────────────────────────────────────────────────────
   return (
     <div
@@ -1090,6 +1137,7 @@ export function TitleBar(): React.JSX.Element {
         ref={tabsRef}
         role="tablist"
         aria-label={t('a11y.tabStrip')}
+        onScroll={measureTabFades}
         onDragOver={(e) => {
           e.preventDefault()
           e.dataTransfer.dropEffect = 'move'
@@ -1312,10 +1360,13 @@ export function TitleBar(): React.JSX.Element {
           onDrop={onDropZone(null)}
           onDragLeave={clearDrop}
         />
-        <button className="tab-add" title={t('titlebar.openRepoOrGroup')} onClick={() => plusMenu()}>
-          <Plus size={15} />
-        </button>
       </div>
+      {/* Outside the strip, so it never scrolls away or gets squeezed against
+          the profile: it follows the last tab, or the fade once tabs overflow. */}
+      <button className="tab-add" title={t('titlebar.openRepoOrGroup')} onClick={() => plusMenu()}>
+        <Plus size={15} />
+      </button>
+      <div className="titlebar-gap" />
       <ProfileSwitcher />
       {/* The GitHub inbox shows with a typed token or a live inbox: the
           credential-helper fallback can feed it without any token in Settings. */}

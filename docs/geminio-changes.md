@@ -87,6 +87,16 @@ message now shows as on (and inert) instead of being offered again.
 
 ## Workspace & tabs
 
+**The tab strip fades where it scrolls.** With many repositories open, tabs
+were cut off sharply at both ends, nothing said more were hidden or which end
+you were at, and the + button scrolled away or sat jammed against the profile.
+Now the strip fades out at whichever edge hides tabs, the way the File View
+control row does, and each fade narrows as you reach that end. Switching tabs
+scrolls the active one clear of the fade. The + sits outside the strip, right
+after the last tab or the fade, always at least 12px from the profile. *Limits:*
+the fade says more tabs are hidden, not how many.
+([Workspaces, tabs & groups](help/workspaces.md#tabs))
+
 **A notifications bell.** A message lasted a few seconds on screen, so a
 failed push or a teammate's new commits were simply missed by anyone in another
 app, and the bell only ever meant GitHub. Now the title-bar bell keeps what you

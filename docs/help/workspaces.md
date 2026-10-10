@@ -25,6 +25,14 @@ alias, worktrees, GitHub, terminal, reveal, editor, and remove. Close the last
 tab and <kbd>⌘W</kbd> closes the window instead. A dot on the tab means
 uncommitted work; a different one means conflicts.
 
+When more tabs are open than fit, the strip scrolls sideways (a trackpad swipe,
+or <kbd>Shift</kbd> with the wheel) and fades out at whichever edge hides
+tabs. The fade narrows as you reach that end, so a strip faded on both sides
+means you are somewhere in the middle. Switching tabs scrolls the one you are
+on clear of the fade. The <kbd>+</kbd> button stays put after the strip,
+never scrolled away, with the same room before your profile whether three
+repositories are open or thirty.
+
 If a close warning appears, <kbd>Escape</kbd> always cancels. <kbd>Enter</kbd>
 confirms only when the tab is clean — when there are uncommitted changes or
 conflicts the warning deliberately makes you reach for the button, so a stray
