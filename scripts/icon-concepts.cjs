@@ -95,64 +95,82 @@ async function neon() {
   })
 }
 
-// Sticker: a die-cut vinyl g with a thick white border, stuck slightly crooked on a brushed aluminium lid.
-async function sticker() {
-  const g = await G({ size: 720, cx: 512, cy: 500, rot: -9 })
+// Shapes: the g broken into bold flat geometry, Bauhaus style. The bowl is a disc, the stem a bar and the
+// tail a quarter ring; it reads as a g from across the room and as a composition up close.
+async function shapes() {
+  const cx = 440, cy = 430, R = 170, sx = cx + R, bot = cy + R + 60, w = 96
   return shell({
-    base: '#b9bdc4',
-    defs: `<linearGradient id="alu" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e3e5e9"/><stop offset=".55" stop-color="#b8bcc3"/><stop offset="1" stop-color="#8f949c"/></linearGradient>
-      <filter id="brush" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.002 0.9" numOctaves="2" seed="4"/><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .35 -.05"/></filter>
-      <linearGradient id="vinyl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd23d"/><stop offset=".5" stop-color="#ff7a1f"/><stop offset="1" stop-color="#ff2e6e"/></linearGradient>
-      <linearGradient id="shine" x1="0" y1="0" x2="1" y2="1"><stop offset=".25" stop-color="#fff" stop-opacity="0"/><stop offset=".38" stop-color="#fff" stop-opacity=".5"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    base: '#101a3c',
+    defs: `<linearGradient id="navy" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b2a63"/><stop offset="1" stop-color="#0a1130"/></linearGradient>${GRAIN('grain', 0.16, 0.9, 3)}`,
+    bg: `<rect width="1024" height="1024" fill="url(#navy)"/>
+      <circle cx="830" cy="190" r="190" fill="#16245a"/><rect x="100" y="760" width="230" height="164" fill="#16245a"/>`,
+    inner: `<g transform="translate(512 512) scale(1.12) translate(-464 -540)">
+      <circle cx="${cx}" cy="${cy}" r="${R}" fill="#ff5a1f"/>
+      <circle cx="${cx}" cy="${cy}" r="${R * 0.42}" fill="#101a3c"/>
+      <path d="M${cx} ${cy - R} A${R} ${R} 0 0 1 ${sx} ${cy} L${cx} ${cy} Z" fill="#ffc21a"/>
+      <path d="M${sx} ${bot} A${R} ${R} 0 0 1 ${sx - R} ${bot + R}" fill="none" stroke="#2fd1c4" stroke-width="${w}"/>
+      <rect x="${sx - w / 2}" y="${cy - R}" width="${w}" height="${bot - cy + R}" fill="#ff2e88"/>
+      <circle cx="${sx}" cy="${cy - R + w / 2}" r="${w / 2}" fill="#ffc21a"/>
+      <circle cx="${sx - R}" cy="${bot + R}" r="30" fill="#fff"/></g>`,
+    over: `<rect width="1024" height="1024" filter="url(#grain)"/>`
+  })
+}
+
+// Circuit: the monoline g etched as a copper trace on a green circuit board, with vias, pads and a chip.
+async function circuit() {
+  const via = ([x, y], r = 22) => `<circle cx="${f(x)}" cy="${f(y)}" r="${r}" fill="url(#gold)" stroke="#5a3a08" stroke-width="3"/><circle cx="${f(x)}" cy="${f(y)}" r="${r * 0.42}" fill="#061d14"/>`
+  const outer = MR + 58
+  const side = (attrs) => `<path d="M${f(MC.x - outer * Math.cos(rad(40)))} ${f(MC.y - outer * Math.sin(rad(40)))} A${outer} ${outer} 0 0 0 ${f(MC.x + outer * Math.cos(rad(70)))} ${f(MC.y + outer * Math.sin(rad(70)))}" ${attrs}/>
+    <path d="M${MSX + 58} ${MC.y - MR + 30} V${MC.y + MR + 40} L${MSX + 120} ${MC.y + MR + 100} H${MSX + 180}" ${attrs}/>
+    <path d="M${MC.x - MR - 120} ${MC.y + 40} H${MC.x - MR - 40}" ${attrs}/>`
+  return shell({
+    base: '#0a3a28',
+    defs: `<radialGradient id="mask" cx=".45" cy=".4" r=".9"><stop offset="0" stop-color="#16603f"/><stop offset="1" stop-color="#062517"/></radialGradient>
+      <pattern id="fine" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="11" cy="11" r="1.6" fill="#000" opacity=".25"/></pattern>
+      <linearGradient id="copper" gradientUnits="userSpaceOnUse" x1="250" y1="250" x2="700" y2="850"><stop offset="0" stop-color="#ffd9a0"/><stop offset=".4" stop-color="#e08a3c"/><stop offset=".7" stop-color="#9a4f16"/><stop offset="1" stop-color="#f2b072"/></linearGradient>
+      <radialGradient id="gold" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff2b0"/><stop offset=".6" stop-color="#d9a52c"/><stop offset="1" stop-color="#8a6010"/></radialGradient>
+      <filter id="etch" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="5" flood-color="#000" flood-opacity=".5"/></filter>
+      ${GRAIN('grain', 0.18, 1, 8)}`,
+    bg: `<rect width="1024" height="1024" fill="url(#mask)"/><rect width="1024" height="1024" fill="url(#fine)"/>
+      <g fill="none" stroke="#2a8a5c" stroke-width="10" stroke-linecap="round" opacity=".55">
+        <path d="M100 250 H260 L320 190 H520"/><path d="M924 330 H800 L740 390 V560"/><path d="M924 700 H820"/><path d="M100 820 H240 L300 760"/></g>`,
+    inner: `<g transform="${FRAME}"><g filter="url(#etch)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        ${side('stroke="#3d9b6c" stroke-width="12"')}
+        <circle cx="${MC.x}" cy="${MC.y}" r="${MR}" stroke="#4a2408" stroke-width="44"/><path d="${hookPath}" stroke="#4a2408" stroke-width="44"/>
+        <circle cx="${MC.x}" cy="${MC.y}" r="${MR}" stroke="url(#copper)" stroke-width="34"/><path d="${hookPath}" stroke="url(#copper)" stroke-width="34"/></g>
+      ${via([MSX, MC.y - MR], 30)}${via([hookTip.x, hookTip.y], 30)}${via(onRing(180))}${via([MSX + 180, MC.y + MR + 100], 16)}${via([MC.x - MR - 120, MC.y + 40], 16)}
+      <g transform="translate(${MC.x - 62} ${MC.y - 62})"><rect width="124" height="124" rx="8" fill="#15171c" stroke="#3a3d45" stroke-width="3"/>
+        ${[22, 50, 78, 102].map((v) => `<rect x="${v - 6}" y="-14" width="12" height="14" fill="url(#gold)"/><rect x="${v - 6}" y="124" width="12" height="14" fill="url(#gold)"/>`).join('')}
+        <circle cx="22" cy="22" r="7" fill="#2a2d34"/></g></g>`,
+    over: `<rect width="1024" height="1024" filter="url(#grain)"/>`
+  })
+}
+
+// Holo foil: the g stamped in holographic foil on black card, its rainbow shifting across the embossed surface.
+async function holoFoil() {
+  const g = await G({ size: 760, cx: 512, cy: 500, rot: -4 })
+  return shell({
+    base: '#07070a',
+    defs: `<radialGradient id="card" cx=".5" cy=".35" r=".9"><stop offset="0" stop-color="#1c1c24"/><stop offset="1" stop-color="#050507"/></radialGradient>
+      ${GRAIN('grain', 0.22, 0.9, 4)}
+      <linearGradient id="holo" gradientUnits="userSpaceOnUse" x1="250" y1="180" x2="780" y2="860">
+        <stop offset="0" stop-color="#ff3cac"/><stop offset=".18" stop-color="#ffb13d"/><stop offset=".34" stop-color="#d4ff4a"/><stop offset=".5" stop-color="#2bffd5"/>
+        <stop offset=".66" stop-color="#3d7bff"/><stop offset=".82" stop-color="#b44dff"/><stop offset="1" stop-color="#ff3cac"/></linearGradient>
+      <filter id="foil" filterUnits="userSpaceOnUse" x="0" y="0" width="1024" height="1024">
+        <feTurbulence type="fractalNoise" baseFrequency=".006 .02" numOctaves="2" seed="13" result="n"/>
+        <feColorMatrix in="n" type="hueRotate" values="0" result="n2"/><feBlend in="SourceGraphic" in2="n2" mode="overlay" result="sh"/>
+        <feGaussianBlur in="SourceAlpha" stdDeviation="6" result="a"/>
+        <feSpecularLighting in="a" surfaceScale="8" specularConstant="1.2" specularExponent="30" lighting-color="#fff" result="sp"><feDistantLight azimuth="225" elevation="45"/></feSpecularLighting>
+        <feComposite in="sh" in2="SourceAlpha" operator="in" result="c"/><feComposite in="sp" in2="SourceAlpha" operator="in" result="s"/>
+        <feMerge><feMergeNode in="c"/><feMergeNode in="s"/></feMerge></filter>
       <clipPath id="tclip">${g.text()}</clipPath>
-      <filter id="lift" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="6" dy="14" stdDeviation="12" flood-color="#2b2f36" flood-opacity=".45"/></filter>`,
-    bg: `<rect width="1024" height="1024" fill="url(#alu)"/><rect width="1024" height="1024" filter="url(#brush)"/>`,
-    inner: `<g filter="url(#lift)">${g.text('fill="#fff" stroke="#fff" stroke-width="64" stroke-linejoin="round"')}</g>
-      ${g.text('fill="url(#vinyl)"')}
-      <g clip-path="url(#tclip)"><rect width="1024" height="1024" fill="url(#shine)"/></g>
-      ${g.text('fill="none" stroke="#000" stroke-opacity=".12" stroke-width="2"')}`
-  })
-}
-
-// Commit graph: the g is a branch diagram. The bowl is a branch that leaves the main line and merges back.
-async function commitGraph() {
-  const dot = ([x, y], c, r = 26) => `<circle cx="${f(x)}" cy="${f(y)}" r="${r}" fill="#fff" stroke="${c}" stroke-width="13"/>`
-  const lane = '#3567ff', branch = '#ff4f8b', tip = '#16b981'
-  const stem = [MC.y - MR, MC.y - MR / 2, MC.y + MR / 2 + 20, MC.y + MR + 70].map((y) => [MSX, y])
-  return shell({
-    base: '#f3efe7',
-    defs: `<linearGradient id="paper" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbf8f2"/><stop offset="1" stop-color="#e9e3d7"/></linearGradient>
-      <pattern id="dots" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="16" cy="16" r="2" fill="#000" opacity=".09"/></pattern>
-      <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#5a4a2a" flood-opacity=".22"/></filter>
-      <radialGradient id="halo"><stop offset="0" stop-color="${tip}" stop-opacity=".45"/><stop offset="1" stop-color="${tip}" stop-opacity="0"/></radialGradient>`,
-    bg: `<rect width="1024" height="1024" fill="url(#paper)"/><rect width="1024" height="1024" fill="url(#dots)"/>`,
-    inner: `<g transform="${FRAME}"><g filter="url(#soft)">
-      <circle cx="${MC.x}" cy="${MC.y}" r="${MR}" fill="none" stroke="${branch}" stroke-width="30"/>
-      <path d="${hookPath}" fill="none" stroke="${lane}" stroke-width="30" stroke-linecap="round"/>
-      <path d="M${MSX} ${MC.y + MR + 70} C${MSX} ${MC.y + MR + 170} ${MSX - 100} ${MC.y + MR + 214} ${hookTip.x} ${hookTip.y}" fill="none" stroke="${tip}" stroke-width="30" stroke-linecap="round"/>
-      ${[200, 140, 260].map((a) => dot(onRing(a), branch)).join('')}
-      ${stem.map((p) => dot(p, lane)).join('')}
-      ${dot([MSX, MC.y], branch, 34)}
-    </g>
-    <circle cx="${hookTip.x}" cy="${hookTip.y}" r="86" fill="url(#halo)"/>${dot([hookTip.x, hookTip.y], tip, 32)}</g>`
-  })
-}
-
-// Riso twins: two g's printed in fluorescent pink and blue risograph ink, slightly off register.
-// The overlap prints purple; Geminio is the twin, the copy. Uneven ink and paper fibre are noise masks.
-async function risoTwins() {
-  const g = await G({ size: 690, cx: 512, cy: 505 })
-  const ink = (id, seed) => `<filter id="${id}" filterUnits="userSpaceOnUse" x="0" y="0" width="1024" height="1024"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="${seed}"/><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -1.6 0 0 0 1.55"/></filter>
-    <mask id="${id}m" ${UMASK}><rect width="1024" height="1024" filter="url(#${id})"/></mask>`
-  return shell({
-    base: '#f2ead8',
-    defs: `${ink('inkA', 3)}${ink('inkB', 8)}${GRAIN('fibre', 0.22, 0.65, 2)}
-      <pattern id="half" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(22)"><circle cx="7" cy="7" r="3.2" fill="#f2ead8"/></pattern>`,
-    bg: `<rect width="1024" height="1024" fill="#f2ead8"/><rect width="1024" height="1024" filter="url(#fibre)"/>`,
-    inner: `<g style="mix-blend-mode:multiply" mask="url(#inkA)">${g.text('fill="#ff48b0"', 'translate(-24 -14)')}</g>
-      <g style="mix-blend-mode:multiply" mask="url(#inkB)">${g.text('fill="#0a78d1"', 'translate(24 14)')}</g>
-      <g opacity=".35" style="mix-blend-mode:screen"><clipPath id="hc">${g.text('', 'translate(24 14)')}</clipPath><rect width="1024" height="1024" fill="url(#half)" clip-path="url(#hc)"/></g>`,
-    over: `<rect width="1024" height="1024" filter="url(#fibre)" opacity=".6"/>`
+      <pattern id="lines" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(-30)"><rect width="7" height="2" fill="#fff" opacity=".14"/></pattern>
+      ${blur('b50', 50)}`,
+    bg: `<rect width="1024" height="1024" fill="url(#card)"/><rect width="1024" height="1024" filter="url(#grain)"/>`,
+    inner: `<g filter="url(#b50)" opacity=".45">${g.text('fill="url(#holo)"')}</g>
+      ${g.text('fill="url(#holo)" filter="url(#foil)"')}
+      <g clip-path="url(#tclip)"><rect width="1024" height="1024" fill="url(#lines)"/></g>
+      ${g.text('fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="2"')}`
   })
 }
 
@@ -296,30 +314,43 @@ async function toyBricks() {
   })
 }
 
-// Clay: a soft, puffy modelling-clay g in pastel mint, sitting on a lilac tabletop.
+// Clay: a hand-rolled g of deep vermilion plasticine, pressed onto a slate board. Wobbly edges, thumb
+// dents and tool drag come from noise in the height map, so the light catches it like real modelling clay.
 async function clay() {
-  const g = await G({ size: 760, cx: 512, cy: 495, rot: -5 })
+  const g = await G({ size: 720, cx: 506, cy: 492, rot: -6 })
+  const lightUp = `<feDistantLight azimuth="240" elevation="38"/>`
   return shell({
-    base: '#d9c8ff',
-    defs: `<linearGradient id="table" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f1e6ff"/><stop offset="1" stop-color="#c3aef5"/></linearGradient>
-      ${GRAIN('grain', 0.12, 1.1, 3)}
-      <filter id="puffy" x="-15%" y="-15%" width="130%" height="130%">
-        <feMorphology in="SourceAlpha" operator="dilate" radius="14" result="fat"/><feGaussianBlur in="fat" stdDeviation="14" result="soft"/>
-        <feComponentTransfer in="soft" result="shape"><feFuncA type="linear" slope="3" intercept="-1"/></feComponentTransfer>
-        <feGaussianBlur in="shape" stdDeviation="16" result="h"/>
-        <feDiffuseLighting in="h" surfaceScale="22" diffuseConstant="1.1" lighting-color="#fff" result="d"><feDistantLight azimuth="235" elevation="52"/></feDiffuseLighting>
-        <feSpecularLighting in="h" surfaceScale="22" specularConstant=".55" specularExponent="16" lighting-color="#fff" result="s"><feDistantLight azimuth="235" elevation="52"/></feSpecularLighting>
-        <feFlood flood-color="#5fe0bd" result="col"/><feComposite in="col" in2="d" operator="arithmetic" k1="1.12" result="lit"/>
-        <feComposite in="s" in2="lit" operator="arithmetic" k2="1" k3="1" result="all"/><feComposite in="all" in2="shape" operator="in"/></filter>
-      <filter id="rest" x="-20%" y="-20%" width="140%" height="140%"><feMorphology in="SourceAlpha" operator="dilate" radius="14"/><feGaussianBlur stdDeviation="20"/><feOffset dx="14" dy="30"/><feColorMatrix type="matrix" values="0 0 0 0 .32  0 0 0 0 .18  0 0 0 0 .55  0 0 0 .45 0"/></filter>`,
-    bg: `<rect width="1024" height="1024" fill="url(#table)"/><rect width="1024" height="1024" filter="url(#grain)"/>`,
-    inner: `${g.text('fill="#000" filter="url(#rest)"')}${g.text('fill="#000" filter="url(#puffy)"')}`,
-    over: `<rect width="1024" height="1024" filter="url(#grain)" opacity=".5"/>`
+    base: '#14161c',
+    defs: `<radialGradient id="slate" cx=".4" cy=".3" r=".95"><stop offset="0" stop-color="#2b2f3a"/><stop offset="1" stop-color="#0c0d12"/></radialGradient>
+      ${GRAIN('grain', 0.3, 0.6, 21)}
+      <filter id="clayf" filterUnits="userSpaceOnUse" x="0" y="0" width="1024" height="1024">
+        <feTurbulence type="fractalNoise" baseFrequency=".011" numOctaves="2" seed="5" result="wob"/>
+        <feDisplacementMap in="SourceAlpha" in2="wob" scale="24" xChannelSelector="R" yChannelSelector="G" result="d"/>
+        <feMorphology in="d" operator="dilate" radius="12" result="fat"/><feGaussianBlur in="fat" stdDeviation="9" result="sb"/>
+        <feComponentTransfer in="sb" result="shape"><feFuncA type="linear" slope="4" intercept="-1.6"/></feComponentTransfer>
+        <feGaussianBlur in="shape" stdDeviation="28" result="dome"/>
+        <feTurbulence type="fractalNoise" baseFrequency=".009 .014" numOctaves="2" seed="9" result="n"/>
+        <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.4 0 0 0 -.5" result="dents"/>
+        <feComposite in="dome" in2="dents" operator="arithmetic" k2="1" k3=".14" result="h"/>
+        <feDiffuseLighting in="h" surfaceScale="40" diffuseConstant="1.3" lighting-color="#fff" result="dl">${lightUp}</feDiffuseLighting>
+        <feSpecularLighting in="h" surfaceScale="40" specularConstant=".25" specularExponent="14" lighting-color="#ffd2bf" result="sl">${lightUp}</feSpecularLighting>
+        <feFlood flood-color="#c4200a" result="col"/>
+        <feComposite in="col" in2="dl" operator="arithmetic" k1="1.05" result="lit"/>
+        <feComposite in="sl" in2="lit" operator="arithmetic" k2=".7" k3="1" result="all"/>
+        <feComposite in="all" in2="shape" operator="in"/></filter>
+      <filter id="restf" filterUnits="userSpaceOnUse" x="0" y="0" width="1024" height="1024">
+        <feTurbulence type="fractalNoise" baseFrequency=".011" numOctaves="2" seed="5" result="wob"/>
+        <feDisplacementMap in="SourceAlpha" in2="wob" scale="24" xChannelSelector="R" yChannelSelector="G"/>
+        <feMorphology operator="dilate" radius="14"/><feGaussianBlur stdDeviation="16"/><feOffset dx="18" dy="28"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .75 0"/></filter>`,
+    bg: `<rect width="1024" height="1024" fill="url(#slate)"/><rect width="1024" height="1024" filter="url(#grain)"/>
+      <g fill="#d8320f" opacity=".5"><circle cx="812" cy="806" r="16"/><circle cx="846" cy="776" r="9"/><circle cx="214" cy="226" r="11"/></g>`,
+    inner: `${g.text('fill="#000" filter="url(#restf)"')}${g.text('fill="#000" filter="url(#clayf)"')}`
   })
 }
 
 const concepts = [
-  ['neon', neon], ['sticker', sticker], ['commit-graph', commitGraph], ['riso-twins', risoTwins], ['enamel-pin', enamelPin],
+  ['neon', neon], ['shapes', shapes], ['circuit', circuit], ['holo-foil', holoFoil], ['enamel-pin', enamelPin],
   ['patch', patch], ['extruded', extruded], ['stained-glass', stainedGlass], ['toy-bricks', toyBricks], ['clay', clay]
 ]
 
