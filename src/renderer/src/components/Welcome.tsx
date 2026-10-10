@@ -6,6 +6,7 @@ import { useUIStore } from '../stores/ui'
 import { useT } from '../i18n'
 import { confirmRemoveRecentRepo, repositoryMenuItems } from '../lib/repositoryMenuItems'
 import geminioLaunch from '../assets/geminio-launch.png'
+import { chooseRepositories } from '../openRepositories'
 
 export interface LauncherItem {
   name: string
@@ -206,8 +207,7 @@ export function Welcome(): React.JSX.Element {
   const t = useT()
 
   const openRepo = async (): Promise<void> => {
-    const path = await window.api.selectDirectory()
-    if (path) openRepoTab({ path, name: path.split('/').pop() ?? path })
+    for (const repo of await chooseRepositories()) openRepoTab(repo)
   }
 
   const cloneRepo = (): void => {

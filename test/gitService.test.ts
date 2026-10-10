@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest'
 import { gitService, gitMethodIsRead } from '../src/main/git'
 import { repoPath } from './helpers'
+import { mkdtempSync, rmSync } from 'fs'
+import { tmpdir } from 'os'
+import { join } from 'path'
 
 // Integration tests: drive the real gitService (simple-git under the hood)
 // against the deterministic playground repos. Assertions target structural
@@ -182,5 +185,20 @@ describe('saved repository folder availability', () => {
     expect(await gitService.directoryExists(`${path}/README.md`)).toBe(false)
     expect(await gitService.directoryExists(`${path}/README.md/child`)).toBe(false)
     expect(gitMethodIsRead('directoryExists')).toBe(true)
+  })
+})
+
+describe('picking several folders to open', () => {
+  it('tells a repository from a plain or missing folder', async () => {
+    const path = repoPath('line-staging')
+    const plain = mkdtempSync(join(tmpdir(), 'geminio-plain-'))
+    try {
+      expect(await gitService.isRepository(path)).toBe(true)
+      expect(await gitService.isRepository(plain)).toBe(false)
+      expect(await gitService.isRepository(`${path}/does-not-exist`)).toBe(false)
+      expect(gitMethodIsRead('isRepository')).toBe(true)
+    } finally {
+      rmSync(plain, { recursive: true, force: true })
+    }
   })
 })

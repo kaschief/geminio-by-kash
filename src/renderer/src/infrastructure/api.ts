@@ -178,6 +178,7 @@ const call = <T>(method: string, ...args: unknown[]): Promise<T> => window.api.g
 
 export const gitApi = {
   directoryExists: (path: string) => call<boolean>('directoryExists', path),
+  isRepository: (path: string) => call<boolean>('isRepository', path),
   open: (path: string) => call<RepoSummary>('open', path),
   log: (path: string, max?: number, skip?: number) => call<GraphCommit[]>('log', path, max, skip),
   branches: (path: string) => call<BranchesPayload>('branches', path),
@@ -826,6 +827,7 @@ export const windowApi = {
 
 export const shellApi = {
   selectDirectory: (title?: string) => window.api.selectDirectory(title),
+  selectDirectories: (title?: string) => window.api.selectDirectories(title),
   revealInFolder: (fullPath: string) => window.api.shell.showItemInFolder(fullPath),
   openPath: (fullPath: string) => window.api.shell.openPath(fullPath),
   openWithPicker: (fullPath: string) => window.api.shell.openWithPicker(fullPath),

@@ -158,6 +158,16 @@ gone shows **Locate** and **Retry** instead of background error toasts at
 startup; the tab is kept until you reconnect or close it.
 ([Moved or unavailable folders](help/workspaces.md#moved-or-unavailable-folders))
 
+**Open several repositories at once.** Open Repository took one folder per trip
+through the picker. It now accepts a multiple selection (⌘-click, Shift-click)
+and opens a tab for each, or adds each to the group it was opened from.
+In a multiple selection, repositories already open and folders that are not Git
+repositories are skipped and named in a message. *Limits:* the picker cannot
+grey out open repositories beforehand (Electron exposes no NSOpenPanel
+delegate); a single pick behaves as before, focusing an open repository or
+offering to initialise a plain folder.
+([Getting started](help/getting-started.md#open-a-repository))
+
 **A quieter title bar.** The workspace name, mascot, workspace dropdown and
 gauge are replaced by one small dashboard icon that opens Mission Control;
 workspace management lives in Settings → Workspaces. In macOS fullscreen the

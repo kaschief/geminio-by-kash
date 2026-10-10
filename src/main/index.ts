@@ -220,6 +220,15 @@ app.whenReady().then(async () => {
     return res.canceled ? null : res.filePaths[0]
   })
 
+  // Open Repository takes several folders at once (⌘- and Shift-click in the panel).
+  ipcMain.handle('dialog:selectDirectories', async (_e, title?: string) => {
+    const res = await dialog.showOpenDialog({
+      properties: ['openDirectory', 'createDirectory', 'multiSelections'],
+      title: title ?? 'Open repository'
+    })
+    return res.canceled ? [] : res.filePaths
+  })
+
   ipcMain.handle('shell:openExternal', (_e, url: string) => {
     if (/^https?:\/\//.test(url)) shell.openExternal(url)
   })

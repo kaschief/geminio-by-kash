@@ -1713,6 +1713,12 @@ export const gitService = {
       throw err
     }
   },
+  /** A folder picked alongside others is skipped, not opened, when this is false. */
+  async isRepository(repoPath: string): Promise<boolean> {
+    if (!(await gitService.directoryExists(repoPath))) return false
+    try { return await gitFor(repoPath).checkIsRepo() }
+    catch { return false }
+  },
   async open(repoPath: string): Promise<RepoSummary> {
     const git = gitFor(repoPath)
     const isRepo = await git.checkIsRepo()
@@ -7730,6 +7736,7 @@ const APP_LEVEL_METHODS = new Set<string>(['clone', 'init', 'remoteBranches'])
 
 const READ_METHODS = new Set<string>([
   'directoryExists',
+  'isRepository',
   'open',
   'lastFetchAt',
   'workTreeActivity',
