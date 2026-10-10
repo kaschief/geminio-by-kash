@@ -140,7 +140,7 @@ In the command palette (`⌘K`), choose **Install 'geminio' command in PATH**.
 
 ```sh
 geminio .
-geminio ~/Code/my-project
+geminio ~/kash-code/my-project
 geminio blame src/app.ts -l 40
 geminio doctor
 ```

@@ -2696,7 +2696,7 @@ export interface RegistryRepo {
 /** A folder Geminio scans for repositories. A preference, not an index. */
 export interface RepoScanRoot {
   path: string
-  /** How deep to descend. 3 covers ~/Code/<client>/<repo>; deeper gets slow
+  /** How deep to descend. 3 covers ~/kash-code/<client>/<repo>; deeper gets slow
    *  fast, and a repo nested further is almost always vendored. */
   depth: number
 }

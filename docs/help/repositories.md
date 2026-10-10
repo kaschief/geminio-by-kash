@@ -125,7 +125,7 @@ is per section rather than per selection — see below.
 
 ## Turning a folder tree into workspaces
 
-Your code folder already encodes the grouping you want. If `~/Code` holds
+Your code folder already encodes the grouping you want. If `~/kash-code` holds
 `client-a`, `client-b` and `personal`, those are contexts you switch between —
 and a [workspace](workspaces.md) is exactly that, with its own tab strip.
 
@@ -142,7 +142,7 @@ workspace containing **one tab per repository**.
 | The root's own name | Repositories sitting loose in the folder you picked, not in a subfolder. Unticked by default |
 
 A repository is filed under the **first folder below the root**, however deep it
-sits: `~/Code/client-a/nested/app` goes into `client-a`. Folders holding no
+sits: `~/kash-code/client-a/nested/app` goes into `client-a`. Folders holding no
 repositories are not offered.
 
 **Nothing is created until you confirm**, and cancelling still leaves the scan's
