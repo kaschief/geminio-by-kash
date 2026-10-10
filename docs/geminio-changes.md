@@ -505,6 +505,17 @@ duplicates. ([Fetch and pull](help/workspaces.md#fetch-and-pull) ·
 Settings fade out at the bottom while more content remains.
 ([Themes & appearance](help/themes.md))
 
+**Quiet sidebar headers.** Section headers mixed counts and buttons at their
+trailing edge, and since rows have zero, one or two buttons, nothing lined up
+and a count looked like a button. At rest a header now shows only its name. Point
+at it (or reach it with the keyboard) and its count appears as a quiet number
+after the name, with its actions (+, Open on Web, Refresh) at the trailing edge.
+Long names stay on one line. Right-clicking a top-level section header (Local,
+Remotes, Stashes, Worktrees…) opens the same show-and-hide menu as the sidebar's
+gear, with the same saved state; a remote's own row keeps its remote menu.
+Counts are no longer visible at a glance; that is the point, and the trade.
+([Branches, remotes & the sidebar](help/branching.md))
+
 ## Settings & appearance
 
 **Eleven new themes, light and dark.** The built-in themes sat mostly in one

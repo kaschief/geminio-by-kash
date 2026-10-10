@@ -1509,7 +1509,11 @@ input.is-invalid {
   display: flex;
 }
 .sb-title {
-  flex: 1;
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   text-align: start;
 }
 .sb-count {
@@ -1521,7 +1525,31 @@ input.is-invalid {
 }
 .sb-actions {
   display: flex;
-  margin-inline-end: 2px;
+  margin-inline-start: auto;
+}
+/* At rest a header is just its name; the count (after the name) and the
+ * actions (at the edge) appear on hover or keyboard focus. Opacity, not
+ * display, so nothing shifts and the buttons stay reachable by keyboard. */
+.sb-header > .sb-count {
+  flex: none;
+  background: transparent;
+  padding: 0;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-2);
+}
+.sb-header > .sb-count,
+.sb-header > .sb-actions {
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+.sb-header:hover > .sb-count,
+.sb-header:hover > .sb-actions,
+.sb-header:focus-visible > .sb-count,
+.sb-header:focus-visible > .sb-actions,
+.sb-header:has(:focus-visible) > .sb-count,
+.sb-header:has(:focus-visible) > .sb-actions {
+  opacity: 1;
 }
 
 .sb-section.dragging {

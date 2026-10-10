@@ -74,9 +74,9 @@ for high — and still drives the yellow status-bar chip.
 | Marker | Where | Means |
 |---|---|---|
 | <kbd>☑ 3</kbd> chip | Status bar, left of the branch name | How many are open; yellow if any is high priority |
-| Count badge | The sidebar section header | The same number, next to the list itself |
+| Count | The sidebar section header, when you point at it | The same number, next to the list itself |
 
-Both disappear at zero. A permanent "0 todos" is furniture, and furniture
+The chip disappears at zero. A permanent "0 todos" is furniture, and furniture
 is what people stop seeing.
 
 ## The detail view

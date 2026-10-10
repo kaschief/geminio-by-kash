@@ -267,8 +267,10 @@ function Section({
         </motion.span>
         {open && openIcon ? openIcon : icon}
         <span className="sb-title">{title}</span>
-        {actions && <span className="sb-actions">{actions}</span>}
+        {/* The count rides with the name and the actions own the trailing edge;
+            both stay out of sight until the header is pointed at or focused. */}
         <span className="sb-count">{count}</span>
+        {actions && <span className="sb-actions">{actions}</span>}
       </div>
       {nested ? (
         <AnimatePresence initial={false}>
@@ -1544,6 +1546,12 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
     dragging: dragId === id,
     dragOver: overId === id && dragId !== null && dragId !== id,
     reorderHint: t('sidebar.reorderHint'),
+    // Right-click a section header for the same visibility menu as the gear,
+    // the way a graph column header configures the columns.
+    onHeaderContextMenu: (e) => {
+      e.preventDefault()
+      openSectionsMenu(e.clientX, e.clientY)
+    },
     onReorderStart: () => setDragId(id),
     onReorderOver: (e) => {
       e.preventDefault()

@@ -10,7 +10,14 @@ keywords: branch branches create checkout rename delete remote pinned sidebar pr
 
 One reorderable, searchable sidebar holds **branches, remotes, tags, stashes,
 worktrees and submodules**. Every section can be hidden or reordered
-(Settings → Layout), and the filter box applies to all of them. Which sections
+(Settings → Layout), and the filter box applies to all of them. To choose which
+sections show without leaving the sidebar, right-click any section header, or
+use the gear beside the filter box; both open the same menu, the way
+right-clicking a graph column header picks the columns.
+
+Headers stay quiet until you need them: at rest each shows only its name.
+Point at one and its count appears after the name, with its buttons (New
+Branch, Add Remote, Open on Web, Refresh) at the right edge. Which sections
 and folders you keep expanded or collapsed is remembered per repository, across
 restarts.
 
