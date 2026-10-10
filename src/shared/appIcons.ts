@@ -2,7 +2,9 @@
  * `resources/app-icons/`. Monoline is the default and the icon baked into the app bundle. */
 export const APP_ICONS = [
   'monoline', 'portal', 'deboss', 'night-slab', 'terminal',
-  'crystal', 'topo', 'water', 'mercury', 'blueprint'
+  'crystal', 'topo', 'water', 'mercury', 'blueprint',
+  'neon', 'shapes', 'circuit', 'holo-foil', 'enamel-pin',
+  'patch', 'extruded', 'stained-glass', 'toy-bricks', 'clay'
 ] as const
 export type AppIconId = typeof APP_ICONS[number]
 export const DEFAULT_APP_ICON: AppIconId = 'monoline'

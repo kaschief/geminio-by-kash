@@ -137,7 +137,7 @@ const ROOT = join(__dirname, '../..')
       app.dock.setIcon = (image) => { globalThis.iconApplications.push(image.getSize()); return original(image) }
     })
     await page.evaluate(() => window.__shot.ui.getState().openModal({ kind: 'settings', page: 'themes' }))
-    assert.equal(await page.locator('.app-icon-choice').count(), 10, 'the picker offers exactly the ten icons')
+    assert.equal(await page.locator('.app-icon-choice').count(), 20, 'the picker offers exactly the twenty icons')
     assert.equal(await page.locator('.app-icon-colors').count(), 0, 'there is no colour row any more')
     assert.equal(await page.locator('.app-icon-choice.selected').innerText(), 'Monoline', 'Monoline is the default')
     await page.getByRole('button', { name: 'Water', exact: true }).click()
