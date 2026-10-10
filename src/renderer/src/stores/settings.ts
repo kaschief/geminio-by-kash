@@ -268,6 +268,8 @@ interface SettingsState {
    *  would be a surprise. */
   closeAllRepoTabs(): void
   reopenClosedTab(): void
+  /** Reopen one particular closed tab (a toast's Reopen), wherever it sits in the stack. */
+  reopenTab(tabId: string): void
   setActiveTab(tabId: string): void
   renameTab(tabId: string, name: string): void
   setTabColor(tabId: string, color: string): void
@@ -333,6 +335,16 @@ export function takeAccountsNotice(): boolean {
 
 /** Session-only stack of recently closed tabs, for reopen (⌘⇧T). */
 const closedTabStack: { tab: TabState; idx: number }[] = []
+
+function restoreClosed(entry: { tab: TabState; idx: number }): void {
+  useSettingsStore.getState().update((s) => {
+    // Skip if a tab with that id somehow already exists.
+    if (s.tabs.some((t) => t.id === entry.tab.id)) return { ...s, activeTabId: entry.tab.id }
+    const tabs = [...s.tabs]
+    tabs.splice(Math.min(entry.idx, tabs.length), 0, entry.tab)
+    return { ...s, tabs, activeTabId: entry.tab.id }
+  })
+}
 
 export const useSettingsStore = create<SettingsState>((set, get) => ({
   settings: defaultSettings(),
@@ -404,7 +416,8 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
     settings.maskSecrets = settings.maskSecrets ?? sd.maskSecrets
     settings.shortcuts = settings.shortcuts ?? sd.shortcuts
     settings.largeFileKb = settings.largeFileKb ?? sd.largeFileKb
-    settings.warnOnClose = settings.warnOnClose ?? sd.warnOnClose
+    // Retired: closing a tab no longer asks, so there is nothing to configure.
+    delete (settings as { warnOnClose?: unknown }).warnOnClose
     settings.terminalPlacement = settings.terminalPlacement ?? sd.terminalPlacement
     settings.sidebarSide = settings.sidebarSide ?? sd.sidebarSide
     settings.rightPanelFullHeight = settings.rightPanelFullHeight ?? sd.rightPanelFullHeight
@@ -743,6 +756,10 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
       const isEmpty = found != null && found.kind !== 'page' && found.repos.length === 0
       if (!isEmpty) return { ...s, tabs: mapped }
       const idx = mapped.findIndex((t) => t.id === tabId)
+      // The group goes with its last repo still in it, so reopening brings both back.
+      const original = s.tabs[idx]
+      if (original) closedTabStack.push({ tab: original, idx })
+      if (closedTabStack.length > 10) closedTabStack.shift()
       const tabs = mapped.filter((t) => t.id !== tabId)
       const activeTabId =
         s.activeTabId === tabId ? (tabs[Math.min(idx, tabs.length - 1)]?.id ?? null) : s.activeTabId
@@ -836,14 +853,15 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
   reopenClosedTab: () => {
     const last = closedTabStack.pop()
     if (!last) return
-    get().update((s) => {
-      // Skip if a tab with that id somehow already exists.
-      if (s.tabs.some((t) => t.id === last.tab.id)) return { ...s, activeTabId: last.tab.id }
-      const tabs = [...s.tabs]
-      tabs.splice(Math.min(last.idx, tabs.length), 0, last.tab)
-      return { ...s, tabs, activeTabId: last.tab.id }
-    })
+    restoreClosed(last)
   },
+
+  reopenTab: (tabId) => {
+    const at = closedTabStack.findIndex((entry) => entry.tab.id === tabId)
+    if (at < 0) return
+    restoreClosed(closedTabStack.splice(at, 1)[0])
+  },
+
 
   setActiveTab: (tabId) => {
     leaveMission()

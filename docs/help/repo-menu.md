@@ -44,7 +44,7 @@ opens the launcher.
 | **Open in Terminal** | Opens Geminio's terminal with this repository as the working directory. |
 | **Reveal in Finder / Explorer** | Highlights the repository folder in the platform file manager. |
 | **Open in External Editor** | The editor configured in Settings. Visible but disabled until one is set. |
-| **Remove…** | Closes the tab or drops the chip from the group. Uses the same uncommitted-work warning as the **×** button. It never deletes files from disk. |
+| **Remove** | Closes the tab or drops the chip from the group, at once, like the **×** button. It never deletes files from disk, and work in progress gets a note with **Reopen**. |
 
 A missing or invalid path keeps copy, alias and remove available, and greys out
 anything that would open or inspect the directory.

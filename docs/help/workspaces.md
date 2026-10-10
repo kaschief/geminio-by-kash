@@ -33,10 +33,13 @@ on clear of the fade. The <kbd>+</kbd> button stays put after the strip,
 never scrolled away, with the same room before your profile whether three
 repositories are open or thirty.
 
-If a close warning appears, <kbd>Escape</kbd> always cancels. <kbd>Enter</kbd>
-confirms only when the tab is clean — when there are uncommitted changes or
-conflicts the warning deliberately makes you reach for the button, so a stray
-keypress after <kbd>⌘W</kbd> cannot close work you were still holding.
+Closing a tab never asks first, because it loses nothing. A tab is a view:
+uncommitted changes and a merge in progress live in the working tree on disk,
+and undo history is kept for when the repository opens again. When the tab you
+closed had work in progress, a short note says so, with a **Reopen** button
+that puts the tab back where it was. A clean tab just goes. Removing a
+repository from a [group](#groups) works the same way. Reopening covers the
+last ten tabs closed in this session.
 
 ### Sorting tabs
 

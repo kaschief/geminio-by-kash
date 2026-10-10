@@ -91,7 +91,7 @@ import {
 } from '../src/renderer/src/lib/launchDevices'
 import { collectInputRefs, normalizeOptions, defaultOptionIndex, isPickInput } from '../src/renderer/src/lib/launchInputs'
 import { resolveInputTokens } from '../src/main/launch'
-import { closeTabPrompt, repoCloseStatus, tabCloseStatus } from '../src/renderer/src/lib/tabClose'
+import { closeNotice, repoCloseStatus, tabCloseStatus } from '../src/renderer/src/lib/tabClose'
 import { formatBytes, parseTooLargeError } from '../src/renderer/src/lib/fileSize'
 import { FILE_TOO_LARGE_PREFIX } from '../src/shared/types'
 import { autolink, remoteWebUrl, filePermalink } from '../src/renderer/src/lib/autolink'
@@ -891,10 +891,6 @@ describe('closing a tab', () => {
   const conflicted = { mergeState: null, status: { conflicted: ['a'], staged: [], unstaged: [] } }
   const merging = { mergeState: 'merge', status: { conflicted: [], staged: [], unstaged: [] } }
 
-  const repoTab = { id: 't1', kind: 'repo' as const, repos: [{ path: '/a' }], activeRepo: '/a' }
-  const groupTab = (paths: string[]): TabState =>
-    ({ id: 'g1', kind: 'group', name: 'Group', repos: paths.map((path) => ({ path })) }) as TabState
-
   it('ranks a conflict above uncommitted work, and an in-progress merge as a conflict', () => {
     expect(repoCloseStatus(clean)).toBeNull()
     expect(repoCloseStatus(dirty)).toBe('wip')
@@ -912,43 +908,16 @@ describe('closing a tab', () => {
     expect(tabCloseStatus([{ path: '/b' }, { path: '/a' }], byPath)).toBe('wip')
   })
 
-  it('honours warnOnClose', () => {
-    expect(closeTabPrompt(repoTab as TabState, 'conflict', 'never')).toBeNull()
-    expect(closeTabPrompt(repoTab as TabState, null, 'wip')).toBeNull()
-    expect(closeTabPrompt(repoTab as TabState, 'wip', 'wip')).not.toBeNull()
-    expect(closeTabPrompt(repoTab as TabState, null, 'always')).not.toBeNull()
-    // Unset falls back to 'always'.
-    expect(closeTabPrompt(repoTab as TabState, null, undefined)).not.toBeNull()
+  it('says nothing when a clean tab closes', () => {
+    expect(closeNotice(null, 'app', 'close')).toBeNull()
+    expect(closeNotice(null, 'app', 'remove')).toBeNull()
   })
 
-  it('never warns for a page tab, which holds no repository state', () => {
-    const page = { id: 'p1', kind: 'page', page: { type: 'vault' } } as unknown as TabState
-    expect(closeTabPrompt(page, 'conflict', 'always')).toBeNull()
-  })
-
-  it('focuses the confirm button only when nothing is at stake', () => {
-    expect(closeTabPrompt(repoTab as TabState, null, 'always')?.autoFocusConfirm).toBe(true)
-    expect(closeTabPrompt(repoTab as TabState, 'wip', 'always')?.autoFocusConfirm).toBe(false)
-    expect(closeTabPrompt(repoTab as TabState, 'conflict', 'always')?.autoFocusConfirm).toBe(false)
-  })
-
-  it('picks the group message only for a group holding more than one repo', () => {
-    const one = closeTabPrompt(groupTab(['/a']), null, 'always')
-    expect(one?.messageKey).toBe('titlebar.closeTabConfirm')
-    expect(one?.vars).toBeUndefined()
-
-    const many = closeTabPrompt(groupTab(['/a', '/b']), null, 'always')
-    expect(many?.messageKey).toBe('titlebar.closeGroup')
-    expect(many?.vars).toEqual({ name: 'Group', count: 2 })
-  })
-
-  it('names what is at risk in a dirty group message', () => {
-    const wip = closeTabPrompt(groupTab(['/a', '/b']), 'wip', 'always')
-    expect(wip?.messageKey).toBe('titlebar.closeGroupDirty')
-    expect(wip?.reasonKey).toBe('titlebar.uncommittedChanges')
-
-    const conflict = closeTabPrompt(groupTab(['/a', '/b']), 'conflict', 'always')
-    expect(conflict?.reasonKey).toBe('titlebar.mergeConflicts')
+  it('names what stays on disk when work in progress closes', () => {
+    expect(closeNotice('wip', 'app', 'close')).toEqual({ key: 'titlebar.closedWithChanges', vars: { name: 'app' } })
+    expect(closeNotice('conflict', 'app', 'close')?.key).toBe('titlebar.closedWithMerge')
+    expect(closeNotice('wip', 'app', 'remove')?.key).toBe('titlebar.removedWithChanges')
+    expect(closeNotice('conflict', 'app', 'remove')?.key).toBe('titlebar.removedWithMerge')
   })
 })
 

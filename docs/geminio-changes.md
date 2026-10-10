@@ -87,6 +87,17 @@ message now shows as on (and inert) instead of being offered again.
 
 ## Workspace & tabs
 
+**Closing a tab no longer asks.** Every close opened a centered dialog that
+dimmed the app to ask "Close this tab?", even though closing a tab loses
+nothing: changes and merges stay on disk, and undo history comes back on
+reopen. Now the tab simply closes. If it held uncommitted changes or a merge in
+progress, a short note says they are still on disk, with a **Reopen** button;
+a clean tab goes silently. Removing a repository from a group works the same
+way, and the "Warn when closing" setting is gone. *Limits:* Reopen and
+<kbd>⌘⇧T</kbd> remember the last ten closes of the session. Close All Tabs on
+the Repositories page still asks when several tabs would go at once.
+([Workspaces, tabs & groups](help/workspaces.md#tabs))
+
 **The tab strip fades where it scrolls.** With many repositories open, tabs
 were cut off sharply at both ends, nothing said more were hidden or which end
 you were at, and the + button scrolled away or sat jammed against the profile.

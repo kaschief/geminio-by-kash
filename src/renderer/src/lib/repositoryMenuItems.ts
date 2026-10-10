@@ -6,7 +6,7 @@ import { useTerminalsStore } from '../stores/terminals'
 import { shellApi } from '../infrastructure/api'
 import { editorIcon, openInEditor } from './editorOpen'
 import { githubRepoUrl } from './hosting'
-import { canonicalRepoName, lookupRepoAlias } from './repoAlias'
+import { canonicalRepoName, lookupRepoAlias, repoDisplayName } from './repoAlias'
 import {
   repoMenuActionTarget,
   repoMenuEntries,
@@ -16,7 +16,7 @@ import {
 } from './repositoryMenu'
 import { t, interp } from '../i18n'
 import { mi } from '../components/menuIcons'
-import { closeTabPrompt, repoCloseStatus, tabCloseStatus } from './tabClose'
+import { closeNotice, repoCloseStatus, tabCloseStatus } from './tabClose'
 
 function platformOf(): RepoMenuPlatform {
   const p = window.api.platform
@@ -156,59 +156,45 @@ export function repositoryMenuItems(path: string, onRemove: () => void, extras?:
   return items
 }
 
-/** Close/remove a grouped repo using the same dirty-worktree warning as the chip X. */
-export function confirmRemoveRepoFromGroup(groupTabId: string, repoPath: string): void {
+/** Drop a repo from its group at once. Its files are untouched; work in
+ *  progress earns a note with a way back. */
+export function requestRemoveRepoFromGroup(groupTabId: string, repoPath: string): void {
   const settingsStore = useSettingsStore.getState()
-  const warn = settingsStore.settings.warnOnClose ?? 'always'
+  const group = settingsStore.settings.tabs.find((tab) => tab.id === groupTabId)
+  if (!group || group.kind === 'page') return
+  const ref = group.repos.find((r) => r.path === repoPath)
+  if (!ref) return
   const status = repoCloseStatus(useRepoStore.getState().repos[repoPath])
-  const shouldWarn = warn === 'always' || (warn === 'wip' && status !== null)
-  if (!shouldWarn) {
-    settingsStore.removeRepoFromGroup(groupTabId, repoPath)
-    return
-  }
-  const message =
-    status === 'conflict'
-      ? t('titlebar.removeRepoConflicts')
-      : status === 'wip'
-        ? t('titlebar.removeRepoWip')
-        : t('titlebar.removeRepoConfirm')
-  useUIStore.getState().openModal({
-    kind: 'confirm',
-    title: t('titlebar.removeRepoTitle'),
-    message,
-    danger: true,
-    confirmLabel: t('common.remove'),
-    onConfirm: () => settingsStore.removeRepoFromGroup(groupTabId, repoPath)
+  settingsStore.removeRepoFromGroup(groupTabId, repoPath)
+  const name = repoDisplayName(repoPath, settingsStore.settings.repoAliases, ref.name)
+  announceClose(closeNotice(status, name, 'remove'), () => {
+    const st = useSettingsStore.getState()
+    // The last repo out takes the group with it; reopening the group restores both.
+    if (st.settings.tabs.some((tab) => tab.id === groupTabId)) st.addRepoToGroup(groupTabId, ref)
+    else st.reopenTab(groupTabId)
   })
 }
 
-/** Close a tab through the same configured confirmation path used by its X button. */
+/** Close a tab at once — every close path (×, middle-click, menus, ⌘W) lands here. */
 export function requestCloseTab(tabId: string): void {
   const settingsStore = useSettingsStore.getState()
   const tab = settingsStore.settings.tabs.find((candidate) => candidate.id === tabId)
   if (!tab) return
+  settingsStore.closeTab(tab.id)
+  if (tab.kind === 'page') return
 
-  const status =
-    tab.kind === 'page' ? null : tabCloseStatus(tab.repos, useRepoStore.getState().repos)
-  const prompt = closeTabPrompt(tab, status, settingsStore.settings.warnOnClose)
-  if (!prompt) {
-    settingsStore.closeTab(tab.id)
-    return
-  }
+  const status = tabCloseStatus(tab.repos, useRepoStore.getState().repos)
+  const name =
+    tab.kind === 'group' && tab.repos.length > 1
+      ? tab.name
+      : repoDisplayName(tab.repos[0]?.path ?? '', settingsStore.settings.repoAliases, tab.repos[0]?.name)
+  announceClose(closeNotice(status, name, 'close'), () => useSettingsStore.getState().reopenTab(tab.id))
+}
 
-  useUIStore.getState().openModal({
-    kind: 'confirm',
-    title: t(prompt.titleKey),
-    message: prompt.vars
-      ? interp(t(prompt.messageKey), {
-          ...prompt.vars,
-          ...(prompt.reasonKey ? { reason: t(prompt.reasonKey) } : {})
-        })
-      : t(prompt.messageKey),
-    danger: true,
-    confirmLabel: t('common.close'),
-    autoFocusConfirm: prompt.autoFocusConfirm,
-    onConfirm: () => settingsStore.closeTab(tab.id)
+function announceClose(notice: ReturnType<typeof closeNotice>, reopen: () => void): void {
+  if (!notice) return
+  useUIStore.getState().toast('info', interp(t(notice.key), notice.vars), {
+    action: { label: t('titlebar.reopen'), run: reopen }
   })
 }
 

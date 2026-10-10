@@ -3014,10 +3014,6 @@ export interface AppSettings {
   shortcuts: Record<string, string>
   /** Warn before committing files larger than this many KB (0 = off). */
   largeFileKb: number
-  /** When to show a confirmation dialog before closing a repo tab, group, or
-   *  repo-within-group. 'always' = every close; 'wip' = only when there are
-   *  uncommitted changes or merge conflicts; 'never' = close silently. */
-  warnOnClose: 'always' | 'wip' | 'never'
   /** Where the integrated terminal pane docks: full-width along the bottom
    *  (default), under the center graph column only (sidebars stay full height),
    *  or as its own right-hand column. */
@@ -3456,7 +3452,6 @@ export function defaultSettings(): AppSettings {
     enableLaunchJson: true,
     shortcuts: {},
     largeFileKb: 5120,
-    warnOnClose: 'always',
     terminalPlacement: 'bottom',
     sidebarSide: 'left',
     rightPanelFullHeight: false

@@ -9,7 +9,7 @@ import { useUIStore } from '../stores/ui'
 import { openRepoSwitcherEntries, type RepoSwitcherEntry } from '../lib/repositoryMenu'
 import { repoDisplayName } from '../lib/repoAlias'
 import { useT } from '../i18n'
-import { confirmRemoveRepoFromGroup, repositoryMenuItems, requestCloseTab } from '../lib/repositoryMenuItems'
+import { requestRemoveRepoFromGroup, repositoryMenuItems, requestCloseTab } from '../lib/repositoryMenuItems'
 
 interface PickerPosition {
   left: number
@@ -71,7 +71,7 @@ export function RepoStatusPicker({ repo }: { repo: RepoData }): React.JSX.Elemen
   }
 
   const removeFor = (entry: RepoSwitcherEntry): void => {
-    if (entry.tabKind === 'group') confirmRemoveRepoFromGroup(entry.tabId, entry.path)
+    if (entry.tabKind === 'group') requestRemoveRepoFromGroup(entry.tabId, entry.path)
     else requestCloseTab(entry.tabId)
   }
 

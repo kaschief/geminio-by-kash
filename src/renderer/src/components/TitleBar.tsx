@@ -26,7 +26,7 @@ import { repoDisplayName } from '../lib/repoAlias'
 import { TabStatusMark } from './TabStatusMark'
 import { applyTabSort, tabSortMenuItem } from '../lib/tabSortMenu'
 import { activeTabSortKey, tabsSettled } from '../lib/tabSort'
-import { confirmRemoveRepoFromGroup, repositoryMenuItems, requestCloseTab } from '../lib/repositoryMenuItems'
+import { requestRemoveRepoFromGroup, repositoryMenuItems, requestCloseTab } from '../lib/repositoryMenuItems'
 import { mi } from './menuIcons'
 import { useT, interp } from '../i18n'
 import { edgeFades, layoutExtent, revealOffset } from '../lib/scrollFade'
@@ -627,9 +627,6 @@ export function TitleBar(): React.JSX.Element {
   // ── menus ───────────────────────────────────────────────────────────────
   const plusMenu = (): void => openModal({ kind: 'launcher' })
 
-  const confirmRemoveRepo = (groupTabId: string, repoPath: string): void =>
-    confirmRemoveRepoFromGroup(groupTabId, repoPath)
-
   // "Move to workspace →" submenu — only offered when another workspace exists.
   const moveToWorkspaceItem = (tab: TabState): MenuItem | null => {
     const others = settings.workspaces.filter((w) => w.id !== settings.activeWorkspaceId)
@@ -884,7 +881,7 @@ export function TitleBar(): React.JSX.Element {
     }
     return repositoryMenuItems(
       repoPath,
-      () => confirmRemoveRepo(groupTab.id, repoPath),
+      () => requestRemoveRepoFromGroup(groupTab.id, repoPath),
       [
         filing,
         { separator: true },
@@ -969,7 +966,7 @@ export function TitleBar(): React.JSX.Element {
         onDragEnd={onDragEnd as any}
         onDragOver={onDragOverRepo(tab.id, repo.path)}
         onDrop={onDropRepo(tab.id, repo.path)}
-        {...middleClose(() => confirmRemoveRepo(tab.id, repo.path))}
+        {...middleClose(() => requestRemoveRepoFromGroup(tab.id, repo.path))}
         onClick={() => {
           setActiveTab(tab.id)
           setGroupActiveRepo(tab.id, repo.path)
@@ -1004,7 +1001,7 @@ export function TitleBar(): React.JSX.Element {
           title={interp(t('a11y.closeTab'), { name: repoDisplayName(repo.path, settings.repoAliases, repo.name) })}
           onClick={(e) => {
             e.stopPropagation()
-            confirmRemoveRepo(tab.id, repo.path)
+            requestRemoveRepoFromGroup(tab.id, repo.path)
           }}
         >
           <X size={12} />

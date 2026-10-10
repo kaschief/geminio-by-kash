@@ -20,7 +20,7 @@ import {
 } from '../../../shared/types'
 import { SettingsPanel } from './SettingsPanel'
 import { LauncherPanel, type LauncherItem } from './Welcome'
-import { confirmRemoveRecentRepo, confirmRemoveRepoFromGroup } from '../lib/repositoryMenuItems'
+import { confirmRemoveRecentRepo, requestRemoveRepoFromGroup } from '../lib/repositoryMenuItems'
 import { AIConfigWizard } from './AIConfigWizard'
 import { InteractiveRebase } from './InteractiveRebase'
 import { BranchComparison } from './BranchComparison'
@@ -1698,7 +1698,7 @@ function LauncherModal({ spec }: { spec: Extract<ModalSpec, { kind: 'launcher' }
     ? groupTab.repos.map((r) => ({
         name: r.name,
         path: r.path,
-        onRemove: () => confirmRemoveRepoFromGroup(spec.groupId!, r.path),
+        onRemove: () => requestRemoveRepoFromGroup(spec.groupId!, r.path),
         onRename: (newName) => renameRepoInGroup(spec.groupId!, r.path, newName)
       }))
     : settings.recentRepos.map((r) => ({

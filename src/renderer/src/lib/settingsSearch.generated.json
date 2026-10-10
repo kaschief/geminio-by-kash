@@ -64,12 +64,7 @@
       "settings.needsRepo",
       "settings.noAppSet",
       "settings.todosHideDone",
-      "settings.todosHideDoneHint",
-      "settings.warnOnClose",
-      "settings.warnOnClose.always",
-      "settings.warnOnClose.never",
-      "settings.warnOnClose.wip",
-      "settings.warnOnCloseHint"
+      "settings.todosHideDoneHint"
     ]
   },
   {
