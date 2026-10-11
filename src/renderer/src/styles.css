@@ -17728,14 +17728,14 @@ button.notice-row:hover { background: var(--bg-2); }
 /* Twenty icons would take over the Appearance page, so the grid scrolls in its own box: two full rows
    and a peek of the third, which the edge fade marks as "more below". Padding keeps the ring
    unclipped; position: relative makes the box the offsetParent the picker scrolls by. */
-/* The app theme list grows with every custom theme, so it scrolls the same way: two rows and a peek. */
-/* max-content rows: the cards clip their overflow, so auto rows would shrink to fit the max-height
-   instead of letting the box scroll. */
-.app-theme-list { max-height: 236px; overflow-y: auto; overscroll-behavior: contain; padding: 4px; position: relative; grid-auto-rows: max-content; }
+/* Long Settings choice lists (app and code themes, graph palettes) scroll in their own box, two rows
+   and a peek, so the page stays short. max-content rows: the cards clip their overflow, so auto rows
+   would shrink to fit the max-height instead of letting the box scroll. */
+.settings-scroll-list { max-height: 236px; overflow-y: auto; overscroll-behavior: contain; padding: 4px; position: relative; grid-auto-rows: max-content; }
 .app-icon-styles { max-height: 248px; overflow-y: auto; overscroll-behavior: contain; padding: 6px 2px; position: relative; }
 /* These boxes show a peek of the next row, so the fade covers that whole peek rather than the usual
    thin edge: the cut row frosts away and reads as "scroll for more". */
-.app-theme-list[data-more-below='true'], .app-icon-styles[data-more-below='true'] {
+.settings-scroll-list[data-more-below='true'], .app-icon-styles[data-more-below='true'] {
   mask-image: linear-gradient(to bottom, #000 calc(100% - 64px), transparent 100%);
 }
 .app-icon-choice { display: flex; flex-direction: column; align-items: center; gap: 7px; padding: 4px 2px; border: 0; border-radius: 10px; background: none; color: var(--text-1); cursor: pointer; font-size: 12px; }

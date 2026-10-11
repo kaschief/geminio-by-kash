@@ -585,7 +585,8 @@ Patch, Extruded, Stained glass, Toy bricks and Clay), replace the older Classic,
 Monogram, Branch and Orbit styles, their six colours and the GitHub photo
 option. The picker scrolls in its own box, two rows at a time, so twenty icons
 do not take over the Appearance page, and it opens on the chosen icon; the App
-Theme list above it scrolls the same way. The Dock
+Theme and Code Theme lists and the graph palettes scroll the same way, with the
+cut-off row fading out. The Dock
 changes immediately; in the installed app the Finder icon changes too and
 survives quitting. *Limits:* the icons are fixed artwork with no colour options;
 a choice saved by an earlier version falls back to Monoline; the development

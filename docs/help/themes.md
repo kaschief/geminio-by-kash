@@ -23,8 +23,9 @@ code theme:
 - **Minimal:** Ink (greyscale with one red accent) and Glacier (quiet steel
   and frost blue).
 
-In **Settings → Appearance** the App Theme list scrolls inside its own box, two
-rows at a time, and opens on the theme you are using, so twenty themes (plus any
+In **Settings → Appearance** the App Theme and Code Theme lists, and the graph
+palettes, each scroll inside their own box, two rows at a time, with the cut-off
+row fading out. Each opens on your current choice, so twenty themes (plus any
 you make) do not push the rest of the page out of reach.
 
 Every one of the new themes keeps text, accents and syntax colours at WCAG AA
