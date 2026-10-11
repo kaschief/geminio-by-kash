@@ -17725,6 +17725,19 @@ button.notice-row:hover { background: var(--bg-2); }
    choice, and "chosen" is a ring around the icon itself — never around its
    label. */
 .app-icon-styles { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 14px 6px; }
+/* Twenty icons would take over the Appearance page, so the grid scrolls in its own box: two full rows
+   and a peek of the third, which the edge fade marks as "more below". Padding keeps the ring
+   unclipped; position: relative makes the box the offsetParent the picker scrolls by. */
+/* Long Settings choice lists (app and code themes, graph palettes) scroll in their own box, two rows
+   and a peek, so the page stays short. max-content rows: the cards clip their overflow, so auto rows
+   would shrink to fit the max-height instead of letting the box scroll. */
+.settings-scroll-list { max-height: 236px; overflow-y: auto; overscroll-behavior: contain; padding: 4px; position: relative; grid-auto-rows: max-content; }
+.app-icon-styles { max-height: 248px; overflow-y: auto; overscroll-behavior: contain; padding: 6px 2px; position: relative; }
+/* These boxes show a peek of the next row, so the fade covers that whole peek rather than the usual
+   thin edge: the cut row frosts away and reads as "scroll for more". */
+.settings-scroll-list[data-more-below='true'], .app-icon-styles[data-more-below='true'] {
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 64px), transparent 100%);
+}
 .app-icon-choice { display: flex; flex-direction: column; align-items: center; gap: 7px; padding: 4px 2px; border: 0; border-radius: 10px; background: none; color: var(--text-1); cursor: pointer; font-size: 12px; }
 .app-icon-tile { position: relative; display: block; width: 64px; aspect-ratio: 1; transition: transform 0.12s; }
 .app-icon-tile img { display: block; width: 100%; height: 100%; }
@@ -17769,6 +17782,9 @@ button.notice-row:hover { background: var(--bg-2); }
 .settings > .settings-heading { flex-shrink: 0; }
 .settings > .settings-body { min-height: 0; }
 .settings > .settings-body > .settings-form { overflow-y: auto; padding: 3px 5px; }
+/* The form scrolls, so nothing in it should shrink: a child with overflow: hidden (the code theme's
+   live preview) has no minimum height and otherwise collapses to its border on a tall page. */
+.settings > .settings-body > .settings-form > * { flex-shrink: 0; }
 
 
 /* Repository accent choices reuse the appearance page's theme cards. */

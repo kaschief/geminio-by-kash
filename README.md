@@ -82,7 +82,7 @@ solves and where its limits are — and it is updated with each change.
 **Settings and the app**
 
 - **One searchable Settings window,** with the repository's settings as a section of it. [Finding a setting](docs/help/search.md#finding-a-setting)
-- **Your app icon.** Ten illustrated Dock icons to switch between, remembered after you quit. [App icon](docs/help/themes.md#app-icon)
+- **Your app icon.** Twenty illustrated Dock icons to switch between, remembered after you quit. [App icon](docs/help/themes.md#app-icon)
 - **No stacked Keychain prompts** from background polling, and no Safe Storage prompt when there is nothing to unlock.
 - **Upstream announced, never installed.** The updater shows Gitcito releases but opens their notes instead of overwriting this build.
 

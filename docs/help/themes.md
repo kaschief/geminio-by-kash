@@ -23,6 +23,11 @@ code theme:
 - **Minimal:** Ink (greyscale with one red accent) and Glacier (quiet steel
   and frost blue).
 
+In **Settings → Appearance** the App Theme and Code Theme lists, and the graph
+palettes, each scroll inside their own box, two rows at a time, with the cut-off
+row fading out. Each opens on your current choice, so twenty themes (plus any
+you make) do not push the rest of the page out of reach.
+
 Every one of the new themes keeps text, accents and syntax colours at WCAG AA
 contrast in both variants. Their diffs use the theme's own green and red, and every
 changed word is underlined in that colour so it stands out on the tinted
@@ -76,9 +81,9 @@ A repository tab says what is waiting in it, most urgent first:
 A folder of tabs adds up the commits of everything inside it. A group chip
 keeps its own `↑` / `↓` counts.
 
-**Settings → Themes → Theme → Tab Status Dots** picks a color for **Changes**,
-**Conflict** and **Push**. The reset button next to each hands it back to the
-theme.
+**Settings → Appearance → Repository Tab Status** picks a color for each mark:
+**Uncommitted changes**, **Conflict in progress** and **Commits to push**. The
+reset button next to each hands it back to the theme.
 
 ## Active repository
 
@@ -94,9 +99,13 @@ This preference applies across repositories, including repositories inside group
 
 ## App icon
 
-On macOS, **Settings → Appearance → App Icon** offers ten illustrated icons:
+On macOS, **Settings → Appearance → App Icon** offers twenty illustrated icons:
 Monoline (the default), Portal, Deboss, Night slab, Terminal, Crystal, Topo,
-Water, Mercury and Blueprint. Your choice changes the Dock icon immediately. In
+Water, Mercury, Blueprint, Neon, Shapes, Circuit, Holo foil, Enamel pin, Patch,
+Extruded, Stained glass, Toy bricks and Clay. Each one is a g in a different
+material. The picker scrolls inside its own box, showing two rows at a time, so
+the rest of the Appearance page stays where it is; it opens scrolled to the icon
+you have chosen. Your choice changes the Dock icon immediately. In
 the installed app it also updates the Finder icon, so it stays selected after
 you quit and relaunch. Choose **Monoline** to go back to the icon the app
 shipped with. The chosen icon wears an accent ring around the icon itself, the
@@ -107,7 +116,7 @@ macOS-only. The development build changes only its running Dock icon, leaving
 the shared Electron runtime untouched, and applies your saved choice again each
 time it starts.
 
-![The ten app icons](../screenshots/app-icon-picker.webp)
+![The app icon picker](../screenshots/app-icon-picker.webp)
 
 ## Layout
 

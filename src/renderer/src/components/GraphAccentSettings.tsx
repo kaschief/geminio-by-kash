@@ -153,6 +153,7 @@ export function StatusDotControls(): React.JSX.Element {
   return (
     <section className="status-dot-settings">
       <h4><CircleDot size={14} /> {t('settings.statusDots')}</h4>
+      <p className="settings-hint">{t('settings.statusDotsHint')}</p>
       <div className="swatch-line">
         {dot('changes', 'settings.statusDotChanges')}
         {dot('conflict', 'settings.statusDotConflict')}
