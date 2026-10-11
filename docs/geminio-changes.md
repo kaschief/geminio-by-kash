@@ -562,13 +562,15 @@ says nothing about which branch another was made from.
 
 **Quiet sidebar headers.** Section headers mixed counts and buttons at their
 trailing edge, and since rows have zero, one or two buttons, nothing lined up
-and a count looked like a button. At rest a header now shows only its name. Point
-at it (or reach it with the keyboard) and its count appears as a quiet number
-after the name, with its actions (+, Open on Web, Refresh) at the trailing edge.
+and a count looked like a button. Top-level sections now show their count as a quiet
+number after the name, always; their actions (+, Open on Web, Refresh) appear at
+the trailing edge on hover or keyboard focus. A remote or branch folder shows
+only its name until pointed at, then its count and actions.
 Long names stay on one line. Right-clicking a top-level section header (Local,
 Remotes, Stashes, Worktrees…) opens the same show-and-hide menu as the sidebar's
 gear, with the same saved state; a remote's own row keeps its remote menu.
-Counts are no longer visible at a glance; that is the point, and the trade.
+Empty hosting sections say plainly "No open pull requests" or "No open issues"
+instead of "…loaded", which read as if some had failed to load.
 ([Branches, remotes & the sidebar](help/branching.md))
 
 ## Settings & appearance

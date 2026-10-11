@@ -1541,9 +1541,10 @@ input.is-invalid {
   display: flex;
   margin-inline-start: auto;
 }
-/* At rest a header is just its name; the count (after the name) and the
- * actions (at the edge) appear on hover or keyboard focus. Opacity, not
- * display, so nothing shifts and the buttons stay reachable by keyboard. */
+/* A top-level section always shows its count after its name; a nested
+ * header (a remote, a branch folder) shows its count only on hover or focus.
+ * Actions appear on hover or focus everywhere. Opacity, not display, so
+ * nothing shifts and the buttons stay reachable by keyboard. */
 .sb-header > .sb-count {
   flex: none;
   background: transparent;
@@ -1562,7 +1563,8 @@ input.is-invalid {
 .sb-header:focus-visible > .sb-count,
 .sb-header:focus-visible > .sb-actions,
 .sb-header:has(:focus-visible) > .sb-count,
-.sb-header:has(:focus-visible) > .sb-actions {
+.sb-header:has(:focus-visible) > .sb-actions,
+.sb-panes > .sb-section > .sb-header > .sb-count {
   opacity: 1;
 }
 
