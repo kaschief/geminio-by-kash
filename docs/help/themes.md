@@ -76,9 +76,9 @@ A repository tab says what is waiting in it, most urgent first:
 A folder of tabs adds up the commits of everything inside it. A group chip
 keeps its own `↑` / `↓` counts.
 
-**Settings → Themes → Theme → Tab Status Dots** picks a color for **Changes**,
-**Conflict** and **Push**. The reset button next to each hands it back to the
-theme.
+**Settings → Appearance → Repository Tab Status** picks a color for each mark:
+**Uncommitted changes**, **Conflict in progress** and **Commits to push**. The
+reset button next to each hands it back to the theme.
 
 ## Active repository
 
