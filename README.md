@@ -2,7 +2,7 @@
 
 <img src="docs/geminio-mark.png" alt="Geminio" width="96" />
 
-# Geminio
+# geminio • by kash
 
 **A desktop Git client for macOS, built with Electron, React and TypeScript.**
 
