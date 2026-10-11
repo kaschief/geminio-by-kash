@@ -17729,7 +17729,9 @@ button.notice-row:hover { background: var(--bg-2); }
    and a peek of the third, which the edge fade marks as "more below". Padding keeps the ring
    unclipped; position: relative makes the box the offsetParent the picker scrolls by. */
 /* The app theme list grows with every custom theme, so it scrolls the same way: two rows and a peek. */
-.app-theme-list { max-height: 236px; overflow-y: auto; overscroll-behavior: contain; padding: 4px; position: relative; }
+/* max-content rows: the cards clip their overflow, so auto rows would shrink to fit the max-height
+   instead of letting the box scroll. */
+.app-theme-list { max-height: 236px; overflow-y: auto; overscroll-behavior: contain; padding: 4px; position: relative; grid-auto-rows: max-content; }
 .app-icon-styles { max-height: 248px; overflow-y: auto; overscroll-behavior: contain; padding: 6px 2px; position: relative; }
 .app-icon-choice { display: flex; flex-direction: column; align-items: center; gap: 7px; padding: 4px 2px; border: 0; border-radius: 10px; background: none; color: var(--text-1); cursor: pointer; font-size: 12px; }
 .app-icon-tile { position: relative; display: block; width: 64px; aspect-ratio: 1; transition: transform 0.12s; }
