@@ -267,6 +267,8 @@ interface SettingsState {
    *  Repositories page is one, and closing the surface the button sits on
    *  would be a surprise. */
   closeAllRepoTabs(): void
+  /** Close every tab but this one, pages included, as a tab strip's Close Others does. */
+  closeOtherTabs(keepTabId: string): void
   reopenClosedTab(): void
   /** Reopen one particular closed tab (a toast's Reopen), wherever it sits in the stack. */
   reopenTab(tabId: string): void
@@ -848,6 +850,22 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
       while (closedTabStack.length > 10) closedTabStack.shift()
       const stillOpen = keep.some((tab) => tab.id === s.activeTabId)
       return { ...s, tabs: keep, activeTabId: stillOpen ? s.activeTabId : (keep[0]?.id ?? null) }
+    }),
+
+  closeOtherTabs: (keepTabId) =>
+    get().update((s) => {
+      if (!s.tabs.some((tab) => tab.id === keepTabId) || s.tabs.length < 2) return s
+      // Right to left, as Close All does, so ⌘⇧T restores strip order. The stack
+      // stretches to hold the whole batch, so the toast's Reopen loses none of it.
+      let closed = 0
+      for (let i = s.tabs.length - 1; i >= 0; i--) {
+        const tab = s.tabs[i]
+        if (tab.id === keepTabId) continue
+        closedTabStack.push({ tab, idx: i })
+        closed++
+      }
+      while (closedTabStack.length > Math.max(10, closed)) closedTabStack.shift()
+      return { ...s, tabs: s.tabs.filter((tab) => tab.id === keepTabId), activeTabId: keepTabId }
     }),
 
   reopenClosedTab: () => {

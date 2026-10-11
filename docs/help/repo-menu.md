@@ -2,8 +2,8 @@
 title: Repository context menu
 category: Start here
 order: 4
-summary: Right-click any repository chip or tab for alias, worktrees, GitHub, terminal and remove.
-keywords: context menu right-click alias worktree github terminal reveal editor remove repository tab
+summary: Right-click any repository chip or tab for alias, worktrees, GitHub, terminal, close and remove.
+keywords: context menu right-click alias worktree github terminal reveal editor remove close others repository tab
 ---
 
 # Repository context menu
@@ -44,7 +44,9 @@ opens the launcher.
 | **Open in Terminal** | Opens Geminio's terminal with this repository as the working directory. |
 | **Reveal in Finder / Explorer** | Highlights the repository folder in the platform file manager. |
 | **Open in External Editor** | The editor configured in Settings. Visible but disabled until one is set. |
-| **Remove** | Closes the tab or drops the chip from the group, at once, like the **×** button. It never deletes files from disk, and work in progress gets a note with **Reopen**. |
+| **Remove** | Drops the chip from its group, or the row from its list, at once. It never deletes files from disk, and work in progress gets a note with **Reopen**. |
+| **Close This Repo** | On a standalone repository tab, in place of Remove. Closes the tab, exactly like its **×**. |
+| **Close Others** | On a standalone repository tab. Closes every other tab in the strip, pages and groups included, and leaves this one active. A note offers **Reopen**, which brings them all back where they were. Disabled when no other tab is open. |
 
 A missing or invalid path keeps copy, alias and remove available, and greys out
 anything that would open or inspect the directory.
