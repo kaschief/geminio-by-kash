@@ -1071,6 +1071,20 @@ html:has(.notice-panel, .branch-picker-popover, .context-menu, .repo-switcher) .
   color: var(--text-0);
 }
 
+/* Other branches have commits to pull: the dot says the menu holds something,
+   while the count pill keeps meaning the checked-out branch. */
+.pull-others-dot {
+  position: absolute;
+  top: 0;
+  inset-inline-end: -1px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 2px var(--bg-2), 0 0 6px color-mix(in srgb, var(--accent) 70%, transparent);
+  pointer-events: none;
+}
+
 .fetch-wrap {
   position: relative;
   display: flex;
@@ -5695,6 +5709,17 @@ body.col-resizing .node-ava {
 /* Submenu flyout is portalled to <body> and positioned inline (see ContextMenu). */
 .context-menu.submenu {
   z-index: 1001;
+}
+.menu-scroll-list {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.menu-item .badge.behind {
+  flex-shrink: 0;
+}
+.menu-item:hover:not(:disabled) .badge.behind {
+  background: rgba(10, 18, 32, 0.18);
+  color: inherit;
 }
 
 /* ─── Modals ────────────────────────────────────────────────────────────── */

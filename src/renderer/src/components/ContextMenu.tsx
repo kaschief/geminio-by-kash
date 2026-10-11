@@ -7,6 +7,9 @@ import { submenuSummary } from '../lib/menuState'
 import { placeMenu, type MenuPlacement } from '../lib/menuPlacement'
 import { ChoiceDot } from './StateMarks'
 
+/** About eight rows and a peek of the next, so a scrolling flyout reads as "more below". */
+const SCROLL_LIST_HEIGHT = 8.5 * 32
+
 function itemRole(item: MenuItem): 'menuitem' | 'menuitemcheckbox' | 'menuitemradio' {
   if (item.checked === undefined) return 'menuitem'
   return item.radio ? 'menuitemradio' : 'menuitemcheckbox'
@@ -65,7 +68,7 @@ function MenuRow({ item, close }: { item: MenuItem; close: () => void }): React.
         {isChoice && <ChoiceDot on={!!item.checked} />}
         {item.icon && <span className="menu-item-icon">{item.icon}</span>}
         <span className="menu-item-label">{item.label}</span>
-        {item.detail && <span className="menu-item-detail">{item.detail}</span>}
+        {item.detail && <span className={item.detailBehind ? 'badge behind' : 'menu-item-detail'}>{item.detail}</span>}
       </button>
     )
   }
@@ -79,10 +82,18 @@ function MenuRow({ item, close }: { item: MenuItem; close: () => void }): React.
     const subW = 220
     // Flip to the left of the row when there isn't room on the right.
     const left = r.right + subW > window.innerWidth - 8 ? r.left - subW - 2 : r.right + 2
-    const subH = (item.submenu?.length ?? 0) * 32 + 10
+    const subH = Math.min((item.submenu?.length ?? 0) * 32, item.scroll ? SCROLL_LIST_HEIGHT : Infinity) + 10
     const top = Math.max(8, Math.min(r.top - 6, window.innerHeight - subH - 8))
     setPos({ left, top })
   }
+
+  const rows = item.submenu.map((sub, j) =>
+    sub.separator ? (
+      <div key={j} className="menu-separator" role="separator" />
+    ) : (
+      <MenuRow key={j} item={sub} close={close} />
+    )
+  )
 
   const openSubAndFocus = (): void => {
     openSub()
@@ -133,12 +144,13 @@ function MenuRow({ item, close }: { item: MenuItem; close: () => void }): React.
               }
             }}
           >
-            {item.submenu.map((sub, j) =>
-              sub.separator ? (
-                <div key={j} className="menu-separator" role="separator" />
-              ) : (
-                <MenuRow key={j} item={sub} close={close} />
-              )
+            {item.scroll ? (
+              // The scroller sits inside the flyout so the fade cuts the rows, not the menu's own edge.
+              <div className="menu-scroll-list" data-scroll-fade="edge" style={{ maxHeight: SCROLL_LIST_HEIGHT }}>
+                {rows}
+              </div>
+            ) : (
+              rows
             )}
           </div>,
           document.body

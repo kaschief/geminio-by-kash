@@ -69,6 +69,7 @@ import { redoStillApplies } from '../lib/redoGuard'
 import { mi } from './menuIcons'
 import { useT, interp, type TranslationKey } from '../i18n'
 import { timeAgo, isStale } from '../lib/timeAgo'
+import { INLINE_PULL_LIMIT, pullableOthers } from '../lib/pullOthers'
 import { BranchStatusPicker } from './BranchStatusPicker'
 import { RepoStatusPicker } from './RepoStatusPicker'
 import { SearchField } from './SearchField'
@@ -96,6 +97,8 @@ type BarItem =
       /** Split-button dropdown; the overflow menu nests the same entries. */
       menu?: () => MenuItem[]
       badge?: number
+      /** A dot on the split arrow: the menu holds something worth opening. */
+      dot?: boolean
       /** Fetch alone hangs its age label under the button. */
       age?: boolean
     }
@@ -141,6 +144,7 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
   const pullAction = useSettingsStore((s) => s.settings.toolbarPullAction ?? 'default')
   const path = repo.path
   const current = repo.branches.locals.find((b) => b.isCurrent)
+  const others = pullableOthers(repo.branches.locals)
 
   // Re-render every 15s so the relative "last fetched / refreshed" labels stay current.
   const [, setTick] = useState(0)
@@ -172,8 +176,47 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
       radio: true,
       checked: pullAction === action,
       onClick: () => useSettingsStore.getState().update((s) => ({ ...s, toolbarPullAction: action }))
-    }))
+    })),
+    ...othersItems()
   ]
+
+  /** Branches you are not on that a fast-forward would catch up — listed, or folded past a handful. */
+  const othersItems = (): MenuItem[] => {
+    if (others.length === 0) return []
+    const rows: MenuItem[] = others.map((b) => ({
+      label: interp(t('branch.pullNamed'), { branch: b.name }),
+      icon: mi.pull(),
+      detail: `↓${b.behind}`,
+      detailBehind: true,
+      onClick: () => void repoActions.pullBranch(path, b.name)
+    }))
+    const names = others.map((b) => b.name)
+    return [
+      { separator: true },
+      { label: t('pull.othersBehind'), disabled: true },
+      ...(others.length > INLINE_PULL_LIMIT
+        ? [
+            {
+              label: t('pull.pickBranch'),
+              icon: mi.branch(),
+              detail: String(others.length),
+              scroll: true,
+              // In a flyout titled "Pull a Branch", the verb on every row is noise.
+              submenu: rows.map((r, i) => ({ ...r, label: names[i] }))
+            }
+          ]
+        : rows),
+      ...(others.length > 1
+        ? [
+            {
+              label: others.length === 2 ? t('pull.bothBranches') : interp(t('pull.allBranches'), { n: String(others.length) }),
+              icon: mi.pull(),
+              onClick: () => void repoActions.pullBranches(path, names)
+            }
+          ]
+        : [])
+    ]
+  }
 
   const pushItems = (): MenuItem[] => [
     { label: t('toolbar.push'), icon: mi.push(), onClick: () => void repoActions.push(path) },
@@ -407,6 +450,13 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
     : nextRedo
       ? interp(t('toolbar.redoNext'), { label: nextRedo.label })
       : t('toolbar.redo')
+  const pullBaseTitle = t(pullAction === 'fetch' ? 'toolbar.fetchTitle' : 'toolbar.pull')
+  const pullTitle =
+    others.length === 0
+      ? pullBaseTitle
+      : others.length === 1
+        ? interp(t('pull.othersHintOne'), { title: pullBaseTitle, branch: others[0].name })
+        : interp(t('pull.othersHintMany'), { title: pullBaseTitle, n: String(others.length) })
   const items: BarItem[] = [
     {
       id: 'undo',
@@ -430,7 +480,7 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
     {
       id: 'pull',
       label: t(pullAction === 'fetch' ? 'toolbar.fetch' : 'toolbar.pull'),
-      title: t(pullAction === 'fetch' ? 'toolbar.fetchTitle' : 'toolbar.pull'),
+      title: pullTitle,
       icon: busyOp === 'pull' || busyOp === 'fetch' ? <Loader2 size={17} className="spin" /> : pullAction === 'fetch' ? <Download size={17} /> : <ArrowDownToLine size={17} />,
       menuIcon: <ArrowDownToLine size={15} strokeWidth={1.75} />,
       // Every option, the first included, is a real choice of what the button
@@ -440,7 +490,8 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
       run: () => void (pullAction === 'fetch' ? repoActions.fetchAll(path) : repoActions.pull(path, pullAction)),
       menu: pullItems,
       age: true,
-      badge: current?.behind
+      badge: current?.behind,
+      dot: others.length > 0
     },
     {
       id: 'push',
@@ -612,6 +663,7 @@ export function Toolbar({ repo }: { repo: RepoData }): React.JSX.Element {
               : { 'aria-hidden': true })}
           >
             <ChevronDown size={13} />
+            {item.dot && <span className="pull-others-dot" aria-hidden="true" />}
           </span>
         )}
       </button>
