@@ -78,6 +78,10 @@ export interface MenuItem {
    * active choice is visible before the flyout is opened.
    */
   detail?: string
+  /** Draws `detail` as the sidebar's red ↓N behind badge instead of dimmed text. */
+  detailBehind?: boolean
+  /** A submenu parent whose list can run long: the flyout scrolls in its own box, fading at the cut. */
+  scroll?: boolean
 }
 
 export interface ContextMenuState {

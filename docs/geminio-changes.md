@@ -218,6 +218,15 @@ open pull requests whose branch comes from your fork, under **On owner/repo**.
 *Limits:* GitHub only, a remote named `upstream` only, and the parent's other
 pull requests are left out. ([Hosting](help/hosting.md#your-pull-requests-on-the-parent-of-a-fork))
 
+**The Pull button points out other branches that are behind.** Catching up a
+branch you were not standing on meant noticing its ↓N in the sidebar first.
+Now a dot on the Pull button's arrow says other local branches are behind their
+upstream, and the arrow's menu lists them with **Pull `<branch>`** rows and a
+**Pull All** row, each fast-forwarding without a checkout and undoable. Past
+five branches they fold into one scrolling **Pull a Branch** flyout. *Limits:*
+only as current as the last fetch; diverged branches are left out.
+([Branches you are not standing on](help/syncing.md#from-the-pull-button))
+
 ## Graph
 
 **Arrange columns directly.** Right-click any column header for the columns

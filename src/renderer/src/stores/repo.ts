@@ -2430,6 +2430,39 @@ export const repoActions = {
   },
 
   /**
+   * Pull several branches you are not standing on, as one action with one undo.
+   * Each is a fast-forward of its own ref; if one is refused the ones before it
+   * stay pulled, and the undo puts every ref back where it started.
+   */
+  pullBranches: async (path: string, branches: string[]): Promise<boolean> => {
+    if (branches.length === 1) return repoActions.pullBranch(path, branches[0])
+    const locals = useRepoStore.getState().repos[path]?.branches.locals ?? []
+    const before = branches.flatMap((name) => {
+      const sha = locals.find((b) => b.name === name)?.sha
+      return sha ? [{ name, sha }] : []
+    })
+    const n = String(branches.length)
+    const pullAll = async (): Promise<void> => {
+      for (const branch of branches) await gitApi.pullBranch(path, branch)
+    }
+    return useRepoStore.getState().run(
+      path,
+      interp(t('act.pulledBranches'), { n }),
+      pullAll,
+      {
+        label: interp(t('undoLabel.pullBranches'), { n }),
+        undo: async () => {
+          for (const b of before) await gitApi.setBranchRef(path, b.name, b.sha)
+        },
+        redo: pullAll
+      },
+      'pull',
+      undefined,
+      ['log', 'branches']
+    )
+  },
+
+  /**
    * Push the current branch to several remotes at once. Runs the same protected
    * branch and secret checks as a normal push — publishing to two remotes is
    * twice the exposure, not half the caution.
