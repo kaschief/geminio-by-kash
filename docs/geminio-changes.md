@@ -201,6 +201,14 @@ disabled with an "Already here" tooltip. Before, **Move Folder To** offered the
 folder's current parent as an ordinary destination — a move that did nothing.
 ([Workspaces, tabs & groups](help/workspaces.md#groups))
 
+**A fork shows your pull requests on its parent.** In a fork checkout, the
+Pull Requests section only asked `origin`, so it stayed empty while your
+contributions waited on the repository you forked from. With an `upstream`
+remote on a different GitHub repository, the section also lists the parent's
+open pull requests whose branch comes from your fork, under **On owner/repo**.
+*Limits:* GitHub only, a remote named `upstream` only, and the parent's other
+pull requests are left out. ([Hosting](help/hosting.md#your-pull-requests-on-the-parent-of-a-fork))
+
 ## Graph
 
 **Arrange columns directly.** Right-click any column header for the columns

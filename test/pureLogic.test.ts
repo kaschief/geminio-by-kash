@@ -14,7 +14,7 @@ import { readDraft, settleDraft } from '../src/renderer/src/lib/boundedNumber'
 import { splitHunkHeader } from '../src/renderer/src/lib/diff'
 import { displayPath, shortFileName } from '../src/renderer/src/lib/pathDisplay'
 import { fitBranchAndGraph } from '../src/renderer/src/lib/graphColumnFit'
-import type { FileEntry } from '../src/shared/types'
+import type { FileEntry, RemoteInfo } from '../src/shared/types'
 import { followCommitFile, followSelectedCommit, followWipFile, headMove, headOf, isHeadCommit, landedCommit, nextWipFile } from '../src/renderer/src/lib/wipFileFollow'
 import { redoStillApplies } from '../src/renderer/src/lib/redoGuard'
 import { stackOrder, moveLevel, adoptableBranches, targetFor } from '../src/renderer/src/lib/stackOrder'
@@ -95,7 +95,7 @@ import { closeNotice, repoCloseStatus, tabCloseStatus } from '../src/renderer/sr
 import { formatBytes, parseTooLargeError } from '../src/renderer/src/lib/fileSize'
 import { FILE_TOO_LARGE_PREFIX } from '../src/shared/types'
 import { autolink, remoteWebUrl, filePermalink } from '../src/renderer/src/lib/autolink'
-import { githubCommitUrl, parseGitHubRemote, githubRemote } from '../src/renderer/src/lib/hosting'
+import { githubCommitUrl, parseGitHubRemote, githubRemote, forkUpstream, prsFromFork } from '../src/renderer/src/lib/hosting'
 import {
   commitMenuCapabilities,
   commitMenuDisabledKey,
@@ -7433,5 +7433,36 @@ describe('nextWipFile', () => {
   })
   it('nothing left: null, and the view closes', () => {
     expect(nextWipFile('parallax', unstaged, lists([f('parallax')]), lists([]))).toBeNull()
+  })
+})
+
+describe('fork upstream pull requests', () => {
+  const remote = (name: string, url: string): RemoteInfo => ({ name, url }) as RemoteInfo
+
+  it('finds the parent only when upstream is a different GitHub repository', () => {
+    const fork = forkUpstream([
+      remote('origin', 'https://github.com/kaschief/gitcito.git'),
+      remote('upstream', 'git@github.com:MyAppDesk/gitcito.git')
+    ])
+    expect(fork?.fork).toBe('kaschief/gitcito')
+    expect(fork?.parent).toBe('MyAppDesk/gitcito')
+    expect(fork?.upstream.name).toBe('upstream')
+    expect(forkUpstream([remote('origin', 'https://github.com/a/b.git')])).toBeNull()
+    expect(
+      forkUpstream([remote('origin', 'https://github.com/a/b.git'), remote('upstream', 'https://github.com/A/B')])
+    ).toBeNull()
+    expect(
+      forkUpstream([remote('origin', 'https://github.com/a/b.git'), remote('upstream', 'https://gitlab.com/c/b.git')])
+    ).toBeNull()
+  })
+
+  it("keeps only the parent's PRs whose head is the fork", () => {
+    const prs = [
+      { id: 42, headRepo: 'kaschief/gitcito' },
+      { id: 7, headRepo: 'someone/gitcito' },
+      { id: 8, headRepo: 'MyAppDesk/gitcito' },
+      { id: 9 }
+    ]
+    expect(prsFromFork(prs, 'Kaschief/Gitcito').map((p) => p.id)).toEqual([42])
   })
 })
