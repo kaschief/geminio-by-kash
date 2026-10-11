@@ -16,6 +16,7 @@ import {
 } from './repositoryMenu'
 import { t, interp } from '../i18n'
 import { mi } from '../components/menuIcons'
+import { tabLabel } from './tabLabel'
 import { closeNotice, repoCloseStatus, tabCloseStatus } from './tabClose'
 
 function platformOf(): RepoMenuPlatform {
@@ -138,18 +139,19 @@ function runAction(id: RepoMenuActionId, caps: RepoMenuCapabilities, onRemove: (
   }
 }
 
-/** Shared repository-scoped context menu. `extras` are appended after Remove. */
-export function repositoryMenuItems(path: string, onRemove: () => void, extras?: MenuItem[]): MenuItem[] {
+/** Shared repository-scoped context menu. `extras` are appended after Remove;
+ *  a null `onRemove` leaves Remove out. */
+export function repositoryMenuItems(path: string, onRemove: (() => void) | null, extras?: MenuItem[]): MenuItem[] {
   const caps = repoMenuCapabilities(path)
   const editor = useSettingsStore.getState().settings.editor
-  const items: MenuItem[] = repoMenuEntries(caps).map((entry) => {
+  const items: MenuItem[] = repoMenuEntries(caps, onRemove !== null).map((entry) => {
     if (entry.kind === 'separator') return { separator: true }
     return {
       label: entry.vars ? interp(t(entry.labelKey), entry.vars) : t(entry.labelKey),
       icon: entry.id === 'openEditor' && editor?.command ? editorIcon(editor) : mi[entry.icon](),
       disabled: entry.disabled,
       danger: entry.danger,
-      onClick: () => runAction(entry.id, caps, onRemove)
+      onClick: () => runAction(entry.id, caps, () => onRemove?.())
     }
   })
   if (extras?.length) items.push({ separator: true }, ...extras)
@@ -189,6 +191,36 @@ export function requestCloseTab(tabId: string): void {
       ? tab.name
       : repoDisplayName(tab.repos[0]?.path ?? '', settingsStore.settings.repoAliases, tab.repos[0]?.name)
   announceClose(closeNotice(status, name, 'close'), () => useSettingsStore.getState().reopenTab(tab.id))
+}
+
+/** Close every tab but this one, with one note that brings them all back. */
+export function requestCloseOtherTabs(tabId: string): void {
+  const settingsStore = useSettingsStore.getState()
+  const others = settingsStore.settings.tabs.filter((tab) => tab.id !== tabId)
+  if (others.length === 0) return
+  settingsStore.closeOtherTabs(tabId)
+  const only = others.length === 1 ? others[0] : null
+  const name = !only
+    ? null
+    : only.kind === 'page'
+      ? tabLabel(only, t)
+      : only.kind === 'group' && only.repos.length > 1
+        ? only.name
+        : repoDisplayName(only.repos[0]?.path ?? '', settingsStore.settings.repoAliases, only.repos[0]?.name)
+  const message = name
+    ? interp(t('titlebar.closedOtherOne'), { name })
+    : interp(t('titlebar.closedOthers'), { count: others.length })
+  useUIStore.getState().toast('info', message, {
+    action: {
+      label: t('titlebar.reopen'),
+      // Left to right, so each lands back at its old index.
+      run: () => {
+        const st = useSettingsStore.getState()
+        for (const tab of others) st.reopenTab(tab.id)
+        st.setActiveTab(tabId)
+      }
+    }
+  })
 }
 
 function announceClose(notice: ReturnType<typeof closeNotice>, reopen: () => void): void {

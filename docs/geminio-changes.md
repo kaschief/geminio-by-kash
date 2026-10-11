@@ -109,6 +109,15 @@ way, and the "Warn when closing" setting is gone. *Limits:* Reopen and
 the Repositories page still asks when several tabs would go at once.
 ([Workspaces, tabs & groups](help/workspaces.md#tabs))
 
+**Close This Repo and Close Others on a repository tab.** Right-clicking a
+repository tab ended in a red "Remove", which only closed the tab and read as if
+it might delete something, and there was no way to clear the strip down to one
+repository. The menu now ends with **Close This Repo** (the same as the tab's
+**×**) and **Close Others**, which closes every other tab and offers **Reopen**
+to bring them all back. *Limits:* Close Others closes page tabs and groups too;
+chips inside a group and other repository lists still say Remove.
+([Repository context menu](help/repo-menu.md))
+
 **The tab strip fades where it scrolls.** With many repositories open, tabs
 were cut off sharply at both ends, nothing said more were hidden or which end
 you were at, and the + button scrolled away or sat jammed against the profile.

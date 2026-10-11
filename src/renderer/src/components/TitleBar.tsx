@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Plus, FolderGit2, X, Minus, Square, Settings, Sparkles, LifeBuoy, FileText, Bell, BarChart3, BookOpen, ScrollText, CircleDot, Flag, Tag, Download, KeyRound, LayoutGrid, Folder, FolderOpen, FolderPlus, FolderTree, Scale, Wrench, FolderRoot, Palette, House, LogOut } from 'lucide-react'
+import { Plus, FolderGit2, X, Minus, Square, Settings, Sparkles, LifeBuoy, FileText, Bell, BarChart3, BookOpen, ScrollText, CircleDot, Flag, Tag, Download, KeyRound, LayoutGrid, Folder, FolderOpen, FolderPlus, FolderTree, Scale, Wrench, FolderRoot, Palette, House, LogOut, CopyX } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useSettingsStore } from '../stores/settings'
 import { useUIStore, type MenuItem } from '../stores/ui'
@@ -26,7 +26,12 @@ import { repoDisplayName } from '../lib/repoAlias'
 import { TabStatusMark } from './TabStatusMark'
 import { applyTabSort, tabSortMenuItem } from '../lib/tabSortMenu'
 import { activeTabSortKey, tabsSettled } from '../lib/tabSort'
-import { requestRemoveRepoFromGroup, repositoryMenuItems, requestCloseTab } from '../lib/repositoryMenuItems'
+import {
+  requestRemoveRepoFromGroup,
+  repositoryMenuItems,
+  requestCloseTab,
+  requestCloseOtherTabs
+} from '../lib/repositoryMenuItems'
 import { mi } from './menuIcons'
 import { useT, interp } from '../i18n'
 import { edgeFades, layoutExtent, revealOffset } from '../lib/scrollFade'
@@ -657,7 +662,23 @@ export function TitleBar(): React.JSX.Element {
       const move = moveToWorkspaceItem(tab)
       if (move) extras.push(move)
       extras.push(tabSortMenuItem())
-      return repositoryMenuItems(tab.repos[0].path, () => requestCloseTab(tab.id), extras)
+      const alone = settings.tabs.length < 2
+      extras.push(
+        { separator: true },
+        {
+          label: t('titlebar.closeThisRepo'),
+          icon: <X size={15} strokeWidth={1.75} />,
+          onClick: () => requestCloseTab(tab.id)
+        },
+        {
+          label: t('titlebar.closeOthers'),
+          icon: <CopyX size={15} strokeWidth={1.75} />,
+          disabled: alone,
+          title: alone ? t('titlebar.closeOthersNone') : undefined,
+          onClick: () => requestCloseOtherTabs(tab.id)
+        }
+      )
+      return repositoryMenuItems(tab.repos[0].path, null, extras)
     }
     const items: MenuItem[] = []
     if (tab.kind === 'group') {
