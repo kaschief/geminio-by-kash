@@ -15,9 +15,10 @@ sections show without leaving the sidebar, right-click any section header, or
 use the gear beside the filter box; both open the same menu, the way
 right-clicking a graph column header picks the columns.
 
-Headers stay quiet until you need them: at rest each shows only its name.
-Point at one and its count appears after the name, with its buttons (New
-Branch, Add Remote, Open on Web, Refresh) at the right edge. Which sections
+Headers stay quiet until you need them. A top-level section always shows its
+count after its name; its buttons (New Branch, Add Remote, Open on Web,
+Refresh) appear at the right edge when you point at it. A remote or a branch
+folder shows only its name until you point at it, then its count and buttons. Which sections
 and folders you keep expanded or collapsed is remembered per repository, across
 restarts.
 
