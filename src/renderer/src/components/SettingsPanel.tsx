@@ -2,6 +2,7 @@ import { searchSettings } from '../lib/settingsSearch'
 import { ChangeSummary } from './ChangeSummary'
 import { GraphRowAccentControls, StatusDotControls } from './GraphAccentSettings'
 import { AppIconPicker } from './AppIconPicker'
+import { useScrollToSelected } from './useScrollToSelected'
 import { setGitHubAccount } from '../stores/githubAccount'
 import { useAiReady } from './useAiReady'
 import { PATH_DEPTHS, displayPath } from '../lib/pathDisplay'
@@ -1710,6 +1711,7 @@ function ThemesPage({ initialTab, searchTab }: { initialTab?: 'theme' | 'graph';
 
   const setMode = (m: ThemeMode): void => update((s) => ({ ...s, themeMode: m }))
   const selectApp = (id: string): void => update((s) => ({ ...s, appThemeId: id }))
+  const appThemeList = useScrollToSelected<HTMLDivElement>('.theme-card.selected')
   const selectCode = (id: string): void => update((s) => ({ ...s, codeThemeId: id }))
 
   const MODES: { id: ThemeMode; key: TranslationKey; icon: React.ReactNode }[] = [
@@ -1828,7 +1830,7 @@ function ThemesPage({ initialTab, searchTab }: { initialTab?: 'theme' | 'graph';
           )}
         </div>
       </div>
-      <div className="theme-grid">
+      <div ref={appThemeList} className="theme-grid app-theme-list" data-scroll-fade="edge">
         {appThemes.map((th) => (
           <div
             key={th.id}

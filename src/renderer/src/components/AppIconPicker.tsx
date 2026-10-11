@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react'
 import { APP_ICONS, normalizeAppIcon, type AppIconId } from '../../../shared/appIcons'
 import { useSettingsStore } from '../stores/settings'
 import { useT } from '../i18n'
+import { useScrollToSelected } from './useScrollToSelected'
 
 // Bundler-resolved URLs for the same artwork the main process puts in the Dock.
 const ARTWORK = import.meta.glob<string>('../../../../resources/app-icons/*.png', { eager: true, query: '?url', import: 'default' })
@@ -11,15 +11,9 @@ export function AppIconPicker(): React.JSX.Element | null {
   const preference = useSettingsStore((s) => s.settings.appIcon)
   const update = useSettingsStore((s) => s.update)
   const t = useT()
-  const grid = useRef<HTMLDivElement>(null)
   const { icon: current } = normalizeAppIcon(preference)
-  // The grid scrolls in its own box; open it on the chosen icon. Setting scrollTop directly keeps
-  // the Settings page itself from jumping, which scrollIntoView would do.
-  useEffect(() => {
-    const box = grid.current
-    const chosen = box?.querySelector<HTMLElement>('.app-icon-choice.selected')
-    if (box && chosen) box.scrollTop = Math.max(0, chosen.offsetTop - (box.clientHeight - chosen.offsetHeight) / 2)
-  }, [])
+  // The grid scrolls in its own box; open it on the chosen icon.
+  const grid = useScrollToSelected<HTMLDivElement>('.app-icon-choice.selected')
   if (window.api.platform !== 'darwin') return null
   return (
     <section className="app-icon-picker" data-scroll-fade="edge">
