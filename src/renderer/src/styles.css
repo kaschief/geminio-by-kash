@@ -17773,6 +17773,9 @@ button.notice-row:hover { background: var(--bg-2); }
 .settings > .settings-heading { flex-shrink: 0; }
 .settings > .settings-body { min-height: 0; }
 .settings > .settings-body > .settings-form { overflow-y: auto; padding: 3px 5px; }
+/* The form scrolls, so nothing in it should shrink: a child with overflow: hidden (the code theme's
+   live preview) has no minimum height and otherwise collapses to its border on a tall page. */
+.settings > .settings-body > .settings-form > * { flex-shrink: 0; }
 
 
 /* Repository accent choices reuse the appearance page's theme cards. */

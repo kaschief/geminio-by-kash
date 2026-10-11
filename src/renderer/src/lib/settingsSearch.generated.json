@@ -137,6 +137,7 @@
       "settings.statusDotConflict",
       "settings.statusDotPush",
       "settings.statusDots",
+      "settings.statusDotsHint",
       "settings.tabGraph",
       "settings.tabTheme",
       "settings.themeName",

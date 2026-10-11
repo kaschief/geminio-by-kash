@@ -591,6 +591,12 @@ a choice saved by an earlier version falls back to Monoline; the development
 build changes only its running Dock icon.
 ([App icon](help/themes.md#app-icon))
 
+**Tab status colours say what they colour.** The section is now Repository Tab
+Status, with a hint and labels that name each mark (Uncommitted changes,
+Conflict in progress, Commits to push) instead of Changes, Conflict and Push.
+The code theme's live preview no longer collapses to a thin line when the
+Appearance page is taller than the window. ([Tab status dots](help/themes.md#tab-status-dots))
+
 **Number fields you can type into.** Bounded number inputs no longer clamp on
 every keystroke.
 
