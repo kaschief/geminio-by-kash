@@ -51,7 +51,9 @@ A prefix with one child is still a folder — `release/1.2.3` is `release`
 containing `1.2.3` — so adding `release/1.2.4` later does not reshape the
 tree. A run of single-child folders collapses into one header
 (`dependabot/npm_and_yarn`). Folder headers use a folder mark; the ref itself
-uses a branch, remote or tag mark.
+uses a branch, remote or tag mark. Plain branches are listed above folders, so
+`main` sits on top and `fix/…` hangs below it. A folder only groups names: it
+does not mean its branches were made from the branch above.
 
 Right-click a folder header to act on the whole group: *Delete all branches
 under `feature` (4 branches)* removes everything inside after one confirmation

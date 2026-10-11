@@ -82,6 +82,7 @@ import {
   collapseFolderRun,
   collectLeaves,
   leafCount,
+  refsBeforeFolders,
   type PrefixNode
 } from '../lib/prefixTree'
 import { TODO_STATUSES, sortTodos, subtaskProgress, todoStatus, todoSummary, topLevelTodos } from '../lib/todos'
@@ -1662,7 +1663,7 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
         {() => (
           <>
             {cur.item && branchItem(cur.item, cur.seg)}
-            {[...cur.children.values()].map((c) => renderBranchNode(c, '', depth + 1, fullPath))}
+            {refsBeforeFolders(cur).map((c) => renderBranchNode(c, '', depth + 1, fullPath))}
           </>
         )}
       </Section>
@@ -1740,7 +1741,7 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
         {() => (
           <>
             {cur.item && remoteItem(cur.item, cur.seg)}
-            {[...cur.children.values()].map((c) => renderRemoteNode(c, '', depth + 1, remoteName, fullPath))}
+            {refsBeforeFolders(cur).map((c) => renderRemoteNode(c, '', depth + 1, remoteName, fullPath))}
           </>
         )}
       </Section>
@@ -2131,7 +2132,7 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
               </Section>
             )}
             {groupBranches
-              ? [...branchTree.children.values()].map((c) => renderBranchNode(c, '', 1))
+              ? refsBeforeFolders(branchTree).map((c) => renderBranchNode(c, '', 1))
               : locals.map((b) => branchItem(b, b.name))}
           </>
         )}
@@ -2200,7 +2201,7 @@ export function Sidebar({ repo }: { repo: RepoData }): React.JSX.Element {
                 <>
                   {branches.length === 0 && <div className="sb-empty">{t('sidebar.noBranches')}</div>}
                   {groupBranches
-                    ? [...(remoteTrees.get(remote.name)?.children.values() ?? [])].map((c) =>
+                    ? refsBeforeFolders(remoteTrees.get(remote.name)).map((c) =>
                         renderRemoteNode(c, '', 2, remote.name)
                       )
                     : branches.map((b) => remoteItem(b, b.name))}
