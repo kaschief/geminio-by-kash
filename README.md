@@ -4,9 +4,7 @@
 
 # Geminio
 
-**Kash's Git client. Built around a personal workflow.**
-
-A desktop home for repositories, branches, changes and GitHub—shaped by daily use on macOS.
+**A desktop Git client for macOS, built with Electron, React and TypeScript.**
 
 [Handbook](docs/help/getting-started.md) · [What Geminio changes](docs/geminio-changes.md) · [Development](CONTRIBUTING.md) · [Ideas & issues](https://github.com/kaschief/geminio-by-kash/issues) · [MIT license](LICENSE)
 
@@ -14,22 +12,20 @@ A desktop home for repositories, branches, changes and GitHub—shaped by daily 
 
 </div>
 
-## The Geminio approach
+## About
 
-Geminio is developed and maintained by **Kash (Kaschief Johnson)**. It began
-as a fork of Gitcito and has grown into a personal Git client with its own
-interface, account integration and workflow decisions.
-
-The focus is a workspace that remembers how you like to work: compact controls,
-consistent layouts across repositories, direct access to GitHub, and fewer
-competing places to configure the app.
+Geminio is built and maintained by **Kaschief Johnson**. It started as a fork of
+[Gitcito](https://github.com/MyAppDesk/gitcito) and has grown its own interface,
+GitHub integration and workflow. Git runs only in Electron's main process; the
+React renderer reaches it through one typed IPC channel that serialises calls
+per repository. Tests run real Git against generated fixture repositories, and
+every screenshot in the handbook is captured from the built app by Playwright.
 
 ## What Geminio adds
 
 Everything Gitcito does, plus the changes below. Each line links to its
-handbook page. **[What Geminio changes](docs/geminio-changes.md)** is the
-running list behind this digest — every improvement since the fork, what it
-solves and where its limits are — and it is updated with each change.
+handbook page; [What Geminio changes](docs/geminio-changes.md) has the full
+list, with what each change solves and its limits.
 
 **Accounts**
 
@@ -74,7 +70,7 @@ solves and where its limits are — and it is updated with each change.
 
 - **State without tick marks.** A lit dot for the chosen option, a lit icon for what is on, and the current value on submenu rows.
 - **Icons on every menu row,** one icon per meaning, and disabled rows that say why.
-- **Sentence case throughout.** Menus, buttons and titles read "Copy file path", not "Copy File Path".
+- **Mac-style capitalisation.** Title Case for controls and titles ("Copy File Path"), sentence case for descriptions and hints.
 - **Menus close when you click away,** title bar included; unsaved repository editors keep Settings open. [Settings](docs/help/repo-settings.md)
 - **Less noise.** Success toasts only for what you cannot see, slower tooltips on labelled controls, no scrollbars, and AI buttons only when AI is set up.
 - **A smaller toolbar.** Compact selectors and one Pull/Fetch button that remembers its default. [Fetch and pull](docs/help/workspaces.md#fetch-and-pull)
@@ -86,7 +82,10 @@ solves and where its limits are — and it is updated with each change.
 - **No stacked Keychain prompts** from background polling, and no Safe Storage prompt when there is nothing to unlock.
 - **Upstream announced, never installed.** The updater shows Gitcito releases but opens their notes instead of overwriting this build.
 
-<img src="docs/screenshots/toolbar-selectors.webp" alt="Compact repository and branch selectors" width="440" />
+| | |
+|---|---|
+| <img src="docs/screenshots/conflict-resolver.webp" alt="Three-pane merge conflict resolver" /> | <img src="docs/screenshots/line-staging.webp" alt="Staging a single line from a diff" /> |
+| **Resolving a merge conflict** | **Staging a single line** |
 
 ## Working with Git
 
