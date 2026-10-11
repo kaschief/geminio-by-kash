@@ -699,7 +699,7 @@ for (const page of pages) writeFileSync(join(OUT, 'help', `${page.id}.html`), he
 
 // Every screenshot the handbook and the landing can reference, plus the mark.
 for (const file of readdirSync(SHOTS_DIR)) copyFileSync(join(SHOTS_DIR, file), join(OUT, 'assets', file))
-copyFileSync(join(ROOT, 'docs/geminio-mark.png'), join(OUT, 'assets/geminio-mark.png'))
+copyFileSync(join(ROOT, 'resources/app-icons/toy-bricks.png'), join(OUT, 'assets/geminio-mark.png'))
 // The share card is a 1200x630 JPEG: the screenshots are WebP now, and LinkedIn
 // and Facebook are unreliable with it. JPEG is the format every scraper agrees
 // on, and a quarter of the PNG's bytes for a photo-like screenshot.
