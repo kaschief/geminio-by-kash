@@ -553,6 +553,13 @@ duplicates. ([Fetch and pull](help/workspaces.md#fetch-and-pull) ·
 Settings fade out at the bottom while more content remains.
 ([Themes & appearance](help/themes.md))
 
+**Branches above folders.** The Local and remote branch lists were plain A to Z,
+so a `fix/` folder sorted above `gitcito-home` and read as if its branches fed
+into the branch below it. Branches without a `/` now come first and folders
+follow, each group still alphabetical. *Limits:* a folder only groups names; it
+says nothing about which branch another was made from.
+([Branches, remotes & the sidebar](help/branching.md))
+
 **Quiet sidebar headers.** Section headers mixed counts and buttons at their
 trailing edge, and since rows have zero, one or two buttons, nothing lined up
 and a count looked like a button. Top-level sections now show their count as a quiet

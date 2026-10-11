@@ -61,3 +61,11 @@ export function collapseFolderRun<T>(
   }
   return { node: cur, display }
 }
+
+/** A node's children with plain refs ahead of folders, each group keeping its
+ *  order. Alphabetical alone puts `fix/…` above `main`, which reads as if the
+ *  folder's branches fed into the one below it. */
+export function refsBeforeFolders<T>(node: PrefixNode<T> | undefined): PrefixNode<T>[] {
+  const all = [...(node?.children.values() ?? [])]
+  return [...all.filter((c) => c.children.size === 0), ...all.filter((c) => c.children.size > 0)]
+}

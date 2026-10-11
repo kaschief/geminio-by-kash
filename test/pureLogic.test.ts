@@ -41,6 +41,7 @@ import { isBuildNoise, ignoreLineFor } from '../src/renderer/src/lib/buildNoise'
 import { bucketOf, fileStats, summaryChips } from '../src/renderer/src/lib/fileStats'
 import {
   buildPrefixTree,
+  refsBeforeFolders,
   collapseFolderRun,
   collectLeaves,
   leafCount,
@@ -6668,6 +6669,11 @@ describe('prefixTree', () => {
     expect(shouldCollapsePrefix(feat)).toBe(false)
     expect(feat.item).toBe('feat')
     expect([...feat.children.keys()]).toEqual(['login'])
+  })
+
+  it('lists plain refs above folders, keeping each group in order', () => {
+    const root = buildPrefixTree(['fix/a', 'fix/b', 'gitcito-home', 'feat', 'feat/x', 'main'], (s) => s)
+    expect(refsBeforeFolders(root).map((n) => n.seg)).toEqual(['gitcito-home', 'main', 'fix', 'feat'])
   })
 })
 
