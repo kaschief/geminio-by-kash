@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/geminio-mark.png" alt="Geminio" width="96" />
+<img src="resources/app-icons/toy-bricks.png" alt="Geminio" width="112" />
 
 # geminio • by kash
 
