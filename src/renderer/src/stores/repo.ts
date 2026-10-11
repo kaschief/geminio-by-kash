@@ -46,6 +46,7 @@ import { isSecretFile } from '../lib/secrets'
 import { isProtectedBranch } from '../lib/repoConfig'
 import { commitHookProblems } from '../lib/commitLint'
 import { isLockErrorMessage, lockRepairPlan } from '../lib/gitLocks'
+import { forkUpstream, prsFromFork } from '../lib/hosting'
 import { overwrittenLocalChanges, readableGitError, summarizePaths } from '../lib/gitErrors'
 import { parseRouteConflict } from '../lib/stackOrder'
 import { timeAgo } from '../lib/timeAgo'
@@ -170,6 +171,8 @@ export interface RepoData {
   submodules: SubmoduleInfo[]
   prs: PullRequest[]
   prProvider: HostingProvider
+  /** In a fork checkout, your open PRs on the parent (the `upstream` remote). */
+  upstreamPrs: PullRequest[]
   issues: IssueInfo[]
   milestones: MilestoneInfo[]
   releases: ReleaseInfo[]
@@ -239,6 +242,7 @@ const emptyRepo = (path: string): RepoData => ({
   submodules: [],
   prs: [],
   prProvider: null,
+  upstreamPrs: [],
   issues: [],
   milestones: [],
   releases: [],
@@ -1018,6 +1022,19 @@ export const useRepoStore = create<RepoStoreState>((set, get) => ({
         bitbucket: profile.bitbucketToken || undefined
       })
       get().patch(path, { prs, prProvider: provider })
+    } catch (err) {
+      if (!opts?.silent) toast('error', err instanceof Error ? err.message : String(err))
+    }
+    // A fork's own PRs live on the parent, where origin's list cannot see them.
+    // Kept apart from `prs` so stacks and branch lookups only act on origin's.
+    const fork = forkUpstream(repo.remotes)
+    if (!fork) {
+      if (repo.upstreamPrs.length) get().patch(path, { upstreamPrs: [] })
+      return
+    }
+    try {
+      const { prs } = await hostingApi.listPRs(fork.upstream.url, { github: profile.githubToken || undefined })
+      get().patch(path, { upstreamPrs: prsFromFork(prs, fork.fork) })
     } catch (err) {
       if (!opts?.silent) toast('error', err instanceof Error ? err.message : String(err))
     }
