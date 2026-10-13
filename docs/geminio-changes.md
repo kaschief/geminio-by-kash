@@ -273,6 +273,13 @@ search is disabled while a file covers the graph. ([Keyboard](help/keyboard.md))
 
 ## Staging, diffs & files
 
+**File search no longer freezes the app.** Typing in the Files tab search read
+every file of the repository inside the app's main process, once per letter,
+with the earlier searches still running; on a large repository the whole app
+stalled. A content search now waits for a pause in typing, a new search stops
+the old one, and plain-text queries run in `git grep` outside the app. *Limits:*
+a regex search skips files over 4 MB. ([Files tab](help/diffs.md#files-tab))
+
 **Pine Script is coloured.** TradingView `.pine` files showed as plain text in
 diffs, the file viewer, code search and the conflict resolver, because the
 highlighter ships no Pine grammar. Geminio now has one: keywords, types,
