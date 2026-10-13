@@ -273,6 +273,14 @@ search is disabled while a file covers the graph. ([Keyboard](help/keyboard.md))
 
 ## Staging, diffs & files
 
+**Huge lines no longer blank the window.** Opening the diff of a file with a
+very long changed line, such as minified HTML, showed a spinner and then a black
+window: word-level marking compared every token of the old line with every token
+of the new one, and two lines of 80,000 characters asked for over a billion cells
+of memory. It now skips what both lines share at the start and end, and marks a
+region that is still too large as one changed block. *Limits:* on such a line,
+edits far apart are marked as one block, not word by word. ([Diffs & previews](help/diffs.md))
+
 **Pine Script is coloured.** TradingView `.pine` files showed as plain text in
 diffs, the file viewer, code search and the conflict resolver, because the
 highlighter ships no Pine grammar. Geminio now has one: keywords, types,

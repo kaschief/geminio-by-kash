@@ -22,37 +22,58 @@ export interface TokenOp {
   text: string
 }
 
+/** Above this many LCS cells the differing middle of a line pair is marked
+ *  changed wholesale: a minified line can hold tens of thousands of tokens, and
+ *  a full table for two of them would exhaust the renderer's memory. */
+export const TOKEN_LCS_CELL_BUDGET = 1_000_000
+
 /**
  * The token-level edit script turning `a` into `b`, via an LCS over
  * {@link tokenize}. Ties prefer the deletion first, so a replaced word reads
- * old-then-new — the order the inline layout shows it in.
+ * old-then-new — the order the inline layout shows it in. The common prefix and
+ * suffix are matched first, so a small edit inside a huge line stays cheap.
  */
 export function tokenOps(a: string, b: string): TokenOp[] {
   const ta = tokenize(a)
   const tb = tokenize(b)
-  const n = ta.length
-  const m = tb.length
-  const dp: number[][] = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0))
-  for (let i = n - 1; i >= 0; i--) {
-    for (let j = m - 1; j >= 0; j--) {
-      dp[i][j] = ta[i] === tb[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1])
-    }
-  }
+  const max = Math.min(ta.length, tb.length)
+  let p = 0
+  while (p < max && ta[p] === tb[p]) p++
+  let s = 0
+  while (s < max - p && ta[ta.length - 1 - s] === tb[tb.length - 1 - s]) s++
+  const n = ta.length - p - s
+  const m = tb.length - p - s
+
   const ops: TokenOp[] = []
-  let i = 0
-  let j = 0
-  while (i < n && j < m) {
-    if (ta[i] === tb[j]) {
-      ops.push({ op: 'same', text: ta[i++] })
-      j++
-    } else if (dp[i + 1][j] >= dp[i][j + 1]) {
-      ops.push({ op: 'del', text: ta[i++] })
-    } else {
-      ops.push({ op: 'add', text: tb[j++] })
+  for (let k = 0; k < p; k++) ops.push({ op: 'same', text: ta[k] })
+  if (n * m > TOKEN_LCS_CELL_BUDGET) {
+    for (let k = 0; k < n; k++) ops.push({ op: 'del', text: ta[p + k] })
+    for (let k = 0; k < m; k++) ops.push({ op: 'add', text: tb[p + k] })
+  } else {
+    const w = m + 1
+    const dp = new Uint32Array((n + 1) * w)
+    for (let i = n - 1; i >= 0; i--) {
+      for (let j = m - 1; j >= 0; j--) {
+        dp[i * w + j] =
+          ta[p + i] === tb[p + j] ? dp[(i + 1) * w + j + 1] + 1 : Math.max(dp[(i + 1) * w + j], dp[i * w + j + 1])
+      }
     }
+    let i = 0
+    let j = 0
+    while (i < n && j < m) {
+      if (ta[p + i] === tb[p + j]) {
+        ops.push({ op: 'same', text: ta[p + i++] })
+        j++
+      } else if (dp[(i + 1) * w + j] >= dp[i * w + j + 1]) {
+        ops.push({ op: 'del', text: ta[p + i++] })
+      } else {
+        ops.push({ op: 'add', text: tb[p + j++] })
+      }
+    }
+    while (i < n) ops.push({ op: 'del', text: ta[p + i++] })
+    while (j < m) ops.push({ op: 'add', text: tb[p + j++] })
   }
-  while (i < n) ops.push({ op: 'del', text: ta[i++] })
-  while (j < m) ops.push({ op: 'add', text: tb[j++] })
+  for (let k = ta.length - s; k < ta.length; k++) ops.push({ op: 'same', text: ta[k] })
   return ops
 }
 
