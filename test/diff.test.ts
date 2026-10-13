@@ -63,6 +63,28 @@ describe('wordDiff', () => {
   it('returns empty ranges for identical lines', () => {
     expect(wordDiff('same', 'same')).toEqual({ del: [], add: [] })
   })
+
+  // A minified line runs to tens of thousands of tokens; a full LCS table for
+  // two of them once blanked the window by exhausting renderer memory.
+  const minified = (tag: string): string =>
+    Array.from({ length: 6000 }, (_, i) => `<div class="c${i}">${i === 3000 ? tag : 'x'}</div>`).join('')
+
+  it('handles one edit inside a huge line', () => {
+    const a = minified('old')
+    const b = minified('new')
+    const { del, add } = wordDiff(a, b)
+    expect(del.map(([s, e]) => a.slice(s, e))).toEqual(['old'])
+    expect(add.map(([s, e]) => b.slice(s, e))).toEqual(['new'])
+  })
+
+  it('marks the middle changed wholesale when edits are far apart in a huge line', () => {
+    const a = minified('x').replace('c1"', 'c1a"').replace('c5998"', 'c5998a"')
+    const b = minified('x').replace('c1"', 'c1b"').replace('c5998"', 'c5998b"')
+    const { del, add } = wordDiff(a, b)
+    expect(del).toHaveLength(1)
+    expect(add).toHaveLength(1)
+    expect(a.slice(del[0][0], del[0][1])).toMatch(/^c1a.*c5998a$/s)
+  })
 })
 
 describe('wordRangesByLine', () => {

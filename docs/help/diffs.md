@@ -42,6 +42,11 @@ it on when you would rather read a long line than chase it — the cost is that 
 line folding over three rows on one side no longer sits opposite its
 counterpart. Every toggle remembers its state across files and sessions.
 
+Word-level marks stay cheap on very long lines, such as minified HTML or a
+bundled script. Where the edits sit close together they are marked exactly; where
+one huge line changes in places far apart, everything between the first and last
+change is marked as one block rather than compared token by token.
+
 With wrap off the two halves scroll **linked** by default — vertically, which
 keeps the rows facing each other, and sideways, so column 90 on the left sits
 above column 90 on the right. Unlink them when the sides have drifted apart —
