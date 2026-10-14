@@ -7,7 +7,8 @@ import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { GitMerge, FolderOpen, Download, ArrowDownToLine, Bug, LifeBuoy, MessageSquare, CheckSquare, Stethoscope, CircleX, TriangleAlert, Info, ListTodo, Pencil } from 'lucide-react'
 import { takeAccountsNotice, useSettingsStore } from './stores/settings'
-import { useRepoStore, repoActions, type RepoData } from './stores/repo'
+import { useRepoStore, repoActions, type RepoData, type RefreshSlice } from './stores/repo'
+import { backgroundMarksDue } from './lib/backgroundMarks'
 import { useUIStore, fileViewKey } from './stores/ui'
 import { tabActiveRepoPath, tabRepos, type ConflictOpKind, type GroupTab, type PageTab, type PageContent } from '../../shared/types'
 import { useT, t as tr, interp } from './i18n'
@@ -516,6 +517,12 @@ function DoctorStatusChip({ path }: { path: string }): React.JSX.Element | null 
   )
 }
 
+// What a background tab's mark reads: status and merge state for the changes
+// and conflict dots, branches for the push count (it re-reads unpushed commits).
+const BACKGROUND_MARK_SLICES = ['status', 'mergeState', 'branches'] as const satisfies readonly RefreshSlice[]
+const BACKGROUND_MARK_GAP_MS = 30_000
+const BACKGROUND_MARK_TICK_MS = 120_000
+
 export default function App(): React.JSX.Element {
   const t = useT()
   const settingsLoaded = useSettingsStore((s) => s.loaded)
@@ -825,6 +832,34 @@ export default function App(): React.JSX.Element {
       document.removeEventListener('visibilitychange', onVisible)
     }
   }, [activeRepoPath])
+
+  // Background tabs are not watched, so their push badge and changes dot would
+  // stay frozen until opened. Re-read just what the mark shows when the window
+  // regains focus and on a slow tick while visible; the per-repo gap keeps a
+  // dozen open tabs from re-shelling git on every focus change.
+  const backgroundMarksAt = useRef(new Map<string, number>())
+  useEffect(() => {
+    const refreshMarks = (): void => {
+      if (document.visibilityState !== 'visible') return
+      const { repos, refresh } = useRepoStore.getState()
+      const paths = settings.tabs.flatMap((tab) => tabRepos(tab).map((r) => r.path))
+      const now = Date.now()
+      for (const path of backgroundMarksDue(paths, activeRepoPath, backgroundMarksAt.current, now, BACKGROUND_MARK_GAP_MS)) {
+        const repo = repos[path]
+        if (!repo || repo.loading || repo.missingFolder || repo.notGit) continue
+        backgroundMarksAt.current.set(path, now)
+        void refresh(path, { only: [...BACKGROUND_MARK_SLICES] })
+      }
+    }
+    window.addEventListener('focus', refreshMarks)
+    document.addEventListener('visibilitychange', refreshMarks)
+    const interval = setInterval(refreshMarks, BACKGROUND_MARK_TICK_MS)
+    return () => {
+      window.removeEventListener('focus', refreshMarks)
+      document.removeEventListener('visibilitychange', refreshMarks)
+      clearInterval(interval)
+    }
+  }, [settings.tabs, activeRepoPath])
 
   // Periodic light refresh of the active repo (status + branches drift), as a
   // backstop for the rare case the FS watcher misses something (e.g. a

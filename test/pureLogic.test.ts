@@ -10,6 +10,7 @@ import { isLockErrorMessage, lockRepairPlan } from '../src/renderer/src/lib/gitL
 import { overwrittenLocalChanges, readableGitError, summarizePaths } from '../src/renderer/src/lib/gitErrors'
 import { sortFilesForList } from '../src/renderer/src/lib/fileNav'
 import { workingChangeCount } from '../src/renderer/src/lib/workingChanges'
+import { backgroundMarksDue } from '../src/renderer/src/lib/backgroundMarks'
 import { readDraft, settleDraft } from '../src/renderer/src/lib/boundedNumber'
 import { splitHunkHeader } from '../src/renderer/src/lib/diff'
 import { displayPath, shortFileName } from '../src/renderer/src/lib/pathDisplay'
@@ -7490,5 +7491,13 @@ describe('pullableOthers', () => {
   })
   it('leaves out diverged branches and branches without an upstream', () => {
     expect(pullableOthers([b('diverged', 2, 1), b('local', 2, 0, { upstream: null })])).toEqual([])
+  })
+})
+
+describe('backgroundMarksDue', () => {
+  it('skips the active repo, duplicates and repos read within the gap', () => {
+    const last = new Map([['/b', 1000], ['/c', 0]])
+    expect(backgroundMarksDue(['/a', '/b', '/c', '/c', '/d'], '/a', last, 20_000, 30_000)).toEqual(['/d'])
+    expect(backgroundMarksDue(['/a', '/b', '/c', '/d'], '/a', last, 31_000, 30_000)).toEqual(['/b', '/c', '/d'])
   })
 })

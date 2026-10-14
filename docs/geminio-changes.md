@@ -172,6 +172,8 @@ conflict replaces both. The count picks dark or white text to stay readable on
 any badge colour. Changes, Conflict and Push colours are each configurable.
 Old local copies of commits that were rebased and pushed from elsewhere (same
 changes, new SHAs on the remote) do not count, since a push would publish nothing.
+Background tabs re-read their marks when the window regains focus and every two
+minutes, so work done in a terminal or by an agent shows without opening the tab.
 ([Tab status dots](help/themes.md#tab-status-dots))
 
 **See which repository is active.** An optional 1px accent outline around the

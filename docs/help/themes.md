@@ -81,6 +81,11 @@ A repository tab says what is waiting in it, most urgent first:
 A folder of tabs adds up the commits of everything inside it. A group chip
 keeps its own `↑` / `↓` counts.
 
+Tabs you are not looking at re-check their marks when you come back to the
+window and every two minutes, so a commit or push made in a terminal shows up
+without opening the tab. Old copies of commits that were rebased and pushed from
+another machine do not count, since pushing them would publish nothing.
+
 **Settings → Appearance → Repository Tab Status** picks a color for each mark:
 **Uncommitted changes**, **Conflict in progress** and **Commits to push**. The
 reset button next to each hands it back to the theme.
