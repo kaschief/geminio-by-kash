@@ -6941,7 +6941,31 @@ export const gitService = {
     const remotes = await runGit(repoPath, ['remote']).catch(() => '')
     if (!remotes.trim()) return []
     const out = await runGit(repoPath, ['rev-list', `--max-count=${max}`, '--branches', '--not', '--remotes']).catch(() => '')
-    return out.split('\n').map((l) => l.trim()).filter(Boolean)
+    const shas = out.split('\n').map((l) => l.trim()).filter(Boolean)
+    if (!shas.length) return shas
+    // A branch rebased elsewhere and pushed leaves the old local copies behind:
+    // different SHAs, same changes. They are not work a push would publish, so
+    // they must not count. Only a branch that is both ahead and behind its
+    // upstream can hold such copies, which keeps the usual case to one call.
+    const refs = await runGit(repoPath, [
+      'for-each-ref',
+      '--format=%(refname)%00%(upstream)%00%(upstream:track,nobracket)',
+      'refs/heads'
+    ]).catch(() => '')
+    const alreadyThere = new Set<string>()
+    for (const line of refs.split('\n')) {
+      const [ref, upstream, track] = line.split('\0')
+      if (!ref || !upstream || !track?.includes('ahead') || !track.includes('behind')) continue
+      const marked = await runGit(repoPath, [
+        'rev-list',
+        '--left-only',
+        '--cherry-mark',
+        '--no-merges',
+        `${ref}...${upstream}`
+      ]).catch(() => '')
+      for (const m of marked.split('\n')) if (m.startsWith('=')) alreadyThere.add(m.slice(1).trim())
+    }
+    return alreadyThere.size ? shas.filter((s) => !alreadyThere.has(s)) : shas
   },
 
   // ─── Bisect ────────────────────────────────────────────────────────────────

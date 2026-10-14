@@ -170,6 +170,8 @@ last refresh or fetch. ([Sorting tabs](help/workspaces.md#sorting-tabs))
 count of commits no remote has yet, ahead of the uncommitted-changes dot; a
 conflict replaces both. The count picks dark or white text to stay readable on
 any badge colour. Changes, Conflict and Push colours are each configurable.
+Old local copies of commits that were rebased and pushed from elsewhere (same
+changes, new SHAs on the remote) do not count, since a push would publish nothing.
 ([Tab status dots](help/themes.md#tab-status-dots))
 
 **See which repository is active.** An optional 1px accent outline around the

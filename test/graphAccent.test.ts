@@ -85,4 +85,36 @@ describe('unpushedCommits', () => {
     const three = commitFile(repo, '3\n', 'three')
     expect(await gitService.unpushedCommits(repo)).toEqual([three, two])
   })
+
+  it('skips an old local copy of a commit that was rebased and pushed elsewhere', async () => {
+    const repo = initRepo()
+    commitFile(repo, '1\n', 'one')
+    const bare = join(repo, '..', 'origin.git')
+    execFileSync('git', ['init', '-q', '--bare', bare])
+    git(repo, ['remote', 'add', 'origin', bare])
+    git(repo, ['push', '-q', '-u', 'origin', 'main'])
+
+    // Another machine: commit on main, then put the same feature on top of it.
+    const other = join(repo, '..', 'other')
+    execFileSync('git', ['clone', '-q', '--branch', 'main', bare, other])
+    git(other, ['config', 'user.email', 't@t'])
+    git(other, ['config', 'user.name', 't'])
+    git(other, ['config', 'commit.gpgsign', 'false'])
+    writeFileSync(join(other, 'b.txt'), 'b\n')
+    git(other, ['add', 'b.txt'])
+    git(other, ['commit', '-qm', 'other work'])
+
+    // Here: the feature, pushed by the other machine after a rebase.
+    const local = commitFile(repo, '2\n', 'feature')
+    git(other, ['fetch', '-q', join(repo, '.git'), 'main:incoming'])
+    git(other, ['cherry-pick', local])
+    git(other, ['push', '-q', 'origin', 'main'])
+    git(repo, ['fetch', '-q', 'origin'])
+
+    expect(await gitService.unpushedCommits(repo)).toEqual([])
+
+    // Real new work on the stale branch still counts.
+    const fresh = commitFile(repo, '3\n', 'fresh')
+    expect(await gitService.unpushedCommits(repo)).toEqual([fresh])
+  })
 })
